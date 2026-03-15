@@ -87,6 +87,7 @@ const navItems = [
     icon: Store,
     href: "/channels",
     subItems: [
+      { title: "概要", icon: PieChart, href: "/channels" },
       { title: "外食メニュー", icon: Utensils, href: "/channels/foodservice" },
       { title: "ドラッグストア", icon: Pill, href: "/channels/drugstore" },
       { title: "コンビニ", icon: ShoppingBag, href: "/channels/cvs" },
