@@ -1,16 +1,32 @@
 "use client"
 
+import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
-  Home,
-  BarChart3,
-  Users,
+  LayoutDashboard,
+  Search,
+  Store,
+  Zap,
   FolderOpen,
   Settings,
-  HelpCircle,
-  Bell,
-  Search,
   ChevronDown,
   LogOut,
+  Bell,
+  TrendingUp,
+  Eye,
+  PieChart,
+  FlaskConical,
+  Package,
+  Target,
+  Clock,
+  Users,
+  MapPin,
+  Utensils,
+  Pill,
+  ShoppingBag,
+  ShoppingCart,
+  Globe,
 } from "lucide-react"
 
 import {
@@ -19,11 +35,13 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import {
@@ -33,90 +51,153 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-const mainNavItems = [
+const navItems = [
   {
-    title: "ダッシュボード",
-    icon: Home,
-    isActive: true,
+    title: "Dashboard",
+    icon: LayoutDashboard,
+    href: "/",
+    subItems: [
+      { title: "Top Trends", icon: TrendingUp, href: "/" },
+      { title: "Trend Spotlight", icon: Eye, href: "/dashboard/spotlight" },
+      { title: "Category Dashboard", icon: PieChart, href: "/dashboard/category" },
+    ],
   },
   {
-    title: "アナリティクス",
-    icon: BarChart3,
+    title: "Explore",
+    icon: Search,
+    href: "/explore",
+    subItems: [
+      { title: "成分・原材料", icon: FlaskConical, href: "/explore/ingredients" },
+      { title: "商品タイプ", icon: Package, href: "/explore/products" },
+      { title: "消費者ニーズ", icon: Target, href: "/explore/needs" },
+      { title: "消費モーメント", icon: Clock, href: "/explore/moments" },
+      { title: "デモグラフィック", icon: Users, href: "/explore/demographics" },
+      { title: "地域", icon: MapPin, href: "/explore/regions" },
+    ],
   },
   {
-    title: "ユーザー管理",
-    icon: Users,
+    title: "Channels",
+    icon: Store,
+    href: "/channels",
+    subItems: [
+      { title: "外食メニュー", icon: Utensils, href: "/channels/foodservice" },
+      { title: "ドラッグストア", icon: Pill, href: "/channels/drugstore" },
+      { title: "コンビニ", icon: ShoppingBag, href: "/channels/cvs" },
+      { title: "EC", icon: Globe, href: "/channels/ec" },
+      { title: "GMS/スーパー", icon: ShoppingCart, href: "/channels/gms" },
+    ],
   },
   {
-    title: "プロジェクト",
+    title: "Solutions",
+    icon: Zap,
+    href: "/solutions",
+  },
+  {
+    title: "Drive",
     icon: FolderOpen,
-  },
-]
-
-const bottomNavItems = [
-  {
-    title: "設定",
-    icon: Settings,
-  },
-  {
-    title: "ヘルプ",
-    icon: HelpCircle,
+    href: "/drive",
   },
 ]
 
 export function DashboardSidebar() {
+  const pathname = usePathname()
+  const [openMenus, setOpenMenus] = useState<string[]>(["Dashboard"])
+
+  const toggleMenu = (title: string) => {
+    setOpenMenus(prev =>
+      prev.includes(title)
+        ? prev.filter(t => t !== title)
+        : [...prev, title]
+    )
+  }
+
+  const isActive = (href: string) => pathname === href
+  const isParentActive = (item: typeof navItems[0]) => {
+    if (isActive(item.href)) return true
+    return item.subItems?.some(sub => isActive(sub.href))
+  }
+
   return (
-    <Sidebar className="border-r border-border/40">
+    <Sidebar className="border-r border-border/50 bg-sidebar">
       <SidebarHeader className="p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground">
-            <span className="text-sm font-bold text-background">D</span>
+        <Link href="/" className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+            <span className="text-base font-bold text-primary-foreground">Y</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-foreground">Dashboard</span>
-            <span className="text-xs text-muted-foreground">ワークスペース</span>
+            <span className="text-base font-bold text-foreground tracking-tight">YAPPI</span>
+            <span className="text-[10px] text-muted-foreground">Consumer Intelligence</span>
           </div>
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarSeparator />
 
-      <SidebarContent>
+      <SidebarContent className="px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            メインメニュー
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNavItems.map((item) => (
+              {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    isActive={item.isActive}
-                    className="gap-3 h-10"
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup className="mt-auto">
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            サポート
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {bottomNavItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="gap-3 h-10">
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
+                  {item.subItems ? (
+                    <Collapsible
+                      open={openMenus.includes(item.title)}
+                      onOpenChange={() => toggleMenu(item.title)}
+                    >
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          className={`gap-3 h-10 justify-between ${
+                            isParentActive(item) ? "bg-sidebar-accent text-primary font-medium" : ""
+                          }`}
+                        >
+                          <span className="flex items-center gap-3">
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.title}</span>
+                          </span>
+                          <ChevronDown
+                            className={`h-4 w-4 transition-transform ${
+                              openMenus.includes(item.title) ? "rotate-180" : ""
+                            }`}
+                          />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.subItems.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={isActive(subItem.href)}
+                              >
+                                <Link href={subItem.href} className="flex items-center gap-2">
+                                  <subItem.icon className="h-3.5 w-3.5" />
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  ) : (
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(item.href)}
+                      className="gap-3 h-10"
+                    >
+                      <Link href={item.href}>
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -127,16 +208,27 @@ export function DashboardSidebar() {
       <SidebarSeparator />
 
       <SidebarFooter className="p-3">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="gap-3 h-10">
+              <Link href="/settings">
+                <Settings className="h-4 w-4" />
+                <span>設定</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-accent transition-colors">
+            <button className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-sidebar-accent transition-colors mt-2">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
-                <AvatarFallback>田</AvatarFallback>
+                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=yappi" />
+                <AvatarFallback className="bg-primary/10 text-primary text-xs">YP</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">田中 太郎</p>
-                <p className="text-xs text-muted-foreground truncate">tanaka@example.com</p>
+                <p className="text-sm font-medium text-foreground truncate">山田 花子</p>
+                <p className="text-xs text-muted-foreground truncate">yamada@company.co.jp</p>
               </div>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </button>

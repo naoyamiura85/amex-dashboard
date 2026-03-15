@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
+const notoSansJP = Noto_Sans_JP({ subsets: ["latin"], variable: '--font-noto-sans-jp' });
 
 export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'Modern dashboard with analytics and insights',
+  title: 'YAPPI - AI-Powered Consumer Intelligence',
+  description: 'AI-driven consumer intelligence platform for FMCG/CPG',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -35,8 +35,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="ja">
+      <body className={`${inter.variable} ${notoSansJP.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>
