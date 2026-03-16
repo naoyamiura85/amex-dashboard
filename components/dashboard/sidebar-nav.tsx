@@ -220,39 +220,26 @@ export function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-auto">
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className="gap-3 h-10">
-                  <Link href="/settings">
-                    <Settings className="h-4 w-4" />
-                    <span>設定</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
+        </SidebarContent>
 
       <SidebarSeparator />
 
-      <SidebarFooter className="p-3 space-y-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-sidebar-accent transition-colors mt-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=yappi" />
-                <AvatarFallback className="bg-primary/10 text-primary text-xs">YP</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">山田 花子</p>
-                <p className="text-xs text-muted-foreground truncate">yamada@company.co.jp</p>
-              </div>
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-            </button>
-          </DropdownMenuTrigger>
+      <SidebarFooter className="p-3">
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex flex-1 items-center gap-3 rounded-lg p-2 text-left hover:bg-sidebar-accent transition-colors">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=yappi" />
+                  <AvatarFallback className="bg-primary/10 text-primary text-xs">YP</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">山田 花子</p>
+                  <p className="text-xs text-muted-foreground truncate">yamada@company.co.jp</p>
+                </div>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4" />
@@ -268,7 +255,19 @@ export function DashboardSidebar() {
               ログアウト
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+          </DropdownMenu>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground"
+            asChild
+          >
+            <Link href="/settings">
+              <Settings className="h-4 w-4" />
+              <span className="sr-only">設定</span>
+            </Link>
+          </Button>
+        </div>
       </SidebarFooter>
     </Sidebar>
   )
