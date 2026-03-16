@@ -60,6 +60,75 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useCategoryMode, categoryModeConfig, CategoryMode } from "@/contexts/category-mode-context"
+import { 
+  Apple, 
+  Coffee, 
+  Sparkles, 
+  Pill as PillIcon, 
+  Bath, 
+  Heart,
+  Layers
+} from "lucide-react"
+
+const categoryModeIcons: Record<CategoryMode, React.ElementType> = {
+  all: Layers,
+  food: Apple,
+  beverage: Coffee,
+  cosmetics: Sparkles,
+  supplement: PillIcon,
+  toiletry: Bath,
+  wellness: Heart,
+}
+
+function CategoryModeSelector() {
+  const { mode, setMode, modeLabel } = useCategoryMode()
+  const Icon = categoryModeIcons[mode]
+  const config = categoryModeConfig[mode]
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex w-full items-center gap-3 rounded-lg border border-border p-3 text-left hover:bg-sidebar-accent transition-colors">
+          <div className={`flex h-8 w-8 items-center justify-center rounded-md ${config.bgColor}`}>
+            <Icon className={`h-4 w-4 ${config.color}`} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">表示モード</p>
+            <p className={`text-sm font-semibold ${config.color}`}>{modeLabel}</p>
+          </div>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" side="top" className="w-[220px]">
+        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
+          カテゴリを選択
+        </div>
+        <DropdownMenuSeparator />
+        {(Object.keys(categoryModeConfig) as CategoryMode[]).map((key) => {
+          const itemConfig = categoryModeConfig[key]
+          const ItemIcon = categoryModeIcons[key]
+          const isSelected = mode === key
+          return (
+            <DropdownMenuItem
+              key={key}
+              onClick={() => setMode(key)}
+              className={`gap-3 ${isSelected ? "bg-sidebar-accent" : ""}`}
+            >
+              <div className={`flex h-6 w-6 items-center justify-center rounded ${itemConfig.bgColor}`}>
+                <ItemIcon className={`h-3.5 w-3.5 ${itemConfig.color}`} />
+              </div>
+              <span className={isSelected ? "font-medium" : ""}>{itemConfig.label}</span>
+              {isSelected && (
+                <div className="ml-auto h-2 w-2 rounded-full bg-primary" />
+              )}
+            </DropdownMenuItem>
+          )
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
 
 const navItems = [
   {
@@ -224,7 +293,11 @@ export function DashboardSidebar() {
 
       <SidebarSeparator />
 
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 space-y-3">
+        {/* Category Mode Selector */}
+        <CategoryModeSelector />
+        
+        {/* User Profile */}
         <div className="flex items-center gap-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -241,9 +314,11 @@ export function DashboardSidebar() {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="top" className="w-56">
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                アカウント設定
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <Settings className="mr-2 h-4 w-4" />
+                  アカウント設定
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell className="mr-2 h-4 w-4" />
@@ -256,17 +331,6 @@ export function DashboardSidebar() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
-            asChild
-          >
-            <Link href="/settings">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">設定</span>
-            </Link>
-          </Button>
         </div>
       </SidebarFooter>
     </Sidebar>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { CategoryModeProvider } from '@/contexts/category-mode-context'
 import './globals.css'
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
@@ -37,7 +38,9 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`${inter.variable} ${notoSansJP.variable} font-sans antialiased`}>
-        {children}
+        <CategoryModeProvider>
+          {children}
+        </CategoryModeProvider>
         <Analytics />
       </body>
     </html>
