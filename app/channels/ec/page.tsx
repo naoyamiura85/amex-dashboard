@@ -1,7 +1,7 @@
 "use client"
 
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
-import { Header } from "@/components/dashboard/header"
+import { DashboardHeader } from "@/components/dashboard/header"
 import { YappiChat } from "@/components/dashboard/yappi-chat"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -94,7 +94,7 @@ export default function ECPage() {
     <div className="flex min-h-screen bg-background">
       <SidebarNav />
       <div className="flex-1 flex flex-col">
-        <Header />
+        <DashboardHeader />
         <main className="flex-1 p-6">
           <div className="space-y-6">
             {/* Header */}
