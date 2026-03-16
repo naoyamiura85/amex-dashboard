@@ -3,7 +3,6 @@
 import { Bell, Search, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import {
   Select,
   SelectContent,
@@ -22,7 +21,6 @@ export function DashboardHeader({ title, breadcrumb }: DashboardHeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background px-6">
       <div className="flex items-center gap-4">
-        <SidebarTrigger className="-ml-2" />
         <div>
           {breadcrumb && breadcrumb.length > 0 && (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-0.5">
