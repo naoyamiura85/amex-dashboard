@@ -4,50 +4,62 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* YAPPI Light Mode - Violet Primary */
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* DDS Light Mode - Clean & Professional */
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.15 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.15 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.541 0.213 285);
+  --popover-foreground: oklch(0.15 0 0);
+  
+  /* Primary - Deep Indigo (DDS style) */
+  --primary: oklch(0.45 0.15 270);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.631 0.178 285);
-  --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.75 0.16 70);
-  --accent-foreground: oklch(0.145 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  
+  /* Secondary - Soft violet */
+  --secondary: oklch(0.96 0.01 270);
+  --secondary-foreground: oklch(0.35 0.1 270);
+  
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  
+  /* Accent - Subtle blue */
+  --accent: oklch(0.95 0.02 250);
+  --accent-foreground: oklch(0.35 0.12 250);
+  
+  --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(1 0 0);
+  
+  /* Subtle borders for clean look */
   --border: oklch(0.92 0 0);
-  --input: oklch(0.92 0 0);
-  --ring: oklch(0.541 0.213 285);
+  --input: oklch(0.94 0 0);
+  --ring: oklch(0.45 0.15 270);
   
-  /* Category Colors */
-  --category-food: oklch(0.696 0.17 162.48);
-  --category-cosmetics: oklch(0.656 0.241 354.308);
-  --category-toiletry: oklch(0.623 0.214 255.128);
-  --category-supplement: oklch(0.705 0.213 47.604);
-  --category-wellness: oklch(0.631 0.178 285);
+  /* Category Colors - Softer palette */
+  --category-food: oklch(0.65 0.15 145);
+  --category-cosmetics: oklch(0.65 0.18 350);
+  --category-toiletry: oklch(0.6 0.15 250);
+  --category-supplement: oklch(0.7 0.16 55);
+  --category-wellness: oklch(0.6 0.14 280);
   
-  /* Chart Colors */
-  --chart-1: oklch(0.541 0.213 285);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.705 0.213 47.604);
-  --chart-4: oklch(0.656 0.241 354.308);
-  --chart-5: oklch(0.623 0.214 255.128);
+  /* Chart Colors - Harmonious palette */
+  --chart-1: oklch(0.55 0.15 270);
+  --chart-2: oklch(0.65 0.15 145);
+  --chart-3: oklch(0.7 0.16 55);
+  --chart-4: oklch(0.65 0.18 350);
+  --chart-5: oklch(0.6 0.15 250);
   
-  --radius: 0.5rem;
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.541 0.213 285);
+  --radius: 0.625rem;
+  
+  /* Sidebar - Clean white with subtle contrast */
+  --sidebar: oklch(0.995 0 0);
+  --sidebar-foreground: oklch(0.25 0 0);
+  --sidebar-primary: oklch(0.45 0.15 270);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.97 0.01 285);
-  --sidebar-accent-foreground: oklch(0.145 0 0);
-  --sidebar-border: oklch(0.92 0 0);
-  --sidebar-ring: oklch(0.541 0.213 285);
+  --sidebar-accent: oklch(0.96 0.01 270);
+  --sidebar-accent-foreground: oklch(0.25 0 0);
+  --sidebar-border: oklch(0.94 0 0);
+  --sidebar-ring: oklch(0.45 0.15 270);
 }
 
 .dark {

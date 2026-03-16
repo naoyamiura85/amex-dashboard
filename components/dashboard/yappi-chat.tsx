@@ -122,14 +122,14 @@ export function YappiChat() {
 
   return (
     <div
-      className={`fixed z-50 bg-background border border-border/50 shadow-2xl flex flex-col transition-all duration-300 ${
+      className={`fixed z-50 bg-background border border-border shadow-xl flex flex-col transition-all duration-300 ${
         isExpanded
           ? "inset-4 rounded-xl"
-          : "bottom-6 right-6 w-[400px] h-[600px] rounded-2xl"
+          : "bottom-6 right-6 w-[380px] h-[560px] rounded-xl"
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-muted/30">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="h-9 w-9 rounded-full bg-primary flex items-center justify-center">
@@ -242,7 +242,7 @@ export function YappiChat() {
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-4 border-t border-border/50 bg-muted/20">
+      <div className="p-4 border-t border-border bg-muted/30">
         <div className="flex items-center gap-2">
           <Input
             ref={inputRef}

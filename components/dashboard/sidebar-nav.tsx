@@ -126,15 +126,15 @@ export function DashboardSidebar() {
   }
 
   return (
-    <Sidebar className="border-r border-border/50 bg-sidebar">
+    <Sidebar className="border-r border-border bg-sidebar">
       <SidebarHeader className="p-4">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <span className="text-base font-bold text-primary-foreground">Y</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary shadow-sm">
+            <span className="text-sm font-bold text-primary-foreground">Y</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-base font-bold text-foreground tracking-tight">YAPPI</span>
-            <span className="text-[10px] text-muted-foreground">Consumer Intelligence</span>
+            <span className="text-sm font-semibold text-foreground tracking-tight">YAPPI</span>
+            <span className="text-[10px] text-muted-foreground leading-tight">Consumer Intelligence</span>
           </div>
         </Link>
       </SidebarHeader>

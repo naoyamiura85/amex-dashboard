@@ -27,11 +27,11 @@ const lifecycleConfig: Record<LifecycleStage, { label: string; className: string
 }
 
 const categoryConfig: Record<Category, { label: string; color: string }> = {
-  food: { label: "食品・飲料", color: "bg-[oklch(0.696_0.17_162.48)]" },
-  cosmetics: { label: "化粧品", color: "bg-[oklch(0.656_0.241_354.308)]" },
-  toiletry: { label: "トイレタリー", color: "bg-[oklch(0.623_0.214_255.128)]" },
-  supplement: { label: "サプリ", color: "bg-[oklch(0.705_0.213_47.604)]" },
-  wellness: { label: "ウェルネス", color: "bg-[oklch(0.631_0.178_285)]" },
+  food: { label: "食品・飲料", color: "bg-emerald-500" },
+  cosmetics: { label: "化粧品", color: "bg-rose-400" },
+  toiletry: { label: "トイレタリー", color: "bg-blue-500" },
+  supplement: { label: "サプリ", color: "bg-amber-500" },
+  wellness: { label: "ウェルネス", color: "bg-violet-500" },
 }
 
 function Sparkline({ data }: { data: number[] }) {
@@ -79,7 +79,7 @@ export function TrendCard({
   const growthColor = growthRate > 0 ? "text-emerald-600" : growthRate < 0 ? "text-rose-600" : "text-muted-foreground"
 
   return (
-    <Card className="group hover:shadow-md transition-all duration-200 hover:border-primary/20 cursor-pointer">
+    <Card className="group hover:shadow-lg transition-all duration-300 hover:border-primary/30 cursor-pointer border-border/60 shadow-sm">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">

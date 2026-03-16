@@ -20,7 +20,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ title, breadcrumb }: DashboardHeaderProps) {
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background px-6">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="-ml-2" />
         <div>

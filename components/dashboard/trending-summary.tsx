@@ -42,15 +42,15 @@ export function TrendingSummary() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {summaryStats.map((stat) => (
-        <Card key={stat.label} className="border-border/50">
-          <CardContent className="p-4">
+        <Card key={stat.label} className="border-border shadow-sm hover:shadow-md transition-shadow duration-200">
+          <CardContent className="p-5">
             <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <div className="space-y-1.5">
+                <p className="text-xs font-medium text-muted-foreground tracking-wide">
                   {stat.label}
                 </p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-semibold text-foreground">
+                  <span className="text-2xl font-semibold text-foreground tracking-tight">
                     {stat.value}
                   </span>
                   <span className={`text-xs font-medium ${
@@ -59,7 +59,7 @@ export function TrendingSummary() {
                     {stat.change}
                   </span>
                 </div>
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-[11px] text-muted-foreground">
                   {stat.description}
                 </p>
               </div>
