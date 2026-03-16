@@ -43,7 +43,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar"
+import { Button } from "@/components/ui/button"
+import { PanelLeftClose, PanelLeft } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -110,6 +113,7 @@ const navItems = [
 export function DashboardSidebar() {
   const pathname = usePathname()
   const [openMenus, setOpenMenus] = useState<string[]>(["Dashboard"])
+  const { toggleSidebar, open } = useSidebar()
 
   const toggleMenu = (title: string) => {
     setOpenMenus(prev =>
@@ -128,15 +132,26 @@ export function DashboardSidebar() {
   return (
     <Sidebar className="border-r border-border bg-sidebar">
       <SidebarHeader className="p-4">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary shadow-sm">
-            <span className="text-sm font-bold text-primary-foreground">Y</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-foreground tracking-tight">YAPPI</span>
-            <span className="text-[10px] text-muted-foreground leading-tight">Consumer Intelligence</span>
-          </div>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary shadow-sm">
+              <span className="text-sm font-bold text-primary-foreground">Y</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-foreground tracking-tight">YAPPI</span>
+              <span className="text-[10px] text-muted-foreground leading-tight">Consumer Intelligence</span>
+            </div>
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            onClick={toggleSidebar}
+          >
+            <PanelLeftClose className="h-4 w-4" />
+            <span className="sr-only">サイドバーを閉じる</span>
+          </Button>
+        </div>
       </SidebarHeader>
 
       <SidebarSeparator />
