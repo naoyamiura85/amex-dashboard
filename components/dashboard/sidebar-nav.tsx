@@ -225,41 +225,41 @@ export function DashboardSidebar() {
       <SidebarSeparator />
 
       <SidebarFooter className="p-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex flex-1 items-center gap-3 rounded-lg p-2 text-left hover:bg-sidebar-accent transition-colors">
-                <Avatar className="h-8 w-8">
+              <button className="flex flex-1 min-w-0 items-center gap-2 rounded-lg p-2 text-left hover:bg-sidebar-accent transition-colors">
+                <Avatar className="h-8 w-8 shrink-0">
                   <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=yappi" />
                   <AvatarFallback className="bg-primary/10 text-primary text-xs">YP</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">山田 花子</p>
-                  <p className="text-xs text-muted-foreground truncate">yamada@company.co.jp</p>
+                  <p className="text-[11px] text-muted-foreground truncate">yamada@company.co.jp</p>
                 </div>
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
               </button>
             </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              アカウント設定
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Bell className="mr-2 h-4 w-4" />
-              通知設定
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
-              <LogOut className="mr-2 h-4 w-4" />
-              ログアウト
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+            <DropdownMenuContent align="start" side="top" className="w-56">
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                アカウント設定
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Bell className="mr-2 h-4 w-4" />
+                通知設定
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-destructive">
+                <LogOut className="mr-2 h-4 w-4" />
+                ログアウト
+              </DropdownMenuItem>
+            </DropdownMenuContent>
           </DropdownMenu>
           <Button
             variant="ghost"
             size="icon"
-            className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground"
+            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
             asChild
           >
             <Link href="/settings">
