@@ -12,9 +12,13 @@ import {
   ArrowUpRight,
   Flame,
   Sparkles,
-  Clock
+  Clock,
+  Loader2
 } from "lucide-react"
 import { useCategoryMode, categoryModeConfig } from "@/contexts/category-mode-context"
+import { useTrends } from "@/contexts/trends-context"
+import { AddTrendDialog } from "./add-trend-dialog"
+import { ResearchQueue } from "./research-queue"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -33,237 +37,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-// Trends data with expanded categories
-const trendsData = [
-  // Cosmetics
-  {
-    id: "retinol-serum",
-    name: "レチノール美容液",
-    category: "cosmetics",
-    categoryLabel: "化粧品",
-    socialShare: "0.8%",
-    yoyGrowth: "+112%",
-    growthType: "up",
-    status: "Growing",
-    mentions: "210K",
-    description: "エイジングケア成分として急成長中。敏感肌向け低刺激処方が人気。",
-    popularityScore: 85,
-  },
-  {
-    id: "cica-cream",
-    name: "シカクリーム",
-    category: "cosmetics",
-    categoryLabel: "化粧品",
-    socialShare: "1.2%",
-    yoyGrowth: "+89%",
-    growthType: "up",
-    status: "Growing",
-    mentions: "320K",
-    description: "韓国発の肌鎮静成分。敏感肌・ニキビケアに特化。",
-    popularityScore: 92,
-  },
-  {
-    id: "ceramide-moisturizer",
-    name: "セラミド保湿",
-    category: "cosmetics",
-    categoryLabel: "化粧品",
-    socialShare: "0.9%",
-    yoyGrowth: "+34%",
-    growthType: "up",
-    status: "Stable",
-    mentions: "185K",
-    description: "バリア機能強化成分。乾燥肌対策として定着。",
-    popularityScore: 79,
-  },
-  // Food
-  {
-    id: "protein-bar",
-    name: "プロテインバー",
-    category: "food",
-    categoryLabel: "食品",
-    socialShare: "2.1%",
-    yoyGrowth: "+67%",
-    growthType: "up",
-    status: "Growing",
-    mentions: "450K",
-    description: "手軽な高タンパク補給。フレーバー多様化が進む。",
-    popularityScore: 88,
-  },
-  {
-    id: "fermented-food",
-    name: "発酵食品",
-    category: "food",
-    categoryLabel: "食品",
-    socialShare: "1.8%",
-    yoyGrowth: "-5%",
-    growthType: "down",
-    status: "Declining",
-    mentions: "340K",
-    description: "腸活ブームは一服。定番化フェーズへ移行。",
-    popularityScore: 65,
-  },
-  {
-    id: "complete-nutrition-food",
-    name: "完全栄養食",
-    category: "food",
-    categoryLabel: "食品",
-    socialShare: "1.3%",
-    yoyGrowth: "+95%",
-    growthType: "up",
-    status: "Growing",
-    mentions: "180K",
-    description: "1食で必要な栄養素を摂取。忙しい現代人に人気。",
-    popularityScore: 82,
-  },
-  {
-    id: "plant-based-meat",
-    name: "プラントベースミート",
-    category: "food",
-    categoryLabel: "食品",
-    socialShare: "0.9%",
-    yoyGrowth: "+42%",
-    growthType: "up",
-    status: "Stable",
-    mentions: "150K",
-    description: "環境配慮型の代替肉。食感・味の改良が進む。",
-    popularityScore: 71,
-  },
-  // Beverage
-  {
-    id: "oat-milk",
-    name: "オーツミルク",
-    category: "beverage",
-    categoryLabel: "飲料",
-    socialShare: "1.5%",
-    yoyGrowth: "+45%",
-    growthType: "up",
-    status: "Stable",
-    mentions: "280K",
-    description: "植物性ミルクの新定番。カフェでの採用拡大。",
-    popularityScore: 76,
-  },
-  {
-    id: "kombucha",
-    name: "コンブチャ",
-    category: "beverage",
-    categoryLabel: "飲料",
-    socialShare: "0.7%",
-    yoyGrowth: "+58%",
-    growthType: "up",
-    status: "Growing",
-    mentions: "120K",
-    description: "発酵茶飲料。腸活・美容目的で20-30代女性に人気。",
-    popularityScore: 74,
-  },
-  {
-    id: "functional-water",
-    name: "機能性ウォーター",
-    category: "beverage",
-    categoryLabel: "飲料",
-    socialShare: "1.1%",
-    yoyGrowth: "+32%",
-    growthType: "up",
-    status: "Stable",
-    mentions: "200K",
-    description: "ビタミン・ミネラル配合水。スポーツ・美容シーンで需要増。",
-    popularityScore: 68,
-  },
-  // Supplement
-  {
-    id: "cbd-supplement",
-    name: "CBDサプリ",
-    category: "supplement",
-    categoryLabel: "サプリメント",
-    socialShare: "0.4%",
-    yoyGrowth: "+156%",
-    growthType: "up",
-    status: "Emerging",
-    mentions: "95K",
-    description: "リラックス・睡眠改善目的で注目。規制緩和の動きも。",
-    popularityScore: 72,
-  },
-  {
-    id: "magnesium-supplement",
-    name: "マグネシウムサプリ",
-    category: "supplement",
-    categoryLabel: "サプリメント",
-    socialShare: "0.6%",
-    yoyGrowth: "+78%",
-    growthType: "up",
-    status: "Growing",
-    mentions: "120K",
-    description: "睡眠・ストレス対策で注目。グリシネート形態が人気。",
-    popularityScore: 81,
-  },
-  {
-    id: "nmn-supplement",
-    name: "NMNサプリ",
-    category: "supplement",
-    categoryLabel: "サプリメント",
-    socialShare: "0.5%",
-    yoyGrowth: "+210%",
-    growthType: "up",
-    status: "Emerging",
-    mentions: "85K",
-    description: "アンチエイジング成分。NAD+前駆体として注目。",
-    popularityScore: 78,
-  },
-  // Toiletry
-  {
-    id: "solid-shampoo",
-    name: "固形シャンプー",
-    category: "toiletry",
-    categoryLabel: "トイレタリー",
-    socialShare: "0.4%",
-    yoyGrowth: "+125%",
-    growthType: "up",
-    status: "Emerging",
-    mentions: "75K",
-    description: "脱プラスチック。旅行・エコ志向層に支持拡大。",
-    popularityScore: 69,
-  },
-  {
-    id: "enzyme-toothpaste",
-    name: "酵素歯磨き",
-    category: "toiletry",
-    categoryLabel: "トイレタリー",
-    socialShare: "0.6%",
-    yoyGrowth: "+48%",
-    growthType: "up",
-    status: "Growing",
-    mentions: "110K",
-    description: "口腔ケア意識の高まり。ホワイトニング効果も訴求。",
-    popularityScore: 73,
-  },
-  // Wellness
-  {
-    id: "sleep-tech",
-    name: "スリープテック",
-    category: "wellness",
-    categoryLabel: "ウェルネス",
-    socialShare: "0.8%",
-    yoyGrowth: "+88%",
-    growthType: "up",
-    status: "Growing",
-    mentions: "140K",
-    description: "睡眠の質向上デバイス・アプリ。睡眠負債解消ニーズ。",
-    popularityScore: 84,
-  },
-  {
-    id: "mindfulness-app",
-    name: "マインドフルネスアプリ",
-    category: "wellness",
-    categoryLabel: "ウェルネス",
-    socialShare: "0.7%",
-    yoyGrowth: "+52%",
-    growthType: "up",
-    status: "Stable",
-    mentions: "130K",
-    description: "瞑想・ストレス管理。企業の福利厚生導入も増加。",
-    popularityScore: 77,
-  },
-]
 
 // Category mapping for mode filter
 const categoryModeMapping: Record<string, string[]> = {
@@ -299,10 +72,11 @@ export function TrendsListContent() {
   const [sortBy, setSortBy] = useState("growth")
   const { mode, modeLabel } = useCategoryMode()
   const modeConfig = categoryModeConfig[mode]
+  const { trends } = useTrends()
 
   // First filter by category mode, then by additional filters
   const filteredTrends = useMemo(() => {
-    return trendsData
+    return trends
       .filter(trend => {
         // Apply category mode filter first
         const modeCategories = categoryModeMapping[mode]
@@ -319,34 +93,41 @@ export function TrendsListContent() {
       })
       .sort((a, b) => {
         if (sortBy === "growth") {
-          return parseFloat(b.yoyGrowth) - parseFloat(a.yoyGrowth)
+          const aGrowth = parseFloat(a.yoyGrowth.replace(/[^-\d.]/g, '')) || 0
+          const bGrowth = parseFloat(b.yoyGrowth.replace(/[^-\d.]/g, '')) || 0
+          return bGrowth - aGrowth
         } else if (sortBy === "mentions") {
-          return parseInt(b.mentions.replace("K", "000")) - parseInt(a.mentions.replace("K", "000"))
+          const aMentions = parseInt(a.mentions.replace(/[^\d]/g, '')) || 0
+          const bMentions = parseInt(b.mentions.replace(/[^\d]/g, '')) || 0
+          return bMentions - aMentions
         } else if (sortBy === "popularity") {
           return b.popularityScore - a.popularityScore
         }
         return 0
       })
-  }, [mode, searchQuery, selectedCategories, sortBy])
+  }, [trends, mode, searchQuery, selectedCategories, sortBy])
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-2xl font-bold text-foreground">Top Trends</h1>
-            {mode !== "all" && (
-              <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${modeConfig.bgColor} ${modeConfig.color}`}>
-                {modeLabel}モード
-              </span>
-            )}
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <h1 className="text-2xl font-bold text-foreground">Top Trends</h1>
+              {mode !== "all" && (
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${modeConfig.bgColor} ${modeConfig.color}`}>
+                  {modeLabel}モード
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {mode === "all" 
+                ? "消費財カテゴリのトレンドを発見・分析" 
+                : `${modeLabel}カテゴリのトレンドを表示中（${filteredTrends.length}件）`}
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {mode === "all" 
-              ? "消費財カテゴリのトレンドを発見・分析" 
-              : `${modeLabel}カテゴリのトレンドを表示中（${filteredTrends.length}件）`}
-          </p>
+          <AddTrendDialog />
         </div>
 
         {/* Filters Row */}
@@ -521,20 +302,37 @@ export function TrendsListContent() {
         </Card>
       </div>
 
+      {/* Research Queue */}
+      <ResearchQueue />
+
       {/* Trends Grid/List */}
       {viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredTrends.map((trend) => (
-            <Link key={trend.id} href="/dashboard/spotlight">
-              <Card className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group h-full">
+            <Link key={trend.id} href={`/dashboard/trends/${trend.id}`}>
+              <Card className={`shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group h-full ${
+                trend.researchStatus === "researching" ? "border-primary/50 animate-pulse" : ""
+              } ${trend.researchStatus === "queued" ? "opacity-70" : ""}`}>
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
                     <Badge variant="secondary" className={categoryColors[trend.category]}>
                       {trend.categoryLabel}
                     </Badge>
-                    <Badge variant="secondary" className={statusColors[trend.status]}>
-                      {trend.status}
-                    </Badge>
+                    {trend.researchStatus === "researching" ? (
+                      <Badge variant="secondary" className="bg-primary/10 text-primary gap-1">
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        分析中
+                      </Badge>
+                    ) : trend.researchStatus === "queued" ? (
+                      <Badge variant="secondary" className="bg-amber-100 text-amber-700 gap-1">
+                        <Clock className="h-3 w-3" />
+                        待機中
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className={statusColors[trend.status]}>
+                        {trend.status}
+                      </Badge>
+                    )}
                   </div>
                   <CardTitle className="text-base font-semibold mt-2 group-hover:text-primary transition-colors flex items-center gap-1">
                     {trend.name}
@@ -574,16 +372,30 @@ export function TrendsListContent() {
           <CardContent className="p-0">
             <div className="divide-y divide-border">
               {filteredTrends.map((trend) => (
-                <Link key={trend.id} href="/dashboard/spotlight">
-                  <div className="flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors cursor-pointer group">
+                <Link key={trend.id} href={`/dashboard/trends/${trend.id}`}>
+                  <div className={`flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors cursor-pointer group ${
+                    trend.researchStatus === "researching" ? "bg-primary/5" : ""
+                  } ${trend.researchStatus === "queued" ? "opacity-70" : ""}`}>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <Badge variant="secondary" className={categoryColors[trend.category]}>
                           {trend.categoryLabel}
                         </Badge>
-                        <Badge variant="secondary" className={statusColors[trend.status]}>
-                          {trend.status}
-                        </Badge>
+                        {trend.researchStatus === "researching" ? (
+                          <Badge variant="secondary" className="bg-primary/10 text-primary gap-1">
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            分析中
+                          </Badge>
+                        ) : trend.researchStatus === "queued" ? (
+                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 gap-1">
+                            <Clock className="h-3 w-3" />
+                            待機中
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className={statusColors[trend.status]}>
+                            {trend.status}
+                          </Badge>
+                        )}
                       </div>
                       <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
                         {trend.name}
