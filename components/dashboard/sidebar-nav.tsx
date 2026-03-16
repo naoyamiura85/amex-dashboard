@@ -65,9 +65,9 @@ const navItems = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
-    href: "/",
+    href: "/dashboard/trends",
     subItems: [
-      { title: "Top Trends", icon: TrendingUp, href: "/" },
+      { title: "Top Trends", icon: TrendingUp, href: "/dashboard/trends" },
       { title: "Trend Spotlight", icon: Eye, href: "/dashboard/spotlight" },
       { title: "Category Dashboard", icon: PieChart, href: "/dashboard/category" },
     ],
