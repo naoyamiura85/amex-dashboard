@@ -132,17 +132,17 @@ function CategoryModeSelector() {
 
 const navItems = [
   {
-    title: "Dashboard",
+    title: "ダッシュボード",
     icon: LayoutDashboard,
     href: "/dashboard/trends",
     subItems: [
-      { title: "Top Trends", icon: TrendingUp, href: "/dashboard/trends" },
-      { title: "Trend Spotlight", icon: Eye, href: "/dashboard/spotlight" },
-      { title: "Category Dashboard", icon: PieChart, href: "/dashboard/category" },
+      { title: "トップトレンド", icon: TrendingUp, href: "/dashboard/trends" },
+      { title: "トレンド詳細", icon: Eye, href: "/dashboard/spotlight" },
+      { title: "カテゴリ分析", icon: PieChart, href: "/dashboard/category" },
     ],
   },
   {
-    title: "Explore",
+    title: "探索",
     icon: Search,
     href: "/explore",
     subItems: [
@@ -155,7 +155,7 @@ const navItems = [
     ],
   },
   {
-    title: "Channels",
+    title: "チャネル",
     icon: Store,
     href: "/channels",
     subItems: [
@@ -168,12 +168,12 @@ const navItems = [
     ],
   },
   {
-    title: "Solutions",
+    title: "ソリューション",
     icon: Zap,
     href: "/solutions",
   },
   {
-    title: "Drive",
+    title: "ドライブ",
     icon: FolderOpen,
     href: "/drive",
   },
@@ -181,7 +181,7 @@ const navItems = [
 
 export function DashboardSidebar() {
   const pathname = usePathname()
-  const [openMenus, setOpenMenus] = useState<string[]>(["Dashboard"])
+  const [openMenus, setOpenMenus] = useState<string[]>(["ダッシュボード"])
   const { toggleSidebar, open } = useSidebar()
 
   const toggleMenu = (title: string) => {
