@@ -95,6 +95,19 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           </div>
         </div>
 
+        {/* Product Image Card */}
+        {trend.imageUrl && (
+          <Card>
+            <CardContent className="p-0">
+              <img 
+                src={trend.imageUrl} 
+                alt={trend.name}
+                className="w-full h-64 object-cover rounded-lg"
+              />
+            </CardContent>
+          </Card>
+        )}
+
         {/* Research Progress Card */}
         <Card className="border-primary/20 bg-primary/5">
           <CardContent className="p-8">
@@ -216,6 +229,19 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           </Button>
         </div>
       </div>
+
+      {/* Product Image */}
+      {trend.imageUrl && (
+        <Card>
+          <CardContent className="p-0">
+            <img 
+              src={trend.imageUrl} 
+              alt={trend.name}
+              className="w-full h-64 object-cover rounded-lg"
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -17,6 +17,7 @@ export interface Trend {
   mentions: string
   description: string
   popularityScore: number
+  imageUrl?: string
   researchStatus?: ResearchStatus
   researchProgress?: number
   createdAt?: Date
@@ -55,6 +56,7 @@ const initialTrends: Trend[] = [
     mentions: "210K",
     description: "エイジングケア成分として急成長中。敏感肌向け低刺激処方が人気。",
     popularityScore: 85,
+    imageUrl: "/images/retinol-serum.jpg",
     researchStatus: "completed",
     researchData: {
       summary: "レチノール美容液は2024年に急成長したスキンケアトレンドです。特に20-40代女性の間でエイジングケア意識の高まりとともに需要が拡大しています。",
@@ -98,6 +100,7 @@ const initialTrends: Trend[] = [
     mentions: "320K",
     description: "韓国発の肌鎮静成分。敏感肌・ニキビケアに特化。",
     popularityScore: 92,
+    imageUrl: "/images/cica-cream.jpg",
     researchStatus: "completed",
   },
   {
@@ -112,6 +115,7 @@ const initialTrends: Trend[] = [
     mentions: "185K",
     description: "バリア機能強化成分。乾燥肌対策として定着。",
     popularityScore: 79,
+    imageUrl: "/images/ceramide-moisturizer.jpg",
     researchStatus: "completed",
   },
   // Food
@@ -127,6 +131,7 @@ const initialTrends: Trend[] = [
     mentions: "450K",
     description: "手軽な高タンパク補給。フレーバー多様化が進む。",
     popularityScore: 88,
+    imageUrl: "/images/protein-bar.jpg",
     researchStatus: "completed",
   },
   {
@@ -141,6 +146,7 @@ const initialTrends: Trend[] = [
     mentions: "340K",
     description: "腸活ブームは一服。定番化フェーズへ移行。",
     popularityScore: 65,
+    imageUrl: "/images/fermented-food.jpg",
     researchStatus: "completed",
   },
   {
@@ -155,6 +161,7 @@ const initialTrends: Trend[] = [
     mentions: "180K",
     description: "1食で必要な栄養素を摂取。忙しい現代人に人気。",
     popularityScore: 82,
+    imageUrl: "/images/complete-nutrition-food.jpg",
     researchStatus: "completed",
   },
   {
@@ -169,6 +176,7 @@ const initialTrends: Trend[] = [
     mentions: "150K",
     description: "環境配慮型の代替肉。食感・味の改良が進む。",
     popularityScore: 71,
+    imageUrl: "/images/plant-based-meat.jpg",
     researchStatus: "completed",
   },
   // Beverage
@@ -184,6 +192,7 @@ const initialTrends: Trend[] = [
     mentions: "280K",
     description: "植物性ミルクの新定番。カフェでの採用拡大。",
     popularityScore: 76,
+    imageUrl: "/images/oat-milk.jpg",
     researchStatus: "completed",
   },
   {
@@ -198,6 +207,7 @@ const initialTrends: Trend[] = [
     mentions: "120K",
     description: "発酵茶飲料。腸活・美容目的で20-30代女性に人気。",
     popularityScore: 74,
+    imageUrl: "/images/kombucha.jpg",
     researchStatus: "completed",
   },
   {
@@ -212,6 +222,7 @@ const initialTrends: Trend[] = [
     mentions: "200K",
     description: "ビタミン・ミネラル配合水。スポーツ・美容シーンで需要増。",
     popularityScore: 68,
+    imageUrl: "/images/functional-water.jpg",
     researchStatus: "completed",
   },
   // Supplement
@@ -227,6 +238,7 @@ const initialTrends: Trend[] = [
     mentions: "95K",
     description: "リラックス・睡眠改善目的で注目。規制緩和の動きも。",
     popularityScore: 72,
+    imageUrl: "/images/cbd-supplement.jpg",
     researchStatus: "completed",
   },
   {
@@ -241,6 +253,7 @@ const initialTrends: Trend[] = [
     mentions: "120K",
     description: "睡眠・ストレス対策で注目。グリシネート形態が人気。",
     popularityScore: 81,
+    imageUrl: "/images/magnesium-supplement.jpg",
     researchStatus: "completed",
   },
   {
@@ -255,6 +268,7 @@ const initialTrends: Trend[] = [
     mentions: "85K",
     description: "アンチエイジング成分。NAD+前駆体として注目。",
     popularityScore: 78,
+    imageUrl: "/images/nmn-supplement.jpg",
     researchStatus: "completed",
   },
   // Toiletry
@@ -270,6 +284,7 @@ const initialTrends: Trend[] = [
     mentions: "75K",
     description: "脱プラスチック。旅行・エコ志向層に支持拡大。",
     popularityScore: 69,
+    imageUrl: "/images/solid-shampoo.jpg",
     researchStatus: "completed",
   },
   {
@@ -284,6 +299,7 @@ const initialTrends: Trend[] = [
     mentions: "110K",
     description: "口腔ケア意識の高まり。ホワイトニング効果も訴求。",
     popularityScore: 73,
+    imageUrl: "/images/enzyme-toothpaste.jpg",
     researchStatus: "completed",
   },
   // Wellness
@@ -299,6 +315,7 @@ const initialTrends: Trend[] = [
     mentions: "140K",
     description: "睡眠の質向上デバイス・アプリ。睡眠負債解消ニーズ。",
     popularityScore: 84,
+    imageUrl: "/images/sleep-tech.jpg",
     researchStatus: "completed",
   },
   {
@@ -313,6 +330,7 @@ const initialTrends: Trend[] = [
     mentions: "130K",
     description: "瞑想・ストレス管理。企業の福利厚生導入も増加。",
     popularityScore: 77,
+    imageUrl: "/images/mindfulness-app.jpg",
     researchStatus: "completed",
   },
 ]

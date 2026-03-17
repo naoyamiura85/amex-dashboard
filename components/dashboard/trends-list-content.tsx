@@ -310,9 +310,19 @@ export function TrendsListContent() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredTrends.map((trend) => (
             <Link key={trend.id} href={`/dashboard/trends/${trend.id}`}>
-              <Card className={`shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group h-full ${
+              <Card className={`shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group h-full overflow-hidden ${
                 trend.researchStatus === "researching" ? "border-primary/50 animate-pulse" : ""
               } ${trend.researchStatus === "queued" ? "opacity-70" : ""}`}>
+                {/* Image */}
+                {trend.imageUrl && (
+                  <div className="h-32 bg-muted overflow-hidden relative">
+                    <img 
+                      src={trend.imageUrl} 
+                      alt={trend.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                    />
+                  </div>
+                )}
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
                     <Badge variant="secondary" className={categoryColors[trend.category]}>
@@ -376,6 +386,16 @@ export function TrendsListContent() {
                   <div className={`flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors cursor-pointer group ${
                     trend.researchStatus === "researching" ? "bg-primary/5" : ""
                   } ${trend.researchStatus === "queued" ? "opacity-70" : ""}`}>
+                    {/* Image Thumbnail */}
+                    {trend.imageUrl && (
+                      <div className="h-16 w-16 rounded-lg bg-muted shrink-0 overflow-hidden">
+                        <img 
+                          src={trend.imageUrl} 
+                          alt={trend.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                        />
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <Badge variant="secondary" className={categoryColors[trend.category]}>
