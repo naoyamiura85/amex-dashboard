@@ -95,73 +95,76 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           </div>
         </div>
 
-        {/* Product Image Card */}
-        {trend.imageUrl && (
-          <Card>
-            <CardContent className="p-0">
-              <img 
-                src={trend.imageUrl} 
-                alt={trend.name}
-                className="w-full h-64 object-cover rounded-lg"
-              />
+        {/* Image and Research Progress Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Product Image Card */}
+          {trend.imageUrl && (
+            <Card>
+              <CardContent className="p-0">
+                <img 
+                  src={trend.imageUrl} 
+                  alt={trend.name}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Research Progress Card */}
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="p-8">
+              <div className="flex flex-col items-center text-center">
+                {trend.researchStatus === "queued" ? (
+                  <>
+                    <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                      <Clock className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2">リサーチ待機中</h3>
+                    <p className="text-muted-foreground mb-4">
+                      キューに追加されました。まもなくディープリサーチを開始します。
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                      <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2">AIディープリサーチ実行中</h3>
+                    <p className="text-muted-foreground mb-4">
+                      SNSデータ、EC販売データ、検索トレンドを分析しています...
+                    </p>
+                    <div className="w-full max-w-md space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>分析進捗</span>
+                        <span className="font-medium">{trend.researchProgress || 0}%</span>
+                      </div>
+                      <Progress value={trend.researchProgress || 0} className="h-2" />
+                    </div>
+                    <div className="mt-4 text-sm text-muted-foreground">
+                      <ul className="space-y-1">
+                        <li className={trend.researchProgress! >= 20 ? "text-foreground" : ""}>
+                          {trend.researchProgress! >= 20 ? "✓" : "○"} SNS言及データ収集
+                        </li>
+                        <li className={trend.researchProgress! >= 40 ? "text-foreground" : ""}>
+                          {trend.researchProgress! >= 40 ? "✓" : "○"} 関連キーワード抽出
+                        </li>
+                        <li className={trend.researchProgress! >= 60 ? "text-foreground" : ""}>
+                          {trend.researchProgress! >= 60 ? "✓" : "○"} 成分・原材料分析
+                        </li>
+                        <li className={trend.researchProgress! >= 80 ? "text-foreground" : ""}>
+                          {trend.researchProgress! >= 80 ? "✓" : "○"} デモグラフィック分析
+                        </li>
+                        <li className={trend.researchProgress! >= 100 ? "text-foreground" : ""}>
+                          {trend.researchProgress! >= 100 ? "✓" : "○"} レポート生成
+                        </li>
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </div>
             </CardContent>
           </Card>
-        )}
-
-        {/* Research Progress Card */}
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="p-8">
-            <div className="flex flex-col items-center text-center">
-              {trend.researchStatus === "queued" ? (
-                <>
-                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                    <Clock className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">リサーチ待機中</h3>
-                  <p className="text-muted-foreground mb-4">
-                    キューに追加されました。まもなくディープリサーチを開始します。
-                  </p>
-                </>
-              ) : (
-                <>
-                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                    <Loader2 className="h-8 w-8 text-primary animate-spin" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">AIディープリサーチ実行中</h3>
-                  <p className="text-muted-foreground mb-4">
-                    SNSデータ、EC販売データ、検索トレンドを分析しています...
-                  </p>
-                  <div className="w-full max-w-md space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>分析進捗</span>
-                      <span className="font-medium">{trend.researchProgress || 0}%</span>
-                    </div>
-                    <Progress value={trend.researchProgress || 0} className="h-2" />
-                  </div>
-                  <div className="mt-4 text-sm text-muted-foreground">
-                    <ul className="space-y-1">
-                      <li className={trend.researchProgress! >= 20 ? "text-foreground" : ""}>
-                        {trend.researchProgress! >= 20 ? "✓" : "○"} SNS言及データ収集
-                      </li>
-                      <li className={trend.researchProgress! >= 40 ? "text-foreground" : ""}>
-                        {trend.researchProgress! >= 40 ? "✓" : "○"} 関連キーワード抽出
-                      </li>
-                      <li className={trend.researchProgress! >= 60 ? "text-foreground" : ""}>
-                        {trend.researchProgress! >= 60 ? "✓" : "○"} 成分・原材料分析
-                      </li>
-                      <li className={trend.researchProgress! >= 80 ? "text-foreground" : ""}>
-                        {trend.researchProgress! >= 80 ? "✓" : "○"} デモグラフィック分析
-                      </li>
-                      <li className={trend.researchProgress! >= 100 ? "text-foreground" : ""}>
-                        {trend.researchProgress! >= 100 ? "✓" : "○"} レポート生成
-                      </li>
-                    </ul>
-                  </div>
-                </>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        </div>
       </div>
     )
   }
@@ -230,23 +233,23 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
         </div>
       </div>
 
-      {/* Product Image */}
-      {trend.imageUrl && (
-        <Card>
-          <CardContent className="p-0">
-            <img 
-              src={trend.imageUrl} 
-              alt={trend.name}
-              className="w-full h-64 object-cover rounded-lg"
-            />
-          </CardContent>
-        </Card>
-      )}
+      {/* Image and Content Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left: Product Image */}
+        {trend.imageUrl && (
+          <Card>
+            <CardContent className="p-0">
+              <img 
+                src={trend.imageUrl} 
+                alt={trend.name}
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </CardContent>
+          </Card>
+        )}
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Trend Performance */}
-        <div className="lg:col-span-1">
+        {/* Right: Main Content */}
+        <div className="flex flex-col gap-6">
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-medium">Trend Performance</CardTitle>
