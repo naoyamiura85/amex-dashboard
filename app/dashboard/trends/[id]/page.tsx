@@ -1,11 +1,29 @@
 "use client"
 
-import { use } from "react"
+import { use, Suspense, lazy } from "react"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { DashboardSidebar } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
-import { YappiChat } from "@/components/dashboard/yappi-chat"
-import { TrendDetailContent } from "@/components/dashboard/trend-detail-content"
+import { Skeleton } from "@/components/ui/skeleton"
+
+const TrendDetailContent = lazy(() => import("@/components/dashboard/trend-detail-content").then(m => ({ default: m.TrendDetailContent })))
+const YappiChat = lazy(() => import("@/components/dashboard/yappi-chat").then(m => ({ default: m.YappiChat })))
+
+function TrendDetailSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Skeleton className="h-8 w-64" />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Skeleton className="h-64 rounded-xl" />
+        <Skeleton className="h-64 rounded-xl" />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Skeleton className="h-48 rounded-xl" />
+        <Skeleton className="h-48 rounded-xl lg:col-span-2" />
+      </div>
+    </div>
+  )
+}
 
 interface TrendDetailPageProps {
   params: Promise<{ id: string }>
@@ -24,10 +42,14 @@ export default function TrendDetailPage({ params }: TrendDetailPageProps) {
             breadcrumb={["ダッシュボード", "トップトレンド"]} 
           />
           <main className="flex-1 overflow-auto p-6">
-            <TrendDetailContent trendId={id} />
+            <Suspense fallback={<TrendDetailSkeleton />}>
+              <TrendDetailContent trendId={id} />
+            </Suspense>
           </main>
         </div>
-        <YappiChat />
+        <Suspense fallback={null}>
+          <YappiChat />
+        </Suspense>
       </div>
     </SidebarProvider>
   )
