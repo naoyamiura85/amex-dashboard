@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge"
 
 interface DashboardHeaderProps {
   title: string
-  breadcrumb?: string[]
+  breadcrumb?: (string | { label: string; href: string })[]
 }
 
 export function DashboardHeader({ title, breadcrumb }: DashboardHeaderProps) {
@@ -24,12 +24,15 @@ export function DashboardHeader({ title, breadcrumb }: DashboardHeaderProps) {
         <div>
           {breadcrumb && breadcrumb.length > 0 && (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-0.5">
-              {breadcrumb.map((item, index) => (
-                <span key={item} className="flex items-center gap-1.5">
-                  {index > 0 && <span>/</span>}
-                  <span>{item}</span>
-                </span>
-              ))}
+              {breadcrumb.map((item, index) => {
+                const label = typeof item === 'string' ? item : item.label
+                return (
+                  <span key={`breadcrumb-${index}`} className="flex items-center gap-1.5">
+                    {index > 0 && <span>/</span>}
+                    <span>{label}</span>
+                  </span>
+                )
+              })}
             </div>
           )}
           <h1 className="text-xl font-semibold text-foreground">{title}</h1>

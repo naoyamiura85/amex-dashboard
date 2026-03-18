@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { useChat } from "@ai-sdk/react"
 import { 
   MessageCircle, 
   X, 
@@ -18,14 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-
-interface Message {
-  id: string
-  role: "user" | "assistant"
-  content: string
-  timestamp: Date
-  actions?: { label: string; icon: React.ReactNode }[]
-}
+import { DefaultChatTransport } from "ai"
 
 const suggestedQuestions = [
   "Z世代で伸びている美容成分トップ10は?",
@@ -37,18 +31,21 @@ const suggestedQuestions = [
 export function YappiChat() {
   const [isOpen, setIsOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content: "こんにちは! YappiGPTです。消費者インサイトやトレンド分析について、何でもお聞きください。",
-      timestamp: new Date(),
-    },
-  ])
-  const [inputValue, setInputValue] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/yappi-chat',
+    }),
+    initialMessages: [
+      {
+        id: "init",
+        role: "assistant",
+        content: "こんにちは! YappiGPTです。消費者インサイトやトレンド分析について、何でもお聞きください。",
+      }
+    ]
+  })
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -62,47 +59,30 @@ export function YappiChat() {
     }
   }, [isOpen])
 
-  const handleSend = async () => {
-    if (!inputValue.trim()) return
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      content: inputValue,
-      timestamp: new Date(),
-    }
-
-    setMessages((prev) => [...prev, userMessage])
-    setInputValue("")
-    setIsTyping(true)
-
-    // Simulated response
-    setTimeout(() => {
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: `「${inputValue}」について分析しています。\n\n観察データによると、このトレンドは現在 **Growing** フェーズにあり、前年比 +45% の成長を示しています。\n\n主なDemand Driverは:\n• Functional: 健康意識の高まり\n• Emotional: 自己ケアへの投資意識\n• Social: SNSでの共有文化`,
-        timestamp: new Date(),
-        actions: [
-          { label: "詳細レポート", icon: <FileText className="h-3 w-3" /> },
-          { label: "グラフで表示", icon: <BarChart3 className="h-3 w-3" /> },
-        ],
-      }
-      setMessages((prev) => [...prev, assistantMessage])
-      setIsTyping(false)
-    }, 1500)
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!input.trim()) return
+    handleSubmit(e)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      handleSend()
+      const form = e.currentTarget.form
+      if (form) {
+        handleSend({ preventDefault: () => {} } as React.FormEvent)
+      }
     }
   }
 
   const handleSuggestedQuestion = (question: string) => {
-    setInputValue(question)
-    setTimeout(() => handleSend(), 100)
+    handleInputChange({ target: { value: question } } as any)
+    setTimeout(() => {
+      const form = inputRef.current?.form
+      if (form) {
+        handleSend({ preventDefault: () => {} } as React.FormEvent)
+      }
+    }, 100)
   }
 
   if (!isOpen) {
@@ -185,25 +165,10 @@ export function YappiChat() {
                 }`}
               >
                 <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
-                {message.actions && (
-                  <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-border/30">
-                    {message.actions.map((action, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        className="h-7 text-xs gap-1.5 bg-background/50"
-                      >
-                        {action.icon}
-                        {action.label}
-                      </Button>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
           ))}
-          {isTyping && (
+          {isLoading && (
             <div className="flex gap-3">
               <Avatar className="h-8 w-8 shrink-0">
                 <AvatarFallback className="bg-primary/10 text-primary">
@@ -242,19 +207,20 @@ export function YappiChat() {
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-4 border-t border-border bg-muted/30">
+      <form onSubmit={handleSend} className="p-4 border-t border-border bg-muted/30">
         <div className="flex items-center gap-2">
           <Input
             ref={inputRef}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            value={input}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder="質問を入力してください..."
-            className="flex-1 h-10 bg-background border-border/50 focus-visible:ring-primary/30"
+            disabled={isLoading}
+            className="flex-1 h-10 bg-background border-border/50 focus-visible:ring-primary/30 disabled:opacity-50"
           />
           <Button
-            onClick={handleSend}
-            disabled={!inputValue.trim() || isTyping}
+            type="submit"
+            disabled={!input.trim() || isLoading}
             size="icon"
             className="h-10 w-10 shrink-0"
           >
@@ -264,7 +230,7 @@ export function YappiChat() {
         <p className="text-[10px] text-muted-foreground mt-2 text-center">
           Cmd+K で全画面モードに切り替え
         </p>
-      </div>
+      </form>
     </div>
   )
 }

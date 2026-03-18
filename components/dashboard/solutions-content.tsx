@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   Clock
 } from "lucide-react"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -21,6 +22,7 @@ const solutions = [
     name: "AI Survey Agency",
     description: "観察データからN=100万規模のサーベイ結果をAIが数分で生成。従来の調査の2-3ヶ月を大幅短縮。",
     icon: ClipboardList,
+    href: "/solutions/ai-survey",
     features: [
       "N=100万+の観察データ分析",
       "数分〜数時間で結果取得",
@@ -36,6 +38,7 @@ const solutions = [
     name: "Content Agency",
     description: "消費者インサイトに基づくコンテンツを自動生成。SNS投稿、レシピ、商品コンセプトシートまで対応。",
     icon: Pencil,
+    href: "/solutions/content-agency",
     features: [
       "SNS投稿案の自動生成",
       "レシピ・使い方コンテンツ",
@@ -51,6 +54,7 @@ const solutions = [
     name: "Sales Story Creator",
     description: "小売バイヤー向け提案資料を自動生成。データに裏付けされた説得力のあるストーリーをPPT形式で出力。",
     icon: Presentation,
+    href: "/solutions/sales-story",
     features: [
       "チャネル別テンプレート",
       "Demand Driver分析統合",
@@ -66,6 +70,7 @@ const solutions = [
     name: "Product Visualizer",
     description: "テキストベースの商品コンセプトからパッケージデザインモックアップ、使用シーン画像をAIが生成。",
     icon: Image,
+    href: "/solutions/product-visualizer",
     features: [
       "パッケージモックアップ生成",
       "使用シーン画像生成",
@@ -81,6 +86,7 @@ const solutions = [
     name: "Regulatory Checker",
     description: "化粧品・サプリの広告表現が薬機法・景表法に準拠しているかAIで自動チェック。代替案も提案。",
     icon: ShieldCheck,
+    href: "/solutions/regulatory-checker",
     features: [
       "薬機法・景表法チェック",
       "NG表現の自動検出",
@@ -129,12 +135,13 @@ export function SolutionsContent() {
           const isDisabled = solution.status === "coming"
           
           return (
-            <Card 
-              key={solution.id} 
-              className={`group transition-all duration-200 ${
-                isDisabled ? "opacity-60" : "hover:shadow-md hover:border-primary/20 cursor-pointer"
-              }`}
-            >
+          <Card 
+            key={solution.id} 
+            className={`group transition-all duration-200 ${
+              isDisabled ? "opacity-60" : "hover:shadow-md hover:border-primary/20 cursor-pointer"
+            }`}
+          >
+            <Link href={isDisabled ? "#" : solution.href} className={isDisabled ? "pointer-events-none" : ""}>
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className={`h-12 w-12 rounded-xl ${solution.color}/10 flex items-center justify-center mb-3`}>
@@ -175,12 +182,18 @@ export function SolutionsContent() {
                   variant={isDisabled ? "outline" : "default"}
                   disabled={isDisabled}
                   size="sm"
+                  asChild={!isDisabled}
                 >
-                  {isDisabled ? "準備中" : "使ってみる"}
-                  <ArrowRight className="h-4 w-4" />
+                  {isDisabled ? <span>準備中</span> : (
+                    <div>
+                      使ってみる
+                      <ArrowRight className="h-4 w-4" />
+                    </div>
+                  )}
                 </Button>
               </CardContent>
-            </Card>
+            </Link>
+          </Card>
           )
         })}
       </div>
