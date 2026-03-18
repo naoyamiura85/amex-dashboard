@@ -27,6 +27,8 @@ import {
   ShoppingBag,
   ShoppingCart,
   Globe,
+  Building2,
+  Star,
 } from "lucide-react"
 
 import {
@@ -152,6 +154,8 @@ const navItems = [
       { title: "消費モーメント", icon: Clock, href: "/explore/moments" },
       { title: "デモグラフィック", icon: Users, href: "/explore/demographics" },
       { title: "地域", icon: MapPin, href: "/explore/regions" },
+      { title: "ブランド比較", icon: Building2, href: "/explore/brands" },
+      { title: "人気度スコア", icon: Star, href: "/explore/popularity" },
     ],
   },
   {
