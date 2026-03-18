@@ -20,11 +20,8 @@ export default function TrendDetailPage({ params }: TrendDetailPageProps) {
         <DashboardSidebar />
         <div className="flex flex-1 flex-col">
           <DashboardHeader 
-            title="Trend Spotlight" 
-            breadcrumb={[
-              { label: "Dashboard", href: "/dashboard/trends" },
-              { label: "Top Trends", href: "/dashboard/trends" },
-            ]} 
+            title="トレンド詳細" 
+            breadcrumb={["ダッシュボード", "トップトレンド"]} 
           />
           <main className="flex-1 overflow-auto p-6">
             <TrendDetailContent trendId={id} />
