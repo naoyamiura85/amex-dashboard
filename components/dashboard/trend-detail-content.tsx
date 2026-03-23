@@ -34,6 +34,7 @@ import {
   Cell,
   PieChart,
   Pie,
+  Legend,
 } from "recharts"
 
 interface TrendDetailContentProps {
@@ -53,6 +54,22 @@ const timeSeriesData = [
 ]
 
 const COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6"]
+
+// 成分×年代相関データ (mock)
+const ingredientUserCorrelationData = [
+  { ingredient: "バクチオール", "10-19歳": 8, "20-29歳": 42, "30-39歳": 28, "40-49歳": 14, "50歳以上": 8 },
+  { ingredient: "レチナール",  "10-19歳": 5, "20-29歳": 30, "30-39歳": 38, "40-49歳": 20, "50歳以上": 7 },
+  { ingredient: "エクトイン",  "10-19歳": 6, "20-29歳": 28, "30-39歳": 32, "40-49歳": 24, "50歳以上": 10 },
+  { ingredient: "CICA",       "10-19歳": 15,"20-29歳": 45, "30-39歳": 22, "40-49歳": 12, "50歳以上": 6 },
+  { ingredient: "グルタチオン","10-19歳": 10,"20-29歳": 35, "30-39歳": 30, "40-49歳": 18, "50歳以上": 7 },
+]
+const AGE_COLORS: Record<string, string> = {
+  "10-19歳": "#a78bfa",
+  "20-29歳": "#6366f1",
+  "30-39歳": "#22c55e",
+  "40-49歳": "#f59e0b",
+  "50歳以上": "#94a3b8",
+}
 
 export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
   const { getTrendById } = useTrends()
@@ -458,6 +475,78 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           </Card>
         </div>
       </div>
+
+      {/* Ingredient x User Correlation */}
+      <Card className="shadow-sm">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base font-medium">成分 × ユーザー相関</CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5">各成分への関心が高い年代の分布</p>
+            </div>
+            <div className="flex items-center gap-3 flex-wrap justify-end">
+              {Object.entries(AGE_COLORS).map(([age, color]) => (
+                <div key={age} className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-sm shrink-0" style={{ backgroundColor: color }} />
+                  <span className="text-xs text-muted-foreground">{age}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[260px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={ingredientUserCorrelationData}
+                layout="vertical"
+                margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
+                barCategoryGap="28%"
+                barGap={2}
+              >
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 10 }}
+                  tickFormatter={(v) => `${v}%`}
+                  domain={[0, 100]}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="ingredient"
+                  tick={{ fontSize: 11 }}
+                  width={88}
+                />
+                <Tooltip
+                  formatter={(value: number, name: string) => [`${value}%`, name]}
+                  contentStyle={{ fontSize: 12 }}
+                />
+                {Object.entries(AGE_COLORS).map(([age, color]) => (
+                  <Bar key={age} dataKey={age} stackId="a" fill={color} radius={age === "50歳以上" ? [0, 4, 4, 0] : [0, 0, 0, 0]} />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Insight chips */}
+          <div className="mt-4 pt-4 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="bg-indigo-50 dark:bg-indigo-950/30 rounded-lg p-3">
+              <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-400 mb-1">最多年代</p>
+              <p className="text-sm font-bold text-foreground">20-29歳</p>
+              <p className="text-xs text-muted-foreground">全成分で最多シェア</p>
+            </div>
+            <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded-lg p-3">
+              <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-1">急成長年代</p>
+              <p className="text-sm font-bold text-foreground">10-19歳</p>
+              <p className="text-xs text-muted-foreground">CICAで前年比+62%</p>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-950/30 rounded-lg p-3">
+              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-1">成分リーチ</p>
+              <p className="text-sm font-bold text-foreground">CICA</p>
+              <p className="text-xs text-muted-foreground">最も幅広い年代に支持</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Bottom Row - Demographics & Regions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
