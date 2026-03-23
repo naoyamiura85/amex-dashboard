@@ -187,7 +187,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
   }
 
   const researchData = trend.researchData || {
-    summary: `${trend.name}は${trend.categoryLabel}カテゴリにおける注目トレンドです。`,
+    summary: `${trend.name}���${trend.categoryLabel}カテゴリにおける注目トレンドです。`,
     popularIngredients: [
       { name: "成分A", share: "15%", growth: "+120%" },
       { name: "成分B", share: "12%", growth: "+95%" },
@@ -217,7 +217,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Back link */}
       <Link 
         href="/dashboard/trends" 
@@ -250,8 +250,8 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
         </div>
       </div>
 
-      {/* Image and Content Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 auto-rows-max lg:auto-rows-fr">
+        {/* Image and Content Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 auto-rows-max lg:auto-rows-fr">
         {/* Left: Product Image */}
         {trend.imageUrl && (
           <Card className="overflow-hidden">
@@ -266,7 +266,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
         )}
 
         {/* Right: Main Content */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {/* Product Overview Card */}
           <Card className="shadow-sm">
             <CardHeader className="pb-3">
@@ -549,7 +549,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
       </Card>
 
       {/* Bottom Row - Demographics & Regions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Demographics */}
         <Card className="shadow-sm">
           <CardHeader className="pb-2">
