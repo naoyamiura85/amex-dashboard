@@ -250,6 +250,60 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
 
         {/* Right: Main Content */}
         <div className="flex flex-col gap-6">
+          {/* Product Overview Card */}
+          <Card className="shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-medium">商品概要</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">カテゴリ</p>
+                  <p className="text-sm font-semibold">{trend.categoryLabel}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">ステータス</p>
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${
+                      trend.status === "established" ? "bg-emerald-600" :
+                      trend.status === "growing" ? "bg-amber-600" :
+                      "bg-sky-600"
+                    }`}></span>
+                    <span className="text-sm font-semibold">
+                      {trend.status === "established" ? "定番化" :
+                       trend.status === "growing" ? "成長中" : "発芽期"}
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">前年比</p>
+                  <p className={`text-sm font-semibold flex items-center gap-1 ${
+                    trend.growthType === "up" ? "text-emerald-600" : "text-rose-600"
+                  }`}>
+                    {trend.growthType === "up" ? (
+                      <TrendingUp className="h-3.5 w-3.5" />
+                    ) : (
+                      <TrendingDown className="h-3.5 w-3.5" />
+                    )}
+                    {trend.yoyGrowth}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">SNS言及数</p>
+                  <p className="text-sm font-semibold">{trend.socialShare}</p>
+                </div>
+              </div>
+              {researchData.summary && (
+                <div className="pt-2 border-t border-border">
+                  <p className="text-xs text-muted-foreground mb-2">トレンド概要</p>
+                  <p className="text-sm text-foreground leading-relaxed">
+                    {researchData.summary}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-medium">Trend Performance</CardTitle>
