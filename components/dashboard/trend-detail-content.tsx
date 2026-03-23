@@ -96,15 +96,15 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
         </div>
 
         {/* Image and Research Progress Side by Side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 auto-rows-max lg:auto-rows-fr">
           {/* Product Image Card */}
           {trend.imageUrl && (
-            <Card>
-              <CardContent className="p-0">
+            <Card className="overflow-hidden">
+              <CardContent className="p-0 h-full">
                 <img 
                   src={trend.imageUrl} 
                   alt={trend.name}
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-full object-cover"
                 />
               </CardContent>
             </Card>
@@ -234,15 +234,15 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
       </div>
 
       {/* Image and Content Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 auto-rows-max lg:auto-rows-fr">
         {/* Left: Product Image */}
         {trend.imageUrl && (
-          <Card>
-            <CardContent className="p-0">
+          <Card className="overflow-hidden">
+            <CardContent className="p-0 h-full">
               <img 
                 src={trend.imageUrl} 
                 alt={trend.name}
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-cover"
               />
             </CardContent>
           </Card>
