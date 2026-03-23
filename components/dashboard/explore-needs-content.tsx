@@ -20,7 +20,10 @@ import {
   Droplets,
   Target,
   ArrowRight,
-  Filter
+  Filter,
+  Eye,
+  Database,
+  MessageSquare
 } from "lucide-react"
 import {
   Select,
@@ -201,17 +204,44 @@ export function ExploreNeedsContent() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-muted/30">
+      {/* Observed Data Banner */}
+      <Card className="bg-gradient-to-r from-violet-500/5 via-violet-500/10 to-violet-500/5 border-violet-500/20">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                <Eye className="h-5 w-5 text-violet-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm text-foreground">消費者ニーズ分析</h3>
+                <p className="text-xs text-muted-foreground">「なぜ買うのか」をSNS・検索・レビューから自動抽出</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1.5">
+                <MessageSquare className="h-3.5 w-3.5 text-violet-600" />
+                <span className="text-muted-foreground">分析対象: <strong className="text-foreground">750億+投稿</strong></span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Database className="h-3.5 w-3.5 text-violet-600" />
+                <span className="text-muted-foreground">需要シグナル: <strong className="text-foreground">自動検出</strong></span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Consumer Needs Explorer</h1>
+          <h1 className="text-2xl font-semibold text-foreground">消費者ニーズ分析</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Discover emerging consumer needs and demand patterns
+            消費者の隠れた需要パターンを発見
           </p>
         </div>
         <Button className="bg-primary hover:bg-primary/90">
-          Create Report
+          レポート作成
         </Button>
       </div>
 

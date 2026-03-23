@@ -7,7 +7,10 @@ import {
   TrendingUp, 
   TrendingDown,
   ArrowUpRight,
-  FlaskConical
+  FlaskConical,
+  Eye,
+  Database,
+  Sparkles
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -163,7 +166,34 @@ export function ExploreIngredientsContent() {
   })
 
   return (
-    <main className="flex-1 p-6 space-y-6">
+    <main className="flex-1 p-6 space-y-6 bg-muted/30">
+      {/* Observed Data Banner */}
+      <Card className="bg-gradient-to-r from-emerald-500/5 via-emerald-500/10 to-emerald-500/5 border-emerald-500/20">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                <Eye className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm text-foreground">成分・原材料トレンド分析</h3>
+                <p className="text-xs text-muted-foreground">SNS・レシピ・EC・検索データから成分の需要シグナルを自動検出</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1.5">
+                <Database className="h-3.5 w-3.5 text-emerald-600" />
+                <span className="text-muted-foreground">データソース: <strong className="text-foreground">12種</strong></span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                <span className="text-muted-foreground">AI分析: <strong className="text-foreground">リアルタイム</strong></span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Search and Filters */}
       <Card>
         <CardContent className="p-4">
