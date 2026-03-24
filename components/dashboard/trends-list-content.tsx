@@ -11,7 +11,6 @@ import {
   List,
   ArrowUpRight,
   Flame,
-  Sparkles,
   Clock,
   Loader2
 } from "lucide-react"
@@ -244,62 +243,6 @@ export function TrendsListContent() {
             </Tabs>
           </div>
         </div>
-      </div>
-
-      {/* Summary Stats - based on filtered data */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Card className="shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Flame className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">トレンド総数</p>
-                <p className="text-xl font-bold">{filteredTrends.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">成長中</p>
-                <p className="text-xl font-bold">{filteredTrends.filter(t => t.status === "Growing").length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">新興</p>
-                <p className="text-xl font-bold">{filteredTrends.filter(t => t.status === "Emerging").length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Clock className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">安定</p>
-                <p className="text-xl font-bold">{filteredTrends.filter(t => t.status === "Stable").length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Research Queue */}
