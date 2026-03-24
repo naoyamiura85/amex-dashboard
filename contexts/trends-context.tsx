@@ -29,6 +29,7 @@ export interface Trend {
     demographics?: { age: string; percentage: number }[]
     regions?: { name: string; percentage: number }[]
   }
+  relatedProducts?: { name: string; image: string }[]
 }
 
 interface TrendsContextType {

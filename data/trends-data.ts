@@ -45,6 +45,12 @@ export const initialTrends: Trend[] = [
         { name: "その他", percentage: 15 },
       ],
     },
+    relatedProducts: [
+      { name: "NMNサプリ", image: "/images/nmn-supplement.jpg" },
+      { name: "CBDサプリ", image: "/images/cbd-supplement.jpg" },
+      { name: "ソリッドセラム", image: "/images/solid-serum.jpg" },
+      { name: "医薬部外品", image: "/images/medicine.jpg" },
+    ],
   },
   {
     id: "cica-cream",

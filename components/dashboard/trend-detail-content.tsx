@@ -585,6 +585,31 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Related Products Grid */}
+      {trend.relatedProducts && trend.relatedProducts.length > 0 && (
+        <div>
+          <h3 className="text-base font-semibold text-foreground mb-3">関連製品</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {trend.relatedProducts.map((product, index) => (
+              <Card key={index} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="p-0">
+                  <div className="aspect-square bg-muted relative overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-2">
+                    <p className="text-xs font-medium truncate">{product.name}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
