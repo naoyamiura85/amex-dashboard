@@ -55,51 +55,51 @@ const timeSeriesData = [
 
 const COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6"]
 
-const TRENDING_INGREDIENT_CLUSTERS = [
+const USER_CLUSTER_RANKING = [
   {
-    name: "バクチオール",
-    growth: "+180%",
-    clusters: [
-      { label: "20-29歳 女性", color: "#6366f1" },
-      { label: "敏感肌ケア層", color: "#22c55e" },
-      { label: "ナチュラル志向", color: "#f59e0b" },
-    ],
+    rank: 1,
+    cluster: "エイジングケア層",
+    color: "#ef4444",
+    score: 92,
+    growth: "+38%",
+    age: "30-49歳",
+    ingredients: ["レチナール", "バクチオール", "グルタチオン"],
   },
   {
-    name: "レチナール",
-    growth: "+145%",
-    clusters: [
-      { label: "30-39歳 女性", color: "#6366f1" },
-      { label: "エイジングケア層", color: "#ef4444" },
-      { label: "美容上級者", color: "#8b5cf6" },
-    ],
+    rank: 2,
+    cluster: "敏感肌ケア層",
+    color: "#22c55e",
+    score: 85,
+    growth: "+31%",
+    age: "20-39歳",
+    ingredients: ["バクチオール", "エクトイン", "CICA"],
   },
   {
-    name: "エクトイン",
-    growth: "+120%",
-    clusters: [
-      { label: "20-39歳", color: "#6366f1" },
-      { label: "乾燥肌ケア層", color: "#0ea5e9" },
-      { label: "インナーケア層", color: "#22c55e" },
-    ],
+    rank: 3,
+    cluster: "韓国コスメ愛好層",
+    color: "#ec4899",
+    score: 78,
+    growth: "+54%",
+    age: "10-29歳",
+    ingredients: ["CICA", "ナイアシンアミド", "グルタチオン"],
   },
   {
-    name: "CICA",
-    growth: "+98%",
-    clusters: [
-      { label: "10-20代", color: "#f59e0b" },
-      { label: "ニキビ肌ケア層", color: "#ef4444" },
-      { label: "韓国コスメ愛好層", color: "#ec4899" },
-    ],
+    rank: 4,
+    cluster: "美白・透明感重視層",
+    color: "#0ea5e9",
+    score: 71,
+    growth: "+29%",
+    age: "30-49歳",
+    ingredients: ["グルタチオン", "ビタミンC誘導体"],
   },
   {
-    name: "グルタチオン",
-    growth: "+85%",
-    clusters: [
-      { label: "30-49歳", color: "#6366f1" },
-      { label: "美白・透明感重視層", color: "#0ea5e9" },
-      { label: "サプリ併用層", color: "#22c55e" },
-    ],
+    rank: 5,
+    cluster: "ナチュラル志向",
+    color: "#f59e0b",
+    score: 63,
+    growth: "+22%",
+    age: "20-39歳",
+    ingredients: ["バクチオール", "エクトイン"],
   },
 ]
 
@@ -463,14 +463,14 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           </Card>
         </div>
 
-        {/* Right Column - Trending Ingredients x User Clusters */}
+        {/* Right Column - User Cluster Ranking */}
         <div className="lg:col-span-1">
           <Card className="shadow-sm h-full">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-base font-medium">急上昇中の成分</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-0.5">関心の高いユーザークラスター</p>
+                  <CardTitle className="text-base font-medium">ユーザークラスター</CardTitle>
+                  <p className="text-xs text-muted-foreground mt-0.5">関心スコア順ランキング</p>
                 </div>
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -482,29 +482,37 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {TRENDING_INGREDIENT_CLUSTERS.map((item, index) => (
-                <div key={index} className="p-3 rounded-lg border border-border bg-muted/30 space-y-2">
+            <CardContent className="space-y-2">
+              {USER_CLUSTER_RANKING.map((item) => (
+                <div key={item.rank} className="p-3 rounded-lg border border-border bg-muted/30 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground w-4">{index + 1}</span>
-                      <div className="h-7 w-7 rounded-md bg-emerald-100 flex items-center justify-center">
-                        <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
+                      <span className="text-xs text-muted-foreground w-4">{item.rank}</span>
+                      <div
+                        className="h-7 w-7 rounded-md flex items-center justify-center"
+                        style={{ backgroundColor: item.color + "22" }}
+                      >
+                        <Users className="h-3.5 w-3.5" style={{ color: item.color }} />
                       </div>
-                      <span className="text-sm font-semibold">{item.name}</span>
+                      <div>
+                        <p className="text-sm font-semibold leading-tight">{item.cluster}</p>
+                        <p className="text-[10px] text-muted-foreground">{item.age}</p>
+                      </div>
                     </div>
-                    <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs">
-                      {item.growth}
-                    </Badge>
+                    <div className="text-right">
+                      <p className="text-xs font-bold text-foreground">{item.score}</p>
+                      <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-[10px] px-1.5">
+                        {item.growth}
+                      </Badge>
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-1.5 pl-9">
-                    {item.clusters.map((cluster, ci) => (
+                    {item.ingredients.map((ing, i) => (
                       <span
-                        key={ci}
-                        className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
-                        style={{ backgroundColor: cluster.color + "22", color: cluster.color }}
+                        key={i}
+                        className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-muted text-muted-foreground"
                       >
-                        {cluster.label}
+                        {ing}
                       </span>
                     ))}
                   </div>
