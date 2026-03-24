@@ -13,8 +13,8 @@ export default function TrendSpotlightPage() {
         <DashboardSidebar />
         <SidebarInset className="flex-1">
           <DashboardHeader 
-            title="Trend Spotlight" 
-            breadcrumb={["Dashboard", "Trend Spotlight"]}
+            title="トレンド詳細" 
+            breadcrumb={["ダッシュボード", "トレンド詳細"]}
           />
           <TrendSpotlightContent />
         </SidebarInset>

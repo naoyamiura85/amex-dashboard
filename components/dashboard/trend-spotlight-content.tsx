@@ -73,7 +73,7 @@ export function TrendSpotlightContent() {
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/dashboard/trends" className="hover:text-foreground transition-colors">
-          Top Trends
+          トップトレンド
         </Link>
         <ChevronRight className="h-4 w-4" />
         <span className="text-foreground">レチノール美容液</span>
@@ -90,11 +90,11 @@ export function TrendSpotlightContent() {
         <div className="flex items-center gap-2">
           <Button variant="default" size="sm" className="gap-2">
             <FileText className="h-4 w-4" />
-            Create brief
+            レポート作成
           </Button>
           <Button variant="outline" size="sm" className="gap-2">
             <Download className="h-4 w-4" />
-            Export
+            エクスポート
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -105,7 +105,7 @@ export function TrendSpotlightContent() {
                 onClick={() => setSavedState(!savedState)}
               >
                 <Bookmark className={`h-4 w-4 ${savedState ? "fill-current" : ""}`} />
-                Save
+                保存
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -131,26 +131,26 @@ export function TrendSpotlightContent() {
         {/* Trend Performance - Left Section */}
         <Card className="lg:col-span-5 shadow-sm border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Trend Performance</CardTitle>
-            <h3 className="text-lg font-semibold">How this trend is performing?</h3>
+            <CardTitle className="text-sm font-medium text-muted-foreground">トレンドパフォーマンス</CardTitle>
+            <h3 className="text-lg font-semibold">このトレンドの動向</h3>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="social" className="w-full">
               <TabsList className="mb-4 h-9">
-                <TabsTrigger value="social" className="text-xs">Social Mentions</TabsTrigger>
-                <TabsTrigger value="ec" className="text-xs">In EC</TabsTrigger>
-                <TabsTrigger value="pos" className="text-xs">In POS</TabsTrigger>
-                <TabsTrigger value="prediction" className="text-xs">Trend prediction</TabsTrigger>
+                <TabsTrigger value="social" className="text-xs">SNS言及</TabsTrigger>
+                <TabsTrigger value="ec" className="text-xs">EC動向</TabsTrigger>
+                <TabsTrigger value="pos" className="text-xs">POS動向</TabsTrigger>
+                <TabsTrigger value="prediction" className="text-xs">トレンド予測</TabsTrigger>
               </TabsList>
               <TabsContent value="social">
                 {/* Stats Row */}
                 <div className="flex items-center gap-6 mb-4 p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Social Share</span>
+                    <span className="text-xs text-muted-foreground">SNSシェア</span>
                     <span className="text-lg font-bold">0.0%</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">YoY Growth</span>
+                    <span className="text-xs text-muted-foreground">前年比</span>
                     <span className="text-lg font-bold text-emerald-600 flex items-center gap-1">
                       <TrendingUp className="h-4 w-4" />
                       112%
@@ -188,7 +188,7 @@ export function TrendSpotlightContent() {
                       />
                       <Tooltip 
                         contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e5e7eb' }}
-                        formatter={(value: number) => [`${(value * 100).toFixed(2)}%`, "Social Share"]}
+                        formatter={(value: number) => [`${(value * 100).toFixed(2)}%`, "SNSシェア"]}
                       />
                       <Area 
                         type="monotone" 
@@ -225,7 +225,7 @@ export function TrendSpotlightContent() {
         <Card className="lg:col-span-3 shadow-sm border-border">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-semibold">Which ingredients are popular?</CardTitle>
+              <CardTitle className="text-base font-semibold">人気の成分は？</CardTitle>
               <div className="flex items-center gap-1">
                 <Button variant="ghost" size="icon" className="h-7 w-7">
                   <Share2 className="h-3.5 w-3.5" />
@@ -250,7 +250,7 @@ export function TrendSpotlightContent() {
                   <p className="text-sm font-medium truncate">{ingredient.name}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-muted-foreground">Social Share</p>
+                  <p className="text-xs text-muted-foreground">SNSシェア</p>
                   <p className="text-sm font-semibold">{ingredient.socialShare}</p>
                 </div>
               </div>
@@ -262,7 +262,7 @@ export function TrendSpotlightContent() {
         <Card className="lg:col-span-4 shadow-sm border-border">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-semibold">Which ingredients are up and coming?</CardTitle>
+              <CardTitle className="text-base font-semibold">急上昇中の成分は？</CardTitle>
               <div className="flex items-center gap-1">
                 <Button variant="ghost" size="icon" className="h-7 w-7">
                   <Share2 className="h-3.5 w-3.5" />
@@ -287,7 +287,7 @@ export function TrendSpotlightContent() {
                   <p className="text-sm font-medium truncate">{ingredient.name}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-muted-foreground">YoY Growth</p>
+                  <p className="text-xs text-muted-foreground">前年比</p>
                   <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 font-semibold">
                     {ingredient.yoyGrowth}
                   </Badge>
@@ -304,10 +304,9 @@ export function TrendSpotlightContent() {
         <Card className="lg:col-span-5 shadow-sm border-border overflow-hidden">
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="bg-primary/10 text-primary">AI Recipe</Badge>
+              <Badge variant="secondary" className="bg-primary/10 text-primary">AI提案</Badge>
             </div>
             <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <span className="text-xl">✨</span>
               レチノール美容液
             </CardTitle>
           </CardHeader>
@@ -316,29 +315,29 @@ export function TrendSpotlightContent() {
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Target</p>
+                  <p className="text-xs text-muted-foreground">ターゲット</p>
                   <p className="text-sm font-medium">30代女性</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Utensils className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Difficulty</p>
-                  <p className="text-sm font-medium">Medium</p>
+                  <p className="text-xs text-muted-foreground">難易度</p>
+                  <p className="text-sm font-medium">中級</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Duration</p>
-                  <p className="text-sm font-medium">45 Min</p>
+                  <p className="text-xs text-muted-foreground">所要時間</p>
+                  <p className="text-sm font-medium">45分</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Projected Engagement</p>
-                  <p className="text-sm font-medium">$3,343</p>
+                  <p className="text-xs text-muted-foreground">予想エンゲージメント</p>
+                  <p className="text-sm font-medium">¥500,000</p>
                 </div>
               </div>
             </div>
@@ -361,7 +360,7 @@ export function TrendSpotlightContent() {
                   className="rounded-lg"
                 />
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">AI Generated Product Concept</p>
+              <p className="mt-4 text-sm text-muted-foreground">AI生成プロダクトコンセプト</p>
             </div>
           </div>
         </Card>
