@@ -15,20 +15,15 @@ import {
   Bell,
   TrendingUp,
   Eye,
-  PieChart,
+  Brain,
+  Lightbulb,
+  BarChart3,
+  Swords,
+  FileBarChart,
+  Telescope,
   FlaskConical,
-  Package,
-  Target,
-  Clock,
-  Users,
-  MapPin,
-  Utensils,
-  Pill,
-  ShoppingBag,
-  ShoppingCart,
-  Globe,
-  Building2,
-  Star,
+  Boxes,
+  Cpu,
 } from "lucide-react"
 
 import {
@@ -138,47 +133,50 @@ const navItems = [
     icon: LayoutDashboard,
     href: "/dashboard/trends",
     subItems: [
-      { title: "トップトレンド", icon: TrendingUp, href: "/dashboard/trends" },
+      { title: "トレンド一覧", icon: TrendingUp, href: "/dashboard/trends" },
       { title: "トレンド詳細", icon: Eye, href: "/dashboard/spotlight" },
     ],
   },
   {
-    title: "探索",
-    icon: Search,
-    href: "/explore",
+    title: "AI分析",
+    icon: Brain,
+    href: "/ai/correlations",
+    badge: "NEW",
     subItems: [
-      { title: "成分・原材料", icon: FlaskConical, href: "/explore/ingredients" },
-      { title: "商品タイプ", icon: Package, href: "/explore/products" },
-      { title: "消費者ニーズ", icon: Target, href: "/explore/needs" },
-      { title: "消費モーメント", icon: Clock, href: "/explore/moments" },
-      { title: "デモグラフィック", icon: Users, href: "/explore/demographics" },
-      { title: "地域", icon: MapPin, href: "/explore/regions" },
-      { title: "ブランド比較", icon: Building2, href: "/explore/brands" },
-      { title: "人気度スコア", icon: Star, href: "/explore/popularity" },
+      { title: "相関発見", icon: Cpu, href: "/ai/correlations" },
+      { title: "トレンド予測", icon: BarChart3, href: "/ai/predictions" },
+      { title: "競合分析", icon: Swords, href: "/ai/competitors" },
     ],
   },
   {
-    title: "チャネル",
-    icon: Store,
-    href: "/channels",
+    title: "商品開発支援",
+    icon: Lightbulb,
+    href: "/ai/concept-generator",
+    badge: "NEW",
     subItems: [
-      { title: "概要", icon: PieChart, href: "/channels" },
-      { title: "外食メニュー", icon: Utensils, href: "/channels/foodservice" },
-      { title: "ドラッグストア", icon: Pill, href: "/channels/drugstore" },
-      { title: "コンビニ", icon: ShoppingBag, href: "/channels/cvs" },
-      { title: "EC", icon: Globe, href: "/channels/ec" },
-      { title: "GMS/スーパー", icon: ShoppingCart, href: "/channels/gms" },
+      { title: "コンセプト生成", icon: Lightbulb, href: "/ai/concept-generator" },
+      { title: "素材データベース", icon: FlaskConical, href: "/ai/materials" },
+      { title: "改定シミュレーター", icon: Boxes, href: "/ai/simulator" },
     ],
   },
   {
-    title: "ソリューション",
-    icon: Zap,
-    href: "/solutions",
+    title: "インサイト",
+    icon: Telescope,
+    href: "/insights/explorer",
+    subItems: [
+      { title: "統合エクスプローラー", icon: Search, href: "/insights/explorer" },
+      { title: "チャネル分析", icon: Store, href: "/channels" },
+    ],
   },
   {
-    title: "ドライブ",
-    icon: FolderOpen,
-    href: "/drive",
+    title: "レポート",
+    icon: FileBarChart,
+    href: "/reports",
+    badge: "NEW",
+    subItems: [
+      { title: "自動生成", icon: Zap, href: "/reports" },
+      { title: "ドライブ", icon: FolderOpen, href: "/drive" },
+    ],
   },
 ]
 
@@ -248,6 +246,11 @@ export function DashboardSidebar() {
                           <span className="flex items-center gap-3">
                             <item.icon className="h-4 w-4" />
                             <span>{item.title}</span>
+                            {"badge" in item && item.badge && (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-primary text-primary-foreground leading-none">
+                                {item.badge}
+                              </span>
+                            )}
                           </span>
                           <ChevronDown
                             className={`h-4 w-4 transition-transform ${
