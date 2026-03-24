@@ -663,7 +663,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Demographics
+              年代別分析
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -689,7 +689,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
               <MapPin className="h-4 w-4" />
-              Regional Distribution
+              地域別分布
             </CardTitle>
           </CardHeader>
           <CardContent>
