@@ -286,24 +286,24 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
 
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base font-medium">Trend Performance</CardTitle>
-              <p className="text-2xl font-bold mt-1">How this trend is performing?</p>
+              <CardTitle className="text-base font-medium">トレンドパフォーマンス</CardTitle>
+              <p className="text-xl font-bold mt-1">このトレンドの動向</p>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="social" className="w-full">
                 <TabsList className="w-full grid grid-cols-3 h-9">
-                  <TabsTrigger value="social" className="text-xs">Social Mentions</TabsTrigger>
-                  <TabsTrigger value="ec" className="text-xs">In EC</TabsTrigger>
-                  <TabsTrigger value="prediction" className="text-xs">Trend prediction</TabsTrigger>
+                  <TabsTrigger value="social" className="text-xs">SNS言及</TabsTrigger>
+                  <TabsTrigger value="ec" className="text-xs">EC動向</TabsTrigger>
+                  <TabsTrigger value="prediction" className="text-xs">トレンド予測</TabsTrigger>
                 </TabsList>
                 <TabsContent value="social" className="mt-4">
                   <div className="flex items-center gap-6 mb-4">
                     <div>
-                      <p className="text-xs text-muted-foreground">Social Share</p>
+                      <p className="text-xs text-muted-foreground">SNSシェア</p>
                       <p className="text-xl font-bold">{trend.socialShare}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">YoY Growth</p>
+                      <p className="text-xs text-muted-foreground">前年比</p>
                       <p className={`text-xl font-bold flex items-center gap-1 ${
                         trend.growthType === "up" ? "text-emerald-600" : "text-rose-600"
                       }`}>
@@ -331,7 +331,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
                         <XAxis dataKey="month" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
                         <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
                         <Tooltip 
-                          formatter={(value: number) => [`${value}%`, 'Social Share']}
+                          formatter={(value: number) => [`${value}%`, 'SNSシェア']}
                           contentStyle={{ fontSize: 12 }}
                         />
                         <Area
@@ -365,7 +365,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           <Card className="shadow-sm h-full">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-medium">Which ingredients are popular?</CardTitle>
+                <CardTitle className="text-base font-medium">人気の成分は？</CardTitle>
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8">
                     <Share2 className="h-4 w-4" />
@@ -388,7 +388,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
                       <p className="text-sm font-medium">{ingredient.name}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-muted-foreground">Social Share</p>
+                      <p className="text-xs text-muted-foreground">SNSシェア</p>
                       <p className="text-sm font-medium">{ingredient.share}</p>
                     </div>
                   </div>
@@ -403,7 +403,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
           <Card className="shadow-sm h-full">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-medium">Which ingredients are up and coming?</CardTitle>
+                <CardTitle className="text-base font-medium">急上昇中の成分は？</CardTitle>
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8">
                     <Share2 className="h-4 w-4" />
@@ -426,7 +426,7 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
                       <p className="text-sm font-medium">{ingredient.name}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-muted-foreground">YoY Growth</p>
+                      <p className="text-xs text-muted-foreground">前年比</p>
                       <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
                         {ingredient.growth}
                       </Badge>
