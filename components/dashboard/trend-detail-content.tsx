@@ -741,8 +741,8 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
 
       {/* Related Products Grid */}
       {trend.relatedProducts && trend.relatedProducts.length > 0 && (
-        <div>
-          <h3 className="text-base font-semibold text-foreground mb-3">関連製品</h3>
+        <div className="mt-2">
+          <h3 className="text-base font-semibold text-foreground mb-2">関連製品</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {trend.relatedProducts.map((product, index) => (
               <Card key={index} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
