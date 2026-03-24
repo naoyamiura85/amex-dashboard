@@ -7,9 +7,10 @@ import './globals.css'
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const zenKaku = Zen_Kaku_Gothic_New({ 
-  subsets: ["latin"], 
+  subsets: ["latin"],
   weight: ["400", "500", "700"],
-  variable: '--font-zen-kaku' 
+  variable: '--font-zen-kaku',
+  preload: true,
 });
 
 export const metadata: Metadata = {
