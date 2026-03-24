@@ -119,6 +119,23 @@ const AGE_COLORS: Record<string, string> = {
   "50歳以上": "#94a3b8",
 }
 
+// クラスター分析データ
+const CLUSTER_TYPES = {
+  "敏感肌ケア層": "#ec4899",
+  "エイジングケア層": "#ef4444", 
+  "ナチュラル志向": "#22c55e",
+  "韓国コスメ愛好層": "#8b5cf6",
+  "美白・透明感重視層": "#0ea5e9",
+}
+
+const ingredientClusterData = [
+  { ingredient: "バクチオール", "敏感肌ケア層": 35, "エイジングケア層": 25, "ナチュラル志向": 28, "韓国コスメ愛好層": 8, "美白・透明感重視層": 4 },
+  { ingredient: "レチナール",  "敏感肌ケア層": 12, "エイジングケア層": 45, "ナチュラル志向": 8, "韓国コスメ愛好層": 15, "美白・透明感重視層": 20 },
+  { ingredient: "エクトイン",  "敏感肌ケア層": 30, "エイジングケア層": 18, "ナチュラル志向": 22, "韓国コスメ愛好層": 12, "美白・透明感重視層": 18 },
+  { ingredient: "CICA",       "敏感肌ケア層": 28, "エイジングケア層": 8, "ナチュラル志向": 15, "韓国コスメ愛好層": 42, "美白・透明感重視層": 7 },
+  { ingredient: "グルタチオン","敏感肌ケア層": 10, "エイジングケア層": 22, "ナチュラル志向": 12, "韓国コスメ愛好層": 18, "美白・透明感重視層": 38 },
+]
+
 export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
   const { getTrendById } = useTrends()
   const trend = getTrendById(trendId)
@@ -502,71 +519,140 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
       <Card className="shadow-sm">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-base font-medium">成分 × ユーザー相関</CardTitle>
-              <p className="text-xs text-muted-foreground mt-0.5">各成分への関心が高い年代の分布</p>
-            </div>
-            <div className="flex items-center gap-3 flex-wrap justify-end">
-              {Object.entries(AGE_COLORS).map(([age, color]) => (
-                <div key={age} className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-sm shrink-0" style={{ backgroundColor: color }} />
-                  <span className="text-xs text-muted-foreground">{age}</span>
-                </div>
-              ))}
-            </div>
+            <CardTitle className="text-base font-medium">成分 × ユーザー相関</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={ingredientUserCorrelationData}
-                layout="vertical"
-                margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
-                barCategoryGap="28%"
-                barGap={2}
-              >
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 10 }}
-                  tickFormatter={(v) => `${v}%`}
-                  domain={[0, 100]}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="ingredient"
-                  tick={{ fontSize: 11 }}
-                  width={88}
-                />
-                <Tooltip
-                  formatter={(value: number, name: string) => [`${value}%`, name]}
-                  contentStyle={{ fontSize: 12 }}
-                />
-                {Object.entries(AGE_COLORS).map(([age, color]) => (
-                  <Bar key={age} dataKey={age} stackId="a" fill={color} radius={age === "50歳以上" ? [0, 4, 4, 0] : [0, 0, 0, 0]} />
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          <Tabs defaultValue="age" className="w-full">
+            <div className="flex items-center justify-between mb-4">
+              <TabsList className="h-8">
+                <TabsTrigger value="age" className="text-xs px-3 h-7">年代分布</TabsTrigger>
+                <TabsTrigger value="cluster" className="text-xs px-3 h-7">クラスター分析</TabsTrigger>
+              </TabsList>
+            </div>
 
-          {/* Insight chips */}
-          <div className="mt-4 pt-4 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-indigo-50 dark:bg-indigo-950/30 rounded-lg p-3">
-              <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-400 mb-1">最多年代</p>
-              <p className="text-sm font-bold text-foreground">20-29歳</p>
-              <p className="text-xs text-muted-foreground">全成分で最多シェア</p>
-            </div>
-            <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded-lg p-3">
-              <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-1">急成長年代</p>
-              <p className="text-sm font-bold text-foreground">10-19歳</p>
-              <p className="text-xs text-muted-foreground">CICAで前年比+62%</p>
-            </div>
-            <div className="bg-amber-50 dark:bg-amber-950/30 rounded-lg p-3">
-              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-1">成分リーチ</p>
-              <p className="text-sm font-bold text-foreground">CICA</p>
-              <p className="text-xs text-muted-foreground">最も幅広い年代に支持</p>
-            </div>
-          </div>
+            {/* 年代分布タブ */}
+            <TabsContent value="age" className="mt-0">
+              <div className="flex items-center gap-3 flex-wrap mb-3">
+                {Object.entries(AGE_COLORS).map(([age, color]) => (
+                  <div key={age} className="flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-sm shrink-0" style={{ backgroundColor: color }} />
+                    <span className="text-xs text-muted-foreground">{age}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="h-[240px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={ingredientUserCorrelationData}
+                    layout="vertical"
+                    margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
+                    barCategoryGap="28%"
+                    barGap={2}
+                  >
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10 }}
+                      tickFormatter={(v) => `${v}%`}
+                      domain={[0, 100]}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="ingredient"
+                      tick={{ fontSize: 11 }}
+                      width={88}
+                    />
+                    <Tooltip
+                      formatter={(value: number, name: string) => [`${value}%`, name]}
+                      contentStyle={{ fontSize: 12 }}
+                    />
+                    {Object.entries(AGE_COLORS).map(([age, color]) => (
+                      <Bar key={age} dataKey={age} stackId="a" fill={color} radius={age === "50歳以上" ? [0, 4, 4, 0] : [0, 0, 0, 0]} />
+                    ))}
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              {/* Insight chips - Age */}
+              <div className="mt-4 pt-4 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="bg-indigo-50 dark:bg-indigo-950/30 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-400 mb-1">最多年代</p>
+                  <p className="text-sm font-bold text-foreground">20-29歳</p>
+                  <p className="text-xs text-muted-foreground">全成分で最多シェア</p>
+                </div>
+                <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-1">急成長年代</p>
+                  <p className="text-sm font-bold text-foreground">10-19歳</p>
+                  <p className="text-xs text-muted-foreground">CICAで前年比+62%</p>
+                </div>
+                <div className="bg-amber-50 dark:bg-amber-950/30 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-1">成分リーチ</p>
+                  <p className="text-sm font-bold text-foreground">CICA</p>
+                  <p className="text-xs text-muted-foreground">最も幅広い年代に支持</p>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* クラスター分析タブ */}
+            <TabsContent value="cluster" className="mt-0">
+              <div className="flex items-center gap-3 flex-wrap mb-3">
+                {Object.entries(CLUSTER_TYPES).map(([cluster, color]) => (
+                  <div key={cluster} className="flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-sm shrink-0" style={{ backgroundColor: color }} />
+                    <span className="text-xs text-muted-foreground">{cluster}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="h-[240px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={ingredientClusterData}
+                    layout="vertical"
+                    margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
+                    barCategoryGap="28%"
+                    barGap={2}
+                  >
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10 }}
+                      tickFormatter={(v) => `${v}%`}
+                      domain={[0, 100]}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="ingredient"
+                      tick={{ fontSize: 11 }}
+                      width={88}
+                    />
+                    <Tooltip
+                      formatter={(value: number, name: string) => [`${value}%`, name]}
+                      contentStyle={{ fontSize: 12 }}
+                    />
+                    {Object.entries(CLUSTER_TYPES).map(([cluster, color], i, arr) => (
+                      <Bar key={cluster} dataKey={cluster} stackId="a" fill={color} radius={i === arr.length - 1 ? [0, 4, 4, 0] : [0, 0, 0, 0]} />
+                    ))}
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              {/* Insight chips - Cluster */}
+              <div className="mt-4 pt-4 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="bg-pink-50 dark:bg-pink-950/30 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-pink-700 dark:text-pink-400 mb-1">最大クラスター</p>
+                  <p className="text-sm font-bold text-foreground">敏感肌ケア層</p>
+                  <p className="text-xs text-muted-foreground">バクチオールで35%</p>
+                </div>
+                <div className="bg-purple-50 dark:bg-purple-950/30 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-purple-700 dark:text-purple-400 mb-1">急成長クラスター</p>
+                  <p className="text-sm font-bold text-foreground">韓国コスメ愛好層</p>
+                  <p className="text-xs text-muted-foreground">CICAで42%シェア</p>
+                </div>
+                <div className="bg-cyan-50 dark:bg-cyan-950/30 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 mb-1">注目成分</p>
+                  <p className="text-sm font-bold text-foreground">グルタチオン</p>
+                  <p className="text-xs text-muted-foreground">美白層で38%シェア</p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
 
