@@ -48,7 +48,7 @@ const generatedConcepts = [
   },
 ]
 
-export function ConceptGeneratorContent() {
+export function AIConceptGeneratorContent() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedConcept, setSelectedConcept] = useState<number | null>(null)
   const [prompt, setPrompt] = useState("")
@@ -202,6 +202,5 @@ export function ConceptGeneratorContent() {
       </div>
     </div>
   )
-}
 
 export { AIConceptGeneratorContent }

@@ -89,7 +89,7 @@ const allLifecyclePoints = trendLifecycleData[0].data.map((d) => {
   return result
 })
 
-export function PredictionsContent() {
+export function AIPredictionsContent() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -223,6 +223,5 @@ export function PredictionsContent() {
       </Tabs>
     </div>
   )
-}
 
 export { AIPredictionsContent }
