@@ -34,7 +34,7 @@ export function YappiChat() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+  const { messages, input = "", handleInputChange, handleSubmit, isLoading } = useChat({
     transport: new DefaultChatTransport({
       api: '/api/yappi-chat',
     }),
@@ -61,7 +61,7 @@ export function YappiChat() {
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim()) return
+    if (!input || !input.trim()) return
     handleSubmit(e)
   }
 
@@ -220,7 +220,7 @@ export function YappiChat() {
           />
           <Button
             type="submit"
-            disabled={!input.trim() || isLoading}
+            disabled={!input || !input.trim() || isLoading}
             size="icon"
             className="h-10 w-10 shrink-0"
           >
