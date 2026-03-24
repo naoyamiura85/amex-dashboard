@@ -12,9 +12,9 @@
   --popover: #FFFFFF;
   --popover-foreground: #1a1a1a;
   
-  /* Primary - DDS Lime Green */
-  --primary: #C8FF00;
-  --primary-foreground: #1a1a1a;
+  /* Primary - DDS Deep Blue */
+  --primary: #3700FF;
+  --primary-foreground: #FFFFFF;
   
   /* Secondary - DDS Neutral */
   --secondary: #F5F5F4;
@@ -23,9 +23,9 @@
   --muted: #FAFAFA;
   --muted-foreground: #737373;
   
-  /* Accent - DDS Secondary Blue */
-  --accent: #3700FF;
-  --accent-foreground: #FFFFFF;
+  /* Accent - DDS Lime Green (accent role) */
+  --accent: #C8FF00;
+  --accent-foreground: #1a1a1a;
   
   --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
@@ -33,7 +33,7 @@
   /* DDS Neutral borders */
   --border: #E6E7E4;
   --input: #E6E7E4;
-  --ring: #C8FF00;
+  --ring: #3700FF;
   
   /* DDS Semantic Colors */
   --success: #22C55E;
@@ -49,7 +49,7 @@
   --sidebar-accent: #F5F5F4;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #E6E7E4;
-  --sidebar-ring: #C8FF00;
+  --sidebar-ring: #3700FF;
 }
 
 .dark {
@@ -59,32 +59,32 @@
   --card-foreground: #fafafa;
   --popover: #0a0a0a;
   --popover-foreground: #fafafa;
-  --primary: #C8FF00;
-  --primary-foreground: #0a0a0a;
+  --primary: #3700FF;
+  --primary-foreground: #fafafa;
   --secondary: #262626;
   --secondary-foreground: #fafafa;
   --muted: #262626;
   --muted-foreground: #a3a3a3;
-  --accent: #3700FF;
-  --accent-foreground: #fafafa;
+  --accent: #C8FF00;
+  --accent-foreground: #0a0a0a;
   --destructive: #EF4444;
   --destructive-foreground: #fafafa;
   --border: #262626;
   --input: #262626;
-  --ring: #C8FF00;
-  --chart-1: #6366f1;
+  --ring: #3700FF;
+  --chart-1: #3700FF;
   --chart-2: #C8FF00;
   --chart-3: #00C8FF;
   --chart-4: #FF00C8;
   --chart-5: #FFB600;
   --sidebar: #0f0f0f;
   --sidebar-foreground: #fafafa;
-  --sidebar-primary: #C8FF00;
-  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-primary: #3700FF;
+  --sidebar-primary-foreground: #fafafa;
   --sidebar-accent: #262626;
   --sidebar-accent-foreground: #fafafa;
   --sidebar-border: #262626;
-  --sidebar-ring: #C8FF00;
+  --sidebar-ring: #3700FF;
 }
 
 @theme inline {
