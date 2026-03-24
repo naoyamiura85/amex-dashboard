@@ -41,7 +41,7 @@ export default function TrendDetailPage({ params }: TrendDetailPageProps) {
             title="トレンド詳細" 
             breadcrumb={["ダッシュボード", "トップトレンド"]} 
           />
-          <main className="flex-1 overflow-auto p-6">
+          <main className="flex-1 overflow-auto p-6 pt-0">
             <Suspense fallback={<TrendDetailSkeleton />}>
               <TrendDetailContent trendId={id} />
             </Suspense>
