@@ -1,12 +1,16 @@
 import type { Metadata } from 'next'
-import { Inter, Noto_Sans_JP } from 'next/font/google'
+import { Inter, Zen_Kaku_Gothic_New } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CategoryModeProvider } from '@/contexts/category-mode-context'
 import { TrendsProvider } from '@/contexts/trends-context'
 import './globals.css'
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
-const notoSansJP = Noto_Sans_JP({ subsets: ["latin"], variable: '--font-noto-sans-jp' });
+const zenKaku = Zen_Kaku_Gothic_New({ 
+  subsets: ["latin"], 
+  weight: ["400", "500", "700"],
+  variable: '--font-zen-kaku' 
+});
 
 export const metadata: Metadata = {
   title: 'YAPPI - AI-Powered Consumer Intelligence',
@@ -38,7 +42,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${inter.variable} ${notoSansJP.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${zenKaku.variable} font-sans antialiased`}>
         <CategoryModeProvider>
           <TrendsProvider>
             {children}
