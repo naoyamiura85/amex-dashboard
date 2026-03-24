@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const ExplorerContent = lazy(() => import("@/components/dashboard/insights-explorer-content").then(m => ({ default: m.ExplorerContent })))
+const ExplorerContent = lazy(() => import("@/components/dashboard/ai-explorer-content").then(m => ({ default: m.AIExplorerContent })))
 const YappiChat = lazy(() => import("@/components/dashboard/yappi-chat").then(m => ({ default: m.YappiChat })))
 
 export default function ExplorerPage() {

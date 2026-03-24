@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const MaterialsContent = lazy(() => import("@/components/dashboard/ai-materials-content").then(m => ({ default: m.MaterialsContent })))
+const MaterialsContent = lazy(() => import("@/components/dashboard/ai-materials-content").then(m => ({ default: m.AIMaterialsContent })))
 const YappiChat = lazy(() => import("@/components/dashboard/yappi-chat").then(m => ({ default: m.YappiChat })))
 
 export default function MaterialsPage() {

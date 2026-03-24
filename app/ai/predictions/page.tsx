@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const PredictionsContent = lazy(() => import("@/components/dashboard/ai-predictions-content").then(m => ({ default: m.PredictionsContent })))
+const PredictionsContent = lazy(() => import("@/components/dashboard/ai-predictions-content").then(m => ({ default: m.AIPredictionsContent })))
 const YappiChat = lazy(() => import("@/components/dashboard/yappi-chat").then(m => ({ default: m.YappiChat })))
 
 export default function PredictionsPage() {

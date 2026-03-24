@@ -11,7 +11,7 @@ export default function ChannelsPage() {
     <SidebarProvider>
       <DashboardSidebar />
       <SidebarInset>
-        <DashboardHeader />
+        <DashboardHeader title="チャネル分析" breadcrumb={["インサイト", "チャネル分析"]} />
         <main className="flex-1 overflow-auto">
           <ChannelsContent />
         </main>

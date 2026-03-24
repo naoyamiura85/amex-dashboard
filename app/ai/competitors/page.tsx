@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const CompetitorsContent = lazy(() => import("@/components/dashboard/ai-competitors-content").then(m => ({ default: m.CompetitorsContent })))
+const CompetitorsContent = lazy(() => import("@/components/dashboard/ai-competitors-content").then(m => ({ default: m.AICompetitorsContent })))
 const YappiChat = lazy(() => import("@/components/dashboard/yappi-chat").then(m => ({ default: m.YappiChat })))
 
 export default function CompetitorsPage() {
@@ -16,7 +16,7 @@ export default function CompetitorsPage() {
         <DashboardSidebar />
         <SidebarInset className="flex-1">
           <DashboardHeader
-            title="競合分析AI"
+            title="競合分析"
             breadcrumb={["AI分析", "競合分析"]}
           />
           <Suspense fallback={<Skeleton className="m-6 h-96 rounded-xl" />}>

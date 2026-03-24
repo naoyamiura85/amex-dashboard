@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const ConceptGeneratorContent = lazy(() => import("@/components/dashboard/ai-concept-generator-content").then(m => ({ default: m.ConceptGeneratorContent })))
+const ConceptGeneratorContent = lazy(() => import("@/components/dashboard/ai-concept-generator-content").then(m => ({ default: m.AIConceptGeneratorContent })))
 const YappiChat = lazy(() => import("@/components/dashboard/yappi-chat").then(m => ({ default: m.YappiChat })))
 
 export default function ConceptGeneratorPage() {

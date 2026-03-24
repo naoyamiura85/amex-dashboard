@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const SimulatorContent = lazy(() => import("@/components/dashboard/ai-simulator-content").then(m => ({ default: m.SimulatorContent })))
+const SimulatorContent = lazy(() => import("@/components/dashboard/ai-simulator-content").then(m => ({ default: m.AISimulatorContent })))
 const YappiChat = lazy(() => import("@/components/dashboard/yappi-chat").then(m => ({ default: m.YappiChat })))
 
 export default function SimulatorPage() {

@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const CorrelationsContent = lazy(() => import("@/components/dashboard/ai-correlations-content").then(m => ({ default: m.CorrelationsContent })))
+const CorrelationsContent = lazy(() => import("@/components/dashboard/ai-correlations-content").then(m => ({ default: m.AICorrelationsContent })))
 const YappiChat = lazy(() => import("@/components/dashboard/yappi-chat").then(m => ({ default: m.YappiChat })))
 
 export default function CorrelationsPage() {
@@ -16,7 +16,7 @@ export default function CorrelationsPage() {
         <DashboardSidebar />
         <SidebarInset className="flex-1">
           <DashboardHeader
-            title="相関発見エンジン"
+            title="相関発見"
             breadcrumb={["AI分析", "相関発見"]}
           />
           <Suspense fallback={<Skeleton className="m-6 h-96 rounded-xl" />}>
