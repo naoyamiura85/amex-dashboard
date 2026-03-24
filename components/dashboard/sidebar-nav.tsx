@@ -140,7 +140,6 @@ const navItems = [
     subItems: [
       { title: "トップトレンド", icon: TrendingUp, href: "/dashboard/trends" },
       { title: "トレンド詳細", icon: Eye, href: "/dashboard/spotlight" },
-      { title: "カテゴリ分析", icon: PieChart, href: "/dashboard/category" },
     ],
   },
   {
