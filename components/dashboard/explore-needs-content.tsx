@@ -206,7 +206,7 @@ export function ExploreNeedsContent() {
   return (
     <div className="p-6 space-y-6 bg-muted/30">
       {/* Observed Data Banner */}
-      <Card className="bg-gradient-to-r from-violet-500/5 via-violet-500/10 to-violet-500/5 border-violet-500/20">
+      <Card className="bg-gradient-to-r from-violet-500/5 via-violet-500/10 to-violet-500/5 border-violet-500/20 rounded-xl">
         <CardContent className="p-4">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-3">
@@ -246,7 +246,7 @@ export function ExploreNeedsContent() {
       </div>
 
       {/* Needs Treemap */}
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader>
           <CardTitle className="text-base">Needs Volume Overview</CardTitle>
           <CardDescription>Relative search volume by consumer need</CardDescription>
@@ -307,7 +307,7 @@ export function ExploreNeedsContent() {
       {/* Needs Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredNeeds.map((need) => (
-          <Card key={need.id} className="hover:border-primary/50 transition-colors cursor-pointer group">
+          <Card key={need.id} className="hover:border-primary/50 transition-colors cursor-pointer group rounded-xl">
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -369,13 +369,13 @@ export function ExploreNeedsContent() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="rounded-xl">
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Total Needs Tracked</p>
             <p className="text-2xl font-semibold mt-1">{needs.length}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl">
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Avg. Growth Rate</p>
             <p className="text-2xl font-semibold mt-1 text-green-600">
@@ -383,13 +383,13 @@ export function ExploreNeedsContent() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl">
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Trending Up</p>
             <p className="text-2xl font-semibold mt-1">{needs.filter(n => n.trend === "up").length}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl">
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Total Search Volume</p>
             <p className="text-2xl font-semibold mt-1">
