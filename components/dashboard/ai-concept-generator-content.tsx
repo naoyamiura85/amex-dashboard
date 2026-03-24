@@ -202,5 +202,4 @@ export function AIConceptGeneratorContent() {
       </div>
     </div>
   )
-
-export { AIConceptGeneratorContent }
+}

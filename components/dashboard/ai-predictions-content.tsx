@@ -223,5 +223,4 @@ export function AIPredictionsContent() {
       </Tabs>
     </div>
   )
-
-export { AIPredictionsContent }
+}
