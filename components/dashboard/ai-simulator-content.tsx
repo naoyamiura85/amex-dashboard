@@ -244,3 +244,5 @@ export function SimulatorContent() {
     </div>
   )
 }
+
+export { AISimulatorContent }

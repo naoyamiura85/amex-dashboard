@@ -224,3 +224,5 @@ export function PredictionsContent() {
     </div>
   )
 }
+
+export { AIPredictionsContent }

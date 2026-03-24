@@ -256,3 +256,5 @@ export function CorrelationsContent() {
     </div>
   )
 }
+
+export { AICorrelationsContent }

@@ -156,3 +156,5 @@ export function AIExplorerContent() {
     </div>
   )
 }
+
+export { AIExplorerContent }

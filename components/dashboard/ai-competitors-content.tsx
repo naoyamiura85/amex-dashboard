@@ -197,3 +197,5 @@ export function CompetitorsContent() {
     </div>
   )
 }
+
+export { AICompetitorsContent }

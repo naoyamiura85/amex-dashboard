@@ -163,3 +163,5 @@ export function AIReportsContent() {
     </div>
   )
 }
+
+export { AIReportsContent }
