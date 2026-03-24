@@ -187,20 +187,20 @@ export function TrendDetailContent({ trendId }: TrendDetailContentProps) {
   }
 
   const researchData = trend.researchData || {
-    summary: `${trend.name}�����${trend.categoryLabel}カテゴリにおける注目トレンドです。`,
+    summary: `${trend.name}は${trend.categoryLabel}カテゴリにおける注目トレンドです。`,
     popularIngredients: [
-      { name: "成分A", share: "15%", growth: "+120%" },
-      { name: "成分B", share: "12%", growth: "+95%" },
-      { name: "成分C", share: "8%", growth: "+78%" },
-      { name: "成分D", share: "6%", growth: "+65%" },
-      { name: "成分E", share: "5%", growth: "+52%" },
+      { name: "ヒアルロン酸", share: "15%", growth: "+45%" },
+      { name: "ビタミンC誘導体", share: "12%", growth: "+38%" },
+      { name: "ナイアシンアミド", share: "8%", growth: "+62%" },
+      { name: "セラミド", share: "6%", growth: "+28%" },
+      { name: "コラーゲン", share: "5%", growth: "+22%" },
     ],
     trendingIngredients: [
-      { name: "新成分1", growth: "+180%" },
-      { name: "新成分2", growth: "+145%" },
-      { name: "新成分3", growth: "+120%" },
-      { name: "新成分4", growth: "+98%" },
-      { name: "新成分5", growth: "+85%" },
+      { name: "バクチオール", growth: "+180%" },
+      { name: "レチナール", growth: "+145%" },
+      { name: "エクトイン", growth: "+120%" },
+      { name: "CICA", growth: "+98%" },
+      { name: "グルタチオン", growth: "+85%" },
     ],
     demographics: [
       { age: "20-29歳", percentage: 30 },
