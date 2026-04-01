@@ -6,7 +6,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { X, Users, ChevronDown } from "lucide-react"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { X, Users, ChevronDown, User, Briefcase, Heart, ShoppingBag } from "lucide-react"
 
 // ステージの定義
 const stages = [
@@ -326,7 +331,7 @@ const segmentData: Record<string, Record<string, {
     zone: {
       population: "142万人",
       personas: [
-        { id: "1", name: "岡本翔太", image: "/images/personas/young_man1.jpg" },
+        { id: "1", name: "岡��翔太", image: "/images/personas/young_man1.jpg" },
         { id: "2", name: "吉川彩香", image: "/images/personas/student1.jpg" },
         { id: "3", name: "池田健太", image: "/images/personas/casual_man1.jpg" },
       ],
@@ -658,16 +663,35 @@ const segmentData: Record<string, Record<string, {
 }
 
 // AIペルソナの詳細データ
-const aiPersonaDetails: Record<string, { age: number; gender: string; tags: string[] }> = {
-  "佐藤健一": { age: 69, gender: "男性", tags: ["ゴルフ派", "日本酒派"] },
-  "田中正雄": { age: 71, gender: "男性", tags: ["山歩き・ハイキング", "ゴルフ派"] },
-  "山本洋子": { age: 67, gender: "女性", tags: ["ゴルフ派", "美容・エイジ"] },
-  "山田美和": { age: 70, gender: "女性", tags: ["ヨガ・太極拳", "オーガニック"] },
-  "鈴木太郎": { age: 65, gender: "男性", tags: ["釣り", "健康志向"] },
-  "高橋由美": { age: 63, gender: "女性", tags: ["料理", "ガーデニング"] },
-  "伊藤健": { age: 68, gender: "男性", tags: ["ウォーキング", "読書"] },
-  "渡辺恵": { age: 66, gender: "女性", tags: ["ヨガ", "美容"] },
-  "小林誠": { age: 64, gender: "男性", tags: ["テニス", "旅行"] },
+const aiPersonaDetails: Record<string, { 
+  age: number
+  gender: string
+  occupation: string
+  income: string
+  tags: string[]
+  purchaseReason: string
+  preferredChannel: string
+}> = {
+  "佐藤健一": { age: 69, gender: "男性", occupation: "会社役員（退職）", income: "900万以上", tags: ["ゴルフ派", "日本酒派"], purchaseReason: "健康維持のため", preferredChannel: "定期購入" },
+  "田中正雄": { age: 71, gender: "男性", occupation: "自営業", income: "700〜900万", tags: ["山歩き・ハイキング", "ゴルフ派"], purchaseReason: "活力維持のため", preferredChannel: "EC" },
+  "山本洋子": { age: 67, gender: "女性", occupation: "専業主婦", income: "500〜700万", tags: ["ゴルフ派", "美容・エイジング"], purchaseReason: "美容と健康のため", preferredChannel: "定期購入" },
+  "山田美和": { age: 70, gender: "女性", occupation: "パート", income: "300〜500万", tags: ["ヨガ・太極拳", "オーガニック"], purchaseReason: "自然派志向", preferredChannel: "店舗" },
+  "鈴木太郎": { age: 65, gender: "男性", occupation: "会社員（管理職）", income: "700〜900万", tags: ["釣り", "健康志向"], purchaseReason: "体調管理のため", preferredChannel: "EC" },
+  "高橋由美": { age: 63, gender: "女性", occupation: "フリーランス", income: "500〜700万", tags: ["料理", "ガーデニング"], purchaseReason: "栄養補給のため", preferredChannel: "店舗" },
+  "伊藤健": { age: 68, gender: "男性", occupation: "年金受給者", income: "300〜500万", tags: ["ウォーキング", "読書"], purchaseReason: "健康寿命延伸のため", preferredChannel: "定期購入" },
+  "渡辺恵": { age: 66, gender: "女性", occupation: "専業主婦", income: "500〜700万", tags: ["ヨガ", "美容"], purchaseReason: "美容目的", preferredChannel: "EC" },
+  "小林誠": { age: 64, gender: "男性", occupation: "会社員", income: "700〜900万", tags: ["テニス", "旅行"], purchaseReason: "体力維持のため", preferredChannel: "コンビニ" },
+  "田村雅彦": { age: 50, gender: "男性", occupation: "会社員（管理職）", income: "700〜900万", tags: ["ビジネス", "ゴルフ"], purchaseReason: "集中力向上のため", preferredChannel: "EC" },
+  "佐野智子": { age: 48, gender: "女性", occupation: "会社員", income: "500〜700万", tags: ["料理", "健康管理"], purchaseReason: "家族の健康のため", preferredChannel: "定期購入" },
+  "井上拓海": { age: 35, gender: "男性", occupation: "会社員（技術系）", income: "500〜700万", tags: ["ゲーム", "テクノロジー"], purchaseReason: "仕事効率化のため", preferredChannel: "コンビニ" },
+  "高田美咲": { age: 32, gender: "女性", occupation: "会社員", income: "400〜600万", tags: ["ヨガ", "美容"], purchaseReason: "美容と健康のため", preferredChannel: "EC" },
+  "鈴木翔": { age: 24, gender: "男性", occupation: "学生", income: "〜200万", tags: ["ゲーム", "eスポーツ"], purchaseReason: "集中力のため", preferredChannel: "コンビニ" },
+  "山本彩": { age: 22, gender: "女性", occupation: "学生", income: "〜200万", tags: ["SNS", "動画配信"], purchaseReason: "勉強の集中力のため", preferredChannel: "コンビニ" },
+  "中田健太": { age: 28, gender: "男性", occupation: "フリーランス", income: "400〜600万", tags: ["プログラミング", "音楽"], purchaseReason: "作業効率化のため", preferredChannel: "EC" },
+  "小林美優": { age: 26, gender: "女性", occupation: "会社員", income: "300〜500万", tags: ["カフェ", "旅行"], purchaseReason: "リフレッシュのため", preferredChannel: "コンビニ" },
+  "北村誠一": { age: 52, gender: "男性", occupation: "会社経営", income: "900万以上", tags: ["コーヒー", "ワイン"], purchaseReason: "上質な味わいのため", preferredChannel: "EC" },
+  "藤井恵子": { age: 55, gender: "女性", occupation: "会社員", income: "600〜800万", tags: ["グルメ", "旅行"], purchaseReason: "贅沢な時間のため", preferredChannel: "定期購入" },
+  "岡本翔太": { age: 27, gender: "男性", occupation: "エンジニア", income: "500〜700万", tags: ["ゲーム", "eスポーツ"], purchaseReason: "パフォーマンス向上のため", preferredChannel: "EC" },
 }
 
 export function MarketOverviewContent() {
@@ -765,14 +789,79 @@ export function MarketOverviewContent() {
                             </span>
                             {/* Persona Avatars */}
                             <div className="flex flex-wrap justify-center gap-1 max-w-[140px]">
-                              {data?.personas.slice(0, 6).map((persona, i) => (
-                                <Avatar key={i} className="h-8 w-8 border-2 border-white shadow-sm">
-                                  <AvatarImage src={persona.image} alt={persona.name} />
-                                  <AvatarFallback className="text-[10px] bg-primary/10 text-primary">
-                                    {persona.name.slice(0, 2)}
-                                  </AvatarFallback>
-                                </Avatar>
-                              ))}
+                              {data?.personas.slice(0, 6).map((persona, i) => {
+                                const personaDetail = aiPersonaDetails[persona.name]
+                                return (
+                                  <Popover key={i}>
+                                    <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                      <button className="focus:outline-none focus:ring-2 focus:ring-primary rounded-full">
+                                        <Avatar className="h-8 w-8 border-2 border-white shadow-sm hover:ring-2 hover:ring-primary transition-all cursor-pointer">
+                                          <AvatarImage src={persona.image} alt={persona.name} />
+                                          <AvatarFallback className="text-[10px] bg-primary/10 text-primary">
+                                            {persona.name.slice(0, 2)}
+                                          </AvatarFallback>
+                                        </Avatar>
+                                      </button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-72 p-0" align="center" side="top">
+                                      <div className="p-4">
+                                        {/* Header with avatar and name */}
+                                        <div className="flex items-center gap-3 mb-4">
+                                          <Avatar className="h-14 w-14 border-2 border-primary/20">
+                                            <AvatarImage src={persona.image} alt={persona.name} />
+                                            <AvatarFallback className="bg-primary/10 text-primary">
+                                              {persona.name.slice(0, 2)}
+                                            </AvatarFallback>
+                                          </Avatar>
+                                          <div>
+                                            <h4 className="font-bold text-foreground">{persona.name}</h4>
+                                            <p className="text-sm text-muted-foreground">
+                                              {personaDetail?.age}歳 / {personaDetail?.gender}
+                                            </p>
+                                          </div>
+                                          <Badge variant="secondary" className="ml-auto text-[10px]">AIペルソナ</Badge>
+                                        </div>
+                                        
+                                        {/* Profile details */}
+                                        {personaDetail && (
+                                          <div className="space-y-3">
+                                            <div className="flex items-center gap-2 text-sm">
+                                              <Briefcase className="h-4 w-4 text-muted-foreground" />
+                                              <span className="text-muted-foreground">職業:</span>
+                                              <span className="font-medium">{personaDetail.occupation}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm">
+                                              <User className="h-4 w-4 text-muted-foreground" />
+                                              <span className="text-muted-foreground">年収:</span>
+                                              <span className="font-medium">{personaDetail.income}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm">
+                                              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                                              <span className="text-muted-foreground">購買理由:</span>
+                                              <span className="font-medium">{personaDetail.purchaseReason}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm">
+                                              <Heart className="h-4 w-4 text-muted-foreground" />
+                                              <span className="text-muted-foreground">チャネル:</span>
+                                              <span className="font-medium">{personaDetail.preferredChannel}</span>
+                                            </div>
+                                            <div className="pt-2 border-t">
+                                              <p className="text-xs text-muted-foreground mb-2">興味・関心</p>
+                                              <div className="flex flex-wrap gap-1">
+                                                {personaDetail.tags.map((tag, idx) => (
+                                                  <Badge key={idx} variant="outline" className="text-[10px]">
+                                                    {tag}
+                                                  </Badge>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </PopoverContent>
+                                  </Popover>
+                                )
+                              })}
                               {data && data.personas.length > 6 && (
                                 <div className="h-8 w-8 rounded-full bg-white border-2 border-slate-200 flex items-center justify-center text-xs text-muted-foreground shadow-sm">
                                   +{data.personas.length - 6}
