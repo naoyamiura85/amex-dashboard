@@ -5,13 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
+
 import {
   Users,
   Search,
@@ -493,19 +487,30 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
         </CardContent>
       </Card>
 
-      {/* フロー詳細モーダル */}
-      <Dialog open={!!selectedFlow} onOpenChange={() => setSelectedFlow(null)}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <ArrowRight className="h-5 w-5 text-primary" />
-              {flowData?.title}
-            </DialogTitle>
-            <DialogDescription>{flowData?.description}</DialogDescription>
-          </DialogHeader>
-          
-          {flowData && (
-            <div className="space-y-6">
+      {/* フロー詳細（インライン表示） */}
+      {selectedFlow && flowData && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <ArrowRight className="h-5 w-5 text-primary" />
+                  {flowData.title}
+                </CardTitle>
+                <CardDescription>{flowData.description}</CardDescription>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setSelectedFlow(null)}
+                className="h-8 w-8"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-6">
               {/* インサイト */}
               <div>
                 <h4 className="font-semibold mb-3 flex items-center gap-2">
@@ -528,21 +533,21 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
                   <Users className="h-4 w-4 text-primary" />
                   代表的なペルソナ
                 </h4>
-                <div className="grid gap-3">
+                <div className="space-y-3">
                   {flowData.personas.map((persona, i) => (
-                    <div key={i} className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
-                      <Avatar className="h-12 w-12 border-2 border-primary/20">
+                    <div key={i} className="flex items-center gap-3 p-3 bg-white dark:bg-card rounded-lg border">
+                      <Avatar className="h-10 w-10 border-2 border-primary/20">
                         <AvatarImage src={persona.image} alt={persona.name} />
                         <AvatarFallback>{persona.name.slice(0, 2)}</AvatarFallback>
                       </Avatar>
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">{persona.name}</span>
-                          <span className="text-sm text-muted-foreground">
+                          <span className="font-medium text-sm">{persona.name}</span>
+                          <span className="text-xs text-muted-foreground">
                             {persona.age}歳 / {persona.gender}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           <Briefcase className="h-3 w-3" />
                           {persona.occupation}
                         </div>
@@ -554,18 +559,119 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
                           ))}
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-xs text-muted-foreground">行動特性</p>
-                        <p className="text-sm font-medium text-primary">{persona.behavior}</p>
+                      <div className="text-right shrink-0">
+                        <p className="text-[10px] text-muted-foreground">行動特性</p>
+                        <p className="text-xs font-medium text-primary">{persona.behavior}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 離脱詳細（インライン表示） */}
+      {selectedDropoff && dropoffData && (
+        <Card className="border-destructive/30 bg-destructive/5">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base flex items-center gap-2 text-destructive">
+                  <AlertTriangle className="h-5 w-5" />
+                  {dropoffData.title}
+                </CardTitle>
+                <CardDescription>{dropoffData.description}</CardDescription>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setSelectedDropoff(null)}
+                className="h-8 w-8"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* 離脱理由 */}
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <X className="h-4 w-4 text-destructive" />
+                  主な離脱理由
+                </h4>
+                <ul className="space-y-2">
+                  {dropoffData.reasons.map((reason, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="text-destructive mt-1">•</span>
+                      {reason}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              {/* 改善提案 */}
+              <div className="bg-emerald-50 dark:bg-emerald-950/30 p-4 rounded-lg">
+                <h4 className="font-semibold mb-3 flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
+                  <TrendingUp className="h-4 w-4" />
+                  改善提案
+                </h4>
+                <ul className="space-y-2">
+                  {dropoffData.recommendations.map((rec, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-emerald-700 dark:text-emerald-300">
+                      <span className="mt-1">→</span>
+                      {rec}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              {/* 離脱ペルソナ */}
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <Users className="h-4 w-4 text-destructive" />
+                  離脱ユーザーの特徴
+                </h4>
+                <div className="space-y-3">
+                  {dropoffData.personas.map((persona, i) => (
+                    <div key={i} className="flex items-center gap-3 p-3 bg-white dark:bg-card rounded-lg border border-destructive/20">
+                      <Avatar className="h-10 w-10 border-2 border-destructive/20">
+                        <AvatarImage src={persona.image} alt={persona.name} />
+                        <AvatarFallback>{persona.name.slice(0, 2)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-sm">{persona.name}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {persona.age}歳 / {persona.gender}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Briefcase className="h-3 w-3" />
+                          {persona.occupation}
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          {persona.tags.map((tag, idx) => (
+                            <Badge key={idx} variant="outline" className="text-[10px] border-destructive/30">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-[10px] text-muted-foreground">離脱理由</p>
+                        <p className="text-xs font-medium text-destructive">{persona.dropReason}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 離脱詳細モーダル */}
       <Dialog open={!!selectedDropoff} onOpenChange={() => setSelectedDropoff(null)}>
