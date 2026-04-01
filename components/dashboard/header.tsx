@@ -32,11 +32,11 @@ const pageConfig: Record<string, { icon: LucideIcon; description: string }> = {
   },
   "/dashboard/trends": { 
     icon: TrendingUp, 
-    description: "AIが検出した消費財カテゴリの成長トレンド" 
+    description: "未購入ユーザーの興味関心から検出した消費財カテゴリの成長トレンド" 
   },
   "/dashboard/digital-shelf": { 
     icon: MonitorSmartphone, 
-    description: "ペルソナデータとEC行動データの統合分析" 
+    description: "購入ユーザーのペルソナデータとEC行動データの統合分析" 
   },
   "/ai/correlations": { 
     icon: Cpu, 
