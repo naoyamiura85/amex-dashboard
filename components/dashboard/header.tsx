@@ -1,90 +1,102 @@
 "use client"
 
-import { Bell, Search, Calendar } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
+import { 
+  BarChart3, 
+  TrendingUp, 
+  Eye, 
+  Cpu, 
+  Swords, 
+  Lightbulb, 
+  FlaskConical, 
+  Boxes, 
+  Search, 
+  Store, 
+  Zap, 
+  FolderOpen,
+  type LucideIcon 
+} from "lucide-react"
 
 interface DashboardHeaderProps {
   title: string
+  description?: string
   breadcrumb?: string[]
+  icon?: LucideIcon
 }
 
-export function DashboardHeader({ title, breadcrumb }: DashboardHeaderProps) {
+// Map routes to icons and descriptions
+const pageConfig: Record<string, { icon: LucideIcon; description: string }> = {
+  "/dashboard/trends": { 
+    icon: TrendingUp, 
+    description: "AIが検出した消費財カテゴリの成長トレンド" 
+  },
+  "/dashboard/spotlight": { 
+    icon: Eye, 
+    description: "注目トレンドの詳細分析とインサイト" 
+  },
+  "/ai/correlations": { 
+    icon: Cpu, 
+    description: "クロスカテゴリー相関と素材シナジーの自動検出" 
+  },
+  "/ai/predictions": { 
+    icon: BarChart3, 
+    description: "トレンド到来予測と寿命分析" 
+  },
+  "/ai/competitors": { 
+    icon: Swords, 
+    description: "競合新商品の自動検知と成分比較分析" 
+  },
+  "/ai/concept-generator": { 
+    icon: Lightbulb, 
+    description: "トレンド×ターゲット×素材からコンセプト自動生成" 
+  },
+  "/ai/materials": { 
+    icon: FlaskConical, 
+    description: "原材料マスタ管理とトレンド相関分析" 
+  },
+  "/ai/simulator": { 
+    icon: Boxes, 
+    description: "What-If分析と製品改定シミュレーション" 
+  },
+  "/insights/explorer": { 
+    icon: Search, 
+    description: "自然言語による統合データ検索" 
+  },
+  "/channels": { 
+    icon: Store, 
+    description: "販売チャネル別のパフォーマンス分析" 
+  },
+  "/reports": { 
+    icon: Zap, 
+    description: "週次・月次レポートの自動生成" 
+  },
+  "/drive": { 
+    icon: FolderOpen, 
+    description: "レポートとドキュメントの管理" 
+  },
+}
+
+export function DashboardHeader({ title, description, breadcrumb, icon }: DashboardHeaderProps) {
+  // Get current path from window if available
+  const path = typeof window !== "undefined" ? window.location.pathname : ""
+  const config = pageConfig[path] || { icon: BarChart3, description: "" }
+  const Icon = icon || config.icon
+  const desc = description || config.description
+
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background px-6">
+    <header className="sticky top-0 z-30 flex h-20 items-center border-b border-border bg-background px-6">
       <div className="flex items-center gap-4">
-        <div>
-          {breadcrumb && breadcrumb.length > 0 && (
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-0.5">
-              {breadcrumb.map((item, index) => (
-                <span key={`breadcrumb-${index}`} className="flex items-center gap-1.5">
-                  {index > 0 && <span>/</span>}
-                  <span>{item}</span>
-                </span>
-              ))}
-            </div>
-          )}
+        {/* Icon */}
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+          <Icon className="h-6 w-6" />
+        </div>
+        
+        {/* Title and Description */}
+        <div className="flex flex-col">
           <h1 className="text-xl font-semibold text-foreground">{title}</h1>
+          {desc && (
+            <p className="text-sm text-muted-foreground">{desc}</p>
+          )}
         </div>
-      </div>
-
-      <div className="flex items-center gap-3">
-        {/* インラインフィルター */}
-        <div className="hidden md:flex items-center gap-2">
-          <Select defaultValue="30days">
-            <SelectTrigger className="h-9 w-[130px] text-sm">
-              <Calendar className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-              <SelectValue placeholder="期間" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7days">過去7日間</SelectItem>
-              <SelectItem value="30days">過去30日間</SelectItem>
-              <SelectItem value="90days">過去90日間</SelectItem>
-              <SelectItem value="1year">過去1年間</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select defaultValue="all">
-            <SelectTrigger className="h-9 w-[100px] text-sm">
-              <SelectValue placeholder="地域" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">全国</SelectItem>
-              <SelectItem value="kanto">関東</SelectItem>
-              <SelectItem value="kansai">関西</SelectItem>
-              <SelectItem value="tokai">東海</SelectItem>
-              <SelectItem value="kyushu">九州</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="hidden md:block h-6 w-px bg-border" />
-
-        {/* 検索 */}
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="検索..."
-            className="h-9 w-[180px] pl-9 text-sm bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
-          />
-        </div>
-
-        {/* 通知 */}
-        <Button variant="ghost" size="icon" className="relative h-9 w-9">
-          <Bell className="h-4 w-4" />
-          <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-accent text-accent-foreground border-0">
-            3
-          </Badge>
-        </Button>
       </div>
     </header>
   )
