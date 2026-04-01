@@ -11,7 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { X, Users, ChevronDown, Briefcase, Heart, ShoppingBag } from "lucide-react"
+import { X, Users, User, ChevronDown, Briefcase, Heart, ShoppingBag } from "lucide-react"
 import { FUNNEL_COLORS } from "@/lib/constants"
 
 // ステージの定義（共通定数の色を使用）
@@ -291,7 +291,7 @@ const segmentData: Record<string, Record<string, {
         { range: "300万未満", rate: "12%" },
       ],
       summary: "購買力はあるが健康意識は低め。ブランドや話題性で商品選択。ECでの購買比率が高い。",
-      interests: ["テクノロジー", "ガジェット", "投資", "ゲーム", "外食"],
+      interests: ["テクノロジー", "ガジェット", "投���", "ゲーム", "外食"],
       purchaseBehavior: [
         { label: "主��購買チャネル", value: "EC・コンビニ" },
         { label: "購買頻度", value: "週2回" },
@@ -591,7 +591,7 @@ const segmentData: Record<string, Record<string, {
         { range: "900万以上", rate: "22%" },
         { range: "300〜500万未満", rate: "15%" },
       ],
-      summary: "購買力はあるが健康モチベーションは低め。便利さや習慣で継続。離脱リスクは中程度。",
+      summary: "購買力はあるが健康モチベーションは低め��便利さや習慣で継続。離脱リスクは中程度。",
       interests: ["テクノロジー", "仕事効率化", "投資", "ゲーム", "外食"],
       purchaseBehavior: [
         { label: "主要購買チャネル", value: "EC・定期購入" },
