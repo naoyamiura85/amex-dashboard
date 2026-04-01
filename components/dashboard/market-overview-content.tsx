@@ -43,15 +43,15 @@ const segmentData: Record<string, Record<string, {
     h: {
       population: "1200万人",
       personas: [
-        { id: "1", name: "佐藤健一", image: "/images/personas/sato.jpg" },
-        { id: "2", name: "田中正雄", image: "/images/personas/tanaka.jpg" },
-        { id: "3", name: "山本洋子", image: "/images/personas/yamamoto.jpg" },
-        { id: "4", name: "山田美和", image: "/images/personas/yamada.jpg" },
-        { id: "5", name: "鈴木太郎", image: "/images/personas/suzuki.jpg" },
-        { id: "6", name: "高橋由美", image: "/images/personas/takahashi.jpg" },
-        { id: "7", name: "伊藤健", image: "/images/personas/goto.jpg" },
-        { id: "8", name: "渡辺恵", image: "/images/personas/okada.jpg" },
-        { id: "9", name: "小林誠", image: "/images/personas/kobayashi.jpg" },
+        { id: "1", name: "佐藤健一", image: "/images/personas/senior_man1.jpg" },
+        { id: "2", name: "田中正雄", image: "/images/personas/casual_man1.jpg" },
+        { id: "3", name: "山本洋子", image: "/images/personas/senior_woman1.jpg" },
+        { id: "4", name: "山田美和", image: "/images/personas/housewife2.jpg" },
+        { id: "5", name: "鈴木太郎", image: "/images/personas/middle_woman1.jpg" },
+        { id: "6", name: "高橋由美", image: "/images/personas/housewife1.jpg" },
+        { id: "7", name: "伊藤健", image: "/images/personas/young_man1.jpg" },
+        { id: "8", name: "渡辺恵", image: "/images/personas/young_mother1.jpg" },
+        { id: "9", name: "小林誠", image: "/images/personas/student1.jpg" },
       ],
       demographics: { genderRatio: "男女ほぼ同率", avgAge: "58歳", marriedRate: "72%", childRate: "65%" },
       occupation: [
@@ -78,13 +78,13 @@ const segmentData: Record<string, Record<string, {
     m: {
       population: "1800万人",
       personas: [
-        { id: "1", name: "中村一郎", image: "/images/personas/nakamura.jpg" },
-        { id: "2", name: "加藤美咲", image: "/images/personas/maeda.jpg" },
-        { id: "3", name: "吉田浩", image: "/images/personas/fujita.jpg" },
-        { id: "4", name: "佐々木花", image: "/images/personas/hashimoto.jpg" },
-        { id: "5", name: "山口大輔", image: "/images/personas/uchida.jpg" },
-        { id: "6", name: "松本理恵", image: "/images/personas/kobayashi.jpg" },
-        { id: "7", name: "井上翔", image: "/images/personas/goto.jpg" },
+        { id: "1", name: "中村一郎", image: "/images/personas/casual_man1.jpg" },
+        { id: "2", name: "加藤美咲", image: "/images/personas/young_woman1.jpg" },
+        { id: "3", name: "吉田浩", image: "/images/personas/young_man1.jpg" },
+        { id: "4", name: "佐々木花", image: "/images/personas/housewife1.jpg" },
+        { id: "5", name: "山口大輔", image: "/images/personas/senior_man1.jpg" },
+        { id: "6", name: "松本理恵", image: "/images/personas/young_mother1.jpg" },
+        { id: "7", name: "井上翔", image: "/images/personas/student1.jpg" },
       ],
       demographics: { genderRatio: "女性やや多め", avgAge: "45歳", marriedRate: "65%", childRate: "55%" },
       occupation: [
@@ -111,10 +111,10 @@ const segmentData: Record<string, Record<string, {
     l: {
       population: "1500万人",
       personas: [
-        { id: "1", name: "木村翔太", image: "/images/personas/suzuki.jpg" },
-        { id: "2", name: "林美穂", image: "/images/personas/takahashi.jpg" },
-        { id: "3", name: "清水健太", image: "/images/personas/ishii.jpg" },
-        { id: "4", name: "山崎愛", image: "/images/personas/maeda.jpg" },
+        { id: "1", name: "木村翔太", image: "/images/personas/young_man1.jpg" },
+        { id: "2", name: "林美穂", image: "/images/personas/student1.jpg" },
+        { id: "3", name: "清水健太", image: "/images/personas/casual_man1.jpg" },
+        { id: "4", name: "山崎愛", image: "/images/personas/young_woman1.jpg" },
       ],
       demographics: { genderRatio: "男性やや多め", avgAge: "35歳", marriedRate: "45%", childRate: "30%" },
       occupation: [
@@ -143,11 +143,11 @@ const segmentData: Record<string, Record<string, {
     h: {
       population: "283万人",
       personas: [
-        { id: "1", name: "石井康夫", image: "/images/personas/ishii.jpg" },
-        { id: "2", name: "前田由紀", image: "/images/personas/maeda.jpg" },
-        { id: "3", name: "藤田誠一", image: "/images/personas/fujita.jpg" },
-        { id: "4", name: "岡田さゆり", image: "/images/personas/okada.jpg" },
-        { id: "5", name: "後藤健二", image: "/images/personas/goto.jpg" },
+        { id: "1", name: "石井康夫", image: "/images/personas/middle_woman1.jpg" },
+        { id: "2", name: "前田由紀", image: "/images/personas/housewife2.jpg" },
+        { id: "3", name: "藤田誠一", image: "/images/personas/senior_man1.jpg" },
+        { id: "4", name: "岡田さゆり", image: "/images/personas/senior_woman1.jpg" },
+        { id: "5", name: "後藤健二", image: "/images/personas/casual_man1.jpg" },
       ],
       demographics: { genderRatio: "女性やや多め", avgAge: "52歳", marriedRate: "78%", childRate: "70%" },
       occupation: [
@@ -174,10 +174,10 @@ const segmentData: Record<string, Record<string, {
     m: {
       population: "340万人",
       personas: [
-        { id: "1", name: "村上大樹", image: "/images/personas/harada.jpg" },
-        { id: "2", name: "近藤真理", image: "/images/personas/hashimoto.jpg" },
-        { id: "3", name: "坂本隆", image: "/images/personas/uchida.jpg" },
-        { id: "4", name: "遠藤美香", image: "/images/personas/kobayashi.jpg" },
+        { id: "1", name: "村上大樹", image: "/images/personas/housewife1.jpg" },
+        { id: "2", name: "近藤真理", image: "/images/personas/young_mother1.jpg" },
+        { id: "3", name: "坂本隆", image: "/images/personas/casual_man1.jpg" },
+        { id: "4", name: "遠藤美香", image: "/images/personas/middle_woman1.jpg" },
       ],
       demographics: { genderRatio: "男女ほぼ同率", avgAge: "48歳", marriedRate: "70%", childRate: "60%" },
       occupation: [
@@ -204,10 +204,10 @@ const segmentData: Record<string, Record<string, {
     l: {
       population: "227万人",
       personas: [
-        { id: "1", name: "青木拓也", image: "/images/personas/nakamura.jpg" },
-        { id: "2", name: "斎藤恵子", image: "/images/personas/yamamoto.jpg" },
-        { id: "3", name: "西村康平", image: "/images/personas/sato.jpg" },
-        { id: "4", name: "福田あゆみ", image: "/images/personas/yamada.jpg" },
+        { id: "1", name: "青木拓也", image: "/images/personas/young_man1.jpg" },
+        { id: "2", name: "斎藤恵子", image: "/images/personas/young_woman1.jpg" },
+        { id: "3", name: "西村康平", image: "/images/personas/student1.jpg" },
+        { id: "4", name: "福田あゆみ", image: "/images/personas/housewife1.jpg" },
       ],
       demographics: { genderRatio: "男性やや多め", avgAge: "38歳", marriedRate: "55%", childRate: "40%" },
       occupation: [
@@ -236,11 +236,11 @@ const segmentData: Record<string, Record<string, {
     h: {
       population: "128万人",
       personas: [
-        { id: "1", name: "原田正樹", image: "/images/personas/harada.jpg" },
-        { id: "2", name: "小川美紀", image: "/images/personas/takahashi.jpg" },
-        { id: "3", name: "三浦健司", image: "/images/personas/tanaka.jpg" },
-        { id: "4", name: "中島愛子", image: "/images/personas/yamamoto.jpg" },
-        { id: "5", name: "阿部俊介", image: "/images/personas/suzuki.jpg" },
+        { id: "1", name: "原田正樹", image: "/images/personas/senior_woman1.jpg" },
+        { id: "2", name: "小川美紀", image: "/images/personas/housewife2.jpg" },
+        { id: "3", name: "三浦健司", image: "/images/personas/senior_man1.jpg" },
+        { id: "4", name: "中島愛子", image: "/images/personas/middle_woman1.jpg" },
+        { id: "5", name: "阿部俊介", image: "/images/personas/casual_man1.jpg" },
       ],
       demographics: { genderRatio: "女性多め", avgAge: "55歳", marriedRate: "80%", childRate: "72%" },
       occupation: [
@@ -267,10 +267,10 @@ const segmentData: Record<string, Record<string, {
     m: {
       population: "107万人",
       personas: [
-        { id: "1", name: "橋本雄一", image: "/images/personas/hashimoto.jpg" },
-        { id: "2", name: "川村さくら", image: "/images/personas/okada.jpg" },
-        { id: "3", name: "上田勝", image: "/images/personas/fujita.jpg" },
-        { id: "4", name: "森下恵美", image: "/images/personas/maeda.jpg" },
+        { id: "1", name: "橋本雄一", image: "/images/personas/housewife1.jpg" },
+        { id: "2", name: "川村さくら", image: "/images/personas/young_mother1.jpg" },
+        { id: "3", name: "上田勝", image: "/images/personas/senior_man1.jpg" },
+        { id: "4", name: "森下恵美", image: "/images/personas/young_woman1.jpg" },
       ],
       demographics: { genderRatio: "男女ほぼ同率", avgAge: "50歳", marriedRate: "75%", childRate: "65%" },
       occupation: [
@@ -297,9 +297,9 @@ const segmentData: Record<string, Record<string, {
     l: {
       population: "85万人",
       personas: [
-        { id: "1", name: "内田雅人", image: "/images/personas/uchida.jpg" },
-        { id: "2", name: "松井真由美", image: "/images/personas/kobayashi.jpg" },
-        { id: "3", name: "野村太一", image: "/images/personas/ishii.jpg" },
+        { id: "1", name: "内田雅人", image: "/images/personas/young_man1.jpg" },
+        { id: "2", name: "松井真由美", image: "/images/personas/student1.jpg" },
+        { id: "3", name: "野村太一", image: "/images/personas/casual_man1.jpg" },
       ],
       demographics: { genderRatio: "男性やや多め", avgAge: "40歳", marriedRate: "60%", childRate: "45%" },
       occupation: [
@@ -328,12 +328,12 @@ const segmentData: Record<string, Record<string, {
     h: {
       population: "79万人",
       personas: [
-        { id: "1", name: "長谷川浩", image: "/images/personas/sato.jpg" },
-        { id: "2", name: "菊地美佳", image: "/images/personas/yamamoto.jpg" },
-        { id: "3", name: "平野誠", image: "/images/personas/tanaka.jpg" },
-        { id: "4", name: "石川由美子", image: "/images/personas/yamada.jpg" },
-        { id: "5", name: "渡邊健一", image: "/images/personas/nakamura.jpg" },
-        { id: "6", name: "杉山明美", image: "/images/personas/takahashi.jpg" },
+        { id: "1", name: "長谷川浩", image: "/images/personas/senior_man1.jpg" },
+        { id: "2", name: "菊地美佳", image: "/images/personas/senior_woman1.jpg" },
+        { id: "3", name: "平野誠", image: "/images/personas/housewife2.jpg" },
+        { id: "4", name: "石川由美子", image: "/images/personas/middle_woman1.jpg" },
+        { id: "5", name: "渡邊健一", image: "/images/personas/casual_man1.jpg" },
+        { id: "6", name: "杉山明美", image: "/images/personas/housewife1.jpg" },
       ],
       demographics: { genderRatio: "女性多め", avgAge: "58歳", marriedRate: "85%", childRate: "75%" },
       occupation: [
@@ -360,10 +360,10 @@ const segmentData: Record<string, Record<string, {
     m: {
       population: "57万人",
       personas: [
-        { id: "1", name: "岩崎一馬", image: "/images/personas/goto.jpg" },
-        { id: "2", name: "久保田恵", image: "/images/personas/okada.jpg" },
-        { id: "3", name: "横山大輔", image: "/images/personas/harada.jpg" },
-        { id: "4", name: "白石理恵", image: "/images/personas/hashimoto.jpg" },
+        { id: "1", name: "岩崎一馬", image: "/images/personas/young_mother1.jpg" },
+        { id: "2", name: "久保田恵", image: "/images/personas/housewife1.jpg" },
+        { id: "3", name: "横山大輔", image: "/images/personas/senior_man1.jpg" },
+        { id: "4", name: "白石理恵", image: "/images/personas/middle_woman1.jpg" },
       ],
       demographics: { genderRatio: "男女ほぼ同率", avgAge: "52歳", marriedRate: "78%", childRate: "68%" },
       occupation: [
@@ -390,8 +390,8 @@ const segmentData: Record<string, Record<string, {
     l: {
       population: "34万人",
       personas: [
-        { id: "1", name: "大野雄介", image: "/images/personas/uchida.jpg" },
-        { id: "2", name: "安藤玲子", image: "/images/personas/maeda.jpg" },
+        { id: "1", name: "大野雄介", image: "/images/personas/young_man1.jpg" },
+        { id: "2", name: "安藤玲子", image: "/images/personas/young_woman1.jpg" },
       ],
       demographics: { genderRatio: "男性やや多め", avgAge: "42歳", marriedRate: "62%", childRate: "50%" },
       occupation: [
@@ -600,7 +600,7 @@ export function MarketOverviewContent() {
                           <span className="font-medium">{segment.demographics.marriedRate}</span>
                         </div>
                         <div className="flex justify-between py-2">
-                          <span className="text-muted-foreground">子あり率</span>
+                          <span className="text-muted-foreground">子��り率</span>
                           <span className="font-medium">{segment.demographics.childRate}</span>
                         </div>
                       </div>
