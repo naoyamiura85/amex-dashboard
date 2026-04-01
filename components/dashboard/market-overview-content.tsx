@@ -660,7 +660,7 @@ const segmentData: Record<string, Record<string, {
 // AIペルソナの詳細データ
 const aiPersonaDetails: Record<string, { age: number; gender: string; tags: string[] }> = {
   "佐藤健一": { age: 69, gender: "男性", tags: ["ゴルフ派", "日本酒派"] },
-  "田中正��": { age: 71, gender: "男性", tags: ["山歩き・ハイ", "ゴルフ派"] },
+  "田中正雄": { age: 71, gender: "男性", tags: ["山歩き・ハイキング", "ゴルフ派"] },
   "山本洋子": { age: 67, gender: "女性", tags: ["ゴルフ派", "美容・エイジ"] },
   "山田美和": { age: 70, gender: "女性", tags: ["ヨガ・太極拳", "オーガニック"] },
   "鈴木太郎": { age: 65, gender: "男性", tags: ["釣り", "健康志向"] },
@@ -848,7 +848,7 @@ export function MarketOverviewContent() {
                           <span className="font-medium">{segment.demographics.marriedRate}</span>
                         </div>
                         <div className="flex justify-between py-2">
-                          <span className="text-muted-foreground">子��り率</span>
+                          <span className="text-muted-foreground">子あり率</span>
                           <span className="font-medium">{segment.demographics.childRate}</span>
                         </div>
                       </div>
