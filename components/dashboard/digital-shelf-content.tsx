@@ -4,21 +4,28 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Progress } from "@/components/ui/progress"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
 import {
   Users,
+  Search,
   Eye,
   ShoppingCart,
   Crown,
   ArrowRight,
-  ChevronDown,
-  ChevronUp,
-  Lightbulb,
-  Target,
-  TestTube,
   TrendingUp,
   TrendingDown,
+  X,
+  User,
+  Briefcase,
+  Heart,
+  AlertTriangle,
 } from "lucide-react"
 
 // 商品の定義（サントリーD2C商品）
@@ -31,91 +38,350 @@ const products = [
   { id: "zone", name: "ZONe", category: "エナジードリンク", image: "/images/products/zone.jpg" },
 ]
 
-// ファネル分析データ
-const funnelAnalysis = [
-  {
-    segment: "全体",
-    title: "カテゴリ潜在層",
-    description: "Tunes上で食品・飲料カテゴリに関与が高いが、自社ECには未来訪の層。「来てもおかしくないのに来ていない」ペルソナの特定",
-    count: "2,450万人",
-    growth: 12.5,
-    color: "bg-slate-500",
-  },
-  {
-    segment: "来訪者",
-    title: "来訪×ペルソナ照合",
-    description: "来訪したが購買しなかった人のTunesプロファイル。閲覧商品×価値観で「何を期待して来て、何が足りなかったか」を推定",
-    count: "890万人",
-    growth: 8.3,
-    color: "bg-blue-500",
-  },
-  {
-    segment: "購買者",
-    title: "購買×ペルソナ深掘り",
-    description: "実購買者のTunesクラスタ分布。「どんな価値観の人が、何を、いくらで、どの頻度で買っているか」のクロス分析",
-    count: "245万人",
-    growth: 15.7,
-    color: "bg-purple-500",
-  },
-  {
-    segment: "ロイヤル",
-    title: "LTV上位×ペルソナ特徴",
-    description: "リピーター・高LTV層のTunes特徴量。ロイヤル層が共通して持つ価値観 → 新商品の「誰に向けて作るか」の定義に直結",
-    count: "42万人",
-    growth: 23.1,
-    color: "bg-amber-500",
-  },
+// サンキーダイアグラムのステージデータ
+const sankeyStages = [
+  { id: "search", name: "検索", icon: Search, count: 2450000, color: "#6B7280" },
+  { id: "visit", name: "来訪", icon: Eye, count: 890000, color: "#3B82F6" },
+  { id: "cart", name: "カート", icon: ShoppingCart, count: 420000, color: "#8B5CF6" },
+  { id: "purchase", name: "購入", icon: ShoppingCart, count: 245000, color: "#10B981" },
+  { id: "repeat", name: "リピート", icon: Crown, count: 98000, color: "#F59E0B" },
 ]
 
-// 商品開発への接続
-const developmentConnections = [
-  {
-    type: "Gap",
-    title: "品揃えギャップ",
-    color: "bg-rose-500",
-    items: [
-      { text: "来訪⇔離脱のペルソナが求める商品属性を特定し、不足SKUを提案", highlight: "来訪⇔離脱" },
-      { text: "ゼロ結果検索×Tunesクラスタで「誰のどんなニーズ」が欠落しているか可視化", highlight: "ゼロ結果検索" },
-    ],
-  },
-  {
-    type: "Who",
-    title: "ペルソナ起点開発",
-    color: "bg-blue-500",
-    items: [
-      { text: "高LTV層の価値観から逆算した商品コンセプトの自動生成", highlight: "高LTV層" },
-      { text: "Claimed（雪だるま値）とObserved（↓購買）のズレから隠れたニーズを発掘", highlight: "Claimed" },
-    ],
-  },
-  {
-    type: "Test",
-    title: "開発前検証",
-    color: "bg-emerald-500",
-    items: [
-      { text: "新商品コンセプトに対するペルソナ別の受容性予測（Tunesベース）", highlight: "ペルソナ別" },
-      { text: "類似商品の購買実績から需要の「質」をシミュレーション", highlight: "質" },
-    ],
-  },
+// フロー（移動）データ
+const sankeyFlows = [
+  { from: "search", to: "visit", value: 890000, rate: 36.3 },
+  { from: "visit", to: "cart", value: 420000, rate: 47.2 },
+  { from: "cart", to: "purchase", value: 245000, rate: 58.3 },
+  { from: "purchase", to: "repeat", value: 98000, rate: 40.0 },
 ]
 
-// ペルソナクラスタデータ
-const personaClusters = [
-  { name: "健康志向ファミリー", count: 125000, share: 28, ltv: 18500, color: "#00A0D2" },
-  { name: "価値重視シニア", count: 98000, share: 22, ltv: 24200, color: "#0077A3" },
-  { name: "トレンド敏感Z世代", count: 78000, share: 17, ltv: 12800, color: "#00C4B4" },
-  { name: "品質こだわり層", count: 67000, share: 15, ltv: 21500, color: "#F59E0B" },
-  { name: "コスパ重視層", count: 52000, share: 12, ltv: 9200, color: "#6B7280" },
-  { name: "その他", count: 25000, share: 6, ltv: 11000, color: "#D1D5DB" },
+// 離脱データ
+const sankeyDropoffs = [
+  { from: "search", value: 1560000, rate: 63.7, reason: "検索離脱" },
+  { from: "visit", value: 470000, rate: 52.8, reason: "来訪離脱" },
+  { from: "cart", value: 175000, rate: 41.7, reason: "カート放棄" },
+  { from: "purchase", value: 147000, rate: 60.0, reason: "単発購入" },
 ]
+
+// ペルソナデータ（フローごと）
+const flowPersonas: Record<string, {
+  title: string
+  description: string
+  insights: string[]
+  personas: Array<{
+    name: string
+    age: number
+    gender: string
+    occupation: string
+    image: string
+    tags: string[]
+    behavior: string
+  }>
+}> = {
+  "search-visit": {
+    title: "検索 → 来訪",
+    description: "検索から実際にサイトを訪問したユーザー層",
+    insights: [
+      "健康志向が高く、特定の成分名で検索する傾向",
+      "口コミやレビューを重視する",
+      "比較検討に時間をかける",
+    ],
+    personas: [
+      { name: "佐藤健一", age: 45, gender: "男性", occupation: "会社員", image: "/images/personas/casual_man1.jpg", tags: ["健康志向", "情報収集型"], behavior: "成分効果を詳しく調査" },
+      { name: "田中美和", age: 38, gender: "女性", occupation: "主婦", image: "/images/personas/housewife1.jpg", tags: ["家族の健康", "価格比較"], behavior: "複数商品を比較検討" },
+      { name: "山田拓也", age: 52, gender: "男性", occupation: "経営者", image: "/images/personas/senior_man1.jpg", tags: ["プレミアム志向", "時短"], behavior: "口コミ評価を重視" },
+    ],
+  },
+  "visit-cart": {
+    title: "来訪 → カート",
+    description: "サイト訪問後、カートに商品を追加したユーザー層",
+    insights: [
+      "商品詳細ページを複数回閲覧",
+      "定期購入オプションに関心が高い",
+      "送料無料ラインを意識した購買行動",
+    ],
+    personas: [
+      { name: "鈴木洋子", age: 42, gender: "女性", occupation: "パート", image: "/images/personas/middle_woman1.jpg", tags: ["コスパ重視", "まとめ買い"], behavior: "送料無料を狙う" },
+      { name: "高橋誠", age: 58, gender: "男性", occupation: "管理職", image: "/images/personas/casual_man1.jpg", tags: ["定期購入派", "品質重視"], behavior: "定期便を検討" },
+    ],
+  },
+  "cart-purchase": {
+    title: "カート → 購入",
+    description: "カートから実際に購入完了したユーザー層",
+    insights: [
+      "決済方法の選択肢を重視",
+      "初回割引キャンペーンに反応",
+      "レビュー投稿率が高い",
+    ],
+    personas: [
+      { name: "伊藤恵", age: 35, gender: "女性", occupation: "会社員", image: "/images/personas/young_woman1.jpg", tags: ["即決型", "ポイント活用"], behavior: "クーポン利用で購入" },
+      { name: "渡辺健太", age: 48, gender: "男性", occupation: "自営業", image: "/images/personas/senior_man1.jpg", tags: ["信頼重視", "継続利用"], behavior: "まずは試し買い" },
+    ],
+  },
+  "purchase-repeat": {
+    title: "購入 → リピート",
+    description: "初回購入後、継続購入しているロイヤルユーザー層",
+    insights: [
+      "平均LTVが最も高いセグメント",
+      "口コミ投稿・紹介が活発",
+      "新商品への関心が高い",
+    ],
+    personas: [
+      { name: "小林正雄", age: 65, gender: "男性", occupation: "退職", image: "/images/personas/senior_man1.jpg", tags: ["健康投資", "ロイヤル"], behavior: "毎月定期購入" },
+      { name: "中村由美", age: 55, gender: "女性", occupation: "専業主婦", image: "/images/personas/housewife1.jpg", tags: ["品質重視", "紹介者"], behavior: "家族にも推奨" },
+    ],
+  },
+}
+
+// 離脱ペルソナデータ
+const dropoffPersonas: Record<string, {
+  title: string
+  description: string
+  reasons: string[]
+  recommendations: string[]
+  personas: Array<{
+    name: string
+    age: number
+    gender: string
+    occupation: string
+    image: string
+    tags: string[]
+    dropReason: string
+  }>
+}> = {
+  "search": {
+    title: "検索離脱",
+    description: "検索後、サイトに来訪せず離脱したユーザー層",
+    reasons: [
+      "検索結果での競合優位性不足",
+      "広告クリエイティブの訴求力不足",
+      "ブランド認知度の低さ",
+    ],
+    recommendations: [
+      "SEO対策の強化（特に成分名キーワード）",
+      "リスティング広告のクリエイティブ改善",
+      "SNSでのブランド認知向上施策",
+    ],
+    personas: [
+      { name: "木村太郎", age: 32, gender: "男性", occupation: "会社員", image: "/images/personas/young_man1.jpg", tags: ["価格重視", "即断型"], dropReason: "競合の安さに流れた" },
+      { name: "松本恵子", age: 45, gender: "女性", occupation: "パート", image: "/images/personas/middle_woman1.jpg", tags: ["口コミ重視", "慎重派"], dropReason: "レビュー数が少なかった" },
+    ],
+  },
+  "visit": {
+    title: "来訪離脱",
+    description: "サイト訪問後、カートに入れずに離脱したユーザー層",
+    reasons: [
+      "商品情報の不足・わかりにくさ",
+      "価格への納得感不足",
+      "サイトの使いにくさ",
+    ],
+    recommendations: [
+      "商品詳細ページのコンテンツ充実",
+      "価格の根拠・価値の明確化",
+      "サイトUX/UIの改善",
+    ],
+    personas: [
+      { name: "斎藤健", age: 55, gender: "男性", occupation: "管理職", image: "/images/personas/senior_man1.jpg", tags: ["比較検討", "時間がない"], dropReason: "情報収集だけで終了" },
+      { name: "井上美咲", age: 28, gender: "女性", occupation: "会社員", image: "/images/personas/young_woman1.jpg", tags: ["SNS情報重視", "価格敏感"], dropReason: "思ったより高かった" },
+    ],
+  },
+  "cart": {
+    title: "カート放棄",
+    description: "カートに入れたが購入せず離脱したユーザー層",
+    reasons: [
+      "送料が高い",
+      "決済方法が限られている",
+      "購入手続きが複雑",
+    ],
+    recommendations: [
+      "送料無料キャンペーンの実施",
+      "決済方法の追加（Amazon Pay等）",
+      "購入フローの簡素化",
+    ],
+    personas: [
+      { name: "加藤裕子", age: 40, gender: "女性", occupation: "主婦", image: "/images/personas/housewife1.jpg", tags: ["送料敏感", "まとめ買い派"], dropReason: "送料がかかると分かり離脱" },
+      { name: "山口隆", age: 38, gender: "男性", occupation: "エンジニア", image: "/images/personas/casual_man1.jpg", tags: ["Amazon Pay派", "時短重視"], dropReason: "決済が面倒で後回し" },
+    ],
+  },
+  "purchase": {
+    title: "単発購入",
+    description: "1回購入したが、リピートしていないユーザー層",
+    reasons: [
+      "効果実感の不足",
+      "価格に対する継続負担感",
+      "定期購入への心理的ハードル",
+    ],
+    recommendations: [
+      "効果実感を促すフォローメール",
+      "2回目購入の特別割引",
+      "定期購入のメリット訴求強化",
+    ],
+    personas: [
+      { name: "森田一郎", age: 50, gender: "男性", occupation: "自営業", image: "/images/personas/senior_man1.jpg", tags: ["試し買い", "効果重視"], dropReason: "効果がよくわからなかった" },
+      { name: "石井真由美", age: 35, gender: "女性", occupation: "会社員", image: "/images/personas/young_woman1.jpg", tags: ["飽き性", "新商品好き"], dropReason: "他の商品を試したくなった" },
+    ],
+  },
+}
 
 interface DigitalShelfContentProps {
   selectedProduct?: string
 }
 
 export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfContentProps) {
-  const [expandedFunnel, setExpandedFunnel] = useState<string | null>("購買者")
+  const [selectedFlow, setSelectedFlow] = useState<string | null>(null)
+  const [selectedDropoff, setSelectedDropoff] = useState<string | null>(null)
 
   const currentProduct = products.find(p => p.id === selectedProduct)
+
+  // フローのモーダルデータ
+  const flowData = selectedFlow ? flowPersonas[selectedFlow] : null
+  const dropoffData = selectedDropoff ? dropoffPersonas[selectedDropoff] : null
+
+  // サンキーダイアグラムのSVG描画
+  const renderSankeyDiagram = () => {
+    const stageWidth = 120
+    const stageGap = 100
+    const svgWidth = (stageWidth + stageGap) * sankeyStages.length - stageGap
+    const svgHeight = 320
+    const maxCount = sankeyStages[0].count
+
+    return (
+      <div className="relative w-full overflow-x-auto">
+        <svg width={svgWidth} height={svgHeight} className="min-w-full">
+          {/* フローパス（移動） */}
+          {sankeyFlows.map((flow, index) => {
+            const fromIndex = sankeyStages.findIndex(s => s.id === flow.from)
+            const toIndex = sankeyStages.findIndex(s => s.id === flow.to)
+            const fromStage = sankeyStages[fromIndex]
+            const toStage = sankeyStages[toIndex]
+            
+            const fromX = fromIndex * (stageWidth + stageGap) + stageWidth
+            const toX = toIndex * (stageWidth + stageGap)
+            const fromHeight = (fromStage.count / maxCount) * 180
+            const toHeight = (toStage.count / maxCount) * 180
+            const flowHeight = (flow.value / maxCount) * 180
+            
+            const fromY = 80
+            const toY = 80
+            
+            const pathD = `
+              M ${fromX} ${fromY}
+              C ${fromX + 50} ${fromY}, ${toX - 50} ${toY}, ${toX} ${toY}
+              L ${toX} ${toY + flowHeight}
+              C ${toX - 50} ${toY + flowHeight}, ${fromX + 50} ${fromY + flowHeight}, ${fromX} ${fromY + flowHeight}
+              Z
+            `
+            
+            return (
+              <g key={`flow-${index}`}>
+                <path
+                  d={pathD}
+                  fill={toStage.color}
+                  fillOpacity={0.3}
+                  stroke={toStage.color}
+                  strokeWidth={1}
+                  className="cursor-pointer hover:fill-opacity-50 transition-all"
+                  onClick={() => setSelectedFlow(`${flow.from}-${flow.to}`)}
+                />
+                <text
+                  x={(fromX + toX) / 2}
+                  y={fromY + flowHeight / 2 + 4}
+                  textAnchor="middle"
+                  className="text-xs fill-foreground font-medium pointer-events-none"
+                >
+                  {flow.rate}%
+                </text>
+              </g>
+            )
+          })}
+          
+          {/* 離脱パス */}
+          {sankeyDropoffs.map((dropoff, index) => {
+            const fromIndex = sankeyStages.findIndex(s => s.id === dropoff.from)
+            const fromStage = sankeyStages[fromIndex]
+            
+            const x = fromIndex * (stageWidth + stageGap) + stageWidth / 2
+            const fromHeight = (fromStage.count / maxCount) * 180
+            const dropoffHeight = (dropoff.value / maxCount) * 180
+            const startY = 80 + fromHeight - dropoffHeight
+            
+            return (
+              <g key={`dropoff-${index}`}>
+                <path
+                  d={`
+                    M ${x - 20} ${startY}
+                    Q ${x - 20} ${svgHeight - 40}, ${x - 50} ${svgHeight - 30}
+                    L ${x - 40} ${svgHeight - 30}
+                    Q ${x - 10} ${svgHeight - 50}, ${x + 20} ${startY + dropoffHeight}
+                    Z
+                  `}
+                  fill="#EF4444"
+                  fillOpacity={0.2}
+                  stroke="#EF4444"
+                  strokeWidth={1}
+                  strokeDasharray="4 2"
+                  className="cursor-pointer hover:fill-opacity-40 transition-all"
+                  onClick={() => setSelectedDropoff(dropoff.from)}
+                />
+                <text
+                  x={x - 35}
+                  y={svgHeight - 10}
+                  textAnchor="middle"
+                  className="text-[10px] fill-destructive font-medium pointer-events-none"
+                >
+                  -{dropoff.rate}%
+                </text>
+              </g>
+            )
+          })}
+          
+          {/* ステージノード */}
+          {sankeyStages.map((stage, index) => {
+            const x = index * (stageWidth + stageGap)
+            const height = (stage.count / maxCount) * 180
+            const Icon = stage.icon
+            
+            return (
+              <g key={stage.id}>
+                <rect
+                  x={x}
+                  y={80}
+                  width={stageWidth}
+                  height={height}
+                  fill={stage.color}
+                  rx={8}
+                  className="drop-shadow-sm"
+                />
+                <foreignObject x={x} y={20} width={stageWidth} height={50}>
+                  <div className="flex flex-col items-center justify-center h-full">
+                    <div className="flex items-center gap-1 text-foreground">
+                      <Icon className="h-4 w-4" />
+                      <span className="text-sm font-medium">{stage.name}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {(stage.count / 10000).toFixed(0)}万人
+                    </span>
+                  </div>
+                </foreignObject>
+              </g>
+            )
+          })}
+        </svg>
+        
+        {/* 凡例 */}
+        <div className="flex items-center justify-center gap-6 mt-4 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-3 bg-primary/30 rounded border border-primary" />
+            <span className="text-muted-foreground">移動（クリックで詳細）</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-3 bg-destructive/20 rounded border border-destructive border-dashed" />
+            <span className="text-muted-foreground">離脱（クリックで詳細）</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">
@@ -154,177 +420,224 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
         </Card>
       )}
 
-      {/* ファネル別 × TUNES連携分析 */}
+      {/* サンキーダイアグラム */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            ファネル別 × TUNES連携分析
+            購買ファネル分析
           </CardTitle>
-          <CardDescription>各ファネルステージにおけるペルソナ分析と商品開発インサイト</CardDescription>
+          <CardDescription>
+            検索から購入、リピートまでのユーザーフロー。フローや離脱部分をクリックすると該当ペルソナの詳細が見られます。
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3">
-          {funnelAnalysis.map((funnel) => (
-            <div
-              key={funnel.segment}
-              className={`border rounded-lg overflow-hidden transition-all ${
-                expandedFunnel === funnel.segment ? "ring-2 ring-primary" : ""
-              }`}
-            >
-              <button
-                onClick={() => setExpandedFunnel(expandedFunnel === funnel.segment ? null : funnel.segment)}
-                className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors"
-              >
-                <Badge variant="outline" className={`${funnel.color} text-white border-0 min-w-[70px]`}>
-                  {funnel.segment}
-                </Badge>
-                <div className="flex-1 text-left">
-                  <h4 className="font-semibold text-foreground">{funnel.title}</h4>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-primary">{funnel.count}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      {funnel.growth > 0 ? (
-                        <TrendingUp className="h-3 w-3 text-emerald-500" />
-                      ) : (
-                        <TrendingDown className="h-3 w-3 text-rose-500" />
-                      )}
-                      <span className={funnel.growth > 0 ? "text-emerald-500" : "text-rose-500"}>
-                        {funnel.growth > 0 ? "+" : ""}{funnel.growth}%
-                      </span>
-                      <span className="text-muted-foreground">前月比</span>
-                    </p>
-                  </div>
-                  {expandedFunnel === funnel.segment ? (
-                    <ChevronUp className="h-5 w-5 text-muted-foreground" />
-                  ) : (
-                    <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                  )}
-                </div>
-              </button>
-              {expandedFunnel === funnel.segment && (
-                <div className="px-4 pb-4 pt-2 border-t bg-muted/30">
-                  <p className="text-sm text-muted-foreground mb-4">{funnel.description}</p>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    詳細を見る
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))}
+        <CardContent>
+          {renderSankeyDiagram()}
         </CardContent>
       </Card>
 
-      {/* ペルソナクラスタ分布 */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">購買者ペルソナクラスタ分布</CardTitle>
-            <CardDescription>Tunesデータに基づく購買者セグメント</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {personaClusters.map((cluster) => (
-                <div key={cluster.name} className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
-                        style={{ backgroundColor: cluster.color }}
-                      />
-                      <span className="font-medium">{cluster.name}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-muted-foreground">{cluster.count.toLocaleString()}人</span>
-                      <span className="font-semibold w-12 text-right">{cluster.share}%</span>
-                    </div>
-                  </div>
-                  <Progress value={cluster.share} className="h-2" />
+      {/* ファネル別サマリーカード */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        {sankeyStages.map((stage, index) => {
+          const flow = sankeyFlows[index]
+          const dropoff = sankeyDropoffs[index]
+          const Icon = stage.icon
+          
+          return (
+            <Card key={stage.id} className="relative overflow-hidden">
+              <div 
+                className="absolute top-0 left-0 w-1 h-full"
+                style={{ backgroundColor: stage.color }}
+              />
+              <CardContent className="pt-4 pb-3 px-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon className="h-4 w-4" style={{ color: stage.color }} />
+                  <span className="font-medium text-sm">{stage.name}</span>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">クラスタ別LTV</CardTitle>
-            <CardDescription>年間顧客生涯価値の比較</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {personaClusters.slice(0, 5).map((cluster, index) => (
-                <div key={cluster.name} className="flex items-center gap-4">
-                  <div className="w-8 text-center">
-                    <span className={`text-lg font-bold ${index < 3 ? "text-primary" : "text-muted-foreground"}`}>
-                      {index + 1}
+                <p className="text-xl font-bold">{(stage.count / 10000).toFixed(0)}万人</p>
+                <div className="flex items-center gap-2 mt-2 text-xs">
+                  {flow && (
+                    <span className="text-emerald-600 flex items-center gap-1">
+                      <TrendingUp className="h-3 w-3" />
+                      次へ {flow.rate}%
                     </span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div 
-                        className="w-2 h-2 rounded-full" 
-                        style={{ backgroundColor: cluster.color }}
-                      />
-                      <span className="text-sm font-medium">{cluster.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-muted rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full"
-                          style={{
-                            width: `${(cluster.ltv / 25000) * 100}%`,
-                            backgroundColor: cluster.color,
-                          }}
-                        />
-                      </div>
-                      <span className="text-sm font-semibold min-w-[70px] text-right">
-                        ¥{cluster.ltv.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
+                  )}
+                  {dropoff && (
+                    <span className="text-destructive flex items-center gap-1">
+                      <TrendingDown className="h-3 w-3" />
+                      離脱 {dropoff.rate}%
+                    </span>
+                  )}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
-      {/* 商品開発への接続 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">商品開発への接続</CardTitle>
-          <CardDescription>デジタルシェルフデータを製品開発に活用</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
-            {developmentConnections.map((connection) => (
-              <div key={connection.type} className="border rounded-lg p-4 bg-card hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-2 mb-3">
-                  <Badge className={`${connection.color} text-white`}>{connection.type}</Badge>
-                  <h4 className="font-semibold text-foreground">{connection.title}</h4>
-                </div>
-                <ul className="space-y-3">
-                  {connection.items.map((item, i) => (
-                    <li key={i} className="text-sm text-muted-foreground">
-                      <span className="text-primary font-medium">{item.highlight}</span>
-                      {item.text.replace(item.highlight, "").split(item.highlight).join("")}
+      {/* フロー詳細モーダル */}
+      <Dialog open={!!selectedFlow} onOpenChange={() => setSelectedFlow(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ArrowRight className="h-5 w-5 text-primary" />
+              {flowData?.title}
+            </DialogTitle>
+            <DialogDescription>{flowData?.description}</DialogDescription>
+          </DialogHeader>
+          
+          {flowData && (
+            <div className="space-y-6">
+              {/* インサイト */}
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-emerald-500" />
+                  主なインサイト
+                </h4>
+                <ul className="space-y-2">
+                  {flowData.insights.map((insight, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="text-primary mt-1">•</span>
+                      {insight}
                     </li>
                   ))}
                 </ul>
-                <Button variant="ghost" size="sm" className="mt-4 w-full gap-2">
-                  {connection.type === "Gap" && <Target className="h-4 w-4" />}
-                  {connection.type === "Who" && <Lightbulb className="h-4 w-4" />}
-                  {connection.type === "Test" && <TestTube className="h-4 w-4" />}
-                  分析を開始
-                </Button>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              
+              {/* 代表的なペルソナ */}
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <Users className="h-4 w-4 text-primary" />
+                  代表的なペルソナ
+                </h4>
+                <div className="grid gap-3">
+                  {flowData.personas.map((persona, i) => (
+                    <div key={i} className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
+                      <Avatar className="h-12 w-12 border-2 border-primary/20">
+                        <AvatarImage src={persona.image} alt={persona.name} />
+                        <AvatarFallback>{persona.name.slice(0, 2)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{persona.name}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {persona.age}歳 / {persona.gender}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Briefcase className="h-3 w-3" />
+                          {persona.occupation}
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          {persona.tags.map((tag, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-[10px]">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-muted-foreground">行動特性</p>
+                        <p className="text-sm font-medium text-primary">{persona.behavior}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* 離脱詳細モーダル */}
+      <Dialog open={!!selectedDropoff} onOpenChange={() => setSelectedDropoff(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              {dropoffData?.title}
+            </DialogTitle>
+            <DialogDescription>{dropoffData?.description}</DialogDescription>
+          </DialogHeader>
+          
+          {dropoffData && (
+            <div className="space-y-6">
+              {/* 離脱理由 */}
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <X className="h-4 w-4 text-destructive" />
+                  主な離脱理由
+                </h4>
+                <ul className="space-y-2">
+                  {dropoffData.reasons.map((reason, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="text-destructive mt-1">•</span>
+                      {reason}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              {/* 改善提案 */}
+              <div className="bg-emerald-50 dark:bg-emerald-950/30 p-4 rounded-lg">
+                <h4 className="font-semibold mb-3 flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
+                  <TrendingUp className="h-4 w-4" />
+                  改善提案
+                </h4>
+                <ul className="space-y-2">
+                  {dropoffData.recommendations.map((rec, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-emerald-700 dark:text-emerald-300">
+                      <span className="mt-1">→</span>
+                      {rec}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              {/* 離脱ペルソナ */}
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <Users className="h-4 w-4 text-destructive" />
+                  離脱ユーザーの特徴
+                </h4>
+                <div className="grid gap-3">
+                  {dropoffData.personas.map((persona, i) => (
+                    <div key={i} className="flex items-center gap-4 p-3 bg-destructive/5 rounded-lg border border-destructive/20">
+                      <Avatar className="h-12 w-12 border-2 border-destructive/20">
+                        <AvatarImage src={persona.image} alt={persona.name} />
+                        <AvatarFallback>{persona.name.slice(0, 2)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{persona.name}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {persona.age}歳 / {persona.gender}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Briefcase className="h-3 w-3" />
+                          {persona.occupation}
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          {persona.tags.map((tag, idx) => (
+                            <Badge key={idx} variant="outline" className="text-[10px] border-destructive/30">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-muted-foreground">離脱理由</p>
+                        <p className="text-sm font-medium text-destructive">{persona.dropReason}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </main>
   )
 }
