@@ -17,8 +17,6 @@ import {
   TrendingUp,
   MonitorSmartphone,
   Lightbulb,
-  Swords,
-  FileBarChart,
   FlaskConical,
   Boxes,
   ChevronRight,
@@ -65,13 +63,7 @@ const navSections = [
       { title: "デジタルシェルフ分析", icon: MonitorSmartphone, href: "/dashboard/digital-shelf" },
     ],
   },
-  {
-    label: "AI ANALYSIS",
-    defaultOpen: true,
-    items: [
-      { title: "競合分析", icon: Swords, href: "/ai/competitors" },
-    ],
-  },
+
   {
     label: "DEVELOPMENT",
     defaultOpen: true,
