@@ -164,7 +164,7 @@ const dropoffPersonas: Record<string, {
     ],
     personas: [
       { name: "木村太郎", age: 32, gender: "男性", occupation: "会社員", image: "/images/personas/young_man1.jpg", tags: ["価格重視", "即断型"], dropReason: "競合の安さに流れた" },
-      { name: "松本恵子", age: 45, gender: "女性", occupation: "パート", image: "/images/personas/middle_woman1.jpg", tags: ["口コミ重視", "慎重派"], dropReason: "レビュー数が少なかった" },
+      { name: "松本恵子", age: 45, gender: "女性", occupation: "パート", image: "/images/personas/middle_woman1.jpg", tags: ["口コミ重視", "慎重派"], dropReason: "レビュ���数が少なかった" },
     ],
   },
   "visit": {
@@ -237,146 +237,203 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
   const flowData = selectedFlow ? flowPersonas[selectedFlow] : null
   const dropoffData = selectedDropoff ? dropoffPersonas[selectedDropoff] : null
 
-  // サンキーダイアグラムのSVG描画
+  // サンキーダイアグラムのSVG描画（モダンデザイン）
   const renderSankeyDiagram = () => {
-    const stageWidth = 120
-    const stageGap = 100
-    const svgWidth = (stageWidth + stageGap) * sankeyStages.length - stageGap
-    const svgHeight = 320
+    const totalWidth = 900
+    const svgHeight = 400
+    const nodeWidth = 8
+    const nodePadding = 140
     const maxCount = sankeyStages[0].count
+    const baseY = 100
+    const maxNodeHeight = 200
+
+    // グラデーション定義用のカラー
+    const gradientColors = [
+      { from: "#6366F1", to: "#8B5CF6" }, // 検索→来訪 (インディゴ→バイオレット)
+      { from: "#8B5CF6", to: "#06B6D4" }, // 来訪→カート (バイオレット→シアン)
+      { from: "#06B6D4", to: "#10B981" }, // カート→購入 (シアン→エメラルド)
+      { from: "#10B981", to: "#F59E0B" }, // 購入→リピート (エメラルド→アンバー)
+    ]
+
+    const stageColors = ["#6366F1", "#8B5CF6", "#06B6D4", "#10B981", "#F59E0B"]
 
     return (
-      <div className="relative w-full overflow-x-auto">
-        <svg width={svgWidth} height={svgHeight} className="min-w-full">
-          {/* フローパス（移動） */}
+      <div className="relative w-full overflow-x-auto py-4">
+        <svg width={totalWidth} height={svgHeight} className="mx-auto" viewBox={`0 0 ${totalWidth} ${svgHeight}`}>
+          <defs>
+            {/* フロー用グラデーション */}
+            {gradientColors.map((color, i) => (
+              <linearGradient key={`flow-gradient-${i}`} id={`flowGradient${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor={color.from} stopOpacity="0.6" />
+                <stop offset="100%" stopColor={color.to} stopOpacity="0.6" />
+              </linearGradient>
+            ))}
+            {/* ノード用グラデーション */}
+            {stageColors.map((color, i) => (
+              <linearGradient key={`node-gradient-${i}`} id={`nodeGradient${i}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={color} stopOpacity="1" />
+                <stop offset="100%" stopColor={color} stopOpacity="0.7" />
+              </linearGradient>
+            ))}
+            {/* 離脱用グラデーション */}
+            <linearGradient id="dropoffGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#F87171" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#F87171" stopOpacity="0.1" />
+            </linearGradient>
+            {/* シャドウフィルター */}
+            <filter id="nodeShadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.15" />
+            </filter>
+          </defs>
+
+          {/* フローパス（滑らかな曲線） */}
           {sankeyFlows.map((flow, index) => {
             const fromIndex = sankeyStages.findIndex(s => s.id === flow.from)
             const toIndex = sankeyStages.findIndex(s => s.id === flow.to)
             const fromStage = sankeyStages[fromIndex]
             const toStage = sankeyStages[toIndex]
             
-            const fromX = fromIndex * (stageWidth + stageGap) + stageWidth
-            const toX = toIndex * (stageWidth + stageGap)
-            const fromHeight = (fromStage.count / maxCount) * 180
-            const toHeight = (toStage.count / maxCount) * 180
-            const flowHeight = (flow.value / maxCount) * 180
+            const fromX = fromIndex * nodePadding + 60 + nodeWidth
+            const toX = toIndex * nodePadding + 60
+            const fromHeight = (fromStage.count / maxCount) * maxNodeHeight
+            const toHeight = (toStage.count / maxCount) * maxNodeHeight
+            const flowHeight = Math.min((flow.value / maxCount) * maxNodeHeight, toHeight)
             
-            const fromY = 80
-            const toY = 80
+            const controlOffset = (toX - fromX) * 0.4
             
             const pathD = `
-              M ${fromX} ${fromY}
-              C ${fromX + 50} ${fromY}, ${toX - 50} ${toY}, ${toX} ${toY}
-              L ${toX} ${toY + flowHeight}
-              C ${toX - 50} ${toY + flowHeight}, ${fromX + 50} ${fromY + flowHeight}, ${fromX} ${fromY + flowHeight}
+              M ${fromX} ${baseY}
+              C ${fromX + controlOffset} ${baseY}, ${toX - controlOffset} ${baseY}, ${toX} ${baseY}
+              L ${toX} ${baseY + flowHeight}
+              C ${toX - controlOffset} ${baseY + flowHeight}, ${fromX + controlOffset} ${baseY + flowHeight}, ${fromX} ${baseY + flowHeight}
               Z
             `
             
             return (
-              <g key={`flow-${index}`}>
+              <g key={`flow-${index}`} className="group">
                 <path
                   d={pathD}
-                  fill={toStage.color}
-                  fillOpacity={0.3}
-                  stroke={toStage.color}
-                  strokeWidth={1}
-                  className="cursor-pointer hover:fill-opacity-50 transition-all"
+                  fill={`url(#flowGradient${index})`}
+                  className="cursor-pointer transition-all duration-300 group-hover:opacity-80"
+                  style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}
                   onClick={() => setSelectedFlow(`${flow.from}-${flow.to}`)}
                 />
-                <text
-                  x={(fromX + toX) / 2}
-                  y={fromY + flowHeight / 2 + 4}
-                  textAnchor="middle"
-                  className="text-xs fill-foreground font-medium pointer-events-none"
-                >
-                  {flow.rate}%
-                </text>
+                {/* フロー率ラベル */}
+                <g className="pointer-events-none">
+                  <rect
+                    x={(fromX + toX) / 2 - 28}
+                    y={baseY + flowHeight / 2 - 12}
+                    width="56"
+                    height="24"
+                    rx="12"
+                    fill="white"
+                    fillOpacity="0.95"
+                    style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }}
+                  />
+                  <text
+                    x={(fromX + toX) / 2}
+                    y={baseY + flowHeight / 2 + 5}
+                    textAnchor="middle"
+                    className="text-sm font-semibold"
+                    fill={stageColors[toIndex]}
+                  >
+                    {flow.rate}%
+                  </text>
+                </g>
               </g>
             )
           })}
           
-          {/* 離脱パス */}
-          {sankeyDropoffs.map((dropoff, index) => {
-            const fromIndex = sankeyStages.findIndex(s => s.id === dropoff.from)
-            const fromStage = sankeyStages[fromIndex]
-            
-            const x = fromIndex * (stageWidth + stageGap) + stageWidth / 2
-            const fromHeight = (fromStage.count / maxCount) * 180
-            const dropoffHeight = (dropoff.value / maxCount) * 180
-            const startY = 80 + fromHeight - dropoffHeight
-            
-            return (
-              <g key={`dropoff-${index}`}>
-                <path
-                  d={`
-                    M ${x - 20} ${startY}
-                    Q ${x - 20} ${svgHeight - 40}, ${x - 50} ${svgHeight - 30}
-                    L ${x - 40} ${svgHeight - 30}
-                    Q ${x - 10} ${svgHeight - 50}, ${x + 20} ${startY + dropoffHeight}
-                    Z
-                  `}
-                  fill="#EF4444"
-                  fillOpacity={0.2}
-                  stroke="#EF4444"
-                  strokeWidth={1}
-                  strokeDasharray="4 2"
-                  className="cursor-pointer hover:fill-opacity-40 transition-all"
-                  onClick={() => setSelectedDropoff(dropoff.from)}
-                />
-                <text
-                  x={x - 35}
-                  y={svgHeight - 10}
-                  textAnchor="middle"
-                  className="text-[10px] fill-destructive font-medium pointer-events-none"
-                >
-                  -{dropoff.rate}%
-                </text>
-              </g>
-            )
-          })}
-          
-          {/* ステージノード */}
+          {/* ステージノード（縦バー） */}
           {sankeyStages.map((stage, index) => {
-            const x = index * (stageWidth + stageGap)
-            const height = (stage.count / maxCount) * 180
+            const x = index * nodePadding + 60
+            const height = (stage.count / maxCount) * maxNodeHeight
             const Icon = stage.icon
             
             return (
               <g key={stage.id}>
+                {/* ノードバー */}
                 <rect
                   x={x}
-                  y={80}
-                  width={stageWidth}
+                  y={baseY}
+                  width={nodeWidth}
                   height={height}
-                  fill={stage.color}
-                  rx={8}
-                  className="drop-shadow-sm"
+                  fill={`url(#nodeGradient${index})`}
+                  rx={4}
+                  filter="url(#nodeShadow)"
                 />
-                <foreignObject x={x} y={20} width={stageWidth} height={50}>
-                  <div className="flex flex-col items-center justify-center h-full">
-                    <div className="flex items-center gap-1 text-foreground">
-                      <Icon className="h-4 w-4" />
-                      <span className="text-sm font-medium">{stage.name}</span>
+                {/* ラベル（上部） */}
+                <foreignObject x={x - 50} y={baseY - 70} width={110} height={65}>
+                  <div className="flex flex-col items-center justify-end h-full text-center">
+                    <div 
+                      className="flex items-center justify-center w-10 h-10 rounded-full mb-1"
+                      style={{ backgroundColor: `${stageColors[index]}15` }}
+                    >
+                      <Icon className="h-5 w-5" style={{ color: stageColors[index] }} />
                     </div>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-sm font-semibold text-foreground">{stage.name}</span>
+                    <span className="text-lg font-bold" style={{ color: stageColors[index] }}>
                       {(stage.count / 10000).toFixed(0)}万人
                     </span>
                   </div>
                 </foreignObject>
+                
+                {/* 離脱表示（下部） */}
+                {sankeyDropoffs[index] && (
+                  <g 
+                    className="cursor-pointer group/drop"
+                    onClick={() => setSelectedDropoff(stage.id)}
+                  >
+                    <foreignObject x={x - 45} y={baseY + height + 10} width={100} height={60}>
+                      <div className="flex flex-col items-center">
+                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-50 group-hover/drop:bg-red-100 transition-colors border border-red-200">
+                          <TrendingDown className="h-3 w-3 text-red-500" />
+                          <span className="text-xs font-semibold text-red-600">
+                            -{sankeyDropoffs[index].rate}%
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-muted-foreground mt-1">
+                          {(sankeyDropoffs[index].value / 10000).toFixed(0)}万人離脱
+                        </span>
+                      </div>
+                    </foreignObject>
+                  </g>
+                )}
               </g>
             )
           })}
+
+          {/* 矢印インジケーター */}
+          {[0, 1, 2, 3].map((i) => (
+            <g key={`arrow-${i}`} className="pointer-events-none">
+              <circle
+                cx={i * nodePadding + 60 + nodePadding / 2}
+                cy={baseY - 10}
+                r="12"
+                fill="white"
+                stroke="#E5E7EB"
+                strokeWidth="1"
+              />
+              <path
+                d={`M ${i * nodePadding + 60 + nodePadding / 2 - 4} ${baseY - 10} l 8 0 l -4 5 z`}
+                fill="#9CA3AF"
+                transform={`rotate(270, ${i * nodePadding + 60 + nodePadding / 2}, ${baseY - 10})`}
+              />
+            </g>
+          ))}
         </svg>
         
         {/* 凡例 */}
-        <div className="flex items-center justify-center gap-6 mt-4 text-sm">
+        <div className="flex items-center justify-center gap-8 mt-6 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-3 bg-primary/30 rounded border border-primary" />
-            <span className="text-muted-foreground">移動（クリックで詳細）</span>
+            <div className="w-8 h-3 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 opacity-60" />
+            <span className="text-muted-foreground">コンバージョン（クリックで詳細）</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-3 bg-destructive/20 rounded border border-destructive border-dashed" />
-            <span className="text-muted-foreground">離脱（クリックで詳細）</span>
+            <div className="px-2 py-0.5 rounded-full bg-red-50 border border-red-200">
+              <span className="text-[10px] text-red-600 font-medium">-XX%</span>
+            </div>
+            <span className="text-muted-foreground">離脱率（クリックで詳細）</span>
           </div>
         </div>
       </div>
