@@ -193,7 +193,7 @@ export function DashboardSidebar() {
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-2 rounded-lg p-2 text-left hover:bg-muted transition-colors">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=yappi" />
+                  <AvatarImage src="/images/avatar-businessman.jpg" />
                   <AvatarFallback className="bg-primary/10 text-primary text-xs">TY</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
