@@ -101,8 +101,8 @@ export function DashboardSidebar() {
             className="object-contain object-left"
           />
           <div className="flex flex-col border-l border-muted-foreground/30 pl-3">
-            <span className="text-xs font-bold text-foreground leading-tight">サントリー食品</span>
-            <span className="text-[10px] text-muted-foreground leading-tight">D2Cダッシュボード</span>
+            <span className="text-xs font-bold text-foreground leading-tight">D2Cダッシュボード</span>
+            <span className="text-[10px] text-muted-foreground leading-tight">サントリー食品</span>
           </div>
         </Link>
       </SidebarHeader>

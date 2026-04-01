@@ -3,7 +3,7 @@ import { MarketOverviewContent } from "@/components/dashboard/market-overview-co
 import { DashboardHeader } from "@/components/dashboard/header"
 
 export const metadata: Metadata = {
-  title: "Market Overview | サントリー食品",
+  title: "Market Overview | D2Cダッシュボード",
   description: "定期顧客化ポテンシャルとウェルネスレベルごとのペルソナ分布",
 }
 
