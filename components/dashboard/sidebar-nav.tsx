@@ -120,20 +120,14 @@ export function DashboardSidebar() {
     <Sidebar className="border-r border-sidebar-border bg-sidebar">
       {/* Header with Logo - Match sidebar background */}
       <SidebarHeader className="p-0 border-b border-sidebar-border">
-        <Link href="/" className="flex items-center gap-4 bg-sidebar px-4 py-3">
-          <div className="flex h-10 w-16 items-center justify-center">
-            <Image 
-              src="/images/suntory-logo.png" 
-              alt="SUNTORY" 
-              width={72} 
-              height={24}
-              className="object-contain"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold text-foreground tracking-tight">サントリー食品</span>
-            <span className="text-[11px] text-muted-foreground leading-tight">製品開発ダッシュボード</span>
-          </div>
+        <Link href="/" className="flex flex-col bg-sidebar px-4 py-4">
+          <Image 
+            src="/images/suntory-logo.png" 
+            alt="SUNTORY BEVERAGE & FOOD" 
+            width={180} 
+            height={48}
+            className="object-contain"
+          />
         </Link>
       </SidebarHeader>
 
