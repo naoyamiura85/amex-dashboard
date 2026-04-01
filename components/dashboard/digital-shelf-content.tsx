@@ -12,7 +12,6 @@ import {
   ShoppingCart,
   Crown,
   ArrowRight,
-  RefreshCw,
   ChevronDown,
   ChevronUp,
   Lightbulb,
@@ -20,8 +19,6 @@ import {
   TestTube,
   TrendingUp,
   TrendingDown,
-  Database,
-  Layers,
 } from "lucide-react"
 
 // 商品の定義（サントリーD2C商品）
@@ -33,29 +30,6 @@ const products = [
   { id: "coffee", name: "SUNTORY COFFEE ROASTERY", category: "プレミアムコーヒー", image: "/images/products/coffee-roastery.jpg" },
   { id: "zone", name: "ZONe", category: "エナジードリンク", image: "/images/products/zone.jpg" },
 ]
-
-// データソース定義
-const claimedData = {
-  title: "Tunes ペルソナ",
-  badge: "Claimed",
-  badgeColor: "bg-emerald-500",
-  items: [
-    "価値観・ライフスタイル・メディア接触",
-    "食の嗜好・健康意識・環境意識",
-    "ブランド態度・カテゴリ関与度",
-  ],
-}
-
-const observedData = {
-  title: "自社EC行動",
-  badge: "Observed",
-  badgeColor: "bg-amber-500",
-  items: [
-    "検索・閲覧・カート・購買・リピート",
-    "レビュー投稿・Q&A・滞在時間",
-    "離脱ポイント・価格感応度",
-  ],
-}
 
 // ファネル分析データ
 const funnelAnalysis = [
@@ -179,72 +153,6 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
           </CardContent>
         </Card>
       )}
-
-      {/* データソース統合セクション */}
-      <Card>
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg">2つのデータ源</CardTitle>
-              <CardDescription>ID連携 / 類似推定マッチングでSync</CardDescription>
-            </div>
-            <Button variant="outline" size="sm" className="gap-2">
-              <RefreshCw className="h-4 w-4" />
-              データ同期
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Claimed データ */}
-            <div className="border rounded-lg p-4 bg-card">
-              <div className="flex items-center gap-3 mb-3">
-                <Badge className={`${claimedData.badgeColor} text-white`}>
-                  {claimedData.badge}
-                </Badge>
-                <h3 className="font-semibold text-foreground">{claimedData.title}</h3>
-              </div>
-              <ul className="space-y-2">
-                {claimedData.items.map((item, i) => (
-                  <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="text-emerald-500 mt-1">•</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Observed データ */}
-            <div className="border rounded-lg p-4 bg-card">
-              <div className="flex items-center gap-3 mb-3">
-                <Badge className={`${observedData.badgeColor} text-white`}>
-                  {observedData.badge}
-                </Badge>
-                <h3 className="font-semibold text-foreground">{observedData.title}</h3>
-              </div>
-              <ul className="space-y-2">
-                {observedData.items.map((item, i) => (
-                  <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="text-amber-500 mt-1">•</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* 連携表示 */}
-          <div className="flex items-center justify-center gap-4 mt-6 py-4 border-t">
-            <Database className="h-5 w-5 text-emerald-500" />
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <RefreshCw className="h-4 w-4" />
-              <span>ID連携 / 類似推定マッチングでSync</span>
-              <RefreshCw className="h-4 w-4" />
-            </div>
-            <Layers className="h-5 w-5 text-amber-500" />
-          </div>
-        </CardContent>
-      </Card>
 
       {/* ファネル別 × TUNES連携分析 */}
       <Card>
