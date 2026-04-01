@@ -434,8 +434,8 @@ export function AISimulatorContent() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-4 gap-4">
-                {funnelStages.map((stage) => {
+              <div className="flex items-stretch gap-2">
+                {funnelStages.map((stage, index) => {
                   const baseValue = baseFunnel[stage.id as keyof typeof baseFunnel]
                   const currentValue = displayFunnel[stage.id as keyof typeof displayFunnel] || baseValue
                   const diff = currentValue - baseValue
@@ -443,42 +443,44 @@ export function AISimulatorContent() {
                   const Icon = stage.icon
                   
                   return (
-                    <div key={stage.id} className="relative">
+                    <div key={stage.id} className="flex items-center flex-1">
                       <div 
-                        className="rounded-xl p-4 text-center transition-all duration-300"
-                        style={{ 
-                          backgroundColor: `${stage.color}15`,
-                          borderLeft: `4px solid ${stage.color}`,
-                        }}
+                        className="flex-1 rounded-xl overflow-hidden bg-card border transition-all duration-300"
+                        style={{ borderLeftWidth: "4px", borderLeftColor: stage.color }}
                       >
-                        <div 
-                          className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2"
-                          style={{ backgroundColor: `${stage.color}20` }}
-                        >
-                          <Icon className="h-5 w-5" style={{ color: stage.color }} />
-                        </div>
-                        <p className="text-xs text-muted-foreground mb-1">{stage.name}</p>
-                        <p 
-                          className="text-2xl font-bold transition-all duration-300"
-                          style={{ color: stage.color }}
-                        >
-                          {currentValue}
-                          <span className="text-sm font-normal">万人</span>
-                        </p>
-                        
-                        {simulationComplete && diff !== 0 && (
-                          <div className={`mt-2 flex items-center justify-center gap-1 text-sm font-medium ${diff > 0 ? "text-green-600" : "text-red-600"}`}>
-                            {diff > 0 ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
-                            <span>{diff > 0 ? "+" : ""}{diff}万人</span>
-                            <span className="text-xs">({diff > 0 ? "+" : ""}{diffPercent}%)</span>
+                        <div className="p-4">
+                          {/* アイコン */}
+                          <div 
+                            className="w-10 h-10 rounded-full flex items-center justify-center mb-3"
+                            style={{ backgroundColor: `${stage.color}15` }}
+                          >
+                            <Icon className="h-5 w-5" style={{ color: stage.color }} />
                           </div>
-                        )}
+                          
+                          {/* ステージ名 */}
+                          <p className="text-xs text-muted-foreground mb-1">{stage.name}</p>
+                          
+                          {/* 人数 */}
+                          <p className="text-2xl font-bold text-foreground transition-all duration-300">
+                            {currentValue}
+                            <span className="text-sm font-normal text-muted-foreground">万人</span>
+                          </p>
+                          
+                          {/* 変化量 */}
+                          {simulationComplete && diff !== 0 && (
+                            <div className="mt-2 flex items-center gap-2 text-sm" style={{ color: stage.color }}>
+                              <ArrowUpRight className="h-4 w-4" />
+                              <span className="font-medium">+{diff}万人</span>
+                              <span className="text-muted-foreground text-xs">(+{diffPercent}%)</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                       
                       {/* 矢印 */}
-                      {stage.id !== "regular" && (
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10">
-                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                      {index < funnelStages.length - 1 && (
+                        <div className="px-1 text-muted-foreground/50">
+                          <ChevronRight className="h-5 w-5" />
                         </div>
                       )}
                     </div>
@@ -518,7 +520,7 @@ export function AISimulatorContent() {
           </Card>
         </div>
 
-        {/* 右カラム: ペルソナと収益 */}
+        {/* 右カラム: ペル���ナと収益 */}
         <div className="space-y-6">
           {/* ペルソナ影響分析 */}
           <Card>
