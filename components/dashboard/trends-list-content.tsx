@@ -17,7 +17,6 @@ import {
 import { useCategoryMode, categoryModeConfig } from "@/contexts/category-mode-context"
 import { useTrends } from "@/contexts/trends-context"
 import { AddTrendDialog } from "./add-trend-dialog"
-import { ResearchQueue } from "./research-queue"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -236,9 +235,6 @@ export function TrendsListContent() {
           </div>
         </div>
       </div>
-
-      {/* Research Queue */}
-      <ResearchQueue />
 
       {/* Trends Grid/List */}
       {viewMode === "grid" ? (
