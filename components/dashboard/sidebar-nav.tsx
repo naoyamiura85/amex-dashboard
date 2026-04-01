@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -20,10 +19,10 @@ import {
   BarChart3,
   Swords,
   FileBarChart,
-  Telescope,
   FlaskConical,
   Boxes,
   Cpu,
+  ChevronRight,
 } from "lucide-react"
 
 import {
@@ -31,19 +30,17 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
-import { PanelLeftClose, PanelLeft } from "lucide-react"
+import { PanelLeftClose } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,11 +48,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useCategoryMode, categoryModeConfig, CategoryMode } from "@/contexts/category-mode-context"
 import { 
@@ -127,53 +119,41 @@ function CategoryModeSelector() {
   )
 }
 
-const navItems = [
+// Section-based navigation structure (like Suntory design)
+const navSections = [
   {
-    title: "ダッシュボード",
-    icon: LayoutDashboard,
-    href: "/dashboard/trends",
-    subItems: [
+    label: "ANALYTICS",
+    items: [
       { title: "トレンド一覧", icon: TrendingUp, href: "/dashboard/trends" },
       { title: "トレンド詳細", icon: Eye, href: "/dashboard/spotlight" },
     ],
   },
   {
-    title: "AI分析",
-    icon: Brain,
-    href: "/ai/correlations",
-    badge: "NEW",
-    subItems: [
+    label: "AI ANALYSIS",
+    items: [
       { title: "相関発見", icon: Cpu, href: "/ai/correlations" },
       { title: "トレンド予測", icon: BarChart3, href: "/ai/predictions" },
       { title: "競合分析", icon: Swords, href: "/ai/competitors" },
     ],
   },
   {
-    title: "商品開発支援",
-    icon: Lightbulb,
-    href: "/ai/concept-generator",
-    badge: "NEW",
-    subItems: [
+    label: "DEVELOPMENT",
+    items: [
       { title: "コンセプト生成", icon: Lightbulb, href: "/ai/concept-generator" },
       { title: "素材データベース", icon: FlaskConical, href: "/ai/materials" },
       { title: "改定シミュレーター", icon: Boxes, href: "/ai/simulator" },
     ],
   },
   {
-    title: "インサイト",
-    icon: Telescope,
-    href: "/insights/explorer",
-    subItems: [
+    label: "INSIGHTS",
+    items: [
       { title: "統合エクスプローラー", icon: Search, href: "/insights/explorer" },
       { title: "チャネル分析", icon: Store, href: "/channels" },
     ],
   },
   {
-    title: "レポート",
-    icon: FileBarChart,
-    href: "/reports",
-    badge: "NEW",
-    subItems: [
+    label: "REPORTS",
+    items: [
       { title: "自動生成", icon: Zap, href: "/reports" },
       { title: "ドライブ", icon: FolderOpen, href: "/drive" },
     ],
@@ -182,33 +162,20 @@ const navItems = [
 
 export function DashboardSidebar() {
   const pathname = usePathname()
-  const [openMenus, setOpenMenus] = useState<string[]>(["ダッシュボード"])
-  const { toggleSidebar, open } = useSidebar()
-
-  const toggleMenu = (title: string) => {
-    setOpenMenus(prev =>
-      prev.includes(title)
-        ? prev.filter(t => t !== title)
-        : [...prev, title]
-    )
-  }
+  const { toggleSidebar } = useSidebar()
 
   const isActive = (href: string) => pathname === href
-  const isParentActive = (item: typeof navItems[0]) => {
-    if (isActive(item.href)) return true
-    return item.subItems?.some(sub => isActive(sub.href))
-  }
 
   return (
     <Sidebar className="border-r border-border bg-sidebar">
       <SidebarHeader className="p-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary shadow-sm">
-              <span className="text-sm font-bold text-primary-foreground">Y</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary shadow-sm">
+              <span className="text-base font-bold text-primary-foreground">Y</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-foreground tracking-tight">YAPPI</span>
+              <span className="text-sm font-bold text-foreground tracking-tight">YAPPI</span>
               <span className="text-[10px] text-muted-foreground leading-tight">Consumer Intelligence</span>
             </div>
           </Link>
@@ -224,78 +191,42 @@ export function DashboardSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarSeparator />
-
-      <SidebarContent className="px-2">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  {item.subItems ? (
-                    <Collapsible
-                      open={openMenus.includes(item.title)}
-                      onOpenChange={() => toggleMenu(item.title)}
-                    >
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuButton
-                          className={`gap-3 h-10 justify-between ${
-                            isParentActive(item) ? "bg-primary text-primary-foreground font-medium hover:bg-primary/90" : "hover:bg-sidebar-accent"
-                          }`}
-                        >
+      <SidebarContent className="px-2 py-2">
+        {navSections.map((section) => (
+          <SidebarGroup key={section.label} className="py-2">
+            <SidebarGroupLabel className="px-3 text-[11px] font-semibold tracking-wider text-primary/70 uppercase">
+              {section.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => {
+                  const active = isActive(item.href)
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={`gap-3 h-10 rounded-lg transition-all ${
+                          active 
+                            ? "bg-primary text-primary-foreground font-medium shadow-sm hover:bg-primary/90" 
+                            : "text-foreground/80 hover:bg-sidebar-accent hover:text-foreground"
+                        }`}
+                      >
+                        <Link href={item.href} className="flex items-center justify-between">
                           <span className="flex items-center gap-3">
-                            <item.icon className="h-4 w-4" />
+                            <item.icon className={`h-4 w-4 ${active ? "" : "text-muted-foreground"}`} />
                             <span>{item.title}</span>
-                            {"badge" in item && item.badge && (
-                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-primary text-primary-foreground leading-none">
-                                {item.badge}
-                              </span>
-                            )}
                           </span>
-                          <ChevronDown
-                            className={`h-4 w-4 transition-transform ${
-                              openMenus.includes(item.title) ? "rotate-180" : ""
-                            }`}
-                          />
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {item.subItems.map((subItem) => (
-                            <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton
-                                asChild
-                                className={isActive(subItem.href) ? "bg-primary text-primary-foreground font-medium hover:bg-primary/90" : ""}
-                              >
-                                <Link href={subItem.href} className="flex items-center gap-2">
-                                  <subItem.icon className="h-3.5 w-3.5" />
-                                  <span>{subItem.title}</span>
-                                </Link>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    </Collapsible>
-                  ) : (
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isActive(item.href)}
-                      className="gap-3 h-10"
-                    >
-                      <Link href={item.href}>
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  )}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        </SidebarContent>
+                          {active && <ChevronRight className="h-4 w-4" />}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
 
       <SidebarSeparator />
 
