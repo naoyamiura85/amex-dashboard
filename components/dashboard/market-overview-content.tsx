@@ -18,9 +18,9 @@ const stages = [
 
 // 商品の定義（サントリーD2C商品）
 const products = [
-  { id: "sesamin", name: "セサミンEX", category: "サプリメント" },
-  { id: "dha", name: "DHA&EPA+セサミンEX", category: "サプリメント" },
-  { id: "omega", name: "オメガエイド", category: "サプリメント" },
+  { id: "sesamin", name: "menphys", category: "健康ドリンク" },
+  { id: "dha", name: "特茶/胡麻麦茶", category: "健康飲料" },
+  { id: "omega", name: "すっきりメンテナン酢", category: "機能性表示食品" },
 ]
 
 // セグメントデータ
