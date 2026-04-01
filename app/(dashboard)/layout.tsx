@@ -7,7 +7,7 @@ import { YappiChat } from "@/components/dashboard/yappi-chat"
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
+      <div className="flex min-h-screen w-full bg-background p-4">
         <DashboardSidebar />
         <SidebarInset className="flex-1">
           {children}
