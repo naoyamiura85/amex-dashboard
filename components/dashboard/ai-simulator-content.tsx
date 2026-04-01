@@ -1,14 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Select,
   SelectContent,
@@ -25,16 +23,13 @@ import {
   TrendingUp,
   TrendingDown,
   Users,
-  ArrowRight,
-  ArrowUpRight,
-  ArrowDownRight,
   RefreshCw,
-  ChevronRight,
   Zap,
   Target,
   DollarSign,
   BarChart3,
 } from "lucide-react"
+import { FUNNEL_COLORS } from "@/lib/constants"
 
 // 商品の定義
 const products = [
@@ -206,12 +201,12 @@ export function AISimulatorContent() {
 
   const displayFunnel = simulationComplete || isSimulating ? animatedValues : baseFunnel
 
-  // サントリーブランドカラー（青系）を基調とした配色
+  // ファネルステージ定義（共通定数の色を使用）
   const funnelStages = [
-    { id: "lm", name: "LM(ポテンシャル小)", color: "#0068B7", icon: Users },       // サントリーブルー
-    { id: "mh", name: "MH(ポテンシャル大)", color: "#00A0E9", icon: Target },      // ライトブルー
-    { id: "purchase", name: "購入ユーザー", color: "#00B894", icon: DollarSign }, // ティール
-    { id: "regular", name: "定期購入", color: "#F5A623", icon: Sparkles },        // ゴールド
+    { id: "lm", name: "LM(ポテンシャル小)", color: FUNNEL_COLORS.lm, icon: Users },
+    { id: "mh", name: "MH(ポテンシャル大)", color: FUNNEL_COLORS.mh, icon: Target },
+    { id: "purchase", name: "購入ユーザー", color: FUNNEL_COLORS.purchase, icon: DollarSign },
+    { id: "regular", name: "定期購入", color: FUNNEL_COLORS.regular, icon: Sparkles },
   ]
 
   return (

@@ -16,11 +16,10 @@ import {
   TrendingUp,
   TrendingDown,
   X,
-  User,
   Briefcase,
-  Heart,
   AlertTriangle,
 } from "lucide-react"
+import { FUNNEL_COLORS, SANKEY_GRADIENTS } from "@/lib/constants"
 
 // 商品の定義（サントリーD2C商品）
 const products = [
@@ -32,13 +31,13 @@ const products = [
   { id: "zone", name: "ZONe", category: "エナジードリンク", image: "/images/products/zone.jpg" },
 ]
 
-// サンキーダイアグラムのステージデータ（サントリーブランドカラー）
+// サンキーダイアグラムのステージデータ（共通定数の色を使用）
 const sankeyStages = [
-  { id: "search", name: "検索", icon: Search, count: 2450000, color: "#0068B7" },    // サントリーブルー
-  { id: "visit", name: "来訪", icon: Eye, count: 890000, color: "#0088CC" },         // ライトブルー
-  { id: "cart", name: "カート", icon: ShoppingCart, count: 420000, color: "#00A0E9" }, // スカイブルー
-  { id: "purchase", name: "購入", icon: ShoppingCart, count: 245000, color: "#00B894" }, // ティール
-  { id: "repeat", name: "リピート", icon: Crown, count: 98000, color: "#F5A623" },   // ゴールド
+  { id: "search", name: "検索", icon: Search, count: 2450000, color: FUNNEL_COLORS.search },
+  { id: "visit", name: "来訪", icon: Eye, count: 890000, color: FUNNEL_COLORS.visit },
+  { id: "cart", name: "カート", icon: ShoppingCart, count: 420000, color: FUNNEL_COLORS.cart },
+  { id: "purchase", name: "購入", icon: ShoppingCart, count: 245000, color: FUNNEL_COLORS.purchase },
+  { id: "repeat", name: "リピート", icon: Crown, count: 98000, color: FUNNEL_COLORS.repeat },
 ]
 
 // フロー（移動）データ
@@ -241,15 +240,15 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
     const baseY = 100
     const maxNodeHeight = 200
 
-    // グラデーション定義用のカラー（サントリーブランドカラー：青系）
-    const gradientColors = [
-      { from: "#0068B7", to: "#0088CC" }, // 検索→来訪 (サントリーブルー)
-      { from: "#0088CC", to: "#00A0E9" }, // 来訪→カート (ライトブルー)
-      { from: "#00A0E9", to: "#00B894" }, // カート→購入 (シアン→ティール)
-      { from: "#00B894", to: "#F5A623" }, // 購入→リピート (ティール→ゴールド)
+    // グラデーション定義（共通定数を使用）
+    const gradientColors = SANKEY_GRADIENTS
+    const stageColors = [
+      FUNNEL_COLORS.search,
+      FUNNEL_COLORS.visit,
+      FUNNEL_COLORS.cart,
+      FUNNEL_COLORS.purchase,
+      FUNNEL_COLORS.repeat,
     ]
-
-    const stageColors = ["#0068B7", "#0088CC", "#00A0E9", "#00B894", "#F5A623"]
 
     return (
       <div className="relative w-full overflow-x-auto py-4">

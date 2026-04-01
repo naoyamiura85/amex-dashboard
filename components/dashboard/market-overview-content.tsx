@@ -11,14 +11,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { X, Users, ChevronDown, User, Briefcase, Heart, ShoppingBag } from "lucide-react"
+import { X, Users, ChevronDown, Briefcase, Heart, ShoppingBag } from "lucide-react"
+import { FUNNEL_COLORS } from "@/lib/constants"
 
-// ステージの定義
+// ステージの定義（共通定数の色を使用）
 const stages = [
-  { id: "lm", name: "LM(ポテンシャル小)", total: "4500万人", color: "bg-slate-100" },
-  { id: "mh", name: "MH(ポテンシャル大)", total: "850万人", color: "bg-primary/20" },
-  { id: "trial", name: "購入ユーザー", total: "320万人", color: "bg-primary/40" },
-  { id: "regular", name: "定期購入ユーザー", total: "170万人", color: "bg-primary/60" },
+  { id: "lm", name: "LM(ポテンシャル小)", total: "4500万人", color: FUNNEL_COLORS.lm },
+  { id: "mh", name: "MH(ポテンシャル大)", total: "850万人", color: FUNNEL_COLORS.mh },
+  { id: "trial", name: "購入ユーザー", total: "320万人", color: FUNNEL_COLORS.purchase },
+  { id: "regular", name: "定期購入ユーザー", total: "170万人", color: FUNNEL_COLORS.regular },
 ]
 
 // 商品の定義（サントリーD2C商品）
@@ -292,7 +293,7 @@ const segmentData: Record<string, Record<string, {
       summary: "購買力はあるが健康意識は低め。ブランドや話題性で商品選択。ECでの購買比率が高い。",
       interests: ["テクノロジー", "ガジェット", "投資", "ゲーム", "外食"],
       purchaseBehavior: [
-        { label: "主要購買チャネル", value: "EC・コンビニ" },
+        { label: "主��購買チャネル", value: "EC・コンビニ" },
         { label: "購買頻度", value: "週2回" },
         { label: "価格感度", value: "低め" },
         { label: "ブランドロイヤルティ", value: "話題性重視" },
