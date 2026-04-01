@@ -12,8 +12,8 @@ import { X, Users, ChevronDown } from "lucide-react"
 const stages = [
   { id: "lm", name: "LM(ポテンシャル小)", total: "4500万人", color: "bg-slate-100" },
   { id: "mh", name: "MH(ポテンシャル大)", total: "850万人", color: "bg-primary/20" },
-  { id: "trial", name: "トライアル", total: "320万人", color: "bg-primary/40" },
-  { id: "regular", name: "定期顧客", total: "170万人", color: "bg-primary/60" },
+  { id: "trial", name: "購入ユーザー", total: "320万人", color: "bg-primary/40" },
+  { id: "regular", name: "定期購入ユーザー", total: "170万人", color: "bg-primary/60" },
 ]
 
 // ウェルネスレベルの定義
