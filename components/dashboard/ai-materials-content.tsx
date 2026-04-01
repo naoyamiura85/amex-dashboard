@@ -391,23 +391,6 @@ export function AIMaterialsContent() {
 
   return (
     <div className="p-6 space-y-6 bg-muted/30 min-h-screen">
-      {/* ヘッダー */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <FlaskConical className="h-6 w-6 text-primary" />
-            素材データベース
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            {materialsData.length}種類の素材を管理 | タグ・効能・トレンドで検索可能
-          </p>
-        </div>
-        <Button size="sm" className="gap-2">
-          <Plus className="h-4 w-4" />
-          新規素材追加
-        </Button>
-      </div>
-
       {/* 検索・フィルター */}
       <Card className="rounded-xl">
         <CardContent className="p-4 space-y-4">
