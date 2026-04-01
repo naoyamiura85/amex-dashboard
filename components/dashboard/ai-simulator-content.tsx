@@ -206,11 +206,12 @@ export function AISimulatorContent() {
 
   const displayFunnel = simulationComplete || isSimulating ? animatedValues : baseFunnel
 
+  // サントリーブランドカラー（青系）を基調とした配色
   const funnelStages = [
-    { id: "lm", name: "LM(ポテンシャル小)", color: "#64748B", icon: Users },
-    { id: "mh", name: "MH(ポテンシャル大)", color: "#0EA5E9", icon: Target },
-    { id: "purchase", name: "購入ユーザー", color: "#10B981", icon: DollarSign },
-    { id: "regular", name: "定期購入", color: "#F59E0B", icon: Sparkles },
+    { id: "lm", name: "LM(ポテンシャル小)", color: "#0068B7", icon: Users },       // サントリーブルー
+    { id: "mh", name: "MH(ポテンシャル大)", color: "#00A0E9", icon: Target },      // ライトブルー
+    { id: "purchase", name: "購入ユーザー", color: "#00B894", icon: DollarSign }, // ティール
+    { id: "regular", name: "定期購入", color: "#F5A623", icon: Sparkles },        // ゴールド
   ]
 
   return (

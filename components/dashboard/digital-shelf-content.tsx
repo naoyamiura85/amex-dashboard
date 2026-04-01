@@ -38,13 +38,13 @@ const products = [
   { id: "zone", name: "ZONe", category: "エナジードリンク", image: "/images/products/zone.jpg" },
 ]
 
-// サンキーダイアグラムのステージデータ
+// サンキーダイアグラムのステージデータ（サントリーブランドカラー）
 const sankeyStages = [
-  { id: "search", name: "検索", icon: Search, count: 2450000, color: "#6B7280" },
-  { id: "visit", name: "来訪", icon: Eye, count: 890000, color: "#3B82F6" },
-  { id: "cart", name: "カート", icon: ShoppingCart, count: 420000, color: "#8B5CF6" },
-  { id: "purchase", name: "購入", icon: ShoppingCart, count: 245000, color: "#10B981" },
-  { id: "repeat", name: "リピート", icon: Crown, count: 98000, color: "#F59E0B" },
+  { id: "search", name: "検索", icon: Search, count: 2450000, color: "#0068B7" },    // サントリーブルー
+  { id: "visit", name: "来訪", icon: Eye, count: 890000, color: "#0088CC" },         // ライトブルー
+  { id: "cart", name: "カート", icon: ShoppingCart, count: 420000, color: "#00A0E9" }, // スカイブルー
+  { id: "purchase", name: "購入", icon: ShoppingCart, count: 245000, color: "#00B894" }, // ティール
+  { id: "repeat", name: "リピート", icon: Crown, count: 98000, color: "#F5A623" },   // ゴールド
 ]
 
 // フロー（移動）データ
@@ -247,15 +247,15 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
     const baseY = 100
     const maxNodeHeight = 200
 
-    // グラデーション定義用のカラー
+    // グラデーション定義用のカラー（サントリーブランドカラー：青系）
     const gradientColors = [
-      { from: "#6366F1", to: "#8B5CF6" }, // 検索→来訪 (インディゴ→バイオレット)
-      { from: "#8B5CF6", to: "#06B6D4" }, // 来訪→カート (バイオレット→シアン)
-      { from: "#06B6D4", to: "#10B981" }, // カート→購入 (シアン→エメラルド)
-      { from: "#10B981", to: "#F59E0B" }, // 購入→リピート (エメラルド→アンバー)
+      { from: "#0068B7", to: "#0088CC" }, // 検索→来訪 (サントリーブルー)
+      { from: "#0088CC", to: "#00A0E9" }, // 来訪→カート (ライトブルー)
+      { from: "#00A0E9", to: "#00B894" }, // カート→購入 (シアン→ティール)
+      { from: "#00B894", to: "#F5A623" }, // 購入→リピート (ティール→ゴールド)
     ]
 
-    const stageColors = ["#6366F1", "#8B5CF6", "#06B6D4", "#10B981", "#F59E0B"]
+    const stageColors = ["#0068B7", "#0088CC", "#00A0E9", "#00B894", "#F5A623"]
 
     return (
       <div className="relative w-full overflow-x-auto py-4">
@@ -684,7 +684,7 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs text-muted-foreground">離脱理由</p>
+                        <p className="text-xs text-muted-foreground">離脱��由</p>
                         <p className="text-sm font-medium text-destructive">{persona.dropReason}</p>
                       </div>
                     </div>
