@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { DefaultChatTransport } from "ai"
 
 const suggestedQuestions = [
   "Z世代で伸びている美容成分トップ10は?",
