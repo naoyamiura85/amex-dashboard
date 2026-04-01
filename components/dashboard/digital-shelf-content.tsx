@@ -461,7 +461,7 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
               <div className="ml-auto flex items-center gap-6">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-primary">24.5万人</p>
-                  <p className="text-xs text-muted-foreground">購入ユーザー数</p>
+                  <p className="text-xs text-muted-foreground">購入ユーザー��</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-emerald-600">+12.3%</p>
@@ -492,45 +492,6 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
           {renderSankeyDiagram()}
         </CardContent>
       </Card>
-
-      {/* ファネル別サマリーカード */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        {sankeyStages.map((stage, index) => {
-          const flow = sankeyFlows[index]
-          const dropoff = sankeyDropoffs[index]
-          const Icon = stage.icon
-          
-          return (
-            <Card key={stage.id} className="relative overflow-hidden">
-              <div 
-                className="absolute top-0 left-0 w-1 h-full"
-                style={{ backgroundColor: stage.color }}
-              />
-              <CardContent className="pt-4 pb-3 px-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Icon className="h-4 w-4" style={{ color: stage.color }} />
-                  <span className="font-medium text-sm">{stage.name}</span>
-                </div>
-                <p className="text-xl font-bold">{(stage.count / 10000).toFixed(0)}万人</p>
-                <div className="flex items-center gap-2 mt-2 text-xs">
-                  {flow && (
-                    <span className="text-emerald-600 flex items-center gap-1">
-                      <TrendingUp className="h-3 w-3" />
-                      次へ {flow.rate}%
-                    </span>
-                  )}
-                  {dropoff && (
-                    <span className="text-destructive flex items-center gap-1">
-                      <TrendingDown className="h-3 w-3" />
-                      離脱 {dropoff.rate}%
-                    </span>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
 
       {/* フロー詳細モーダル */}
       <Dialog open={!!selectedFlow} onOpenChange={() => setSelectedFlow(null)}>
