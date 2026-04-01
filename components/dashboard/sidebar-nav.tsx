@@ -120,12 +120,12 @@ export function DashboardSidebar() {
     <Sidebar className="border-r border-sidebar-border bg-sidebar">
       {/* Header with Logo - Match sidebar background */}
       <SidebarHeader className="p-0 border-b border-sidebar-border">
-        <Link href="/" className="flex flex-col bg-sidebar px-4 py-4">
+        <Link href="/" className="flex items-center bg-sidebar px-4 py-2">
           <Image 
             src="/images/suntory-logo.png" 
             alt="SUNTORY BEVERAGE & FOOD" 
-            width={180} 
-            height={48}
+            width={160} 
+            height={36}
             className="object-contain"
           />
         </Link>
