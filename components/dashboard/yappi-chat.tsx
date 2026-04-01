@@ -34,9 +34,7 @@ export function YappiChat() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { messages, input = "", handleInputChange, handleSubmit, isLoading } = useChat({
-    transport: new DefaultChatTransport({
-      api: '/api/yappi-chat',
-    }),
+    api: '/api/yappi-chat',
     initialMessages: [
       {
         id: "init",
