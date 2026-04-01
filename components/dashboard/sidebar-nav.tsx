@@ -240,7 +240,7 @@ export function DashboardSidebar() {
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
                           className={`gap-3 h-10 justify-between ${
-                            isParentActive(item) ? "bg-sidebar-accent text-primary font-medium" : ""
+                            isParentActive(item) ? "bg-primary text-primary-foreground font-medium hover:bg-primary/90" : "hover:bg-sidebar-accent"
                           }`}
                         >
                           <span className="flex items-center gap-3">
@@ -265,7 +265,7 @@ export function DashboardSidebar() {
                             <SidebarMenuSubItem key={subItem.title}>
                               <SidebarMenuSubButton
                                 asChild
-                                isActive={isActive(subItem.href)}
+                                className={isActive(subItem.href) ? "bg-primary text-primary-foreground font-medium hover:bg-primary/90" : ""}
                               >
                                 <Link href={subItem.href} className="flex items-center gap-2">
                                   <subItem.icon className="h-3.5 w-3.5" />

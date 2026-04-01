@@ -4,92 +4,98 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Dentsu Design System - Light Mode */
+  /* Suntory Corporate Colors - Water Blue */
   --background: #FFFFFF;
-  --foreground: #1a1a1a;
+  --foreground: #111111;
   --card: #FFFFFF;
-  --card-foreground: #1a1a1a;
+  --card-foreground: #111111;
   --popover: #FFFFFF;
   --popover-foreground: #1a1a1a;
-  
-  /* Primary - DDS Deep Blue */
-  --primary: #3700FF;
+  --primary: #00A0D2; /* Suntory Water Blue */
   --primary-foreground: #FFFFFF;
-  
-  /* Secondary - DDS Neutral */
-  --secondary: #F5F5F4;
-  --secondary-foreground: #1a1a1a;
-  
-  --muted: #FAFAFA;
-  --muted-foreground: #737373;
-  
-  /* Accent - DDS Lime Green (accent role) */
-  --accent: #C8FF00;
+  --secondary: #0088B4; /* Water Blue Dark */
+  --secondary-foreground: #FFFFFF;
+  --muted: #F5F5F4;
+  --muted-foreground: #5a5c58;
+  --accent: #66C7E5; /* Water Blue Light */
   --accent-foreground: #1a1a1a;
-  
-  --destructive: #EF4444;
+  --destructive: #D32F2F;
   --destructive-foreground: #FFFFFF;
-  
-  /* DDS Neutral borders */
-  --border: #E6E7E4;
-  --input: #E6E7E4;
-  --ring: #3700FF;
-  
-  /* DDS Semantic Colors */
+  --border: #ECEEED;
+  --input: #F5F5F4;
+  --ring: #00A0D2;
+  --chart-1: #00A0D2;
+  --chart-2: #0088B4;
+  --chart-3: #66C7E5;
+  --chart-4: #006E94;
+  --chart-5: #B3E5F6;
+  --radius: 0.5rem;
+  /* Semantic Colors */
   --success: #22C55E;
   --warning: #F59E0B;
   --error: #EF4444;
-  --info: #3B82F6;
-  
-  /* Sidebar - DDS Clean white */
-  --sidebar: #FFFFFF;
+  --info: #00A0D2;
+  /* Suntory Extended Palette */
+  --suntory-blue-100: #E6F7FC;
+  --suntory-blue-200: #B3E5F6;
+  --suntory-blue-300: #66C7E5;
+  --suntory-blue-400: #00A0D2;
+  --suntory-blue-500: #0088B4;
+  --suntory-blue-600: #006E94;
+  --suntory-blue-700: #005F80;
+  --suntory-blue-800: #004D66;
+  --suntory-blue-900: #003D52;
+  /* Sidebar */
+  --sidebar: #F0F9FF;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #3700FF;
+  --sidebar-primary: #00A0D2;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F5F5F4;
+  --sidebar-accent: #E0F2FE;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #E6E7E4;
-  --sidebar-ring: #3700FF;
+  --sidebar-ring: #00A0D2;
 }
 
 .dark {
+  /* Suntory Water Blue Dark Mode */
   --background: #0a0a0a;
-  --foreground: #fafafa;
-  --card: #0a0a0a;
-  --card-foreground: #fafafa;
-  --popover: #0a0a0a;
-  --popover-foreground: #fafafa;
-  --primary: #3700FF;
-  --primary-foreground: #fafafa;
-  --secondary: #262626;
-  --secondary-foreground: #fafafa;
-  --muted: #262626;
-  --muted-foreground: #a3a3a3;
-  --accent: #C8FF00;
-  --accent-foreground: #0a0a0a;
+  --foreground: #FAFAFA;
+  --card: #1a1a1a;
+  --card-foreground: #FAFAFA;
+  --popover: #1a1a1a;
+  --popover-foreground: #FAFAFA;
+  --primary: #66C7E5;
+  --primary-foreground: #1a1a1a;
+  --secondary: #00A0D2;
+  --secondary-foreground: #FFFFFF;
+  --muted: #2a2a2a;
+  --muted-foreground: #A9ABA0;
+  --accent: #00A0D2;
+  --accent-foreground: #FFFFFF;
   --destructive: #EF4444;
-  --destructive-foreground: #fafafa;
-  --border: #262626;
-  --input: #262626;
-  --ring: #3700FF;
-  --chart-1: #3700FF;
-  --chart-2: #C8FF00;
-  --chart-3: #00C8FF;
-  --chart-4: #FF00C8;
-  --chart-5: #FFB600;
-  --sidebar: #0f0f0f;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #3700FF;
-  --sidebar-primary-foreground: #fafafa;
-  --sidebar-accent: #262626;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #262626;
-  --sidebar-ring: #3700FF;
+  --destructive-foreground: #FFFFFF;
+  --border: #3a3a3a;
+  --input: #2a2a2a;
+  --ring: #66C7E5;
+  --chart-1: #66C7E5;
+  --chart-2: #00A0D2;
+  --chart-3: #0088B4;
+  --chart-4: #006E94;
+  --chart-5: #B3E5F6;
+  --sidebar: #1a1a1a;
+  --sidebar-foreground: #FAFAFA;
+  --sidebar-primary: #66C7E5;
+  --sidebar-primary-foreground: #1a1a1a;
+  --sidebar-accent: #1a3a4a;
+  --sidebar-accent-foreground: #FAFAFA;
+  --sidebar-border: #3a3a3a;
+  --sidebar-ring: #66C7E5;
 }
 
 @theme inline {
-  --font-sans: var(--font-zen-kaku), 'Zen Kaku Gothic New', var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-sans: var(--font-zen-kaku), 'Zen Kaku Gothic New', system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -128,7 +134,30 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@layer components {
+  /* Suntory Water Blue Primary Button */
+  .btn-primary {
+    @apply bg-[#00A0D2] text-white hover:bg-[#0088B4] transition-colors;
+  }
+
+  /* Suntory Water Blue Accent */
+  .accent-cyan {
+    @apply text-[#00A0D2];
+  }
+
+  .bg-accent-cyan {
+    @apply bg-[#00A0D2];
+  }
+
+  .text-accent-cyan {
+    @apply text-[#00A0D2];
+  }
+}
+
 @layer base {
+  html {
+    font-size: 16.25px;
+  }
   * {
     @apply border-border outline-ring/50;
   }
