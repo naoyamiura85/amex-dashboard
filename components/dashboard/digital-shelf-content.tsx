@@ -5,7 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  Cell,
+  LabelList,
+  Tooltip,
+  FunnelChart,
+  Funnel,
+} from "recharts"
 import {
   Users,
   Search,
@@ -13,13 +24,15 @@ import {
   ShoppingCart,
   Crown,
   ArrowRight,
+  ArrowDown,
   TrendingUp,
   TrendingDown,
   X,
   Briefcase,
   AlertTriangle,
+  ChevronRight,
 } from "lucide-react"
-import { FUNNEL_COLORS, SANKEY_GRADIENTS } from "@/lib/constants"
+import { FUNNEL_COLORS } from "@/lib/constants"
 
 // 商品の定義（サントリーD2C商品）
 const products = [
@@ -31,29 +44,13 @@ const products = [
   { id: "zone", name: "ZONe", category: "エナジードリンク", image: "/images/products/zone.jpg" },
 ]
 
-// サンキーダイアグラムのステージデータ（共通定数の色を使用）
-const sankeyStages = [
-  { id: "search", name: "検索", icon: Search, count: 2450000, color: FUNNEL_COLORS.search },
-  { id: "visit", name: "来訪", icon: Eye, count: 890000, color: FUNNEL_COLORS.visit },
-  { id: "cart", name: "カート", icon: ShoppingCart, count: 420000, color: FUNNEL_COLORS.cart },
-  { id: "purchase", name: "購入", icon: ShoppingCart, count: 245000, color: FUNNEL_COLORS.purchase },
-  { id: "repeat", name: "リピート", icon: Crown, count: 98000, color: FUNNEL_COLORS.repeat },
-]
-
-// フロー（移動）データ
-const sankeyFlows = [
-  { from: "search", to: "visit", value: 890000, rate: 36.3 },
-  { from: "visit", to: "cart", value: 420000, rate: 47.2 },
-  { from: "cart", to: "purchase", value: 245000, rate: 58.3 },
-  { from: "purchase", to: "repeat", value: 98000, rate: 40.0 },
-]
-
-// 離脱データ
-const sankeyDropoffs = [
-  { from: "search", value: 1560000, rate: 63.7, reason: "検索離脱" },
-  { from: "visit", value: 470000, rate: 52.8, reason: "来訪離脱" },
-  { from: "cart", value: 175000, rate: 41.7, reason: "カート放棄" },
-  { from: "purchase", value: 147000, rate: 60.0, reason: "単発購入" },
+// ファネルデータ
+const funnelData = [
+  { name: "検索", value: 245, fill: FUNNEL_COLORS.search, icon: Search, dropoff: 63.7, dropoffValue: 156 },
+  { name: "来訪", value: 89, fill: FUNNEL_COLORS.visit, icon: Eye, dropoff: 52.8, dropoffValue: 47, convRate: 36.3 },
+  { name: "カート", value: 42, fill: FUNNEL_COLORS.cart, icon: ShoppingCart, dropoff: 41.7, dropoffValue: 18, convRate: 47.2 },
+  { name: "購入", value: 25, fill: FUNNEL_COLORS.purchase, icon: ShoppingCart, dropoff: 60.0, dropoffValue: 15, convRate: 58.3 },
+  { name: "リピート", value: 10, fill: FUNNEL_COLORS.repeat, icon: Crown, convRate: 40.0 },
 ]
 
 // ペルソナデータ（フローごと）
@@ -71,7 +68,7 @@ const flowPersonas: Record<string, {
     behavior: string
   }>
 }> = {
-  "search-visit": {
+  "検索-来訪": {
     title: "検索 → 来訪",
     description: "検索から実際にサイトを訪問したユーザー層",
     insights: [
@@ -85,7 +82,7 @@ const flowPersonas: Record<string, {
       { name: "山田拓也", age: 52, gender: "男性", occupation: "経営者", image: "/images/personas/senior_man1.jpg", tags: ["プレミアム志向", "時短"], behavior: "口コミ評価を重視" },
     ],
   },
-  "visit-cart": {
+  "来訪-カート": {
     title: "来訪 → カート",
     description: "サイト訪問後、カートに商品を追加したユーザー層",
     insights: [
@@ -98,30 +95,30 @@ const flowPersonas: Record<string, {
       { name: "高橋誠", age: 58, gender: "男性", occupation: "管理職", image: "/images/personas/casual_man1.jpg", tags: ["定期購入派", "品質重視"], behavior: "定期便を検討" },
     ],
   },
-  "cart-purchase": {
+  "カート-購入": {
     title: "カート → 購入",
-    description: "カートから実際に購入完了したユーザー層",
+    description: "カートに入れた後、実際に購入完了したユーザー層",
     insights: [
-      "決済方法の選択肢を重視",
-      "初回割引キャンペーンに反応",
-      "レビュー投稿率が高い",
+      "決済方法の多様性を重視",
+      "お得なキャンペーンに反応しやすい",
+      "初回購入特典に関心が高い",
     ],
     personas: [
-      { name: "伊藤恵", age: 35, gender: "女性", occupation: "会社員", image: "/images/personas/young_woman1.jpg", tags: ["即決型", "ポイント活用"], behavior: "クーポン利用で購入" },
-      { name: "渡辺健太", age: 48, gender: "男性", occupation: "自営業", image: "/images/personas/senior_man1.jpg", tags: ["信頼重視", "継続利用"], behavior: "まずは試し買い" },
+      { name: "伊藤真理", age: 35, gender: "女性", occupation: "会社員", image: "/images/personas/career_woman1.jpg", tags: ["新規顧客", "特典重視"], behavior: "初回割引で購入決定" },
+      { name: "渡辺健太", age: 48, gender: "男性", occupation: "自営業", image: "/images/personas/casual_man1.jpg", tags: ["リピーター候補", "品質重視"], behavior: "口コミ確認後に購入" },
     ],
   },
-  "purchase-repeat": {
+  "購入-リピート": {
     title: "購入 → リピート",
-    description: "初回購入後、継続購入しているロイヤルユーザー層",
+    description: "初回購入後、継続購入しているユーザー層",
     insights: [
-      "平均LTVが最も高いセグメント",
-      "口コミ投稿・紹介が活発",
-      "新商品への関心が高い",
+      "定期購入への移行率が高い",
+      "商品効果を実感している",
+      "価格より品質を重視",
     ],
     personas: [
-      { name: "小林正雄", age: 65, gender: "男性", occupation: "退職", image: "/images/personas/senior_man1.jpg", tags: ["健康投資", "ロイヤル"], behavior: "毎月定期購入" },
-      { name: "中村由美", age: 55, gender: "女性", occupation: "専業主婦", image: "/images/personas/housewife1.jpg", tags: ["品質重視", "紹介者"], behavior: "家族にも推奨" },
+      { name: "中村康夫", age: 55, gender: "男性", occupation: "役員", image: "/images/personas/senior_man1.jpg", tags: ["ロイヤル顧客", "高LTV"], behavior: "定期購入を継続" },
+      { name: "小林恵子", age: 50, gender: "女性", occupation: "主婦", image: "/images/personas/housewife1.jpg", tags: ["家族利用", "まとめ買い"], behavior: "家族全員で愛用" },
     ],
   },
 }
@@ -142,295 +139,103 @@ const dropoffPersonas: Record<string, {
     dropReason: string
   }>
 }> = {
-  "search": {
+  "検索": {
     title: "検索離脱",
-    description: "検索後、サイトに来訪せず離脱したユーザー層",
+    description: "検索後、サイトを訪問せずに離脱したユーザー",
     reasons: [
-      "検索結果での競合優位性不足",
-      "広告クリエイティブの訴求力不足",
-      "ブランド認知度の低さ",
+      "検索結果での表示順位が低い",
+      "メタディスクリプションが魅力的でない",
+      "競合他社のサイトを選択",
     ],
     recommendations: [
-      "SEO対策の強化（特に成分名キーワード）",
-      "リスティング広告のクリエイティブ改善",
-      "SNSでのブランド認知向上施策",
+      "SEO対策の強化",
+      "リスティング広告の最適化",
+      "ブランド認知向上キャンペーン",
     ],
     personas: [
-      { name: "木村太郎", age: 32, gender: "男性", occupation: "会社員", image: "/images/personas/young_man1.jpg", tags: ["価格重視", "即断型"], dropReason: "競合の安さに流れた" },
-      { name: "松本恵子", age: 45, gender: "女性", occupation: "パート", image: "/images/personas/middle_woman1.jpg", tags: ["口コミ重視", "慎重派"], dropReason: "レビュ���数が少なかった" },
+      { name: "情報探索型ユーザー", age: 30, gender: "男性", occupation: "会社員", image: "/images/personas/casual_man1.jpg", tags: ["比較検討", "慎重派"], dropReason: "他社サイトを優先" },
     ],
   },
-  "visit": {
+  "来訪": {
     title: "来訪離脱",
-    description: "サイト訪問後、カートに入れずに離脱したユーザー層",
+    description: "サイト訪問後、カートに入れずに離脱したユーザー",
     reasons: [
-      "商品情報の不足・わかりにくさ",
-      "価格への納得感不足",
-      "サイトの使いにくさ",
+      "商品情報が不十分",
+      "価格が期待より高い",
+      "サイトの使いやすさに問題",
     ],
     recommendations: [
-      "商品詳細ページのコンテンツ充実",
-      "価格の根拠・価値の明確化",
-      "サイトUX/UIの改善",
+      "商品ページの情報充実",
+      "お試しセットの導入",
+      "UI/UXの改善",
     ],
     personas: [
-      { name: "斎藤健", age: 55, gender: "男性", occupation: "管理職", image: "/images/personas/senior_man1.jpg", tags: ["比較検討", "時間がない"], dropReason: "情報収集だけで終了" },
-      { name: "井上美咲", age: 28, gender: "女性", occupation: "会社員", image: "/images/personas/young_woman1.jpg", tags: ["SNS情報重視", "価格敏感"], dropReason: "思ったより高かった" },
+      { name: "価格敏感ユーザー", age: 35, gender: "女性", occupation: "主婦", image: "/images/personas/housewife1.jpg", tags: ["価格比較", "慎重"], dropReason: "価格が高いと感じた" },
     ],
   },
-  "cart": {
+  "カート": {
     title: "カート放棄",
-    description: "カートに入れたが購入せず離脱したユーザー層",
+    description: "カートに商品を入れたが購入しなかったユーザー",
     reasons: [
-      "送料が高い",
-      "決済方法が限られている",
+      "送料が予想より高い",
+      "決済方法の選択肢が少ない",
       "購入手続きが複雑",
     ],
     recommendations: [
-      "送料無料キャンペーンの実施",
-      "決済方法の追加（Amazon Pay等）",
-      "購入フローの簡素化",
+      "送料無料キャンペーン",
+      "決済方法の追加",
+      "チェックアウトプロセスの簡素化",
     ],
     personas: [
-      { name: "加藤裕子", age: 40, gender: "女性", occupation: "主婦", image: "/images/personas/housewife1.jpg", tags: ["送料敏感", "まとめ買い派"], dropReason: "送料がかかると分かり離脱" },
-      { name: "山口隆", age: 38, gender: "男性", occupation: "エンジニア", image: "/images/personas/casual_man1.jpg", tags: ["Amazon Pay派", "時短重視"], dropReason: "決済が面倒で後回し" },
+      { name: "送料敏感ユーザー", age: 40, gender: "女性", occupation: "パート", image: "/images/personas/middle_woman1.jpg", tags: ["送料重視", "価格比較"], dropReason: "送料が高い" },
     ],
   },
-  "purchase": {
+  "購入": {
     title: "単発購入",
-    description: "1回購入したが、リピートしていないユーザー層",
+    description: "一度購入したがリピートしていないユーザー",
     reasons: [
-      "効果実感の不足",
-      "価格に対する継続負担感",
-      "定期購入への心理的ハードル",
+      "商品効果を実感できなかった",
+      "価格に見合う価値を感じなかった",
+      "他社商品に乗り換え",
     ],
     recommendations: [
-      "効果実感を促すフォローメール",
-      "2回目購入の特別割引",
-      "定期購入のメリット訴求強化",
+      "フォローアップメールの最適化",
+      "定期購入特典の強化",
+      "使用方法のサポート強化",
     ],
     personas: [
-      { name: "森田一郎", age: 50, gender: "男性", occupation: "自営業", image: "/images/personas/senior_man1.jpg", tags: ["試し買い", "効果重視"], dropReason: "効果がよくわからなかった" },
-      { name: "石井真由美", age: 35, gender: "女性", occupation: "会社員", image: "/images/personas/young_woman1.jpg", tags: ["飽き性", "新商品好き"], dropReason: "他の商品を試したくなった" },
+      { name: "効果実感できず離脱", age: 45, gender: "男性", occupation: "会社員", image: "/images/personas/casual_man1.jpg", tags: ["効果重視", "短期判断"], dropReason: "効果を感じなかった" },
     ],
   },
 }
 
-interface DigitalShelfContentProps {
-  selectedProduct?: string
-}
-
-export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfContentProps) {
+export function DigitalShelfContent() {
+  const [selectedProduct] = useState("all")
   const [selectedFlow, setSelectedFlow] = useState<string | null>(null)
   const [selectedDropoff, setSelectedDropoff] = useState<string | null>(null)
 
   const currentProduct = products.find(p => p.id === selectedProduct)
-
-  // フローのモーダルデータ
   const flowData = selectedFlow ? flowPersonas[selectedFlow] : null
   const dropoffData = selectedDropoff ? dropoffPersonas[selectedDropoff] : null
 
-  // サンキーダイアグラムのSVG描画（モダンデザイン）
-  const renderSankeyDiagram = () => {
-    const totalWidth = 900
-    const svgHeight = 400
-    const nodeWidth = 8
-    const nodePadding = 140
-    const maxCount = sankeyStages[0].count
-    const baseY = 100
-    const maxNodeHeight = 200
-
-    // グラデーション定義（共通定数を使用）
-    const gradientColors = SANKEY_GRADIENTS
-    const stageColors = [
-      FUNNEL_COLORS.search,
-      FUNNEL_COLORS.visit,
-      FUNNEL_COLORS.cart,
-      FUNNEL_COLORS.purchase,
-      FUNNEL_COLORS.repeat,
-    ]
-
-    return (
-      <div className="relative w-full overflow-x-auto py-4">
-        <svg width={totalWidth} height={svgHeight} className="mx-auto" viewBox={`0 0 ${totalWidth} ${svgHeight}`}>
-          <defs>
-            {/* フロー用グラデーション */}
-            {gradientColors.map((color, i) => (
-              <linearGradient key={`flow-gradient-${i}`} id={`flowGradient${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={color.from} stopOpacity="0.6" />
-                <stop offset="100%" stopColor={color.to} stopOpacity="0.6" />
-              </linearGradient>
-            ))}
-            {/* ノード用グラデーション */}
-            {stageColors.map((color, i) => (
-              <linearGradient key={`node-gradient-${i}`} id={`nodeGradient${i}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={color} stopOpacity="1" />
-                <stop offset="100%" stopColor={color} stopOpacity="0.7" />
-              </linearGradient>
-            ))}
-            {/* 離脱用グラデーション */}
-            <linearGradient id="dropoffGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#F87171" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#F87171" stopOpacity="0.1" />
-            </linearGradient>
-            {/* シャドウフィルター */}
-            <filter id="nodeShadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.15" />
-            </filter>
-          </defs>
-
-          {/* フローパス（滑らかな曲線） */}
-          {sankeyFlows.map((flow, index) => {
-            const fromIndex = sankeyStages.findIndex(s => s.id === flow.from)
-            const toIndex = sankeyStages.findIndex(s => s.id === flow.to)
-            const fromStage = sankeyStages[fromIndex]
-            const toStage = sankeyStages[toIndex]
-            
-            const fromX = fromIndex * nodePadding + 60 + nodeWidth
-            const toX = toIndex * nodePadding + 60
-            const fromHeight = (fromStage.count / maxCount) * maxNodeHeight
-            const toHeight = (toStage.count / maxCount) * maxNodeHeight
-            const flowHeight = Math.min((flow.value / maxCount) * maxNodeHeight, toHeight)
-            
-            const controlOffset = (toX - fromX) * 0.4
-            
-            const pathD = `
-              M ${fromX} ${baseY}
-              C ${fromX + controlOffset} ${baseY}, ${toX - controlOffset} ${baseY}, ${toX} ${baseY}
-              L ${toX} ${baseY + flowHeight}
-              C ${toX - controlOffset} ${baseY + flowHeight}, ${fromX + controlOffset} ${baseY + flowHeight}, ${fromX} ${baseY + flowHeight}
-              Z
-            `
-            
-            return (
-              <g key={`flow-${index}`} className="group">
-                <path
-                  d={pathD}
-                  fill={`url(#flowGradient${index})`}
-                  className="cursor-pointer transition-all duration-300 group-hover:opacity-80"
-                  style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}
-                  onClick={() => setSelectedFlow(`${flow.from}-${flow.to}`)}
-                />
-                {/* フロー率ラベル */}
-                <g className="pointer-events-none">
-                  <rect
-                    x={(fromX + toX) / 2 - 28}
-                    y={baseY + flowHeight / 2 - 12}
-                    width="56"
-                    height="24"
-                    rx="12"
-                    fill="white"
-                    fillOpacity="0.95"
-                    style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }}
-                  />
-                  <text
-                    x={(fromX + toX) / 2}
-                    y={baseY + flowHeight / 2 + 5}
-                    textAnchor="middle"
-                    className="text-sm font-semibold"
-                    fill={stageColors[toIndex]}
-                  >
-                    {flow.rate}%
-                  </text>
-                </g>
-              </g>
-            )
-          })}
-          
-          {/* ステージノード（縦バー） */}
-          {sankeyStages.map((stage, index) => {
-            const x = index * nodePadding + 60
-            const height = (stage.count / maxCount) * maxNodeHeight
-            const Icon = stage.icon
-            
-            return (
-              <g key={stage.id}>
-                {/* ノードバー */}
-                <rect
-                  x={x}
-                  y={baseY}
-                  width={nodeWidth}
-                  height={height}
-                  fill={`url(#nodeGradient${index})`}
-                  rx={4}
-                  filter="url(#nodeShadow)"
-                />
-                {/* ラベル（上部） */}
-                <foreignObject x={x - 50} y={baseY - 70} width={110} height={65}>
-                  <div className="flex flex-col items-center justify-end h-full text-center">
-                    <div 
-                      className="flex items-center justify-center w-10 h-10 rounded-full mb-1"
-                      style={{ backgroundColor: `${stageColors[index]}15` }}
-                    >
-                      <Icon className="h-5 w-5" style={{ color: stageColors[index] }} />
-                    </div>
-                    <span className="text-sm font-semibold text-foreground">{stage.name}</span>
-                    <span className="text-lg font-bold" style={{ color: stageColors[index] }}>
-                      {(stage.count / 10000).toFixed(0)}万人
-                    </span>
-                  </div>
-                </foreignObject>
-                
-                {/* 離脱表示（下部） */}
-                {sankeyDropoffs[index] && (
-                  <g 
-                    className="cursor-pointer group/drop"
-                    onClick={() => setSelectedDropoff(stage.id)}
-                  >
-                    <foreignObject x={x - 45} y={baseY + height + 10} width={100} height={60}>
-                      <div className="flex flex-col items-center">
-                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-50 group-hover/drop:bg-red-100 transition-colors border border-red-200">
-                          <TrendingDown className="h-3 w-3 text-red-500" />
-                          <span className="text-xs font-semibold text-red-600">
-                            -{sankeyDropoffs[index].rate}%
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-muted-foreground mt-1">
-                          {(sankeyDropoffs[index].value / 10000).toFixed(0)}万人離脱
-                        </span>
-                      </div>
-                    </foreignObject>
-                  </g>
-                )}
-              </g>
-            )
-          })}
-
-          {/* 矢印インジケーター */}
-          {[0, 1, 2, 3].map((i) => (
-            <g key={`arrow-${i}`} className="pointer-events-none">
-              <circle
-                cx={i * nodePadding + 60 + nodePadding / 2}
-                cy={baseY - 10}
-                r="12"
-                fill="white"
-                stroke="#E5E7EB"
-                strokeWidth="1"
-              />
-              <path
-                d={`M ${i * nodePadding + 60 + nodePadding / 2 - 4} ${baseY - 10} l 8 0 l -4 5 z`}
-                fill="#9CA3AF"
-                transform={`rotate(270, ${i * nodePadding + 60 + nodePadding / 2}, ${baseY - 10})`}
-              />
-            </g>
-          ))}
-        </svg>
-        
-        {/* 凡例 */}
-        <div className="flex items-center justify-center gap-8 mt-6 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-3 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 opacity-60" />
-            <span className="text-muted-foreground">コンバージョン（クリックで詳細）</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="px-2 py-0.5 rounded-full bg-red-50 border border-red-200">
-              <span className="text-[10px] text-red-600 font-medium">-XX%</span>
-            </div>
-            <span className="text-muted-foreground">離脱率（クリックで詳細）</span>
-          </div>
+  // カスタムツールチップ
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: typeof funnelData[0] }> }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload
+      return (
+        <div className="bg-white dark:bg-card p-3 rounded-lg shadow-lg border">
+          <p className="font-semibold text-sm">{data.name}</p>
+          <p className="text-lg font-bold" style={{ color: data.fill }}>{data.value}万人</p>
+          {data.convRate && (
+            <p className="text-xs text-emerald-600">コンバージョン率: {data.convRate}%</p>
+          )}
+          {data.dropoff && (
+            <p className="text-xs text-red-500">離脱率: {data.dropoff}%</p>
+          )}
         </div>
-      </div>
-    )
+      )
+    }
+    return null
   }
 
   return (
@@ -454,7 +259,7 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
               <div className="ml-auto flex items-center gap-6">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-primary">24.5万人</p>
-                  <p className="text-xs text-muted-foreground">購入ユーザー��</p>
+                  <p className="text-xs text-muted-foreground">購入ユーザー数</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-emerald-600">+12.3%</p>
@@ -470,7 +275,7 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
         </Card>
       )}
 
-      {/* サンキーダイアグラム */}
+      {/* 購買ファネル分析 */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
@@ -478,11 +283,159 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
             購買ファネル分析
           </CardTitle>
           <CardDescription>
-            検索から購入、リピートまでのユーザーフロー。フローや離脱部分をクリックすると該当ペルソナの詳細が見られます。
+            検索から購入、リピートまでのユーザーフロー。各ステージをクリックすると詳細が表示されます。
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {renderSankeyDiagram()}
+          {/* ファネルチャート */}
+          <div className="h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <FunnelChart>
+                <Tooltip content={<CustomTooltip />} />
+                <Funnel
+                  dataKey="value"
+                  data={funnelData}
+                  isAnimationActive
+                  onClick={(data) => {
+                    if (data && data.payload) {
+                      const idx = funnelData.findIndex(d => d.name === data.payload.name)
+                      if (idx < funnelData.length - 1) {
+                        const flowKey = `${funnelData[idx].name}-${funnelData[idx + 1].name}`
+                        setSelectedFlow(flowKey)
+                        setSelectedDropoff(null)
+                      }
+                    }
+                  }}
+                >
+                  <LabelList
+                    position="right"
+                    fill="#000"
+                    stroke="none"
+                    dataKey="name"
+                    className="text-sm font-medium"
+                  />
+                  {funnelData.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={entry.fill}
+                      className="cursor-pointer hover:opacity-80 transition-opacity"
+                    />
+                  ))}
+                </Funnel>
+              </FunnelChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* ステージ詳細カード */}
+          <div className="grid grid-cols-5 gap-3 mt-6">
+            {funnelData.map((stage, index) => {
+              const Icon = stage.icon
+              const nextStage = funnelData[index + 1]
+              const flowKey = nextStage ? `${stage.name}-${nextStage.name}` : null
+
+              return (
+                <div key={stage.name} className="relative">
+                  <Card 
+                    className={`cursor-pointer transition-all hover:shadow-md ${
+                      selectedFlow === flowKey ? 'ring-2 ring-primary' : ''
+                    }`}
+                    style={{ borderLeftWidth: 4, borderLeftColor: stage.fill }}
+                    onClick={() => {
+                      if (flowKey) {
+                        setSelectedFlow(flowKey)
+                        setSelectedDropoff(null)
+                      }
+                    }}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div 
+                          className="w-8 h-8 rounded-full flex items-center justify-center"
+                          style={{ backgroundColor: `${stage.fill}20` }}
+                        >
+                          <Icon className="h-4 w-4" style={{ color: stage.fill }} />
+                        </div>
+                        <span className="text-sm font-medium">{stage.name}</span>
+                      </div>
+                      <p className="text-2xl font-bold" style={{ color: stage.fill }}>
+                        {stage.value}<span className="text-sm font-normal text-muted-foreground">万人</span>
+                      </p>
+                      {stage.convRate && (
+                        <div className="flex items-center gap-1 mt-2 text-xs text-emerald-600">
+                          <TrendingUp className="h-3 w-3" />
+                          <span>CV {stage.convRate}%</span>
+                        </div>
+                      )}
+                      {stage.dropoff && (
+                        <button
+                          className="flex items-center gap-1 mt-1 text-xs text-red-500 hover:text-red-600 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setSelectedDropoff(stage.name)
+                            setSelectedFlow(null)
+                          }}
+                        >
+                          <TrendingDown className="h-3 w-3" />
+                          <span>離脱 {stage.dropoff}% ({stage.dropoffValue}万人)</span>
+                        </button>
+                      )}
+                    </CardContent>
+                  </Card>
+                  
+                  {/* 矢印 */}
+                  {index < funnelData.length - 1 && (
+                    <div className="absolute -right-2 top-1/2 -translate-y-1/2 z-10">
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* 凡例 */}
+          <div className="flex items-center justify-center gap-8 mt-6 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-emerald-500" />
+              <span className="text-muted-foreground">コンバージョン（ステージをクリック）</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <span className="text-muted-foreground">離脱（離脱率をクリック）</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* コンバージョン比較チャート */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">ステージ別コンバージョン率</CardTitle>
+          <CardDescription>各ステージから次のステージへの移行率</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={funnelData.filter(d => d.convRate)}
+                layout="vertical"
+                margin={{ top: 0, right: 30, left: 80, bottom: 0 }}
+              >
+                <XAxis type="number" domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
+                <YAxis type="category" dataKey="name" width={70} />
+                <Tooltip 
+                  formatter={(value: number) => [`${value}%`, 'コンバージョン率']}
+                  contentStyle={{ borderRadius: 8 }}
+                />
+                <Bar dataKey="convRate" radius={[0, 4, 4, 0]}>
+                  {funnelData.filter(d => d.convRate).map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                  <LabelList dataKey="convRate" position="right" formatter={(v: number) => `${v}%`} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </CardContent>
       </Card>
 
@@ -671,7 +624,6 @@ export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfCon
           </CardContent>
         </Card>
       )}
-
     </main>
   )
 }
