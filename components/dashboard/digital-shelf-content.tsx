@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
   Cell,
   Tooltip,
+  LabelList,
 } from "recharts"
 import {
   Users,
