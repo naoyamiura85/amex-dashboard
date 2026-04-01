@@ -3,7 +3,7 @@
 import { 
   BarChart3, 
   TrendingUp, 
-  Eye, 
+  ShoppingCart, 
   Cpu, 
   Swords, 
   Lightbulb, 
@@ -29,9 +29,9 @@ const pageConfig: Record<string, { icon: LucideIcon; description: string }> = {
     icon: TrendingUp, 
     description: "AIが検出した消費財カテゴリの成長トレンド" 
   },
-  "/dashboard/spotlight": { 
-    icon: Eye, 
-    description: "注目トレンドの詳細分析とインサイト" 
+  "/dashboard/sales-analysis": { 
+    icon: ShoppingCart, 
+    description: "既存商品の販売実績と市場動向分析" 
   },
   "/ai/correlations": { 
     icon: Cpu, 

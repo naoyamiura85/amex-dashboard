@@ -15,7 +15,7 @@ import {
   LogOut,
   Bell,
   TrendingUp,
-  Eye,
+  ShoppingCart,
   Brain,
   Lightbulb,
   BarChart3,
@@ -63,7 +63,7 @@ const navSections = [
     defaultOpen: true,
     items: [
       { title: "トレンド一覧", icon: TrendingUp, href: "/dashboard/trends" },
-      { title: "トレンド詳細", icon: Eye, href: "/dashboard/spotlight" },
+      { title: "販売状況分析", icon: ShoppingCart, href: "/dashboard/sales-analysis" },
     ],
   },
   {
