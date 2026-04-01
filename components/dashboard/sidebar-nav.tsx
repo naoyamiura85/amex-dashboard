@@ -117,18 +117,20 @@ export function DashboardSidebar() {
   return (
     <Sidebar className="border-r border-sidebar-border bg-sidebar">
       {/* Header with Logo - Suntory Blue Background */}
-      <SidebarHeader className="p-4 bg-primary">
-        <Link href="/" className="flex items-center gap-3">
-          <Image 
-            src="/images/suntory-logo.png" 
-            alt="SUNTORY" 
-            width={80} 
-            height={28}
-            className="object-contain brightness-0 invert"
-          />
-          <div className="flex flex-col border-l border-white/30 pl-3">
+      <SidebarHeader className="p-0">
+        <Link href="/" className="flex items-center gap-4 bg-primary px-4 py-3">
+          <div className="flex h-10 w-16 items-center justify-center bg-white rounded">
+            <Image 
+              src="/images/suntory-logo.png" 
+              alt="SUNTORY" 
+              width={56} 
+              height={20}
+              className="object-contain"
+            />
+          </div>
+          <div className="flex flex-col">
             <span className="text-sm font-bold text-white tracking-tight">サントリー食品</span>
-            <span className="text-[10px] text-white/80 leading-tight">製品開発ダッシュボード</span>
+            <span className="text-[11px] text-white/80 leading-tight">製品開発ダッシュボード</span>
           </div>
         </Link>
       </SidebarHeader>
