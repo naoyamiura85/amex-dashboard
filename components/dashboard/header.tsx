@@ -13,6 +13,7 @@ import {
   Store, 
   Zap, 
   FolderOpen,
+  Users,
   type LucideIcon 
 } from "lucide-react"
 
@@ -25,6 +26,10 @@ interface DashboardHeaderProps {
 
 // Map routes to icons and descriptions
 const pageConfig: Record<string, { icon: LucideIcon; description: string }> = {
+  "/dashboard/market-overview": { 
+    icon: Users, 
+    description: "定期顧客化ポテンシャルとウェルネスレベルごとのペルソナ分布" 
+  },
   "/dashboard/trends": { 
     icon: TrendingUp, 
     description: "AIが検出した消費財カテゴリの成長トレンド" 

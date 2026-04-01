@@ -25,6 +25,7 @@ import {
   Boxes,
   Cpu,
   ChevronRight,
+  Users,
 } from "lucide-react"
 
 import {
@@ -62,6 +63,7 @@ const navSections = [
     label: "ANALYTICS",
     defaultOpen: true,
     items: [
+      { title: "Market Overview", icon: Users, href: "/dashboard/market-overview" },
       { title: "トレンド一覧", icon: TrendingUp, href: "/dashboard/trends" },
       { title: "デジタルシェルフ分析", icon: MonitorSmartphone, href: "/dashboard/digital-shelf" },
     ],
