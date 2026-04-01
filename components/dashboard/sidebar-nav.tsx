@@ -16,14 +16,11 @@ import {
   Bell,
   TrendingUp,
   MonitorSmartphone,
-  Brain,
   Lightbulb,
-  BarChart3,
   Swords,
   FileBarChart,
   FlaskConical,
   Boxes,
-  Cpu,
   ChevronRight,
   Users,
 } from "lucide-react"
@@ -72,8 +69,6 @@ const navSections = [
     label: "AI ANALYSIS",
     defaultOpen: true,
     items: [
-      { title: "相関発見", icon: Cpu, href: "/ai/correlations" },
-      { title: "トレンド予測", icon: BarChart3, href: "/ai/predictions" },
       { title: "競合分析", icon: Swords, href: "/ai/competitors" },
     ],
   },
