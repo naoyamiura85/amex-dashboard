@@ -1,19 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import {
   Users,
   Eye,
@@ -30,7 +22,6 @@ import {
   TrendingDown,
   Database,
   Layers,
-  Package,
 } from "lucide-react"
 
 // 商品の定義（サントリーD2C商品）
@@ -143,55 +134,22 @@ const personaClusters = [
   { name: "その他", count: 25000, share: 6, ltv: 11000, color: "#D1D5DB" },
 ]
 
-export function DigitalShelfContent() {
+interface DigitalShelfContentProps {
+  selectedProduct?: string
+}
+
+export function DigitalShelfContent({ selectedProduct = "all" }: DigitalShelfContentProps) {
   const [expandedFunnel, setExpandedFunnel] = useState<string | null>("購買者")
-  const [selectedProduct, setSelectedProduct] = useState<string>("all")
 
   const currentProduct = products.find(p => p.id === selectedProduct)
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">
-      {/* 商品選択ヘッダー */}
-      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-        <CardContent className="py-4">
-          <div className="flex items-center justify-between flex-wrap gap-4">
+      {/* 選択された商品のサマリー表示 */}
+      {currentProduct && currentProduct.id !== "all" && (
+        <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+          <CardContent className="py-4">
             <div className="flex items-center gap-4">
-              <Package className="h-6 w-6 text-primary" />
-              <div>
-                <h2 className="font-semibold text-foreground">分析対象商品を選択</h2>
-                <p className="text-sm text-muted-foreground">商品別の購入ユーザー分析を行います</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-                <SelectTrigger className="w-[280px] bg-background">
-                  <SelectValue placeholder="商品を選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  {products.map((product) => (
-                    <SelectItem key={product.id} value={product.id}>
-                      <div className="flex items-center gap-3">
-                        {product.image ? (
-                          <div className="w-6 h-6 rounded overflow-hidden bg-white border flex-shrink-0">
-                            <img 
-                              src={product.image} 
-                              alt={product.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <Package className="w-6 h-6 text-muted-foreground" />
-                        )}
-                        <span>{product.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          {currentProduct && currentProduct.id !== "all" && (
-            <div className="mt-4 pt-4 border-t border-primary/20 flex items-center gap-4">
               <div className="w-16 h-16 rounded-lg overflow-hidden bg-white border flex-shrink-0">
                 <img 
                   src={currentProduct.image} 
@@ -218,9 +176,10 @@ export function DigitalShelfContent() {
                 </div>
               </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+
       {/* データソース統合セクション */}
       <Card>
         <CardHeader className="pb-4">
