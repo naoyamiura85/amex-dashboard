@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import {
@@ -117,13 +118,17 @@ export function DashboardSidebar() {
     <Sidebar className="border-r border-border bg-white">
       {/* Header with Logo */}
       <SidebarHeader className="p-4 border-b border-border">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <span className="text-lg font-bold text-primary-foreground">Y</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold text-foreground tracking-tight">YAPPI</span>
-            <span className="text-[10px] text-muted-foreground leading-tight">Consumer Intelligence</span>
+        <Link href="/" className="flex flex-col gap-1">
+          <Image 
+            src="/images/suntory-logo.png" 
+            alt="SUNTORY" 
+            width={120} 
+            height={40}
+            className="object-contain"
+          />
+          <div className="flex flex-col mt-1">
+            <span className="text-xs font-bold text-foreground tracking-tight">サントリー食品</span>
+            <span className="text-[10px] text-muted-foreground leading-tight">製品開発ダッシュボード</span>
           </div>
         </Link>
       </SidebarHeader>
