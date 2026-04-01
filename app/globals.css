@@ -46,13 +46,13 @@
   --suntory-blue-800: #004D66;
   --suntory-blue-900: #003D52;
   /* Sidebar */
-  --sidebar: #F0F9FF;
+  --sidebar: #FAFAFA;
   --sidebar-foreground: #1a1a1a;
   --sidebar-primary: #00A0D2;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #E0F2FE;
+  --sidebar-accent: #F0F7FC;
   --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: #E6E7E4;
+  --sidebar-border: #EAECEF;
   --sidebar-ring: #00A0D2;
 }
 

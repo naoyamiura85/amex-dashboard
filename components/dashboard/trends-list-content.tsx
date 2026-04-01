@@ -108,28 +108,20 @@ export function TrendsListContent() {
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">
-      {/* Header */}
+      {/* Filters Row */}
       <div className="flex flex-col gap-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-2xl font-bold text-foreground">トップトレンド</h1>
-              {mode !== "all" && (
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${modeConfig.bgColor} ${modeConfig.color}`}>
-                  {modeLabel}モード
-                </span>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {mode === "all" 
-                ? "AIが検出した消費財カテゴリの成長トレンド" 
-                : `${modeLabel}カテゴリのトレンドを表示中（${filteredTrends.length}件）`}
-            </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {mode !== "all" && (
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${modeConfig.bgColor} ${modeConfig.color}`}>
+                {modeLabel}モード
+              </span>
+            )}
           </div>
           <AddTrendDialog />
         </div>
 
-        {/* Filters Row */}
+        {/* Search and Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
