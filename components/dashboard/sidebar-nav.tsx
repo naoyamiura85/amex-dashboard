@@ -5,11 +5,6 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import {
-  LayoutDashboard,
-  Search,
-  Store,
-  Zap,
-  FolderOpen,
   Settings,
   ChevronDown,
   LogOut,
@@ -70,23 +65,13 @@ const navSections = [
     items: [
       { title: "コンセプト生成", icon: Lightbulb, href: "/ai/concept-generator" },
       { title: "素材データベース", icon: FlaskConical, href: "/ai/materials" },
+    ],
+  },
+  {
+    label: "SIMULATION",
+    defaultOpen: false,
+    items: [
       { title: "改定シミュレーター", icon: Boxes, href: "/ai/simulator" },
-    ],
-  },
-  {
-    label: "INSIGHTS",
-    defaultOpen: false,
-    items: [
-      { title: "統合エクスプローラー", icon: Search, href: "/insights/explorer" },
-      { title: "チャネル分析", icon: Store, href: "/channels" },
-    ],
-  },
-  {
-    label: "REPORTS",
-    defaultOpen: false,
-    items: [
-      { title: "自動生成", icon: Zap, href: "/reports" },
-      { title: "ドライブ", icon: FolderOpen, href: "/drive" },
     ],
   },
 ]
