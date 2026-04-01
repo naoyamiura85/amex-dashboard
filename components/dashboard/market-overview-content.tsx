@@ -16,11 +16,11 @@ const stages = [
   { id: "regular", name: "定期購入ユーザー", total: "170万人", color: "bg-primary/60" },
 ]
 
-// ウェルネスレベルの定義
-const wellnessLevels = [
-  { id: "h", name: "H", range: "67-100" },
-  { id: "m", name: "M", range: "34-66" },
-  { id: "l", name: "L", range: "0-33" },
+// 商品の定義（サントリーD2C商品）
+const products = [
+  { id: "sesamin", name: "セサミンEX", category: "サプリメント" },
+  { id: "dha", name: "DHA&EPA+セサミンEX", category: "サプリメント" },
+  { id: "omega", name: "オメガエイド", category: "サプリメント" },
 ]
 
 // セグメントデータ
@@ -40,7 +40,7 @@ const segmentData: Record<string, Record<string, {
   purchaseBehavior: { label: string; value: string }[]
 }>> = {
   lm: {
-    h: {
+    sesamin: {
       population: "1200万人",
       personas: [
         { id: "1", name: "佐藤健一", image: "/images/personas/senior_man1.jpg" },
@@ -75,7 +75,7 @@ const segmentData: Record<string, Record<string, {
         { label: "ブランドロイヤルティ", value: "中程度" },
       ],
     },
-    m: {
+    dha: {
       population: "1800万人",
       personas: [
         { id: "1", name: "中村一郎", image: "/images/personas/casual_man1.jpg" },
@@ -108,7 +108,7 @@ const segmentData: Record<string, Record<string, {
         { label: "ブランドロイヤルティ", value: "低め" },
       ],
     },
-    l: {
+    omega: {
       population: "1500万人",
       personas: [
         { id: "1", name: "木村翔太", image: "/images/personas/young_man1.jpg" },
@@ -140,7 +140,7 @@ const segmentData: Record<string, Record<string, {
     },
   },
   mh: {
-    h: {
+    sesamin: {
       population: "283万人",
       personas: [
         { id: "1", name: "石井康夫", image: "/images/personas/middle_woman1.jpg" },
@@ -171,7 +171,7 @@ const segmentData: Record<string, Record<string, {
         { label: "ブランドロイヤルティ", value: "高い" },
       ],
     },
-    m: {
+    dha: {
       population: "340万人",
       personas: [
         { id: "1", name: "村上大樹", image: "/images/personas/housewife1.jpg" },
@@ -201,7 +201,7 @@ const segmentData: Record<string, Record<string, {
         { label: "ブランドロイヤルティ", value: "中〜高" },
       ],
     },
-    l: {
+    omega: {
       population: "227万人",
       personas: [
         { id: "1", name: "青木拓也", image: "/images/personas/young_man1.jpg" },
@@ -233,7 +233,7 @@ const segmentData: Record<string, Record<string, {
     },
   },
   trial: {
-    h: {
+    sesamin: {
       population: "128万人",
       personas: [
         { id: "1", name: "原田正樹", image: "/images/personas/senior_woman1.jpg" },
@@ -264,7 +264,7 @@ const segmentData: Record<string, Record<string, {
         { label: "ブランドロイヤルティ", value: "構築中" },
       ],
     },
-    m: {
+    dha: {
       population: "107万人",
       personas: [
         { id: "1", name: "橋本雄一", image: "/images/personas/housewife1.jpg" },
@@ -294,7 +294,7 @@ const segmentData: Record<string, Record<string, {
         { label: "ブランドロイヤルティ", value: "評価中" },
       ],
     },
-    l: {
+    omega: {
       population: "85万人",
       personas: [
         { id: "1", name: "内田雅人", image: "/images/personas/young_man1.jpg" },
@@ -325,7 +325,7 @@ const segmentData: Record<string, Record<string, {
     },
   },
   regular: {
-    h: {
+    sesamin: {
       population: "79万人",
       personas: [
         { id: "1", name: "長谷川浩", image: "/images/personas/senior_man1.jpg" },
@@ -357,7 +357,7 @@ const segmentData: Record<string, Record<string, {
         { label: "ブランドロイヤルティ", value: "非常に高い" },
       ],
     },
-    m: {
+    dha: {
       population: "57万人",
       personas: [
         { id: "1", name: "岩崎一馬", image: "/images/personas/young_mother1.jpg" },
@@ -387,7 +387,7 @@ const segmentData: Record<string, Record<string, {
         { label: "ブランドロイヤルティ", value: "中程度" },
       ],
     },
-    l: {
+    omega: {
       population: "34万人",
       personas: [
         { id: "1", name: "大野雄介", image: "/images/personas/young_man1.jpg" },
@@ -435,21 +435,21 @@ export function MarketOverviewContent() {
   const [selectedSegment, setSelectedSegment] = useState<{
     stageId: string
     stageName: string
-    wellnessId: string
-    wellnessName: string
+    productId: string
+    productName: string
   } | null>(null)
 
-  const handleCellClick = (stageId: string, stageName: string, wellnessId: string, wellnessName: string) => {
-    if (selectedSegment?.stageId === stageId && selectedSegment?.wellnessId === wellnessId) {
+  const handleCellClick = (stageId: string, stageName: string, productId: string, productName: string) => {
+    if (selectedSegment?.stageId === stageId && selectedSegment?.productId === productId) {
       setSelectedSegment(null)
     } else {
-      setSelectedSegment({ stageId, stageName, wellnessId, wellnessName })
+      setSelectedSegment({ stageId, stageName, productId, productName })
     }
   }
 
   const getSegmentData = () => {
     if (!selectedSegment) return null
-    return segmentData[selectedSegment.stageId]?.[selectedSegment.wellnessId]
+    return segmentData[selectedSegment.stageId]?.[selectedSegment.productId]
   }
 
   const segment = getSegmentData()
@@ -467,7 +467,7 @@ export function MarketOverviewContent() {
                   <th className="p-3 text-left text-xs text-muted-foreground border-b border-r">
                     <div className="flex flex-col">
                       <span>ステージ</span>
-                      <span className="text-[10px] mt-1">ウェルネス</span>
+                      <span className="text-[10px] mt-1">商品</span>
                     </div>
                   </th>
                   {stages.map((stage, index) => (
@@ -488,28 +488,28 @@ export function MarketOverviewContent() {
                 </tr>
               </thead>
               <tbody>
-                {wellnessLevels.map((wellness) => (
-                  <tr key={wellness.id}>
-                    <td className="p-3 border-r">
-                      <div className="flex flex-col items-center">
-                        <span className="text-lg font-bold text-primary">{wellness.name}</span>
-                        <span className="text-[10px] text-muted-foreground">{wellness.range}</span>
+                {products.map((product) => (
+                  <tr key={product.id}>
+                    <td className="p-3 border-r min-w-[140px]">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-primary">{product.name}</span>
+                        <span className="text-[10px] text-muted-foreground">{product.category}</span>
                       </div>
                     </td>
                     {stages.map((stage, stageIndex) => {
-                      const data = segmentData[stage.id]?.[wellness.id]
-                      const isSelected = selectedSegment?.stageId === stage.id && selectedSegment?.wellnessId === wellness.id
+                      const data = segmentData[stage.id]?.[product.id]
+                      const isSelected = selectedSegment?.stageId === stage.id && selectedSegment?.productId === product.id
                       
                       return (
                         <td 
-                          key={`${stage.id}-${wellness.id}`}
+                          key={`${stage.id}-${product.id}`}
                           className={`p-4 text-center cursor-pointer transition-all ${
                             stageIndex === 0 ? "bg-slate-50 hover:bg-slate-100" : 
                             stageIndex === 1 ? "bg-sky-50 hover:bg-sky-100" : 
                             stageIndex === 2 ? "bg-sky-100 hover:bg-sky-200" : 
                             "bg-sky-200 hover:bg-sky-300"
                           } ${isSelected ? "ring-2 ring-primary ring-inset" : ""}`}
-                          onClick={() => handleCellClick(stage.id, stage.name, wellness.id, wellness.name)}
+                          onClick={() => handleCellClick(stage.id, stage.name, product.id, product.name)}
                         >
                           <div className="flex flex-col items-center gap-2">
                             <span className={`text-xl font-bold ${stageIndex > 0 ? "text-primary" : "text-foreground"}`}>
@@ -561,7 +561,7 @@ export function MarketOverviewContent() {
                   </Badge>
                 </div>
                 <h3 className="text-lg font-semibold">
-                  {selectedSegment.stageName} × ウェルネス {selectedSegment.wellnessName.toUpperCase()}
+                  {selectedSegment.stageName} × {selectedSegment.productName}
                   <span className="text-muted-foreground font-normal ml-2">
                     推定 {segment.population}
                   </span>
