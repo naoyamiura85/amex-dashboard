@@ -6,13 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { X, Users } from "lucide-react"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { X, Users, ChevronDown } from "lucide-react"
 
 // ステージの定義
 const stages = [
@@ -42,6 +36,9 @@ const segmentData: Record<string, Record<string, {
   occupation: { name: string; rate: string }[]
   income: { range: string; rate: string }[]
   summary: string
+  interests: string[]
+  purchaseBehavior: { label: string; value: string }[]
+  wellnessTrends: { label: string; value: string }[]
 }>> = {
   lm: {
     h: {
@@ -71,6 +68,19 @@ const segmentData: Record<string, Record<string, {
         { range: "300万未満", rate: "14%" },
       ],
       summary: "健康への関心はあるが継続行動に至っていない層。価格重視で比較検討を慎重に行う。テレビCMや薬局店頭がメインのタッチポイント。",
+      interests: ["健康情報番組", "料理・レシピ", "旅行", "園芸", "ゴルフ"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "ドラッグストア・スーパー" },
+        { label: "購買頻度", value: "月1-2回" },
+        { label: "価格感度", value: "高い" },
+        { label: "ブランドロイヤルティ", value: "中程度" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "週1回程度" },
+        { label: "食事管理", value: "意識している" },
+        { label: "サプリメント摂取", value: "時々" },
+        { label: "健康診断", value: "年1回" },
+      ],
     },
     m: {
       population: "1800万人",
@@ -97,6 +107,19 @@ const segmentData: Record<string, Record<string, {
         { range: "900万以上", rate: "12%" },
       ],
       summary: "日常的な健康意識は中程度。コンビニやスーパーでの購買が中心。SNSや口コミの影響を受けやすい。",
+      interests: ["SNS", "美容", "ファッション", "グルメ", "子育て"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "コンビニ・スーパー" },
+        { label: "購買頻度", value: "週1-2回" },
+        { label: "価格感度", value: "中程度" },
+        { label: "ブランドロイヤルティ", value: "低め" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "月数回" },
+        { label: "食事管理", value: "時々意識" },
+        { label: "サプリメント摂取", value: "あまりしない" },
+        { label: "健康診断", value: "年1回" },
+      ],
     },
     l: {
       population: "1500万人",
@@ -120,6 +143,19 @@ const segmentData: Record<string, Record<string, {
         { range: "700〜900万未満", rate: "10%" },
       ],
       summary: "健康への関心は低く、味や価格を重視。衝動買いが多く、コンビニでの購買が中心。デジタル広告への接触が多い。",
+      interests: ["ゲーム", "動画配信", "音楽", "スポーツ観戦", "外食"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "コンビニ" },
+        { label: "購買頻度", value: "週3回以上" },
+        { label: "価格感度", value: "低め" },
+        { label: "ブランドロイヤルティ", value: "低い" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "ほとんどなし" },
+        { label: "食事管理", value: "あまり意識しない" },
+        { label: "サプリメント摂取", value: "しない" },
+        { label: "健康診断", value: "不定期" },
+      ],
     },
   },
   mh: {
@@ -146,6 +182,19 @@ const segmentData: Record<string, Record<string, {
         { range: "300〜500万未満", rate: "12%" },
       ],
       summary: "健康意識が非常に高く、機能性表示食品に積極的。品質重視で価格感度は低め。専門店やECでの購買が多い。",
+      interests: ["健康食品", "オーガニック", "ヨガ・ピラティス", "ランニング", "料理"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "専門店・EC" },
+        { label: "購買頻度", value: "月2-3回" },
+        { label: "価格感度", value: "低い" },
+        { label: "ブランドロイヤルティ", value: "高い" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "週3回以上" },
+        { label: "食事管理", value: "徹底している" },
+        { label: "サプリメント摂取", value: "毎日" },
+        { label: "健康診断", value: "年2回以上" },
+      ],
     },
     m: {
       population: "340万人",
@@ -169,6 +218,19 @@ const segmentData: Record<string, Record<string, {
         { range: "900万以上", rate: "15%" },
       ],
       summary: "健康意識は中〜高程度。定期的な運動習慣がある。ドラッグストアとスーパーでの購買が中心。",
+      interests: ["スポーツ", "アウトドア", "旅行", "読書", "家庭菜園"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "ドラッグストア・スーパー" },
+        { label: "購買頻度", value: "週1回" },
+        { label: "価格感度", value: "中程度" },
+        { label: "ブランドロイヤルティ", value: "中〜高" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "週2回程度" },
+        { label: "食事管理", value: "意識している" },
+        { label: "サプリメント摂取", value: "週数回" },
+        { label: "健康診断", value: "年1回" },
+      ],
     },
     l: {
       population: "227万人",
@@ -192,6 +254,19 @@ const segmentData: Record<string, Record<string, {
         { range: "300万未満", rate: "12%" },
       ],
       summary: "購買力はあるが健康意識は低め。ブランドや話題性で商品選択。ECでの購買比率が高い。",
+      interests: ["テクノロジー", "ガジェット", "投資", "ゲーム", "外食"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "EC・コンビニ" },
+        { label: "購買頻度", value: "週2回" },
+        { label: "価格感度", value: "低め" },
+        { label: "ブランドロイヤルティ", value: "話題性重視" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "月数回" },
+        { label: "食事管理", value: "あまり意識しない" },
+        { label: "サプリメント摂取", value: "時々" },
+        { label: "健康診断", value: "年1回" },
+      ],
     },
   },
   trial: {
@@ -218,6 +293,19 @@ const segmentData: Record<string, Record<string, {
         { range: "300〜500万未満", rate: "15%" },
       ],
       summary: "既に当社商品を試用中。健康効果を実感しつつある層。継続購買への移行が期待できる。",
+      interests: ["健康食品", "美容", "旅行", "ガーデニング", "料理"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "EC・専門店" },
+        { label: "購買頻度", value: "月1回" },
+        { label: "価格感度", value: "低め" },
+        { label: "ブランドロイヤルティ", value: "構築中" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "週2-3回" },
+        { label: "食事管理", value: "徹底している" },
+        { label: "サプリメント摂取", value: "毎日" },
+        { label: "健康診断", value: "年1-2回" },
+      ],
     },
     m: {
       population: "107万人",
@@ -241,6 +329,19 @@ const segmentData: Record<string, Record<string, {
         { range: "900万以上", rate: "12%" },
       ],
       summary: "お試し購入段階。価格と効果のバランスを評価中。クーポンやキャンペーンに反応しやすい。",
+      interests: ["クーポン・セール", "口コミサイト", "健康番組", "料理", "旅行"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "ドラッグストア・EC" },
+        { label: "購買頻度", value: "月1回" },
+        { label: "価格感度", value: "高い" },
+        { label: "ブランドロイヤルティ", value: "評価中" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "週1回程度" },
+        { label: "食事管理", value: "意識している" },
+        { label: "サプリメント摂取", value: "試用中" },
+        { label: "健康診断", value: "年1回" },
+      ],
     },
     l: {
       population: "85万人",
@@ -263,6 +364,19 @@ const segmentData: Record<string, Record<string, {
         { range: "900万以上", rate: "12%" },
       ],
       summary: "話題性やキャンペーンで初回購入。継続意向は低め。離脱リスクが高い。",
+      interests: ["SNS", "話題の商品", "ガジェット", "エンタメ", "外食"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "EC・コンビニ" },
+        { label: "購買頻度", value: "不定期" },
+        { label: "価格感度", value: "中程度" },
+        { label: "ブランドロイヤルティ", value: "低い" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "ほとんどなし" },
+        { label: "食事管理", value: "あまり意識しない" },
+        { label: "サプリメント摂取", value: "お試し中" },
+        { label: "健康診断", value: "不定期" },
+      ],
     },
   },
   regular: {
@@ -290,6 +404,19 @@ const segmentData: Record<string, Record<string, {
         { range: "300〜500万未満", rate: "12%" },
       ],
       summary: "当社のロイヤルカスタマー。定期購入を継続。口コミでの推奨も活発。LTVが最も高い層。",
+      interests: ["健康管理", "家族", "旅行", "ガーデニング", "料理教室"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "定期購入・EC" },
+        { label: "購買頻度", value: "月1回（定期）" },
+        { label: "価格感度", value: "低い" },
+        { label: "ブランドロイヤルティ", value: "非常に高い" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "週3回以上" },
+        { label: "食事管理", value: "徹底している" },
+        { label: "サプリメント摂取", value: "毎日複数" },
+        { label: "健康診断", value: "年2回以上" },
+      ],
     },
     m: {
       population: "57万人",
@@ -313,6 +440,19 @@ const segmentData: Record<string, Record<string, {
         { range: "300〜500万未満", rate: "15%" },
       ],
       summary: "継続購買中だが、競合への乗り換えリスクあり。価格感度が比較的高い。",
+      interests: ["コスパ", "比較サイト", "クーポン", "健康番組", "旅行"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "ドラッグストア・EC" },
+        { label: "購買頻度", value: "月1-2回" },
+        { label: "価格感度", value: "中〜高" },
+        { label: "ブランドロイヤルティ", value: "中程度" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "週1-2回" },
+        { label: "食事管理", value: "意識している" },
+        { label: "サプリメント摂取", value: "毎日" },
+        { label: "健康診断", value: "年1回" },
+      ],
     },
     l: {
       population: "34万人",
@@ -334,6 +474,19 @@ const segmentData: Record<string, Record<string, {
         { range: "300〜500万未満", rate: "15%" },
       ],
       summary: "購買力はあるが健康モチベーションは低め。便利さや習慣で継続。離脱リスクは中程度。",
+      interests: ["テクノロジー", "仕事効率化", "投資", "ゲーム", "外食"],
+      purchaseBehavior: [
+        { label: "主要購買チャネル", value: "EC・定期購入" },
+        { label: "購買頻度", value: "月1回（定期）" },
+        { label: "価格感度", value: "低め" },
+        { label: "ブランドロイヤルティ", value: "習慣的" },
+      ],
+      wellnessTrends: [
+        { label: "運動習慣", value: "月数回" },
+        { label: "食事管理", value: "あまり意識しない" },
+        { label: "サプリメント摂取", value: "習慣的に" },
+        { label: "健康診断", value: "年1回" },
+      ],
     },
   },
 }
@@ -344,6 +497,11 @@ const aiPersonaDetails: Record<string, { age: number; gender: string; tags: stri
   "田中正雄": { age: 71, gender: "男性", tags: ["山歩き・ハイ", "ゴルフ派"] },
   "山本洋子": { age: 67, gender: "女性", tags: ["ゴルフ派", "美容・エイジ"] },
   "山田美和": { age: 70, gender: "女性", tags: ["ヨガ・太極拳", "オーガニック"] },
+  "鈴木太郎": { age: 65, gender: "男性", tags: ["釣り", "健康志向"] },
+  "高橋由美": { age: 63, gender: "女性", tags: ["料理", "ガーデニング"] },
+  "伊藤健": { age: 68, gender: "男性", tags: ["ウォーキング", "読書"] },
+  "渡辺恵": { age: 66, gender: "女性", tags: ["ヨガ", "美容"] },
+  "小林誠": { age: 64, gender: "男性", tags: ["テニス", "旅行"] },
 }
 
 export function MarketOverviewContent() {
@@ -355,7 +513,11 @@ export function MarketOverviewContent() {
   } | null>(null)
 
   const handleCellClick = (stageId: string, stageName: string, wellnessId: string, wellnessName: string) => {
-    setSelectedSegment({ stageId, stageName, wellnessId, wellnessName })
+    if (selectedSegment?.stageId === stageId && selectedSegment?.wellnessId === wellnessId) {
+      setSelectedSegment(null)
+    } else {
+      setSelectedSegment({ stageId, stageName, wellnessId, wellnessName })
+    }
   }
 
   const getSegmentData = () => {
@@ -409,16 +571,17 @@ export function MarketOverviewContent() {
                     </td>
                     {stages.map((stage, stageIndex) => {
                       const data = segmentData[stage.id]?.[wellness.id]
-                      const bgColor = stageIndex === 0 
-                        ? "bg-slate-50 hover:bg-slate-100" 
-                        : `bg-primary/${10 + stageIndex * 15} hover:bg-primary/${15 + stageIndex * 15}`
+                      const isSelected = selectedSegment?.stageId === stage.id && selectedSegment?.wellnessId === wellness.id
                       
                       return (
                         <td 
                           key={`${stage.id}-${wellness.id}`}
-                          className={`p-4 text-center cursor-pointer transition-colors ${
-                            stageIndex > 0 ? "bg-sky-50 hover:bg-sky-100" : "bg-slate-50 hover:bg-slate-100"
-                          } ${stageIndex > 1 ? "bg-sky-100 hover:bg-sky-200" : ""} ${stageIndex > 2 ? "bg-sky-200 hover:bg-sky-300" : ""}`}
+                          className={`p-4 text-center cursor-pointer transition-all ${
+                            stageIndex === 0 ? "bg-slate-50 hover:bg-slate-100" : 
+                            stageIndex === 1 ? "bg-sky-50 hover:bg-sky-100" : 
+                            stageIndex === 2 ? "bg-sky-100 hover:bg-sky-200" : 
+                            "bg-sky-200 hover:bg-sky-300"
+                          } ${isSelected ? "ring-2 ring-primary ring-inset" : ""}`}
                           onClick={() => handleCellClick(stage.id, stage.name, wellness.id, wellness.name)}
                         >
                           <div className="flex flex-col items-center gap-2">
@@ -441,6 +604,9 @@ export function MarketOverviewContent() {
                                 </div>
                               )}
                             </div>
+                            {isSelected && (
+                              <ChevronDown className="h-4 w-4 text-primary mt-1" />
+                            )}
                           </div>
                         </td>
                       )
@@ -453,28 +619,35 @@ export function MarketOverviewContent() {
         </CardContent>
       </Card>
 
-      {/* Segment Detail Dialog */}
-      <Dialog open={!!selectedSegment} onOpenChange={() => setSelectedSegment(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="flex flex-row items-center gap-4 pb-4 border-b">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">セグメント分析</Badge>
-              <Badge className="bg-primary text-primary-foreground">
-                <Users className="h-3 w-3 mr-1" />
-                ユーザー分析
-              </Badge>
+      {/* Segment Detail Panel - Inline below matrix */}
+      {selectedSegment && segment && (
+        <Card className="border-0 shadow-sm animate-in slide-in-from-top-2 duration-300">
+          <CardContent className="p-6">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6 pb-4 border-b">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">セグメント分析</Badge>
+                  <Badge className="bg-primary text-primary-foreground">
+                    <Users className="h-3 w-3 mr-1" />
+                    ユーザー分析
+                  </Badge>
+                </div>
+                <h3 className="text-lg font-semibold">
+                  {selectedSegment.stageName} × ウェルネス {selectedSegment.wellnessName.toUpperCase()}
+                  <span className="text-muted-foreground font-normal ml-2">
+                    推定 {segment.population}
+                  </span>
+                </h3>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedSegment(null)}>
+                <X className="h-4 w-4" />
+              </Button>
             </div>
-            <DialogTitle className="text-lg font-semibold flex-1">
-              {selectedSegment?.stageName} × ウェルネス {selectedSegment?.wellnessName.toUpperCase()}
-              <span className="text-muted-foreground font-normal ml-2">
-                推定 {segment?.population}
-              </span>
-            </DialogTitle>
-          </DialogHeader>
 
-          {segment && (
-            <Tabs defaultValue="overview" className="mt-4">
-              <TabsList className="grid w-full grid-cols-5">
+            {/* Tabs */}
+            <Tabs defaultValue="overview">
+              <TabsList className="mb-6">
                 <TabsTrigger value="overview">属性・概要</TabsTrigger>
                 <TabsTrigger value="interests">興味関心</TabsTrigger>
                 <TabsTrigger value="purchase">購買行動</TabsTrigger>
@@ -482,110 +655,97 @@ export function MarketOverviewContent() {
                 <TabsTrigger value="docomo">docomo Data</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="overview" className="mt-6">
-                <div className="grid grid-cols-3 gap-6">
-                  {/* Left Column - Demographics */}
-                  <div className="col-span-2 space-y-6">
-                    {/* Basic Demographics */}
-                    <Card>
-                      <CardContent className="p-4 space-y-3">
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="text-sm text-muted-foreground">性別構成</span>
-                          <span className="text-sm font-semibold">{segment.demographics.genderRatio}</span>
+              <TabsContent value="overview" className="mt-0">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Left: Demographics & Occupation/Income */}
+                  <div className="lg:col-span-2 space-y-6">
+                    {/* Demographics */}
+                    <div className="border rounded-lg p-4">
+                      <div className="space-y-3">
+                        <div className="flex justify-between py-2 border-b">
+                          <span className="text-muted-foreground">性別構成</span>
+                          <span className="font-medium">{segment.demographics.genderRatio}</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="text-sm text-muted-foreground">平均年齢</span>
-                          <span className="text-sm font-semibold">{segment.demographics.avgAge}</span>
+                        <div className="flex justify-between py-2 border-b">
+                          <span className="text-muted-foreground">平均年齢</span>
+                          <span className="font-medium">{segment.demographics.avgAge}</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="text-sm text-muted-foreground">既婚率</span>
-                          <span className="text-sm font-semibold">{segment.demographics.marriedRate}</span>
+                        <div className="flex justify-between py-2 border-b">
+                          <span className="text-muted-foreground">既婚率</span>
+                          <span className="font-medium">{segment.demographics.marriedRate}</span>
                         </div>
-                        <div className="flex justify-between items-center py-2">
-                          <span className="text-sm text-muted-foreground">子あり率</span>
-                          <span className="text-sm font-semibold">{segment.demographics.childRate}</span>
+                        <div className="flex justify-between py-2">
+                          <span className="text-muted-foreground">子あり率</span>
+                          <span className="font-medium">{segment.demographics.childRate}</span>
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
 
-                    {/* Occupation and Income */}
+                    {/* Occupation & Income */}
                     <div className="grid grid-cols-2 gap-4">
-                      <Card>
-                        <CardContent className="p-4">
-                          <h4 className="text-sm font-semibold mb-3">職業</h4>
-                          <div className="space-y-2">
-                            {segment.occupation.map((item, i) => (
-                              <div key={i} className="flex justify-between items-center">
-                                <span className="text-xs text-muted-foreground flex items-center gap-2">
-                                  <span className="w-2 h-2 rounded-full bg-primary" />
-                                  {item.name}
-                                </span>
-                                <span className="text-xs font-medium">{item.rate}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card>
-                        <CardContent className="p-4">
-                          <h4 className="text-sm font-semibold mb-3">世帯年収</h4>
-                          <div className="space-y-2">
-                            {segment.income.map((item, i) => (
-                              <div key={i} className="flex justify-between items-center">
-                                <span className="text-xs text-muted-foreground flex items-center gap-2">
-                                  <span className="w-2 h-2 rounded-full bg-sky-400" />
-                                  {item.range}
-                                </span>
-                                <span className="text-xs font-medium">{item.rate}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium mb-3">職業</h4>
+                        <div className="space-y-2">
+                          {segment.occupation.map((item, i) => (
+                            <div key={i} className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-primary" />
+                              <span className="text-sm text-muted-foreground flex-1">{item.name}</span>
+                              <span className="text-sm font-medium">{item.rate}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium mb-3">世帯年収</h4>
+                        <div className="space-y-2">
+                          {segment.income.map((item, i) => (
+                            <div key={i} className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-sky-400" />
+                              <span className="text-sm text-muted-foreground flex-1">{item.range}</span>
+                              <span className="text-sm font-medium">{item.rate}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
 
                     {/* Summary */}
-                    <Card className="bg-muted/50">
-                      <CardContent className="p-4">
-                        <h4 className="text-sm font-semibold mb-2">サマリー</h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {segment.summary}
-                        </p>
-                      </CardContent>
-                    </Card>
+                    <div className="border rounded-lg p-4 bg-muted/30">
+                      <h4 className="font-medium mb-2">サマリー</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {segment.summary}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Right Column - AI Personas */}
-                  <div>
-                    <h4 className="text-sm font-semibold mb-3">
-                      AIペルソナ（{segment.personas.length}名）
-                    </h4>
-                    <div className="space-y-3">
-                      {segment.personas.slice(0, 5).map((persona, i) => {
-                        const details = aiPersonaDetails[persona.name] || { age: 45 + i * 5, gender: i % 2 === 0 ? "男性" : "女性", tags: ["健康志向", "アウトドア"] }
+                  {/* Right: AI Personas */}
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-medium mb-4">AIペルソナ（{segment.personas.length}名）</h4>
+                    <div className="space-y-4 max-h-[400px] overflow-y-auto">
+                      {segment.personas.slice(0, 5).map((persona) => {
+                        const details = aiPersonaDetails[persona.name]
                         return (
-                          <div key={i} className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer">
-                            <Avatar className="h-10 w-10">
+                          <div key={persona.id} className="flex items-start gap-3">
+                            <Avatar className="h-10 w-10 border">
                               <AvatarImage src={persona.image} alt={persona.name} />
-                              <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                              <AvatarFallback className="bg-primary/10 text-primary text-sm">
                                 {persona.name.slice(0, 2)}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium">{persona.name}</p>
+                              <p className="font-medium text-sm">{persona.name}</p>
                               <p className="text-xs text-muted-foreground">
-                                {details.age}歳 / {details.gender}
+                                {details?.age || 50}歳 / {details?.gender || "不明"}
                               </p>
-                              <div className="flex flex-wrap gap-1 mt-1">
-                                {details.tags.slice(0, 2).map((tag, j) => (
-                                  <Badge key={j} variant="secondary" className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary">
-                                    {tag}
-                                  </Badge>
-                                ))}
-                                {details.tags.length > 2 && (
-                                  <span className="text-[10px] text-muted-foreground">+{details.tags.length - 2}</span>
-                                )}
-                              </div>
+                              {details?.tags && (
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {details.tags.map((tag, i) => (
+                                    <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0">
+                                      {tag}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           </div>
                         )
@@ -595,33 +755,59 @@ export function MarketOverviewContent() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="interests" className="mt-6">
-                <div className="text-center py-12 text-muted-foreground">
-                  興味関心データは準備中です
+              <TabsContent value="interests" className="mt-0">
+                <div className="border rounded-lg p-6">
+                  <h4 className="font-medium mb-4">興味・関心カテゴリ</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {segment.interests?.map((interest, i) => (
+                      <Badge key={i} variant="outline" className="text-sm py-1.5 px-3">
+                        {interest}
+                      </Badge>
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-6">
+                    このセグメントの主要な興味関心領域です。広告ターゲティングやコンテンツ企画の参考にご活用ください。
+                  </p>
                 </div>
               </TabsContent>
 
-              <TabsContent value="purchase" className="mt-6">
-                <div className="text-center py-12 text-muted-foreground">
-                  購買行動データは準備中です
+              <TabsContent value="purchase" className="mt-0">
+                <div className="border rounded-lg p-6">
+                  <h4 className="font-medium mb-4">購買行動パターン</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    {segment.purchaseBehavior?.map((item, i) => (
+                      <div key={i} className="p-4 bg-muted/30 rounded-lg">
+                        <p className="text-sm text-muted-foreground">{item.label}</p>
+                        <p className="font-medium mt-1">{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </TabsContent>
 
-              <TabsContent value="wellness" className="mt-6">
-                <div className="text-center py-12 text-muted-foreground">
-                  ウェルネス傾向データは準備中です
+              <TabsContent value="wellness" className="mt-0">
+                <div className="border rounded-lg p-6">
+                  <h4 className="font-medium mb-4">ウェルネス傾向</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    {segment.wellnessTrends?.map((item, i) => (
+                      <div key={i} className="p-4 bg-muted/30 rounded-lg">
+                        <p className="text-sm text-muted-foreground">{item.label}</p>
+                        <p className="font-medium mt-1">{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </TabsContent>
 
-              <TabsContent value="docomo" className="mt-6">
-                <div className="text-center py-12 text-muted-foreground">
-                  docomo Dataは準備中です
+              <TabsContent value="docomo" className="mt-0">
+                <div className="border rounded-lg p-6 text-center">
+                  <p className="text-muted-foreground">docomo Dataとの連携は準備中です</p>
                 </div>
               </TabsContent>
             </Tabs>
-          )}
-        </DialogContent>
-      </Dialog>
+          </CardContent>
+        </Card>
+      )}
     </main>
   )
 }
