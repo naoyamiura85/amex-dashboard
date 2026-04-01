@@ -434,89 +434,109 @@ export function AISimulatorContent() {
                 )}
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-stretch gap-2">
-                {funnelStages.map((stage, index) => {
-                  const baseValue = baseFunnel[stage.id as keyof typeof baseFunnel]
-                  const currentValue = displayFunnel[stage.id as keyof typeof displayFunnel] || baseValue
-                  const diff = currentValue - baseValue
-                  const diffPercent = ((diff / baseValue) * 100).toFixed(1)
-                  const Icon = stage.icon
-                  
-                  return (
-                    <div key={stage.id} className="flex items-center flex-1">
-                      <div 
-                        className="flex-1 rounded-xl overflow-hidden bg-card border transition-all duration-300"
-                        style={{ borderLeftWidth: "4px", borderLeftColor: stage.color }}
-                      >
-                        <div className="p-4">
-                          {/* アイコン */}
-                          <div 
-                            className="w-10 h-10 rounded-full flex items-center justify-center mb-3"
-                            style={{ backgroundColor: `${stage.color}15` }}
-                          >
-                            <Icon className="h-5 w-5" style={{ color: stage.color }} />
+            <CardContent className="p-0">
+              {/* テーブル形式のファネル表示 */}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  {/* ヘッダー行 */}
+                  <thead>
+                    <tr className="border-b bg-muted/30">
+                      <th className="text-left p-4 w-48">
+                        <div className="text-xs text-muted-foreground">ステージ</div>
+                        <div className="text-xs text-muted-foreground">商品</div>
+                      </th>
+                      {funnelStages.map((stage) => (
+                        <th key={stage.id} className="p-4 text-center min-w-[140px]">
+                          <div className="flex flex-col items-center gap-1">
+                            <div 
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: stage.color }}
+                            />
+                            <span className="text-sm font-medium" style={{ color: stage.color }}>
+                              {stage.name}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {baseFunnel[stage.id as keyof typeof baseFunnel] * 10}万人
+                            </span>
                           </div>
-                          
-                          {/* ステージ名 */}
-                          <p className="text-xs text-muted-foreground mb-1">{stage.name}</p>
-                          
-                          {/* 人数 */}
-                          <p className="text-2xl font-bold text-foreground transition-all duration-300">
-                            {currentValue}
-                            <span className="text-sm font-normal text-muted-foreground">万人</span>
-                          </p>
-                          
-                          {/* 変化量 */}
-                          {simulationComplete && diff !== 0 && (
-                            <div className="mt-2 flex items-center gap-2 text-sm" style={{ color: stage.color }}>
-                              <ArrowUpRight className="h-4 w-4" />
-                              <span className="font-medium">+{diff}万人</span>
-                              <span className="text-muted-foreground text-xs">(+{diffPercent}%)</span>
-                            </div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  {/* データ行 */}
+                  <tbody>
+                    <tr className="border-b">
+                      {/* 商品情報 */}
+                      <td className="p-4 bg-muted/20">
+                        <div className="flex items-center gap-3">
+                          {currentProduct && (
+                            <>
+                              <div className="w-12 h-12 rounded-lg overflow-hidden bg-white border flex-shrink-0">
+                                <img src={currentProduct.image} alt={currentProduct.name} className="w-full h-full object-cover" />
+                              </div>
+                              <div>
+                                <p className="font-semibold text-sm">{currentProduct.name}</p>
+                                <p className="text-xs text-muted-foreground">{currentProduct.category}</p>
+                              </div>
+                            </>
                           )}
                         </div>
-                      </div>
-                      
-                      {/* 矢印 */}
-                      {index < funnelStages.length - 1 && (
-                        <div className="px-1 text-muted-foreground/50">
-                          <ChevronRight className="h-5 w-5" />
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
+                      </td>
+                      {/* 各ステージのデータ */}
+                      {funnelStages.map((stage) => {
+                        const baseValue = baseFunnel[stage.id as keyof typeof baseFunnel]
+                        const currentValue = displayFunnel[stage.id as keyof typeof displayFunnel] || baseValue
+                        const diff = currentValue - baseValue
+                        const stagePersonas = personas.filter(p => p.segment === stage.id)
+                        
+                        return (
+                          <td 
+                            key={stage.id} 
+                            className="p-4 text-center transition-all duration-300"
+                            style={{ backgroundColor: simulationComplete && diff > 0 ? `${stage.color}10` : "transparent" }}
+                          >
+                            {/* 人数 */}
+                            <p 
+                              className="text-2xl font-bold mb-2 transition-all duration-300"
+                              style={{ color: stage.color }}
+                            >
+                              {currentValue}
+                              <span className="text-sm font-normal">万人</span>
+                            </p>
+                            
+                            {/* 変化量 */}
+                            {simulationComplete && diff !== 0 && (
+                              <div className="text-xs text-green-600 font-medium mb-3">
+                                +{diff}万人 (+{((diff / baseValue) * 100).toFixed(1)}%)
+                              </div>
+                            )}
+                            
+                            {/* ペルソナアバター */}
+                            <div className="flex justify-center -space-x-2">
+                              {stagePersonas.map((persona, i) => (
+                                <Avatar 
+                                  key={i} 
+                                  className="h-9 w-9 border-2 border-white ring-2 transition-all duration-300"
+                                  style={{ 
+                                    ringColor: simulationComplete && diff > 0 ? stage.color : "transparent",
+                                    zIndex: stagePersonas.length - i
+                                  }}
+                                >
+                                  <AvatarImage src={persona.image} alt={persona.name} />
+                                  <AvatarFallback>{persona.name.slice(0, 1)}</AvatarFallback>
+                                </Avatar>
+                              ))}
+                              {stagePersonas.length === 0 && (
+                                <div className="text-xs text-muted-foreground">-</div>
+                              )}
+                            </div>
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-
-              {/* フロー矢印（視覚的な流れ） */}
-              {simulationComplete && (
-                <div className="mt-6 p-4 bg-muted/30 rounded-xl">
-                  <p className="text-sm font-medium mb-3">ユーザー移動予測</p>
-                  <div className="flex items-center justify-center gap-2 flex-wrap">
-                    {effects.lm > 0 && (
-                      <Badge className="bg-slate-100 text-slate-700">
-                        新規認知 +{effects.lm}%
-                      </Badge>
-                    )}
-                    {effects.mh > 0 && (
-                      <Badge className="bg-sky-100 text-sky-700">
-                        興味喚起 +{effects.mh}%
-                      </Badge>
-                    )}
-                    {effects.purchase > 0 && (
-                      <Badge className="bg-emerald-100 text-emerald-700">
-                        購入転換 +{effects.purchase}%
-                      </Badge>
-                    )}
-                    {effects.regular > 0 && (
-                      <Badge className="bg-amber-100 text-amber-700">
-                        定期化 +{effects.regular}%
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
         </div>
