@@ -463,40 +463,6 @@ export function AIMaterialsContent() {
         </CardContent>
       </Card>
 
-      {/* 統計サマリー */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="rounded-xl">
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-primary">{materialsData.length}</p>
-            <p className="text-xs text-muted-foreground">登録素材数</p>
-          </CardContent>
-        </Card>
-        <Card className="rounded-xl">
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-emerald-600">
-              {materialsData.filter(m => m.trendStatus === "emerging" || m.trendStatus === "growing").length}
-            </p>
-            <p className="text-xs text-muted-foreground">成長トレンド</p>
-          </CardContent>
-        </Card>
-        <Card className="rounded-xl">
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600">
-              {materialsData.filter(m => m.safetyGrade === "A").length}
-            </p>
-            <p className="text-xs text-muted-foreground">安全性A評価</p>
-          </CardContent>
-        </Card>
-        <Card className="rounded-xl">
-          <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-amber-600">
-              {materialsData.reduce((sum, m) => sum + m.suppliers, 0)}
-            </p>
-            <p className="text-xs text-muted-foreground">サプライヤー総数</p>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* 素材一覧テーブル */}
       <Card className="rounded-xl">
         <CardHeader className="pb-2">
