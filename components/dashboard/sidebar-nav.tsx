@@ -116,9 +116,9 @@ export function DashboardSidebar() {
 
   return (
     <Sidebar className="border-r border-sidebar-border bg-sidebar">
-      {/* Header with Logo - Suntory Blue Background */}
+      {/* Header with Logo - Gray Background */}
       <SidebarHeader className="p-0">
-        <Link href="/" className="flex items-center gap-4 bg-primary px-4 py-3">
+        <Link href="/" className="flex items-center gap-4 bg-[#4A5568] px-4 py-3">
           <div className="flex h-10 w-16 items-center justify-center bg-white rounded">
             <Image 
               src="/images/suntory-logo.png" 
