@@ -320,7 +320,7 @@ const segmentData: Record<string, Record<string, {
         { range: "900万以上", rate: "22%" },
         { range: "300〜500万未満", rate: "10%" },
       ],
-      summary: "コーヒーにこだわりを持つ層。スペシャルティコーヒーやプレミアム商品に関心が高い。カフェ文化を好む。",
+      summary: "コーヒーにこだわり��持つ層。スペシャルティコーヒーやプレミアム商品に関心が高い。カフェ文化を好む。",
       interests: ["スペシャルティコーヒー", "カフェ巡り", "グルメ", "読書", "旅行"],
       purchaseBehavior: [
         { label: "主要購買チャネル", value: "専門店・EC" },
@@ -591,7 +591,7 @@ const segmentData: Record<string, Record<string, {
         { range: "900万以上", rate: "22%" },
         { range: "300〜500万未満", rate: "15%" },
       ],
-      summary: "購買力はあるが健康モチベーションは低め��便利さや習慣で継続。離脱リスクは中程度。",
+      summary: "購買力はあるが健康モチベーショ��は低め��便利さや習慣で継続。離脱リスクは中程度。",
       interests: ["テクノロジー", "仕事効率化", "投資", "ゲーム", "外食"],
       purchaseBehavior: [
         { label: "主要購買チャネル", value: "EC・定期購入" },
@@ -739,10 +739,18 @@ export function MarketOverviewContent() {
                       <div className="flex flex-col items-center gap-1">
                         <div 
                           className={`w-2.5 h-2.5 rounded-full ${
-                            index === 0 ? "bg-slate-400" : "bg-primary"
+                            index === 0 ? "bg-slate-400" : 
+                            index === 1 ? "bg-blue-500" : 
+                            index === 2 ? "bg-emerald-500" : 
+                            "bg-amber-500"
                           }`} 
                         />
-                        <span className={`text-sm font-medium ${index > 0 ? "text-primary" : "text-foreground"}`}>
+                        <span className={`text-sm font-medium ${
+                          index === 0 ? "text-slate-700" : 
+                          index === 1 ? "text-blue-600" : 
+                          index === 2 ? "text-emerald-600" : 
+                          "text-amber-600"
+                        }`}>
                           {stage.name}
                         </span>
                         <span className="text-xs text-muted-foreground">{stage.total}</span>
@@ -778,14 +786,19 @@ export function MarketOverviewContent() {
                           key={`${stage.id}-${product.id}`}
                           className={`p-4 text-center cursor-pointer transition-all ${
                             stageIndex === 0 ? "bg-slate-50 hover:bg-slate-100" : 
-                            stageIndex === 1 ? "bg-sky-50 hover:bg-sky-100" : 
-                            stageIndex === 2 ? "bg-sky-100 hover:bg-sky-200" : 
-                            "bg-sky-200 hover:bg-sky-300"
+                            stageIndex === 1 ? "bg-blue-50 hover:bg-blue-100" : 
+                            stageIndex === 2 ? "bg-emerald-50 hover:bg-emerald-100" : 
+                            "bg-amber-50 hover:bg-amber-100"
                           } ${isSelected ? "ring-2 ring-primary ring-inset" : ""}`}
                           onClick={() => handleCellClick(stage.id, stage.name, product.id, product.name)}
                         >
                           <div className="flex flex-col items-center gap-2">
-                            <span className={`text-xl font-bold ${stageIndex > 0 ? "text-primary" : "text-foreground"}`}>
+                            <span className={`text-xl font-bold ${
+                              stageIndex === 0 ? "text-slate-700" : 
+                              stageIndex === 1 ? "text-blue-600" : 
+                              stageIndex === 2 ? "text-emerald-600" : 
+                              "text-amber-600"
+                            }`}>
                               {data?.population || "N/A"}
                             </span>
                             {/* Persona Avatars */}
