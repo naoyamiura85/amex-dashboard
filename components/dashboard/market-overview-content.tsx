@@ -38,7 +38,6 @@ const segmentData: Record<string, Record<string, {
   summary: string
   interests: string[]
   purchaseBehavior: { label: string; value: string }[]
-  wellnessTrends: { label: string; value: string }[]
 }>> = {
   lm: {
     h: {
@@ -75,12 +74,6 @@ const segmentData: Record<string, Record<string, {
         { label: "価格感度", value: "高い" },
         { label: "ブランドロイヤルティ", value: "中程度" },
       ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "週1回程度" },
-        { label: "食事管理", value: "意識している" },
-        { label: "サプリメント摂取", value: "時々" },
-        { label: "健康診断", value: "年1回" },
-      ],
     },
     m: {
       population: "1800万人",
@@ -114,12 +107,6 @@ const segmentData: Record<string, Record<string, {
         { label: "価格感度", value: "中程度" },
         { label: "ブランドロイヤルティ", value: "低め" },
       ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "月数回" },
-        { label: "食事管理", value: "時々意識" },
-        { label: "サプリメント摂取", value: "あまりしない" },
-        { label: "健康診断", value: "年1回" },
-      ],
     },
     l: {
       population: "1500万人",
@@ -149,12 +136,6 @@ const segmentData: Record<string, Record<string, {
         { label: "購買頻度", value: "週3回以上" },
         { label: "価格感度", value: "低め" },
         { label: "ブランドロイヤルティ", value: "低い" },
-      ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "ほとんどなし" },
-        { label: "食事管理", value: "あまり意識しない" },
-        { label: "サプリメント摂取", value: "しない" },
-        { label: "健康診断", value: "不定期" },
       ],
     },
   },
@@ -189,12 +170,6 @@ const segmentData: Record<string, Record<string, {
         { label: "価格感度", value: "低い" },
         { label: "ブランドロイヤルティ", value: "高い" },
       ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "週3回以上" },
-        { label: "食事管理", value: "徹底している" },
-        { label: "サプリメント摂取", value: "毎日" },
-        { label: "健康診断", value: "年2回以上" },
-      ],
     },
     m: {
       population: "340万人",
@@ -225,12 +200,6 @@ const segmentData: Record<string, Record<string, {
         { label: "価格感度", value: "中程度" },
         { label: "ブランドロイヤルティ", value: "中〜高" },
       ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "週2回程度" },
-        { label: "食事管理", value: "意識している" },
-        { label: "サプリメント摂取", value: "週数回" },
-        { label: "健康診断", value: "年1回" },
-      ],
     },
     l: {
       population: "227万人",
@@ -260,12 +229,6 @@ const segmentData: Record<string, Record<string, {
         { label: "購買頻度", value: "週2回" },
         { label: "価格感度", value: "低め" },
         { label: "ブランドロイヤルティ", value: "話題性重視" },
-      ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "月数回" },
-        { label: "食事管理", value: "あまり意識しない" },
-        { label: "サプリメント摂取", value: "時々" },
-        { label: "健康診断", value: "年1回" },
       ],
     },
   },
@@ -300,12 +263,6 @@ const segmentData: Record<string, Record<string, {
         { label: "価格感度", value: "低め" },
         { label: "ブランドロイヤルティ", value: "構築中" },
       ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "週2-3回" },
-        { label: "食事管理", value: "徹底している" },
-        { label: "サプリメント摂取", value: "毎日" },
-        { label: "健��診断", value: "年1-2回" },
-      ],
     },
     m: {
       population: "107万人",
@@ -336,12 +293,6 @@ const segmentData: Record<string, Record<string, {
         { label: "価格感度", value: "高い" },
         { label: "ブランドロイヤルティ", value: "評価中" },
       ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "週1回程度" },
-        { label: "食事管理", value: "意識している" },
-        { label: "サプリメント摂取", value: "試用中" },
-        { label: "健康診断", value: "年1回" },
-      ],
     },
     l: {
       population: "85万人",
@@ -370,12 +321,6 @@ const segmentData: Record<string, Record<string, {
         { label: "購買頻度", value: "不定期" },
         { label: "価格感度", value: "中程度" },
         { label: "ブランドロイヤルティ", value: "低い" },
-      ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "ほとんどなし" },
-        { label: "食事管理", value: "あまり意識しない" },
-        { label: "サプリメント摂取", value: "お試し中" },
-        { label: "健康診断", value: "不定期" },
       ],
     },
   },
@@ -411,12 +356,6 @@ const segmentData: Record<string, Record<string, {
         { label: "価格感度", value: "低い" },
         { label: "ブランドロイヤルティ", value: "非常に高い" },
       ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "週3回以上" },
-        { label: "食事管理", value: "徹底している" },
-        { label: "サプリメント摂取", value: "毎日複数" },
-        { label: "健康診断", value: "年2回以上" },
-      ],
     },
     m: {
       population: "57万人",
@@ -447,12 +386,6 @@ const segmentData: Record<string, Record<string, {
         { label: "価格感度", value: "中〜高" },
         { label: "ブランドロイヤルティ", value: "中程度" },
       ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "週1-2回" },
-        { label: "食事管理", value: "意識している" },
-        { label: "サプリメント摂取", value: "毎日" },
-        { label: "健康診断", value: "年1回" },
-      ],
     },
     l: {
       population: "34万人",
@@ -480,12 +413,6 @@ const segmentData: Record<string, Record<string, {
         { label: "購買頻度", value: "月1回（定期）" },
         { label: "価格感度", value: "低め" },
         { label: "ブランドロイヤルティ", value: "習慣的" },
-      ],
-      wellnessTrends: [
-        { label: "運動習慣", value: "月数回" },
-        { label: "食事管理", value: "あまり意識しない" },
-        { label: "サプリメント摂取", value: "習慣的に" },
-        { label: "健康診断", value: "年1回" },
       ],
     },
   },
@@ -651,8 +578,6 @@ export function MarketOverviewContent() {
                 <TabsTrigger value="overview">属性・概要</TabsTrigger>
                 <TabsTrigger value="interests">興味関心</TabsTrigger>
                 <TabsTrigger value="purchase">購買行動</TabsTrigger>
-                <TabsTrigger value="wellness">ウェルネス傾向</TabsTrigger>
-                <TabsTrigger value="docomo">docomo Data</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="mt-0">
@@ -785,25 +710,7 @@ export function MarketOverviewContent() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="wellness" className="mt-0">
-                <div className="border rounded-lg p-6">
-                  <h4 className="font-medium mb-4">ウェルネス傾向</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    {segment.wellnessTrends?.map((item, i) => (
-                      <div key={i} className="p-4 bg-muted/30 rounded-lg">
-                        <p className="text-sm text-muted-foreground">{item.label}</p>
-                        <p className="font-medium mt-1">{item.value}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </TabsContent>
 
-              <TabsContent value="docomo" className="mt-0">
-                <div className="border rounded-lg p-6 text-center">
-                  <p className="text-muted-foreground">docomo Dataとの連携は準備中です</p>
-                </div>
-              </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
