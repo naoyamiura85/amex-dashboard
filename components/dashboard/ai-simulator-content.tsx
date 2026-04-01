@@ -215,31 +215,46 @@ export function AISimulatorContent() {
 
   return (
     <div className="p-6 space-y-6 bg-muted/30 min-h-screen">
-      {/* ヘッダー */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Boxes className="h-6 w-6 text-primary" />
-            改定シミュレーター
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            商品改定による市場インパクトをシミュレート
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 左カラム: 設定パネル */}
-        <div className="space-y-4">
-          {/* 商品選択 */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Package className="h-4 w-4" />
+      {/* ========== 上部: パラメータ設定エリア ========== */}
+      <Card className="border-primary/20">
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+                <Boxes className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div>
+                <CardTitle>改定シミュレーター</CardTitle>
+                <CardDescription>商品・素材・企画を組み合わせて市場インパクトを予測</CardDescription>
+              </div>
+            </div>
+            <Button 
+              className="gap-2 h-10" 
+              onClick={runSimulation}
+              disabled={isSimulating}
+            >
+              {isSimulating ? (
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  シミュレーション中...
+                </>
+              ) : (
+                <>
+                  <Play className="h-4 w-4" />
+                  シミュレーション実行
+                </>
+              )}
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* 商品選択 */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Package className="h-4 w-4 text-primary" />
                 対象商品
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </div>
               <Select value={selectedProduct} onValueChange={(v) => { setSelectedProduct(v); resetSimulation(); }}>
                 <SelectTrigger>
                   <SelectValue />
@@ -257,110 +272,106 @@ export function AISimulatorContent() {
                   ))}
                 </SelectContent>
               </Select>
-              
               {currentProduct && (
-                <div className="mt-4 p-3 bg-muted/50 rounded-lg flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-white border flex-shrink-0">
+                <div className="p-3 bg-muted/50 rounded-lg flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-white border flex-shrink-0">
                     <img src={currentProduct.image} alt={currentProduct.name} className="w-full h-full object-cover" />
                   </div>
-                  <div>
-                    <p className="font-semibold">{currentProduct.name}</p>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-sm truncate">{currentProduct.name}</p>
                     <p className="text-xs text-muted-foreground">{currentProduct.category}</p>
-                    <p className="text-sm font-medium text-primary mt-1">
+                    <p className="text-sm font-medium text-primary">
                       ¥{(currentProduct.basePrice + priceAdjustment).toLocaleString()}
                     </p>
                   </div>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* 素材オプション */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <FlaskConical className="h-4 w-4" />
+            {/* 素材オプション */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <FlaskConical className="h-4 w-4 text-primary" />
                 素材改定
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {materialOptions.map((mat) => (
-                <label
-                  key={mat.id}
-                  className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
-                    selectedMaterials.includes(mat.id) ? "bg-primary/10 border border-primary/30" : "bg-muted/30 hover:bg-muted/50"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={selectedMaterials.includes(mat.id)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedMaterials([...selectedMaterials, mat.id])
-                        } else {
-                          setSelectedMaterials(selectedMaterials.filter(id => id !== mat.id))
-                        }
-                        resetSimulation()
-                      }}
-                    />
-                    <span className="text-sm font-medium">{mat.name}</span>
-                  </div>
-                  <Badge variant="outline" className="text-[10px]">
-                    +¥{mat.cost}
-                  </Badge>
-                </label>
-              ))}
-            </CardContent>
-          </Card>
+              </div>
+              <div className="space-y-1.5 max-h-[180px] overflow-y-auto pr-1">
+                {materialOptions.map((mat) => (
+                  <label
+                    key={mat.id}
+                    className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors text-sm ${
+                      selectedMaterials.includes(mat.id) ? "bg-primary/10 border border-primary/30" : "bg-muted/30 hover:bg-muted/50"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={selectedMaterials.includes(mat.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedMaterials([...selectedMaterials, mat.id])
+                          } else {
+                            setSelectedMaterials(selectedMaterials.filter(id => id !== mat.id))
+                          }
+                          resetSimulation()
+                        }}
+                      />
+                      <span className="font-medium">{mat.name}</span>
+                    </div>
+                    <Badge variant="outline" className="text-[10px] shrink-0">
+                      +¥{mat.cost}
+                    </Badge>
+                  </label>
+                ))}
+              </div>
+            </div>
 
-          {/* 企画オプション */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Sparkles className="h-4 w-4" />
+            {/* 企画オプション */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Sparkles className="h-4 w-4 text-primary" />
                 企画施策
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {campaignOptions.map((camp) => (
-                <label
-                  key={camp.id}
-                  className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
-                    selectedCampaigns.includes(camp.id) ? "bg-primary/10 border border-primary/30" : "bg-muted/30 hover:bg-muted/50"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={selectedCampaigns.includes(camp.id)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedCampaigns([...selectedCampaigns, camp.id])
-                        } else {
-                          setSelectedCampaigns(selectedCampaigns.filter(id => id !== camp.id))
-                        }
-                        resetSimulation()
-                      }}
-                    />
-                    <span className="text-sm font-medium">{camp.name}</span>
-                  </div>
-                  <Badge variant={camp.cost > 0 ? "outline" : "secondary"} className="text-[10px]">
-                    {camp.cost > 0 ? `+¥${camp.cost}` : camp.cost < 0 ? `${camp.cost}%` : "±0"}
-                  </Badge>
-                </label>
-              ))}
-            </CardContent>
-          </Card>
+              </div>
+              <div className="space-y-1.5 max-h-[180px] overflow-y-auto pr-1">
+                {campaignOptions.map((camp) => (
+                  <label
+                    key={camp.id}
+                    className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors text-sm ${
+                      selectedCampaigns.includes(camp.id) ? "bg-primary/10 border border-primary/30" : "bg-muted/30 hover:bg-muted/50"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={selectedCampaigns.includes(camp.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedCampaigns([...selectedCampaigns, camp.id])
+                          } else {
+                            setSelectedCampaigns(selectedCampaigns.filter(id => id !== camp.id))
+                          }
+                          resetSimulation()
+                        }}
+                      />
+                      <span className="font-medium">{camp.name}</span>
+                    </div>
+                    <Badge variant={camp.cost > 0 ? "outline" : "secondary"} className="text-[10px] shrink-0">
+                      {camp.cost > 0 ? `+¥${camp.cost}` : camp.cost < 0 ? `${camp.cost}%` : "±0"}
+                    </Badge>
+                  </label>
+                ))}
+              </div>
+            </div>
 
-          {/* 価格調整 */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
+            {/* 価格調整 */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <DollarSign className="h-4 w-4 text-primary" />
                 価格調整
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+              </div>
+              <div className="p-4 bg-muted/30 rounded-lg space-y-4">
+                <div className="text-center">
+                  <span className={`text-2xl font-bold ${priceAdjustment > 0 ? "text-red-500" : priceAdjustment < 0 ? "text-green-500" : "text-foreground"}`}>
+                    {priceAdjustment > 0 ? "+" : ""}{priceAdjustment === 0 ? "±0" : `¥${priceAdjustment}`}
+                  </span>
+                </div>
                 <Slider
                   value={[priceAdjustment]}
                   onValueChange={([v]) => { setPriceAdjustment(v); resetSimulation(); }}
@@ -368,40 +379,45 @@ export function AISimulatorContent() {
                   max={500}
                   step={50}
                 />
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">-¥500</span>
-                  <span className={`font-semibold ${priceAdjustment > 0 ? "text-red-500" : priceAdjustment < 0 ? "text-green-500" : ""}`}>
-                    {priceAdjustment > 0 ? "+" : ""}{priceAdjustment === 0 ? "±0" : `¥${priceAdjustment}`}
-                  </span>
-                  <span className="text-muted-foreground">+¥500</span>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>-¥500</span>
+                  <span>+¥500</span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+              {/* 選択中の要約 */}
+              <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
+                <p className="text-xs text-muted-foreground mb-1">選択中の改定</p>
+                <div className="flex flex-wrap gap-1">
+                  {selectedMaterials.length === 0 && selectedCampaigns.length === 0 && (
+                    <span className="text-xs text-muted-foreground">なし</span>
+                  )}
+                  {selectedMaterials.map(id => {
+                    const mat = materialOptions.find(m => m.id === id)
+                    return mat && (
+                      <Badge key={id} variant="secondary" className="text-[10px]">
+                        {mat.name}
+                      </Badge>
+                    )
+                  })}
+                  {selectedCampaigns.map(id => {
+                    const camp = campaignOptions.find(c => c.id === id)
+                    return camp && (
+                      <Badge key={id} variant="outline" className="text-[10px]">
+                        {camp.name}
+                      </Badge>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-          {/* シミュレーション実行ボタン */}
-          <Button 
-            className="w-full gap-2 h-12 text-base" 
-            onClick={runSimulation}
-            disabled={isSimulating}
-          >
-            {isSimulating ? (
-              <>
-                <RefreshCw className="h-5 w-5 animate-spin" />
-                シミュレーション中...
-              </>
-            ) : (
-              <>
-                <Play className="h-5 w-5" />
-                シミュレーション実行
-              </>
-            )}
-          </Button>
-        </div>
-
-        {/* 中央・右カラム: 結果表示 */}
-        <div className="lg:col-span-2 space-y-4">
-          {/* ファネル変化 */}
+      {/* ========== 下部: 結果表示エリア ========== */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* ファネル変化（2カラム幅） */}
+        <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -500,18 +516,21 @@ export function AISimulatorContent() {
               )}
             </CardContent>
           </Card>
+        </div>
 
+        {/* 右カラム: ペルソナと収益 */}
+        <div className="space-y-6">
           {/* ペルソナ影響分析 */}
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <Users className="h-5 w-5" />
                 影響を受けるペルソナ
               </CardTitle>
-              <CardDescription>改定により行動変化が予測されるユーザー像</CardDescription>
+              <CardDescription className="text-xs">改定により行動変化が予測されるユーザー像</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="space-y-3">
                 {personas.map((persona, index) => {
                   const segmentEffect = effects[persona.segment as keyof typeof effects] || 0
                   const isPositive = segmentEffect > 0
@@ -527,20 +546,20 @@ export function AISimulatorContent() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12 border-2" style={{ borderColor: stage?.color }}>
+                        <Avatar className="h-10 w-10 border-2" style={{ borderColor: stage?.color }}>
                           <AvatarImage src={persona.image} alt={persona.name} />
                           <AvatarFallback>{persona.name.slice(0, 2)}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{persona.name}</p>
                           <p className="text-xs text-muted-foreground">{stage?.name}</p>
-                          {simulationComplete && segmentEffect !== 0 && (
-                            <div className={`flex items-center gap-1 mt-1 text-xs ${isPositive ? "text-green-600" : "text-red-600"}`}>
-                              {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                              <span>転換率 {isPositive ? "+" : ""}{segmentEffect}%</span>
-                            </div>
-                          )}
                         </div>
+                        {simulationComplete && segmentEffect !== 0 && (
+                          <div className={`flex items-center gap-1 text-xs font-medium ${isPositive ? "text-green-600" : "text-red-600"}`}>
+                            {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                            <span>{isPositive ? "+" : ""}{segmentEffect}%</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )
@@ -550,38 +569,44 @@ export function AISimulatorContent() {
           </Card>
 
           {/* 収益インパクト */}
-          {simulationComplete && (
-            <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-primary" />
-                  収益インパクト予測
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-6">
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-1">追加コスト</p>
-                    <p className={`text-2xl font-bold ${calculateCost() > 0 ? "text-red-600" : "text-green-600"}`}>
+          <Card className={`transition-all duration-500 ${simulationComplete ? "bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20" : ""}`}>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Zap className="h-5 w-5 text-primary" />
+                収益インパクト予測
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {simulationComplete ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-background rounded-lg">
+                    <span className="text-sm text-muted-foreground">追加コスト</span>
+                    <span className={`text-lg font-bold ${calculateCost() > 0 ? "text-red-600" : "text-green-600"}`}>
                       {calculateCost() > 0 ? "+" : ""}{calculateCost()}円/個
-                    </p>
+                    </span>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-1">売上増加予測</p>
-                    <p className="text-2xl font-bold text-green-600">
+                  <div className="flex items-center justify-between p-3 bg-background rounded-lg">
+                    <span className="text-sm text-muted-foreground">売上増加予測</span>
+                    <span className="text-lg font-bold text-green-600">
                       +{((newFunnel.purchase - baseFunnel.purchase) * 0.8 + (newFunnel.regular - baseFunnel.regular) * 2.5).toFixed(1)}%
-                    </p>
+                    </span>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-1">ROI予測</p>
-                    <p className="text-2xl font-bold text-primary">
+                  <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <span className="text-sm font-medium">ROI予測</span>
+                    <span className="text-2xl font-bold text-primary">
                       {(((newFunnel.purchase - baseFunnel.purchase) * 0.8 + (newFunnel.regular - baseFunnel.regular) * 2.5) / Math.max(calculateCost() / 100, 1)).toFixed(1)}x
-                    </p>
+                    </span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <BarChart3 className="h-10 w-10 mx-auto mb-2 opacity-30" />
+                  <p className="text-sm">シミュレーションを実行すると</p>
+                  <p className="text-sm">収益予測が表示されます</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
