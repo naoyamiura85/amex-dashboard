@@ -18,9 +18,9 @@ const stages = [
 
 // 商品の定義（サントリーD2C商品）
 const products = [
-  { id: "sesamin", name: "menphys", category: "健康ドリンク" },
-  { id: "dha", name: "特茶/胡麻麦茶", category: "健康飲料" },
-  { id: "omega", name: "すっきりメンテナン酢", category: "機能性表示食品" },
+  { id: "sesamin", name: "menphys", category: "健康ドリンク", image: "/images/products/menphys.jpg" },
+  { id: "dha", name: "特茶/胡麻麦茶", category: "健康飲料", image: "/images/products/tokucha.jpg" },
+  { id: "omega", name: "すっきりメンテナン酢", category: "機能性表示食品", image: "/images/products/maintenansu.jpg" },
 ]
 
 // セグメントデータ
@@ -490,10 +490,19 @@ export function MarketOverviewContent() {
               <tbody>
                 {products.map((product) => (
                   <tr key={product.id}>
-                    <td className="p-3 border-r min-w-[140px]">
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-primary">{product.name}</span>
-                        <span className="text-[10px] text-muted-foreground">{product.category}</span>
+                    <td className="p-3 border-r min-w-[180px]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg overflow-hidden bg-white border flex-shrink-0">
+                          <img 
+                            src={product.image} 
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-primary">{product.name}</span>
+                          <span className="text-[10px] text-muted-foreground">{product.category}</span>
+                        </div>
                       </div>
                     </td>
                     {stages.map((stage, stageIndex) => {
