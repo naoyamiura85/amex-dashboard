@@ -7,13 +7,14 @@ import { useClient } from "@/contexts/client-context"
 
 export default function TrendsListPage() {
   const { brand, data } = useClient()
-  const isAmex = brand.id === "amex"
+  const isAmex = brand?.id === "amex"
+  const trendTitle = data?.trendTitle || "トップトレンド"
   
   return (
     <>
       <DashboardHeader 
-        title={data.trendTitle || "トップトレンド"} 
-        breadcrumb={["ダッシュボード", data.trendTitle || "トップトレンド"]}
+        title={trendTitle} 
+        breadcrumb={["ダッシュボード", trendTitle]}
       />
       {isAmex ? <AmexTrendsContent /> : <TrendsListContent />}
     </>
