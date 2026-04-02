@@ -3,10 +3,10 @@
 import { DashboardHeader } from "@/components/dashboard/header"
 import { TrendsListContent } from "@/components/dashboard/trends-list-content"
 import { AmexTrendsContent } from "@/components/dashboard/amex-trends-content"
-import { useClientConfig } from "@/contexts/client-context"
+import { useClient } from "@/contexts/client-context"
 
 export default function TrendsListPage() {
-  const { brand, data } = useClientConfig()
+  const { brand, data } = useClient()
   const isAmex = brand.id === "amex"
   
   return (

@@ -16,7 +16,7 @@ import {
   Gem,
   Smartphone,
 } from "lucide-react"
-import { useClientConfig } from "@/contexts/client-context"
+import { useClient } from "@/contexts/client-context"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -46,7 +46,7 @@ const statusColors: Record<string, string> = {
 }
 
 export function AmexTrendsContent() {
-  const { data, brand } = useClientConfig()
+  const { data, brand } = useClient()
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
