@@ -14,6 +14,7 @@ export interface BrandConfig {
     accent: string                // アクセントカラー
   }
   dashboardTitle: string          // ダッシュボードタイトル
+  darkMode?: boolean              // ダークモードを使用するか
 }
 
 // 機能フラグ
