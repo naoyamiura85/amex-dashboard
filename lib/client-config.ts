@@ -15,7 +15,8 @@ const clientConfigs: Record<ClientId, ClientConfig> = {
 // 環境変数からクライアントIDを取得
 export function getClientId(): ClientId {
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID as ClientId | undefined
-  return clientId && clientId in clientConfigs ? clientId : "suntory"
+  // デフォルトをamexに設定（デモ用）
+  return clientId && clientId in clientConfigs ? clientId : "amex"
 }
 
 // 現在のクライアント設定を取得
