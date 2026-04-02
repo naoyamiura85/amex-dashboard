@@ -3,6 +3,8 @@ import { Inter, Zen_Kaku_Gothic_New } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CategoryModeProvider } from '@/contexts/category-mode-context'
 import { TrendsProvider } from '@/contexts/trends-context'
+import { ClientProvider } from '@/contexts/client-context'
+import { getClientId } from '@/lib/client-config'
 import './globals.css'
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
@@ -41,14 +43,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const clientId = getClientId()
+  
   return (
-    <html lang="ja">
+    <html lang="ja" data-client={clientId}>
       <body className={`${inter.variable} ${zenKaku.variable} font-sans antialiased`}>
-        <CategoryModeProvider>
-          <TrendsProvider>
-            {children}
-          </TrendsProvider>
-        </CategoryModeProvider>
+        <ClientProvider>
+          <CategoryModeProvider>
+            <TrendsProvider>
+              {children}
+            </TrendsProvider>
+          </CategoryModeProvider>
+        </ClientProvider>
         <Analytics />
       </body>
     </html>

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import {
   Settings,
   ChevronDown,
@@ -17,6 +17,7 @@ import {
   ChevronRight,
   Users,
 } from "lucide-react"
+import { getClientConfig } from "@/lib/client-config"
 
 import {
   Sidebar,
@@ -78,6 +79,9 @@ const navSections = [
 
 export function DashboardSidebar() {
   const pathname = usePathname()
+  const clientConfig = useMemo(() => getClientConfig(), [])
+  const { brand } = clientConfig
+  
   const [openSections, setOpenSections] = useState<Record<string, boolean>>(
     navSections.reduce((acc, section) => ({ ...acc, [section.label]: section.defaultOpen }), {})
   )
@@ -93,16 +97,18 @@ export function DashboardSidebar() {
       {/* Header with Logo - Match sidebar background */}
       <SidebarHeader className="p-0 border-b border-sidebar-border">
         <Link href="/" className="flex items-center gap-3 bg-sidebar pl-2 pr-2 py-1">
-          <Image 
-            src="/images/suntory-logo.png" 
-            alt="SUNTORY BEVERAGE & FOOD" 
-            width={100} 
-            height={20}
-            className="object-contain object-left"
-          />
+          {brand.logo && (
+            <Image 
+              src={brand.logo}
+              alt={brand.name}
+              width={100} 
+              height={20}
+              className="object-contain object-left"
+            />
+          )}
           <div className="flex flex-col border-l border-muted-foreground/30 pl-3">
-            <span className="text-xs font-bold text-foreground leading-tight">D2Cダッシュボード</span>
-            <span className="text-[10px] text-muted-foreground leading-tight">サントリー食品</span>
+            <span className="text-xs font-bold text-foreground leading-tight">{brand.dashboardTitle}</span>
+            <span className="text-[10px] text-muted-foreground leading-tight">{brand.name}</span>
           </div>
         </Link>
       </SidebarHeader>

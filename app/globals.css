@@ -3,7 +3,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
+:root,
+[data-client="suntory"] {
   /* Suntory Corporate Colors - Water Blue */
   --background: #FFFFFF;
   --foreground: #111111;
@@ -90,6 +91,43 @@
   --sidebar-accent-foreground: #FAFAFA;
   --sidebar-border: #3a3a3a;
   --sidebar-ring: #66C7E5;
+}
+
+/* Kirin Theme */
+[data-client="kirin"] {
+  --background: #FFFFFF;
+  --foreground: #111111;
+  --card: #FFFFFF;
+  --card-foreground: #111111;
+  --popover: #FFFFFF;
+  --popover-foreground: #1a1a1a;
+  --primary: #E60012; /* Kirin Red */
+  --primary-foreground: #FFFFFF;
+  --secondary: #006934; /* Kirin Green */
+  --secondary-foreground: #FFFFFF;
+  --muted: #F5F5F4;
+  --muted-foreground: #5a5c58;
+  --accent: #FFD700; /* Gold */
+  --accent-foreground: #1a1a1a;
+  --destructive: #D32F2F;
+  --destructive-foreground: #FFFFFF;
+  --border: #ECEEED;
+  --input: #F5F5F4;
+  --ring: #E60012;
+  --chart-1: #E60012;
+  --chart-2: #006934;
+  --chart-3: #FFD700;
+  --chart-4: #FF6B6B;
+  --chart-5: #4CAF50;
+  --radius: 0.5rem;
+  --sidebar: #FAFAFA;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #E60012;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FFF5F5;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #EAECEF;
+  --sidebar-ring: #E60012;
 }
 
 @theme inline {
