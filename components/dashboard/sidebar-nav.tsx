@@ -96,15 +96,26 @@ export function DashboardSidebar() {
     <Sidebar className="border-r border-sidebar-border bg-sidebar">
       {/* Header with Logo - Match sidebar background */}
       <SidebarHeader className="p-0 border-b border-sidebar-border">
-        <Link href="/" className="flex items-center gap-3 bg-sidebar pl-2 pr-2 py-1">
-          {brand.logo && (
+        <Link href="/" className="flex items-center gap-3 bg-sidebar pl-2 pr-2 py-2">
+          {brand.logo ? (
             <Image 
               src={brand.logo}
               alt={brand.name}
               width={100} 
-              height={20}
+              height={24}
               className="object-contain object-left"
+              onError={(e) => {
+                // Hide broken image
+                e.currentTarget.style.display = 'none'
+              }}
             />
+          ) : (
+            <div 
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
+              style={{ backgroundColor: brand.colors.primary }}
+            >
+              {brand.shortName.charAt(0)}
+            </div>
           )}
           <div className="flex flex-col border-l border-muted-foreground/30 pl-3">
             <span className="text-xs font-bold text-foreground leading-tight">{brand.dashboardTitle}</span>
