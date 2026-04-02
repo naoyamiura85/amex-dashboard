@@ -52,8 +52,8 @@ export function AmexTrendsContent() {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [sortBy, setSortBy] = useState("growth")
 
-  const trends = data.trends || []
-  const categories = data.trendCategories || []
+  const trends = data?.trends || []
+  const categories = data?.trendCategories || []
 
   const filteredTrends = useMemo(() => {
     return trends
