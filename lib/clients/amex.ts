@@ -1,0 +1,119 @@
+import { ClientConfig } from "@/types/client"
+
+export const amexConfig: ClientConfig = {
+  id: "amex",
+  brand: {
+    name: "アメリカン・エキスプレス",
+    shortName: "AMEX",
+    logo: "/images/clients/amex-logo.png",
+    dashboardTitle: "会員分析ダッシュボード",
+    colors: {
+      primary: "#006FCF",      // AMEX Blue
+      secondary: "#00175A",    // Dark Blue
+      accent: "#B4975A",       // Gold
+    },
+  },
+  features: {
+    marketOverview: true,
+    trends: true,
+    digitalShelf: true,
+    aiSimulator: true,
+    insights: true,
+  },
+  products: [
+    {
+      id: "platinum",
+      name: "プラチナ・カード",
+      category: "プレミアムカード",
+      image: "/images/products/amex-platinum.png",
+    },
+    {
+      id: "gold",
+      name: "ゴールド・カード",
+      category: "プレミアムカード",
+      image: "/images/products/amex-gold.png",
+    },
+    {
+      id: "green",
+      name: "グリーン・カード",
+      category: "スタンダードカード",
+      image: "/images/products/amex-green.png",
+    },
+    {
+      id: "blue",
+      name: "ブルー・カード",
+      category: "エントリーカード",
+      image: "/images/products/amex-blue.png",
+    },
+    {
+      id: "business-gold",
+      name: "ビジネス・ゴールド",
+      category: "法人カード",
+      image: "/images/products/amex-business.png",
+    },
+  ],
+  personas: [
+    {
+      id: "executive",
+      name: "エグゼクティブ層",
+      description: "経営者・役員クラスの高所得者",
+      image: "/images/personas/executive.png",
+      age: "50-65",
+      gender: "男性",
+      occupation: "経営者・役員",
+      interests: ["ゴルフ", "高級レストラン", "海外旅行", "ワイン"],
+      tags: ["高所得", "プラチナ保有", "年間利用額1000万以上"],
+    },
+    {
+      id: "business-professional",
+      name: "ビジネスプロフェッショナル",
+      description: "外資系企業勤務の上級管理職",
+      image: "/images/personas/business-pro.png",
+      age: "35-50",
+      gender: "男性",
+      occupation: "上級管理職",
+      interests: ["出張", "ビジネスラウンジ", "ホテル", "マイル"],
+      tags: ["出張多い", "ゴールド保有", "ポイント重視"],
+    },
+    {
+      id: "affluent-female",
+      name: "アフルエント女性",
+      description: "高収入キャリア女性",
+      image: "/images/personas/affluent-female.png",
+      age: "30-45",
+      gender: "女性",
+      occupation: "専門職・管理職",
+      interests: ["ラグジュアリーブランド", "スパ", "美容", "海外旅行"],
+      tags: ["美容関心高", "ショッピング", "体験重視"],
+    },
+    {
+      id: "young-professional",
+      name: "若手プロフェッショナル",
+      description: "成長志向の若手ビジネスパーソン",
+      image: "/images/personas/young-pro.png",
+      age: "25-35",
+      gender: "男女",
+      occupation: "コンサル・金融・IT",
+      interests: ["キャリア", "自己投資", "海外", "テクノロジー"],
+      tags: ["グリーン・ブルー保有", "将来のアップグレード候補"],
+    },
+    {
+      id: "small-business-owner",
+      name: "スモールビジネスオーナー",
+      description: "中小企業経営者・個人事業主",
+      image: "/images/personas/sbo.png",
+      age: "35-55",
+      gender: "男性",
+      occupation: "経営者",
+      interests: ["経費管理", "資金繰り", "ビジネス成長", "税務"],
+      tags: ["ビジネスカード保有", "経費利用中心"],
+    },
+  ],
+  funnelStages: [
+    { id: "awareness", name: "認知", color: "#006FCF" },
+    { id: "interest", name: "興味・検討", color: "#0051A8" },
+    { id: "application", name: "申込", color: "#00175A" },
+    { id: "approval", name: "審査通過", color: "#B4975A" },
+    { id: "active", name: "アクティブ会員", color: "#D4AF37" },
+  ],
+}

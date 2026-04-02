@@ -130,6 +130,43 @@
   --sidebar-ring: #E60012;
 }
 
+/* AMEX Theme */
+[data-client="amex"] {
+  --background: #FFFFFF;
+  --foreground: #00175A;
+  --card: #FFFFFF;
+  --card-foreground: #00175A;
+  --popover: #FFFFFF;
+  --popover-foreground: #00175A;
+  --primary: #006FCF; /* AMEX Blue */
+  --primary-foreground: #FFFFFF;
+  --secondary: #00175A; /* Dark Blue */
+  --secondary-foreground: #FFFFFF;
+  --muted: #F5F7FA;
+  --muted-foreground: #5A6B7D;
+  --accent: #B4975A; /* Gold */
+  --accent-foreground: #FFFFFF;
+  --destructive: #D32F2F;
+  --destructive-foreground: #FFFFFF;
+  --border: #E5E9F0;
+  --input: #F5F7FA;
+  --ring: #006FCF;
+  --chart-1: #006FCF;
+  --chart-2: #00175A;
+  --chart-3: #B4975A;
+  --chart-4: #4A90D9;
+  --chart-5: #D4AF37;
+  --radius: 0.5rem;
+  --sidebar: #00175A;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #B4975A;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #003087;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #003087;
+  --sidebar-ring: #B4975A;
+}
+
 @theme inline {
   --font-sans: var(--font-zen-kaku), 'Zen Kaku Gothic New', system-ui, -apple-system, sans-serif;
   --font-display: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;

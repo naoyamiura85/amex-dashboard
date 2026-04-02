@@ -3,12 +3,13 @@ import type { ClientConfig, ClientId } from "@/types/client"
 // クライアント設定をインポート
 import { suntoryConfig } from "./clients/suntory"
 import { kirinConfig } from "./clients/kirin"
+import { amexConfig } from "./clients/amex"
 
 // クライアント設定マップ
 const clientConfigs: Record<ClientId, ClientConfig> = {
   suntory: suntoryConfig,
   kirin: kirinConfig,
-  asahi: suntoryConfig, // 仮: 後で追加可能
+  amex: amexConfig,
 }
 
 // 環境変数からクライアントIDを取得

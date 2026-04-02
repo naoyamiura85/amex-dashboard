@@ -1,6 +1,6 @@
 // クライアント設定の型定義
 
-export type ClientId = "suntory" | "kirin" | "asahi"
+export type ClientId = "suntory" | "kirin" | "amex"
 
 // ブランド設定
 export interface BrandConfig {
