@@ -285,30 +285,31 @@ export function DigitalShelfContent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* 横向きファネルチャート（Recharts BarChart） */}
-          <div className="h-[320px] w-full">
+          {/* 左から右へのファネルチャート */}
+          <div className="h-[380px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={funnelData}
-                layout="vertical"
-                margin={{ top: 20, right: 120, left: 100, bottom: 20 }}
-                barCategoryGap="20%"
+                layout="horizontal"
+                margin={{ top: 40, right: 20, left: 20, bottom: 60 }}
+                barCategoryGap="15%"
               >
                 <XAxis 
-                  type="number" 
-                  domain={[0, 300]} 
-                  tickFormatter={(v) => `${v}万人`}
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#64748b', fontSize: 12 }}
-                />
-                <YAxis 
-                  type="category" 
-                  dataKey="name" 
-                  width={90}
+                  type="category"
+                  dataKey="name"
                   axisLine={false}
                   tickLine={false}
                   tick={{ fill: '#1e293b', fontSize: 13, fontWeight: 600 }}
+                  dy={10}
+                />
+                <YAxis 
+                  type="number"
+                  domain={[0, 280]}
+                  tickFormatter={(v) => `${v}万`}
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#64748b', fontSize: 12 }}
+                  width={50}
                 />
                 <Tooltip 
                   formatter={(value: number, name: string, props: { payload: typeof funnelData[0] }) => {
@@ -328,10 +329,11 @@ export function DigitalShelfContent() {
                     boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
                     padding: '12px 16px'
                   }}
+                  cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                 />
                 <Bar 
                   dataKey="value" 
-                  radius={[0, 8, 8, 0]}
+                  radius={[8, 8, 0, 0]}
                   cursor="pointer"
                   onClick={(data) => {
                     const index = funnelData.findIndex(d => d.name === data.name)
@@ -351,17 +353,18 @@ export function DigitalShelfContent() {
                   ))}
                   <LabelList 
                     dataKey="value" 
-                    position="right" 
+                    position="top" 
                     formatter={(v: number) => `${v}万人`}
-                    style={{ fill: '#1e293b', fontSize: 14, fontWeight: 700 }}
+                    style={{ fill: '#1e293b', fontSize: 13, fontWeight: 700 }}
+                    offset={8}
                   />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          {/* ステージ詳細サマリー */}
-          <div className="grid grid-cols-5 gap-3 mt-4 pt-4 border-t">
+          {/* ステージ間フロー表示 */}
+          <div className="flex items-center justify-between px-4 py-3 bg-muted/30 rounded-xl mt-2">
             {funnelData.map((stage, index) => {
               const Icon = stage.icon
               const nextStage = funnelData[index + 1]
@@ -369,39 +372,50 @@ export function DigitalShelfContent() {
               const isSelected = selectedFlow === flowKey || selectedDropoff === stage.name
               
               return (
-                <div 
-                  key={stage.name} 
-                  className={`text-center p-3 rounded-xl transition-all cursor-pointer ${
-                    isSelected ? 'bg-primary/10 ring-1 ring-primary' : 'hover:bg-muted/50'
-                  }`}
-                  onClick={() => {
-                    if (flowKey) {
-                      setSelectedFlow(flowKey)
-                      setSelectedDropoff(null)
-                    }
-                  }}
-                >
+                <div key={stage.name} className="flex items-center">
                   <div 
-                    className="w-10 h-10 rounded-lg mx-auto mb-2 flex items-center justify-center"
-                    style={{ backgroundColor: `${stage.fill}20` }}
+                    className={`flex flex-col items-center cursor-pointer transition-all p-2 rounded-lg ${
+                      isSelected ? 'bg-white shadow-md' : 'hover:bg-white/50'
+                    }`}
+                    onClick={() => {
+                      if (flowKey) {
+                        setSelectedFlow(flowKey)
+                        setSelectedDropoff(null)
+                      }
+                    }}
                   >
-                    <Icon className="h-5 w-5" style={{ color: stage.fill }} />
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-1">{stage.name}</p>
-                  {stage.convRate && (
-                    <p className="text-sm font-semibold text-emerald-600">CV {stage.convRate}%</p>
-                  )}
-                  {stage.dropoff && (
-                    <button
-                      className="text-xs text-red-500 hover:text-red-600 hover:underline mt-1"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setSelectedDropoff(stage.name)
-                        setSelectedFlow(null)
-                      }}
+                    <div 
+                      className="w-10 h-10 rounded-full flex items-center justify-center mb-1"
+                      style={{ backgroundColor: `${stage.fill}20` }}
                     >
-                      離脱 {stage.dropoff}%
-                    </button>
+                      <Icon className="h-5 w-5" style={{ color: stage.fill }} />
+                    </div>
+                    <span className="text-xs font-medium text-muted-foreground">{stage.name}</span>
+                    <div className="flex flex-col items-center mt-1">
+                      {stage.convRate && (
+                        <span className="text-xs font-semibold text-emerald-600">CV {stage.convRate}%</span>
+                      )}
+                      {stage.dropoff && (
+                        <button
+                          className="text-[10px] text-red-500 hover:text-red-600 hover:underline"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setSelectedDropoff(stage.name)
+                            setSelectedFlow(null)
+                          }}
+                        >
+                          離脱 {stage.dropoff}%
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* 矢印 */}
+                  {index < funnelData.length - 1 && (
+                    <div className="flex items-center mx-2">
+                      <div className="w-8 h-0.5 bg-gradient-to-r from-current to-transparent" style={{ color: stage.fill }} />
+                      <ChevronRight className="h-4 w-4 -ml-1" style={{ color: nextStage?.fill }} />
+                    </div>
                   )}
                 </div>
               )
