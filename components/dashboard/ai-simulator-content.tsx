@@ -412,8 +412,9 @@ export function AISimulatorContent() {
 
       {/* ========== 下部: 結果表示エリア ========== */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* ファネル変化（2カラム幅） */}
+        {/* 左側: ファネル変化と収益インパクト（2カラム幅） */}
         <div className="lg:col-span-2 space-y-6">
+          {/* ファネル変化予測 */}
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -534,9 +535,49 @@ export function AISimulatorContent() {
               </div>
             </CardContent>
           </Card>
+
+          {/* 収益インパクト予測 */}
+          <Card className={`transition-all duration-500 ${simulationComplete ? "bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20" : ""}`}>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Zap className="h-5 w-5 text-primary" />
+                収益インパクト予測
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {simulationComplete ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-background rounded-lg">
+                    <span className="text-sm text-muted-foreground">追加コスト</span>
+                    <span className={`text-lg font-bold ${calculateCost() > 0 ? "text-red-600" : "text-green-600"}`}>
+                      {calculateCost() > 0 ? "+" : ""}{calculateCost()}円/個
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-background rounded-lg">
+                    <span className="text-sm text-muted-foreground">売上増加予測</span>
+                    <span className="text-lg font-bold text-green-600">
+                      +{((newFunnel.purchase - baseFunnel.purchase) * 0.8 + (newFunnel.regular - baseFunnel.regular) * 2.5).toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <span className="text-sm font-semibold">予測最大売上増加額</span>
+                    <span className="text-lg font-bold text-primary">
+                      +{(((newFunnel.purchase - baseFunnel.purchase) * currentProduct!.basePrice * 0.8 + (newFunnel.regular - baseFunnel.regular) * currentProduct!.basePrice * 2.5) / 1000000).toFixed(1)}百万円
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
+                  <DollarSign className="h-12 w-12 mb-2 opacity-20" />
+                  <p className="text-sm">シミュレーション実行で</p>
+                  <p className="text-sm">収益予測が表示されます</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
-        {/* 右カラム: ペル���ナと収益 */}
+        {/* 右側: ペルソナ分析（1カラム） */}
         <div className="space-y-6">
           {/* ペルソナ影響分析 */}
           <Card>
@@ -585,28 +626,8 @@ export function AISimulatorContent() {
               </div>
             </CardContent>
           </Card>
-
-          {/* 収益インパクト */}
-          <Card className={`transition-all duration-500 ${simulationComplete ? "bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20" : ""}`}>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Zap className="h-5 w-5 text-primary" />
-                収益インパクト予測
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {simulationComplete ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-background rounded-lg">
-                    <span className="text-sm text-muted-foreground">追加コスト</span>
-                    <span className={`text-lg font-bold ${calculateCost() > 0 ? "text-red-600" : "text-green-600"}`}>
-                      {calculateCost() > 0 ? "+" : ""}{calculateCost()}円/個
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-background rounded-lg">
-                    <span className="text-sm text-muted-foreground">売上増加予測</span>
-                    <span className="text-lg font-bold text-green-600">
-                      +{((newFunnel.purchase - baseFunnel.purchase) * 0.8 + (newFunnel.regular - baseFunnel.regular) * 2.5).toFixed(1)}%
+        </div>
+      </div>
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20">
