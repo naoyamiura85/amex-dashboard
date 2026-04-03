@@ -121,7 +121,7 @@ const flowPersonas: Record<string, {
   },
 }
 
-// 離脱ペルソナデータ
+// ��脱ペルソナデータ
 const dropoffPersonas: Record<string, {
   title: string
   description: string
@@ -309,12 +309,17 @@ export function DigitalShelfContent() {
                       </div>
                     </div>
                     
-                    {/* 矢印コネクタ */}
+                    {/* 矢印コネクタと離脱情報 */}
                     {!isLast && (
-                      <div className="flex flex-col items-center mx-1">
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                      <div className="flex flex-col items-center mx-2 gap-1">
+                        <div className="flex items-center gap-1">
+                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        </div>
                         {stage.convRate && (
-                          <span className="text-xs text-emerald-600 font-semibold">{stage.convRate}%</span>
+                          <span className="text-xs font-semibold text-emerald-600">{stage.convRate}%</span>
+                        )}
+                        {stage.dropoff && (
+                          <span className="text-xs font-semibold text-red-500">離脱 {stage.dropoff}%</span>
                         )}
                       </div>
                     )}
