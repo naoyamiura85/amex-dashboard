@@ -328,39 +328,8 @@ export function DigitalShelfContent() {
               })}
             </div>
           </div>
-
-          {/* ステージ間フロー表示 */}
-          <div className="flex items-center justify-between px-4 py-3 bg-muted/30 rounded-xl mt-2">
-            {funnelData.map((stage, index) => {
-              const Icon = stage.icon
-              const nextStage = funnelData[index + 1]
-              const flowKey = nextStage ? `${stage.name}-${nextStage.name}` : null
-              const isSelected = selectedFlow === flowKey || selectedDropoff === stage.name
-              
-              return (
-                <div key={stage.name} className="flex items-center">
-                  <div 
-                    className={`flex flex-col items-center cursor-pointer transition-all p-2 rounded-lg ${
-                      isSelected ? 'bg-white shadow-md' : 'hover:bg-white/50'
-                    }`}
-                    onClick={() => {
-                      if (flowKey) {
-                        setSelectedFlow(flowKey)
-                        setSelectedDropoff(null)
-                      }
-                    }}
-                  >
-                    <div 
-                      className="w-10 h-10 rounded-full flex items-center justify-center mb-1"
-                      style={{ backgroundColor: `${stage.fill}20` }}
-                    >
-                      <Icon className="h-5 w-5" style={{ color: stage.fill }} />
-                    </div>
-                    <span className="text-xs font-medium text-muted-foreground">{stage.name}</span>
-                    <div className="flex flex-col items-center mt-1">
-                      {stage.convRate && (
-                        <span className="text-xs font-semibold text-emerald-600">CV {stage.convRate}%</span>
-                      )}
+        </CardContent>
+      </Card>
                       {stage.dropoff && (
                         <button
                           className="text-[10px] text-red-500 hover:text-red-600 hover:underline"
