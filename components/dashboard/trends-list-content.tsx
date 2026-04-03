@@ -36,6 +36,7 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Category mapping for mode filter
 const categoryModeMapping: Record<string, string[]> = {
