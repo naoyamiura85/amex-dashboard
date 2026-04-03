@@ -238,41 +238,6 @@ export function DigitalShelfContent() {
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">
-      {/* 選択された商品のサマリー表示 */}
-      {currentProduct && currentProduct.id !== "all" && (
-        <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-          <CardContent className="py-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-lg overflow-hidden bg-white border flex-shrink-0">
-                <img 
-                  src={currentProduct.image} 
-                  alt={currentProduct.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-primary">{currentProduct.name}</h3>
-                <p className="text-sm text-muted-foreground">{currentProduct.category}</p>
-              </div>
-              <div className="ml-auto flex items-center gap-6">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-primary">24.5万人</p>
-                  <p className="text-xs text-muted-foreground">購入ユーザー数</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-emerald-600">+12.3%</p>
-                  <p className="text-xs text-muted-foreground">前月比</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-amber-600">¥18,500</p>
-                  <p className="text-xs text-muted-foreground">平均LTV</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* 購買ファネル分析 */}
       <Card>
         <CardHeader>
