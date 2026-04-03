@@ -215,15 +215,7 @@ export function AISimulatorContent() {
       {/* ========== 上部: パラメータ設定エリア ========== */}
       <Card className="border-primary/20">
         <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
-                <Boxes className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <div>
-                <CardTitle>改定シミュレーター</CardTitle>
-              </div>
-            </div>
+          <div className="flex items-center justify-end">
             <Button 
               className="gap-2 h-10" 
               onClick={runSimulation}
