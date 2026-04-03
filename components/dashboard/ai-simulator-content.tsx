@@ -214,28 +214,7 @@ export function AISimulatorContent() {
     <div className="p-6 space-y-6 bg-muted/30 min-h-screen">
       {/* ========== 上部: パラメータ設定エリア ========== */}
       <Card className="border-primary/20">
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-end">
-            <Button 
-              className="gap-2 h-10" 
-              onClick={runSimulation}
-              disabled={isSimulating}
-            >
-              {isSimulating ? (
-                <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  シミュレーション中...
-                </>
-              ) : (
-                <>
-                  <Play className="h-4 w-4" />
-                  シミュレーション実行
-                </>
-              )}
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* 商品選択 */}
             <div className="space-y-3">
@@ -400,6 +379,25 @@ export function AISimulatorContent() {
             </div>
           </div>
         </CardContent>
+        <div className="px-6 pb-6">
+          <Button 
+            className="w-full gap-2 h-12" 
+            onClick={runSimulation}
+            disabled={isSimulating}
+          >
+            {isSimulating ? (
+              <>
+                <RefreshCw className="h-4 w-4 animate-spin" />
+                シミュレーション中...
+              </>
+            ) : (
+              <>
+                <Play className="h-4 w-4" />
+                シミュレーション実行
+              </>
+            )}
+          </Button>
+        </div>
       </Card>
 
       {/* ========== 下部: 結果表示エリア ========== */}
