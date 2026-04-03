@@ -70,7 +70,7 @@ const navSections = [
   },
   {
     label: "SIMULATION",
-    defaultOpen: false,
+    defaultOpen: true,
     items: [
       { title: "改定シミュレーター", icon: Boxes, href: "/ai/simulator" },
     ],
