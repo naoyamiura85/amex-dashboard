@@ -222,7 +222,6 @@ export function AISimulatorContent() {
               </div>
               <div>
                 <CardTitle>改定シミュレーター</CardTitle>
-                <CardDescription>商品・素材・企画を組み合わせて市場インパクトを予測</CardDescription>
               </div>
             </div>
             <Button 
