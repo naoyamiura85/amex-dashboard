@@ -250,82 +250,78 @@ export function DigitalShelfContent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* 左から右へのファネルチャート */}
-          <div className="h-[380px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={funnelData}
-                layout="horizontal"
-                margin={{ top: 40, right: 20, left: 20, bottom: 60 }}
-                barCategoryGap="15%"
-              >
-                <XAxis 
-                  type="category"
-                  dataKey="name"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#1e293b', fontSize: 13, fontWeight: 600 }}
-                  dy={10}
-                />
-                <YAxis 
-                  type="number"
-                  domain={[0, 280]}
-                  tickFormatter={(v) => `${v}万`}
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#64748b', fontSize: 12 }}
-                  width={50}
-                />
-                <Tooltip 
-                  formatter={(value: number, name: string, props: { payload: typeof funnelData[0] }) => {
-                    const stage = props.payload
-                    return [
-                      <div key="tooltip" className="space-y-1">
-                        <div className="font-bold">{value}万人</div>
-                        {stage.convRate && <div className="text-emerald-600">CV率: {stage.convRate}%</div>}
-                        {stage.dropoff && <div className="text-red-500">離脱: {stage.dropoff}% ({stage.dropoffValue}万人)</div>}
-                      </div>,
-                      ''
-                    ]
-                  }}
-                  contentStyle={{ 
-                    borderRadius: '12px', 
-                    border: 'none', 
-                    boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
-                    padding: '12px 16px'
-                  }}
-                  cursor={{ fill: 'rgba(0,0,0,0.05)' }}
-                />
-                <Bar 
-                  dataKey="value" 
-                  radius={[8, 8, 0, 0]}
-                  cursor="pointer"
-                  onClick={(data) => {
-                    const index = funnelData.findIndex(d => d.name === data.name)
-                    const nextStage = funnelData[index + 1]
-                    if (nextStage) {
-                      setSelectedFlow(`${data.name}-${nextStage.name}`)
-                      setSelectedDropoff(null)
-                    }
-                  }}
-                >
-                  {funnelData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={entry.fill}
-                      className="transition-opacity hover:opacity-80"
-                    />
-                  ))}
-                  <LabelList 
-                    dataKey="value" 
-                    position="top" 
-                    formatter={(v: number) => `${v}万人`}
-                    style={{ fill: '#1e293b', fontSize: 13, fontWeight: 700 }}
-                    offset={8}
-                  />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+          {/* 横向きファネルチャート */}
+          <div className="py-4">
+            <div className="flex items-center justify-center gap-0">
+              {funnelData.map((stage, index) => {
+                const Icon = stage.icon
+                const maxValue = funnelData[0].value
+                const heightPercent = (stage.value / maxValue) * 100
+                const nextStage = funnelData[index + 1]
+                const flowKey = nextStage ? `${stage.name}-${nextStage.name}` : null
+                const isSelected = selectedFlow === flowKey || selectedDropoff === stage.name
+                const isLast = index === funnelData.length - 1
+                
+                return (
+                  <div key={stage.name} className="flex items-center">
+                    {/* ファネルセグメント */}
+                    <div 
+                      className={`relative flex flex-col items-center justify-center cursor-pointer transition-all ${
+                        isSelected ? 'scale-105' : 'hover:scale-102'
+                      }`}
+                      style={{
+                        width: '140px',
+                        height: `${Math.max(heightPercent * 1.6, 60)}px`,
+                        minHeight: '60px',
+                        maxHeight: '160px',
+                      }}
+                      onClick={() => {
+                        if (flowKey) {
+                          setSelectedFlow(flowKey)
+                          setSelectedDropoff(null)
+                        }
+                      }}
+                    >
+                      {/* ファネル形状（SVG） */}
+                      <svg 
+                        className="absolute inset-0 w-full h-full"
+                        viewBox="0 0 140 100"
+                        preserveAspectRatio="none"
+                      >
+                        <polygon
+                          points={
+                            index === 0
+                              ? "0,0 140,10 140,90 0,100"
+                              : isLast
+                              ? "0,15 140,30 140,70 0,85"
+                              : `0,${5 + index * 3} 140,${10 + index * 4} 140,${90 - index * 4} 0,${95 - index * 3}`
+                          }
+                          fill={stage.fill}
+                          className="transition-opacity hover:opacity-90"
+                        />
+                      </svg>
+                      
+                      {/* コンテンツ */}
+                      <div className="relative z-10 flex flex-col items-center text-white">
+                        <Icon className="h-5 w-5 mb-1 drop-shadow" />
+                        <span className="text-lg font-bold drop-shadow">{stage.value}万人</span>
+                        <span className="text-xs font-medium drop-shadow opacity-90">{stage.name}</span>
+                      </div>
+                    </div>
+                    
+                    {/* 矢印コネクタ */}
+                    {!isLast && (
+                      <div className="flex flex-col items-center mx-1">
+                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        {stage.convRate && (
+                          <span className="text-xs text-emerald-600 font-semibold">{stage.convRate}%</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
 
           {/* ステージ間フロー表示 */}
