@@ -424,38 +424,6 @@ export function DigitalShelfContent() {
         </CardContent>
       </Card>
 
-      {/* コンバージョン比較チャート */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">ステージ別コンバージョン率</CardTitle>
-          <CardDescription>各ステージから次のステージへの移行率</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[200px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={funnelData.filter(d => d.convRate)}
-                layout="vertical"
-                margin={{ top: 0, right: 30, left: 80, bottom: 0 }}
-              >
-                <XAxis type="number" domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
-                <YAxis type="category" dataKey="name" width={70} />
-                <Tooltip 
-                  formatter={(value: number) => [`${value}%`, 'コンバージョン率']}
-                  contentStyle={{ borderRadius: 8 }}
-                />
-                <Bar dataKey="convRate" radius={[0, 4, 4, 0]}>
-                  {funnelData.filter(d => d.convRate).map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                  <LabelList dataKey="convRate" position="right" formatter={(v: number) => `${v}%`} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* フロー詳細（インライン表示） */}
       {selectedFlow && flowData && (
         <Card className="border-primary/30 bg-primary/5">
