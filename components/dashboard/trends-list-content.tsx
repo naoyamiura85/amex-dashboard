@@ -14,11 +14,6 @@ import {
   Flame,
   Clock,
   Loader2,
-  Brain,
-  Zap,
-  Download,
-  BarChart3,
-  Globe,
   Bell,
 } from "lucide-react"
 import { useCategoryMode, categoryModeConfig } from "@/contexts/category-mode-context"
@@ -42,16 +37,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ReferenceLine,
-} from "recharts"
 
 // Category mapping for mode filter
 const categoryModeMapping: Record<string, string[]> = {
@@ -79,64 +64,6 @@ const statusColors: Record<string, string> = {
   Emerging: "bg-amber-100 text-amber-700",
   Declining: "bg-red-100 text-red-700",
 }
-
-// 相関発見データ
-const crossCategoryCorrelations = [
-  { title: "睡眠サプリ × スキンケア", correlation: 87, image: "/images/correlations/sleep-skincare.jpg", insight: "睡眠の質向上と美肌効果の相乗効果" },
-  { title: "アンチエイジング × 睡眠", correlation: 82, image: "/images/correlations/antiaging-sleep.jpg", insight: "夜間ケアと睡眠促進の組み合わせ需要" },
-  { title: "美肌 × 栄養補助食品", correlation: 79, image: "/images/correlations/beauty-supplements.jpg", insight: "インナービューティー市場の拡大" },
-]
-
-const materialSynergies = [
-  { title: "ビタミンC + ヒアルロン酸", boost: 143, image: "/images/correlations/vitaminc-hyaluronic.jpg", insight: "保湿×美白の定番コンビ" },
-  { title: "レチノール + ペプチド", boost: 128, image: "/images/correlations/retinol-peptide.jpg", insight: "エイジングケアの最強タッグ" },
-  { title: "ナイアシンアミド + セラミド", boost: 115, image: "/images/correlations/niacinamide-ceramide.jpg", insight: "バリア機能強化の新定番" },
-]
-
-// トレンド予測データ
-const trendArrivalData = [
-  { trend: "ポストバイオティクス", origin: "米国", arrivalMonth: "2025年7月", confidence: 92, growth: "+180%", status: "到来直前" },
-  { trend: "クリーンビューティー2.0", origin: "欧州", arrivalMonth: "2025年9月", confidence: 87, growth: "+145%", status: "準備期" },
-  { trend: "バイオミメティクス成分", origin: "韓国", arrivalMonth: "2025年5月", confidence: 94, growth: "+210%", status: "到来直前" },
-]
-
-const trendLifecycleData = [
-  {
-    name: "バクチオール",
-    data: [
-      { month: "24/01", value: 20 }, { month: "24/04", value: 45 }, { month: "24/07", value: 72 },
-      { month: "24/10", value: 88 }, { month: "25/01", value: 95 }, { month: "25/04", value: 91 },
-    ],
-    phase: "成熟",
-    color: "#3700FF",
-  },
-  {
-    name: "ポストバイオティクス",
-    data: [
-      { month: "24/01", value: 5 }, { month: "24/04", value: 8 }, { month: "24/07", value: 15 },
-      { month: "24/10", value: 28 }, { month: "25/01", value: 42 }, { month: "25/04", value: 61 },
-    ],
-    phase: "急成長",
-    color: "#C8FF00",
-  },
-]
-
-const phaseColors: Record<string, string> = {
-  急成長: "bg-emerald-100 text-emerald-700",
-  成熟: "bg-blue-100 text-blue-700",
-  衰退: "bg-gray-100 text-gray-600",
-  到来直前: "bg-red-100 text-red-700",
-  準備期: "bg-orange-100 text-orange-700",
-}
-
-const allLifecyclePoints = trendLifecycleData[0].data.map((d) => {
-  const result: Record<string, string | number> = { month: d.month }
-  trendLifecycleData.forEach((t) => {
-    const point = t.data.find((p) => p.month === d.month)
-    if (point) result[t.name] = point.value
-  })
-  return result
-})
 
 export function TrendsListContent() {
   const [activeTab, setActiveTab] = useState("trends")
