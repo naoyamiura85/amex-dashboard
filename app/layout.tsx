@@ -16,7 +16,7 @@ const zenKaku = Zen_Kaku_Gothic_New({
 });
 
 export const metadata: Metadata = {
-  title: 'YAPPI - AI-Powered Consumer Intelligence',
+  title: 'D2Cダッシュボード',
   description: 'AI-driven consumer intelligence platform for FMCG/CPG',
   generator: 'v0.app',
   icons: {
