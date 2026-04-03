@@ -36,7 +36,6 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 // Category mapping for mode filter
 const categoryModeMapping: Record<string, string[]> = {
@@ -66,7 +65,6 @@ const statusColors: Record<string, string> = {
 }
 
 export function TrendsListContent() {
-  const [activeTab, setActiveTab] = useState("trends")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -110,18 +108,7 @@ export function TrendsListContent() {
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">
-      {/* メインタブ */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="h-10 w-fit">
-          <TabsTrigger value="trends" className="gap-2">
-            <TrendingUp className="h-4 w-4" />
-            トレンド一覧
-          </TabsTrigger>
-
-        </TabsList>
-
-        {/* トレンド一覧タブ */}
-        <TabsContent value="trends" className="mt-6 space-y-6">
+      <div className="w-full space-y-6">
           {/* Filters Row */}
           <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
@@ -399,10 +386,7 @@ export function TrendsListContent() {
           </CardContent>
         </Card>
       )}
-        </TabsContent>
-
-
-      </Tabs>
+      </div>
     </main>
   )
 }
