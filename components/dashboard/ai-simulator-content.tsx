@@ -103,6 +103,7 @@ export function AISimulatorContent() {
   const [isSimulating, setIsSimulating] = useState(false)
   const [simulationComplete, setSimulationComplete] = useState(false)
   const [animatedValues, setAnimatedValues] = useState<Record<string, number>>({})
+  const [enableSound, setEnableSound] = useState(true)
 
   const currentProduct = products.find(p => p.id === selectedProduct)
   const baseFunnel = baseFunnelData[selectedProduct as keyof typeof baseFunnelData]
