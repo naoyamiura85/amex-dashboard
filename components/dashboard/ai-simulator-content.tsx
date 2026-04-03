@@ -628,26 +628,6 @@ export function AISimulatorContent() {
           </Card>
         </div>
       </div>
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20">
-                    <span className="text-sm font-medium">ROI予測</span>
-                    <span className="text-2xl font-bold text-primary">
-                      {(((newFunnel.purchase - baseFunnel.purchase) * 0.8 + (newFunnel.regular - baseFunnel.regular) * 2.5) / Math.max(calculateCost() / 100, 1)).toFixed(1)}x
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  <BarChart3 className="h-10 w-10 mx-auto mb-2 opacity-30" />
-                  <p className="text-sm">シミュレーションを実行すると</p>
-                  <p className="text-sm">収益予測が表示されます</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
     </div>
   )
 }
