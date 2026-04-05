@@ -59,6 +59,10 @@ const pageConfig: Record<string, { icon: LucideIcon; description: string }> = {
     icon: TrendingUp, 
     description: "会員行動トレンドと市場変化の時系列分析" 
   },
+  "/dashboard/tribe-analysis": { 
+    icon: Users, 
+    description: "趣味・行動ベースの会員グループ（トライブ）ごとのクラスター分析" 
+  },
   "/dashboard/digital-shelf": { 
     icon: MonitorSmartphone, 
     description: "カード利用カテゴリ・チャネル別の消費行動分析" 

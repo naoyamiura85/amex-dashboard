@@ -17,6 +17,7 @@ import {
   ChevronRight,
   Users,
   Sparkles,
+  Network,
 } from "lucide-react"
 import { getClientConfig } from "@/lib/client-config"
 
@@ -59,6 +60,7 @@ const navSections = [
       { title: "会員分析",               icon: TrendingUp,       href: "/dashboard/market-overview" },
       { title: "カード利用分析",         icon: MonitorSmartphone, href: "/dashboard/digital-shelf" },
       { title: "トレンド分析",           icon: Sparkles,         href: "/dashboard/trends" },
+      { title: "トライブ分析",           icon: Network,          href: "/dashboard/tribe-analysis" },
     ],
   },
   {
