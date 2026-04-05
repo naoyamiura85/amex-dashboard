@@ -8,414 +8,408 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   ResponsiveContainer,
-  RadarChart,
-  Radar,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
   CartesianGrid,
-  Cell,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   LineChart,
   Line,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts"
-import {
-  Users,
-  CreditCard,
-  ChevronRight,
-  TrendingUp,
-  TrendingDown,
-  Award,
-  Briefcase,
-  ShoppingBag,
-  Plane,
-  Coffee,
-  Star,
-  ArrowUpRight,
-  Download,
-} from "lucide-react"
+import { Users, TrendingUp, TrendingDown, ArrowUpRight, Filter, Download } from "lucide-react"
 
-// 会員ファネルステージ
-const funnelStages = [
-  { id: "prospect", name: "見込み層", total: "2,850万人", color: "#006FCF", subLabel: "AMEX認知あり・未申込" },
-  { id: "applicant", name: "申込済み", total: "58万人", color: "#0051A8", subLabel: "当月申込件数" },
-  { id: "approved", name: "審査通過", total: "41万人", color: "#00175A", subLabel: "承認率 70.7%" },
-  { id: "active", name: "アクティブ", total: "370万人", color: "#B4975A", subLabel: "月1回以上利用" },
-  { id: "premium", name: "プレミアム", total: "49万人", color: "#D4B483", subLabel: "プラチナ・センチュリオン" },
+// --- データ定義 ---
+
+const segmentData = [
+  { segment: "プラチナ", members: 490, churn: 1.2, spend: 68, nps: 72, color: "#B4975A" },
+  { segment: "ゴールド", members: 1095, churn: 1.8, spend: 38, nps: 61, color: "#006FCF" },
+  { segment: "グリーン", members: 1345, churn: 2.3, spend: 18, nps: 54, color: "#10B981" },
+  { segment: "ブルー", members: 917, churn: 3.1, spend: 9, nps: 46, color: "#64B5F6" },
 ]
 
-// カード別会員データ
-const cardSegments = [
-  {
-    id: "platinum",
-    name: "プラチナ・カード",
-    members: 420000,
-    avgSpend: "¥1,840,000",
-    retention: 94.2,
-    nps: 72,
-    color: "#B4975A",
-    trend: "+3.1%",
-  },
-  {
-    id: "gold",
-    name: "ゴールド・カード",
-    members: 1095000,
-    avgSpend: "¥420,000",
-    retention: 88.5,
-    nps: 58,
-    color: "#006FCF",
-    trend: "+5.8%",
-  },
-  {
-    id: "green",
-    name: "グリーン・カード",
-    members: 1345000,
-    avgSpend: "¥180,000",
-    retention: 82.1,
-    nps: 48,
-    color: "#10B981",
-    trend: "+1.2%",
-  },
-  {
-    id: "blue",
-    name: "ブルー・カード",
-    members: 917000,
-    avgSpend: "¥95,000",
-    retention: 75.4,
-    nps: 38,
-    color: "#64B5F6",
-    trend: "-0.8%",
-  },
-  {
-    id: "business",
-    name: "ビジネス・ゴールド",
-    members: 70000,
-    avgSpend: "¥2,200,000",
-    retention: 91.8,
-    nps: 65,
-    color: "#00175A",
-    trend: "+8.4%",
-  },
+const ageData = [
+  { age: "18-24歳", platinum: 2, gold: 8, green: 22, blue: 18 },
+  { age: "25-34歳", platinum: 12, gold: 28, green: 38, blue: 25 },
+  { age: "35-44歳", platinum: 28, gold: 32, green: 24, blue: 20 },
+  { age: "45-54歳", platinum: 32, gold: 20, green: 10, blue: 14 },
+  { age: "55-64歳", platinum: 18, gold: 9, green: 5, blue: 14 },
+  { age: "65歳+", platinum: 8, gold: 3, green: 1, blue: 9 },
+]
+
+const retentionData = [
+  { month: "1月", platinum: 98.9, gold: 98.2, green: 97.7, blue: 96.9 },
+  { month: "2月", platinum: 98.7, gold: 98.0, green: 97.5, blue: 96.8 },
+  { month: "3月", platinum: 98.8, gold: 98.1, green: 97.8, blue: 97.0 },
+  { month: "4月", platinum: 99.0, gold: 98.3, green: 97.6, blue: 96.7 },
+  { month: "5月", platinum: 98.9, gold: 98.2, green: 97.9, blue: 96.5 },
+  { month: "6月", platinum: 99.1, gold: 98.4, green: 98.0, blue: 96.8 },
+  { month: "7月", platinum: 98.8, gold: 98.3, green: 97.7, blue: 97.1 },
+  { month: "8月", platinum: 99.0, gold: 98.5, green: 97.8, blue: 96.9 },
+  { month: "9月", platinum: 98.9, gold: 98.4, green: 97.9, blue: 97.0 },
+  { month: "10月", platinum: 99.2, gold: 98.6, green: 97.8, blue: 96.8 },
 ]
 
 // ペルソナ定義
 const personas = [
   {
-    id: "executive",
-    name: "エグゼクティブ層",
-    segment: "プラチナ保有",
-    age: "50-65歳",
-    gender: "男性 82%",
-    occupation: "経営者・役員",
-    annualSpend: "¥1,800万+",
-    interests: ["ゴルフ", "高級レストラン", "海外出張", "ワイン"],
+    id: "urban-exec",
+    name: "都市型エグゼクティブ",
+    card: "プラチナ",
+    cardColor: "#B4975A",
+    age: "42歳 / 男性",
+    income: "年収 2,000万+",
+    spend: "月平均利用 ¥84万",
+    topCategories: ["航空・ホテル", "高級レストラン", "海外ショッピング"],
+    avatar: "UE",
+    nps: 78,
     churnRisk: "低",
-    upgradeProb: 5,
-    avatar: "EX",
-    avatarColor: "bg-amber-100 text-amber-700",
+    upgradeScore: null,
+    size: "490K人",
     radarData: [
-      { subject: "利用額", value: 98 },
-      { subject: "旅行", value: 95 },
-      { subject: "グルメ", value: 88 },
-      { subject: "エンタメ", value: 72 },
-      { subject: "ショッピング", value: 70 },
-      { subject: "デジタル", value: 55 },
+      { metric: "利用頻度", value: 95 },
+      { metric: "利用金額", value: 98 },
+      { metric: "特典利用", value: 88 },
+      { metric: "NPS", value: 82 },
+      { metric: "継続期間", value: 92 },
     ],
-    churnColor: "text-emerald-600",
-    badges: ["高LTV", "チャーンリスク低", "紹介多"],
   },
   {
-    id: "biz-pro",
-    name: "ビジネスプロフェッショナル",
-    segment: "ゴールド保有",
-    age: "35-50歳",
-    gender: "男性 71%",
-    occupation: "外資系・上級管理職",
-    annualSpend: "¥420万",
-    interests: ["出張", "ラウンジ", "ホテル", "マイル"],
+    id: "career-gold",
+    name: "キャリア志向ゴールド",
+    card: "ゴールド",
+    cardColor: "#006FCF",
+    age: "35歳 / 女性",
+    income: "年収 800万",
+    spend: "月平均利用 ¥32万",
+    topCategories: ["飲食・カフェ", "EC通販", "国内旅行"],
+    avatar: "CG",
+    nps: 64,
     churnRisk: "中",
-    upgradeProb: 28,
-    avatar: "BP",
-    avatarColor: "bg-blue-100 text-blue-700",
+    upgradeScore: 72,
+    size: "1,095K人",
     radarData: [
-      { subject: "利用額", value: 75 },
-      { subject: "旅行", value: 92 },
-      { subject: "グルメ", value: 68 },
-      { subject: "エンタメ", value: 55 },
-      { subject: "ショッピング", value: 60 },
-      { subject: "デジタル", value: 85 },
+      { metric: "利用頻度", value: 78 },
+      { metric: "利用金額", value: 68 },
+      { metric: "特典利用", value: 62 },
+      { metric: "NPS", value: 64 },
+      { metric: "継続期間", value: 71 },
     ],
-    churnColor: "text-amber-600",
-    badges: ["出張多", "マイル重視", "アップグレード候補"],
   },
   {
-    id: "affluent-f",
-    name: "アフルエント女性",
-    segment: "ゴールド・グリーン",
-    age: "30-45歳",
-    gender: "女性 100%",
-    occupation: "専門職・管理職",
-    annualSpend: "¥280万",
-    interests: ["ラグジュアリーブランド", "スパ・美容", "海外旅行", "グルメ"],
-    churnRisk: "低",
-    upgradeProb: 35,
-    avatar: "AF",
-    avatarColor: "bg-rose-100 text-rose-700",
-    radarData: [
-      { subject: "利用額", value: 68 },
-      { subject: "旅行", value: 78 },
-      { subject: "グルメ", value: 82 },
-      { subject: "エンタメ", value: 70 },
-      { subject: "ショッピング", value: 95 },
-      { subject: "デジタル", value: 78 },
-    ],
-    churnColor: "text-emerald-600",
-    badges: ["ショッピング高", "体験重視", "SNS影響受"],
-  },
-  {
-    id: "young-pro",
-    name: "若手プロフェッショナル",
-    segment: "グリーン・ブルー",
-    age: "25-35歳",
-    gender: "男女ほぼ同率",
-    occupation: "コンサル・金融・IT",
-    annualSpend: "¥95万",
-    interests: ["カフェ", "サブスク", "キャリア投資", "テック"],
-    churnRisk: "高",
-    upgradeProb: 42,
+    id: "young-green",
+    name: "ヤングプロフェッショナル",
+    card: "グリーン",
+    cardColor: "#10B981",
+    age: "28歳 / 男性",
+    income: "年収 450万",
+    spend: "月平均利用 ¥15万",
+    topCategories: ["EC通販", "サブスク", "コンビニ"],
     avatar: "YP",
-    avatarColor: "bg-green-100 text-green-700",
+    nps: 55,
+    churnRisk: "高",
+    upgradeScore: 58,
+    size: "1,345K人",
     radarData: [
-      { subject: "利用額", value: 45 },
-      { subject: "旅行", value: 55 },
-      { subject: "グルメ", value: 72 },
-      { subject: "エンタメ", value: 80 },
-      { subject: "ショッピング", value: 68 },
-      { subject: "デジタル", value: 95 },
+      { metric: "利用頻度", value: 65 },
+      { metric: "利用金額", value: 42 },
+      { metric: "特典利用", value: 38 },
+      { metric: "NPS", value: 55 },
+      { metric: "継続期間", value: 44 },
     ],
-    churnColor: "text-red-600",
-    badges: ["デジタルネイティブ", "チャーンリスク", "将来の高LTV候補"],
   },
 ]
 
-// 会員属性データ（年齢分布）
-const ageDistribution = [
-  { age: "20代", members: 620, platinum: 15, gold: 140, green: 280, blue: 185 },
-  { age: "30代", members: 980, platinum: 75, gold: 285, green: 380, blue: 240 },
-  { age: "40代", members: 1150, platinum: 160, gold: 380, green: 390, blue: 220 },
-  { age: "50代", members: 820, platinum: 135, gold: 200, green: 280, blue: 205 },
-  { age: "60代以上", members: 277, platinum: 105, gold: 90, green: 55, blue: 27 },
+const genderData = [
+  { name: "男性", value: 61, color: "#006FCF" },
+  { name: "女性", value: 36, color: "#B4975A" },
+  { name: "その他", value: 3, color: "#64B5F6" },
 ]
 
-// 解約率トレンド
-const churnTrend = [
-  { month: "5月", platinum: 0.9, gold: 1.8, green: 2.4, blue: 3.8 },
-  { month: "6月", platinum: 0.8, gold: 1.9, green: 2.6, blue: 3.6 },
-  { month: "7月", platinum: 1.0, gold: 2.0, green: 2.5, blue: 4.0 },
-  { month: "8月", platinum: 0.9, gold: 1.8, green: 2.3, blue: 3.9 },
-  { month: "9月", platinum: 0.8, gold: 1.7, green: 2.2, blue: 3.5 },
-  { month: "10月", platinum: 0.7, gold: 1.6, green: 2.1, blue: 3.4 },
+const acquisitionData = [
+  { channel: "Web直接", count: 18420, color: "#006FCF" },
+  { channel: "紹介プログラム", count: 12380, color: "#B4975A" },
+  { channel: "SNS広告", count: 8640, color: "#10B981" },
+  { channel: "金融機関提携", count: 5280, color: "#64B5F6" },
+  { channel: "空港・店舗", count: 3600, color: "#00175A" },
 ]
 
-function formatMembers(n: number) {
-  if (n >= 1000000) return `${(n / 10000).toFixed(0)}万人`
-  if (n >= 10000) return `${(n / 10000).toFixed(1)}万人`
-  return `${n.toLocaleString()}人`
+const churnRiskConfig: Record<string, string> = {
+  低: "text-emerald-600 bg-emerald-50 border-emerald-200",
+  中: "text-amber-600 bg-amber-50 border-amber-200",
+  高: "text-red-600 bg-red-50 border-red-200",
 }
 
 export function MarketOverviewContent() {
-  const [selectedPersona, setSelectedPersona] = useState(personas[0])
   const [activeTab, setActiveTab] = useState("segments")
+  const [selectedPersona, setSelectedPersona] = useState(personas[0])
 
   return (
     <div className="p-6 space-y-6">
-      {/* ページヘッダーアクション */}
+      {/* ツールバー */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {funnelStages.map((stage, idx) => (
-            <div key={stage.id} className="flex items-center gap-2">
-              <div
-                className="px-3 py-1.5 rounded-lg text-white text-xs font-medium"
-                style={{ backgroundColor: stage.color }}
-              >
-                <span className="block font-bold">{stage.total}</span>
-                <span className="block opacity-80 text-[10px]">{stage.name}</span>
-              </div>
-              {idx < funnelStages.length - 1 && (
-                <ChevronRight className="h-3 w-3 text-muted-foreground" />
-              )}
-            </div>
-          ))}
+        <p className="text-sm text-muted-foreground">2026年10月 | 会員データ基準日: 2026/10/01</p>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="gap-2 text-xs">
+            <Filter className="h-3.5 w-3.5" />
+            フィルター
+          </Button>
+          <Button variant="outline" size="sm" className="gap-2 text-xs">
+            <Download className="h-3.5 w-3.5" />
+            エクスポート
+          </Button>
         </div>
-        <Button variant="outline" size="sm" className="gap-2 text-xs">
-          <Download className="h-3.5 w-3.5" />
-          レポート出力
-        </Button>
       </div>
 
-      {/* タブ */}
+      {/* セグメントサマリーカード */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {segmentData.map((seg) => (
+          <Card key={seg.segment} className="border border-border shadow-sm">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <span
+                  className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
+                  style={{ backgroundColor: seg.color }}
+                >
+                  {seg.segment}
+                </span>
+                <span className="flex items-center gap-0.5 text-xs font-medium text-emerald-600">
+                  <ArrowUpRight className="h-3 w-3" />
+                  NPS {seg.nps}
+                </span>
+              </div>
+              <p className="text-2xl font-bold text-foreground">{seg.members}<span className="text-sm font-normal ml-1 text-muted-foreground">K人</span></p>
+              <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+                <span>月平均利用 ¥{seg.spend}万</span>
+                <span className={`${seg.churn > 2.5 ? "text-red-600" : "text-muted-foreground"}`}>解約率 {seg.churn}%</span>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* タブコンテンツ */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="bg-muted/60 h-9">
-          <TabsTrigger value="segments" className="text-xs">カードセグメント</TabsTrigger>
-          <TabsTrigger value="personas" className="text-xs">ペルソナ分析</TabsTrigger>
-          <TabsTrigger value="demographics" className="text-xs">会員属性</TabsTrigger>
-          <TabsTrigger value="churn" className="text-xs">チャーン分析</TabsTrigger>
+          <TabsTrigger value="segments" className="text-xs">セグメント分析</TabsTrigger>
+          <TabsTrigger value="persona" className="text-xs">ペルソナ詳細</TabsTrigger>
+          <TabsTrigger value="retention" className="text-xs">継続率推移</TabsTrigger>
+          <TabsTrigger value="acquisition" className="text-xs">獲得チャネル</TabsTrigger>
         </TabsList>
 
-        {/* カードセグメント */}
+        {/* セグメント分析 */}
         <TabsContent value="segments" className="mt-4">
-          <div className="space-y-3">
-            {cardSegments.map((seg) => (
-              <Card key={seg.id} className="border border-border shadow-sm">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-1 h-16 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: seg.color }}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <Card className="lg:col-span-3 border border-border shadow-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold">年代別・カード種別会員分布</CardTitle>
+                <p className="text-xs text-muted-foreground">各年代のカード保有比率（千人）</p>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={ageData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                    <XAxis dataKey="age" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
                     />
-                    <div className="flex-1 grid grid-cols-5 gap-4 items-center">
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">{seg.name}</p>
-                        <p className="text-xl font-bold mt-0.5" style={{ color: seg.color }}>
-                          {formatMembers(seg.members)}
-                        </p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground">平均年間利用額</p>
-                        <p className="text-sm font-bold text-foreground mt-0.5">{seg.avgSpend}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground">継続率</p>
-                        <div className="flex items-center justify-center gap-1 mt-0.5">
-                          <p className="text-sm font-bold text-foreground">{seg.retention}%</p>
-                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div className="h-full rounded-full" style={{ width: `${seg.retention}%`, backgroundColor: seg.color }} />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground">NPS</p>
-                        <p className="text-sm font-bold text-foreground mt-0.5">{seg.nps}</p>
-                      </div>
-                      <div className="text-right">
-                        <Badge
-                          className={`text-xs border-0 ${seg.trend.startsWith("+") ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}
-                        >
-                          {seg.trend.startsWith("+") ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-                          {seg.trend}
-                        </Badge>
-                        <p className="text-[10px] text-muted-foreground mt-1">前月比</p>
-                      </div>
+                    <Bar dataKey="platinum" name="プラチナ" stackId="a" fill="#B4975A" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="gold" name="ゴールド" stackId="a" fill="#006FCF" />
+                    <Bar dataKey="green" name="グリーン" stackId="a" fill="#10B981" />
+                    <Bar dataKey="blue" name="ブルー" stackId="a" fill="#64B5F6" radius={[3, 3, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-2 border border-border shadow-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold">性別構成比</CardTitle>
+                <p className="text-xs text-muted-foreground">全会員ベース</p>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center gap-4">
+                <ResponsiveContainer width="100%" height={180}>
+                  <PieChart>
+                    <Pie
+                      data={genderData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={52}
+                      outerRadius={78}
+                      paddingAngle={3}
+                      dataKey="value"
+                    >
+                      {genderData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
+                      formatter={(v) => [`${v}%`, ""]}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="w-full space-y-1.5 text-xs">
+                  {genderData.map((d) => (
+                    <div key={d.name} className="flex items-center justify-between">
+                      <span className="flex items-center gap-2">
+                        <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: d.color }} />
+                        <span className="text-muted-foreground">{d.name}</span>
+                      </span>
+                      <span className="font-semibold text-foreground">{d.value}%</span>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
-        {/* ペルソナ分析 */}
-        <TabsContent value="personas" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* ペルソナ選択 */}
-            <div className="space-y-2">
+        {/* ペルソナ詳細 */}
+        <TabsContent value="persona" className="mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+            {/* ペルソナ一覧 */}
+            <div className="space-y-3">
               {personas.map((p) => (
-                <Card
+                <button
                   key={p.id}
-                  className={`cursor-pointer border transition-all shadow-sm ${
-                    selectedPersona.id === p.id
-                      ? "border-[#006FCF] bg-[#E6F2FF]/50 shadow-md"
-                      : "border-border hover:border-[#006FCF]/50"
-                  }`}
                   onClick={() => setSelectedPersona(p)}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    selectedPersona.id === p.id
+                      ? "border-[#006FCF] bg-[#E6F2FF]"
+                      : "border-border bg-card hover:border-[#006FCF]/40"
+                  }`}
                 >
-                  <CardContent className="p-3 flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className={`text-sm font-bold ${p.avatarColor}`}>{p.avatar}</AvatarFallback>
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-9 w-9 flex-shrink-0">
+                      <AvatarFallback
+                        className="text-xs font-bold text-white"
+                        style={{ backgroundColor: p.cardColor }}
+                      >
+                        {p.avatar}
+                      </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground truncate">{p.name}</p>
-                      <p className="text-xs text-muted-foreground">{p.segment}</p>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground">{p.name}</p>
+                      <p className="text-[10px] text-muted-foreground">{p.size} | {p.age}</p>
                     </div>
-                    <div className="text-right flex-shrink-0">
-                      <p className={`text-xs font-medium ${p.churnColor}`}>解約リスク: {p.churnRisk}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </button>
               ))}
             </div>
 
             {/* ペルソナ詳細 */}
-            <Card className="lg:col-span-2 border border-border shadow-sm">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className={`text-base font-bold ${selectedPersona.avatarColor}`}>
-                      {selectedPersona.avatar}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <CardTitle className="text-base">{selectedPersona.name}</CardTitle>
-                    <p className="text-xs text-muted-foreground">{selectedPersona.segment} | {selectedPersona.age}</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {selectedPersona.badges.map((b) => (
-                        <Badge key={b} variant="secondary" className="text-[10px] h-5 px-1.5 bg-muted border-0">{b}</Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  {/* 基本情報 */}
-                  <div className="space-y-3">
+            <Card className="lg:col-span-3 border border-border shadow-sm">
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between mb-5">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-14 w-14">
+                      <AvatarFallback
+                        className="text-base font-bold text-white"
+                        style={{ backgroundColor: selectedPersona.cardColor }}
+                      >
+                        {selectedPersona.avatar}
+                      </AvatarFallback>
+                    </Avatar>
                     <div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">基本属性</p>
-                      {[
-                        { icon: Users, label: "性別・年齢", value: `${selectedPersona.gender} / ${selectedPersona.age}` },
-                        { icon: Briefcase, label: "職業", value: selectedPersona.occupation },
-                        { icon: CreditCard, label: "年間利用額", value: selectedPersona.annualSpend },
-                        { icon: ArrowUpRight, label: "アップグレード確率", value: `${selectedPersona.upgradeProb}%` },
-                      ].map((item) => {
-                        const Icon = item.icon
-                        return (
-                          <div key={item.label} className="flex items-center gap-2 py-1.5 border-b border-border/50 last:border-0">
-                            <Icon className="h-3.5 w-3.5 text-[#006FCF] flex-shrink-0" />
-                            <span className="text-xs text-muted-foreground w-28 flex-shrink-0">{item.label}</span>
-                            <span className="text-xs font-medium text-foreground">{item.value}</span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">主な関心</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selectedPersona.interests.map((interest) => (
-                          <Badge key={interest} variant="outline" className="text-xs h-6 px-2 border-[#006FCF]/30 text-[#006FCF]">
-                            {interest}
-                          </Badge>
-                        ))}
+                      <h3 className="text-base font-bold text-foreground">{selectedPersona.name}</h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span
+                          className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
+                          style={{ backgroundColor: selectedPersona.cardColor }}
+                        >
+                          {selectedPersona.card}
+                        </span>
+                        <span className="text-xs text-muted-foreground">{selectedPersona.age}</span>
+                        <span className="text-xs text-muted-foreground">{selectedPersona.income}</span>
                       </div>
                     </div>
                   </div>
-                  {/* レーダーチャート */}
+                  <div className="text-right">
+                    <p className="text-xs text-muted-foreground">会員数</p>
+                    <p className="text-lg font-bold text-foreground">{selectedPersona.size}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-xs font-semibold text-muted-foreground mb-2">主要利用カテゴリ</p>
+                      <div className="space-y-1.5">
+                        {selectedPersona.topCategories.map((cat, i) => (
+                          <div key={cat} className="flex items-center gap-2">
+                            <span className="text-[10px] text-muted-foreground w-3">{i + 1}.</span>
+                            <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${[85, 65, 45][i]}%`,
+                                  backgroundColor: selectedPersona.cardColor,
+                                }}
+                              />
+                            </div>
+                            <span className="text-xs text-foreground">{cat}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="text-center p-2.5 rounded-lg bg-muted/50">
+                        <p className="text-xs text-muted-foreground">NPS</p>
+                        <p className="text-xl font-bold" style={{ color: selectedPersona.cardColor }}>
+                          {selectedPersona.nps}
+                        </p>
+                      </div>
+                      <div className="text-center p-2.5 rounded-lg bg-muted/50">
+                        <p className="text-xs text-muted-foreground">解約リスク</p>
+                        <Badge className={`text-[10px] mt-0.5 border ${churnRiskConfig[selectedPersona.churnRisk]}`}>
+                          {selectedPersona.churnRisk}
+                        </Badge>
+                      </div>
+                      <div className="text-center p-2.5 rounded-lg bg-muted/50">
+                        <p className="text-xs text-muted-foreground">月平均</p>
+                        <p className="text-xs font-bold text-foreground mt-0.5">{selectedPersona.spend}</p>
+                      </div>
+                    </div>
+
+                    {selectedPersona.upgradeScore && (
+                      <div className="p-3 rounded-lg border border-[#006FCF]/30 bg-[#E6F2FF]">
+                        <p className="text-xs font-semibold text-[#006FCF] mb-1">アップグレードスコア</p>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-2 bg-[#B3D9FF] rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-[#006FCF] rounded-full"
+                              style={{ width: `${selectedPersona.upgradeScore}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-bold text-[#006FCF]">{selectedPersona.upgradeScore}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">利用行動プロファイル</p>
+                    <p className="text-xs font-semibold text-muted-foreground mb-2">エンゲージメントレーダー</p>
                     <ResponsiveContainer width="100%" height={200}>
-                      <RadarChart data={selectedPersona.radarData}>
+                      <RadarChart data={selectedPersona.radarData} margin={{ top: 8, right: 20, bottom: 8, left: 20 }}>
                         <PolarGrid stroke="var(--border)" />
-                        <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
-                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                        <PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
+                        <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                         <Radar
-                          name={selectedPersona.name}
                           dataKey="value"
-                          stroke="#006FCF"
-                          fill="#006FCF"
-                          fillOpacity={0.25}
+                          stroke={selectedPersona.cardColor}
+                          fill={selectedPersona.cardColor}
+                          fillOpacity={0.2}
                           strokeWidth={2}
                         />
                       </RadarChart>
@@ -427,13 +421,13 @@ export function MarketOverviewContent() {
           </div>
         </TabsContent>
 
-        {/* 会員属性 */}
-        <TabsContent value="demographics" className="mt-4">
+        {/* 継続率推移 */}
+        <TabsContent value="retention" className="mt-4">
           <Card className="border border-border shadow-sm">
             <CardHeader className="pb-2 flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-sm font-semibold">年齢層別カード保有構成（千人）</CardTitle>
-                <p className="text-xs text-muted-foreground mt-0.5">年代別のカードポートフォリオ</p>
+                <CardTitle className="text-sm font-semibold">カード種別 月次継続率（%）</CardTitle>
+                <p className="text-xs text-muted-foreground">解約・失効を除く在籍率</p>
               </div>
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
                 {[
@@ -443,7 +437,7 @@ export function MarketOverviewContent() {
                   { name: "ブルー", color: "#64B5F6" },
                 ].map((l) => (
                   <span key={l.name} className="flex items-center gap-1">
-                    <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: l.color }} />
+                    <span className="inline-block w-2.5 h-2 rounded-sm" style={{ backgroundColor: l.color }} />
                     {l.name}
                   </span>
                 ))}
@@ -451,96 +445,84 @@ export function MarketOverviewContent() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={ageDistribution} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
+                <LineChart data={retentionData} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis dataKey="age" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[95, 100]} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
                   <Tooltip
                     contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
+                    formatter={(v: number) => [`${v.toFixed(1)}%`, ""]}
                   />
-                  <Bar dataKey="platinum" name="プラチナ" stackId="a" fill="#B4975A" radius={[0,0,0,0]} />
-                  <Bar dataKey="gold" name="ゴールド" stackId="a" fill="#006FCF" radius={[0,0,0,0]} />
-                  <Bar dataKey="green" name="グリーン" stackId="a" fill="#10B981" radius={[0,0,0,0]} />
-                  <Bar dataKey="blue" name="ブルー" stackId="a" fill="#64B5F6" radius={[4,4,0,0]} />
-                </BarChart>
+                  <Line type="monotone" dataKey="platinum" stroke="#B4975A" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="gold" stroke="#006FCF" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="green" stroke="#10B981" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="blue" stroke="#64B5F6" strokeWidth={2} dot={false} />
+                </LineChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
         </TabsContent>
 
-        {/* チャーン分析 */}
-        <TabsContent value="churn" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <Card className="lg:col-span-2 border border-border shadow-sm">
-              <CardHeader className="pb-2 flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-sm font-semibold">カード別月次解約率推移（%）</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-0.5">過去6ヶ月のチャーントレンド</p>
-                </div>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                  {[
-                    { name: "プラチナ", color: "#B4975A" },
-                    { name: "ゴールド", color: "#006FCF" },
-                    { name: "グリーン", color: "#10B981" },
-                    { name: "ブルー", color: "#64B5F6" },
-                  ].map((l) => (
-                    <span key={l.name} className="flex items-center gap-1">
-                      <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: l.color }} />
-                      {l.name}
-                    </span>
-                  ))}
-                </div>
+        {/* 獲得チャネル */}
+        <TabsContent value="acquisition" className="mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <Card className="border border-border shadow-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold">チャネル別 新規申込数（今月）</CardTitle>
+                <p className="text-xs text-muted-foreground">申込経路の内訳</p>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={260}>
-                  <LineChart data={churnTrend} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                    <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} domain={[0, 5]} />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
-                      formatter={(v: number) => [`${v}%`, ""]}
-                    />
-                    <Line type="monotone" dataKey="platinum" name="プラチナ" stroke="#B4975A" strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="gold" name="ゴールド" stroke="#006FCF" strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="green" name="グリーン" stroke="#10B981" strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="blue" name="ブルー" stroke="#64B5F6" strokeWidth={2} dot={{ r: 3 }} strokeDasharray="4 2" />
-                  </LineChart>
-                </ResponsiveContainer>
+                <div className="space-y-3 mt-2">
+                  {acquisitionData.map((item) => {
+                    const max = acquisitionData[0].count
+                    const pct = Math.round((item.count / max) * 100)
+                    return (
+                      <div key={item.channel} className="flex items-center gap-4">
+                        <div className="w-24 text-right">
+                          <span className="text-xs font-medium text-muted-foreground">{item.channel}</span>
+                        </div>
+                        <div className="flex-1 h-7 rounded-md overflow-hidden bg-muted/50">
+                          <div
+                            className="h-full rounded-md flex items-center pl-3"
+                            style={{ width: `${pct}%`, backgroundColor: item.color }}
+                          >
+                            <span className="text-white text-xs font-semibold whitespace-nowrap">
+                              {item.count.toLocaleString()}件
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
               </CardContent>
             </Card>
 
-            {/* 解約要因 */}
             <Card className="border border-border shadow-sm">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">解約主要因（AI分析）</CardTitle>
-                <p className="text-xs text-muted-foreground">今月の解約申請 4,820件より</p>
+                <CardTitle className="text-sm font-semibold">チャネル別 コスト効率</CardTitle>
+                <p className="text-xs text-muted-foreground">CPA（申込一件あたりコスト）</p>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {[
-                  { reason: "年会費コストパフォーマンス", pct: 38, color: "#006FCF" },
-                  { reason: "競合カードへの切り替え", pct: 24, color: "#00175A" },
-                  { reason: "特典の未活用", pct: 18, color: "#B4975A" },
-                  { reason: "引越し・ライフステージ変化", pct: 12, color: "#10B981" },
-                  { reason: "その他", pct: 8, color: "#D0DCE8" },
-                ].map((item) => (
-                  <div key={item.reason}>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-xs text-foreground">{item.reason}</span>
-                      <span className="text-xs font-semibold text-foreground">{item.pct}%</span>
+              <CardContent>
+                <div className="space-y-3 mt-2">
+                  {[
+                    { channel: "紹介プログラム", cpa: 2800, trend: "down", prev: 3100 },
+                    { channel: "Web直接", cpa: 4200, trend: "down", prev: 4580 },
+                    { channel: "金融機関提携", cpa: 5800, trend: "up", prev: 5600 },
+                    { channel: "SNS広告", cpa: 6400, trend: "down", prev: 7200 },
+                    { channel: "空港・店舗", cpa: 9800, trend: "up", prev: 9200 },
+                  ].map((item) => (
+                    <div key={item.channel} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                      <span className="text-xs text-foreground">{item.channel}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-muted-foreground">¥{item.prev.toLocaleString()}</span>
+                        <span className="text-xs font-bold text-foreground">¥{item.cpa.toLocaleString()}</span>
+                        <span className={`flex items-center text-xs font-medium ${item.trend === "down" ? "text-emerald-600" : "text-red-600"}`}>
+                          {item.trend === "down" ? <TrendingDown className="h-3 w-3" /> : <TrendingUp className="h-3 w-3" />}
+                        </span>
+                      </div>
                     </div>
-                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: `${item.pct}%`, backgroundColor: item.color }}
-                      />
-                    </div>
-                  </div>
-                ))}
-                <div className="pt-2 mt-2 border-t border-border/50">
-                  <Badge className="bg-[#E6F2FF] text-[#006FCF] border-0 text-xs">
-                    AI推奨: 特典リマインドキャンペーンで18%削減可能
-                  </Badge>
+                  ))}
                 </div>
               </CardContent>
             </Card>
