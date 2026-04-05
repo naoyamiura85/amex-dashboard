@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import Image from "next/image"
-import { X, Users, TrendingUp, CreditCard, Star, ChevronRight, Trophy, Plane, Palette, Wine, Zap, Mountain, Car, Fish, Music, Cpu } from "lucide-react"
+import { X, Users, TrendingUp, CreditCard, Star, ChevronRight, Trophy, Plane, Palette, Wine, Zap, Mountain, Car, Fish, Music, Cpu, Network } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -228,7 +228,7 @@ const ALL_TRIBES: Tribe[] = [
       {
         id: "p7", name: "渡辺 隆", age: 45, gender: "男性",
         image: "/images/personas/persona-09.jpg",
-        occupation: "��造業 オーナー経営者", income: "2,000万円以上",
+        occupation: "����造業 オーナー経営者", income: "2,000万円以上",
         background: "フェラーリとポルシェを所有。モナコGPにはプライベートヨットで参戦。サーキット走行ライセンスも保有。",
         lifestyle: "週末はサーキットかドライビング体験。F1チームのスポンサーを通じた人脈形成に積極的。",
         interests: ["F1", "スーパーカー", "ヨット"], cardGoal: "F1 VIPパドックパスとスーパーカーレンタル優待",
@@ -320,7 +320,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 22,
     engagementScore: 55,
     spendPotential: 62,
-    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高額支出する層��体験の希少性・独自性を最優先とする価値観。",
+    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高額支出する����体験の希少性・独自性を最優先とする価値観。",
     avgSpend: "¥38万/月",
     upgradeRate: "18%",
     churnRisk: "中",
@@ -554,10 +554,10 @@ export function TribeAnalysisContent() {
         </div>
       </div>
 
-      {/* メインレイアウト */}
-      <div className="flex gap-4">
+      {/* メインレイアウト: 常に grid 2列固定 */}
+      <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 320px" }}>
         {/* クラスターマップ */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0">
           <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
             {/* 上部ラベル */}
             <div className="flex justify-between px-10 pt-3 pb-0 text-[10px] text-muted-foreground font-medium">
@@ -646,9 +646,18 @@ export function TribeAnalysisContent() {
           </div>
         </div>
 
-        {/* 詳細パネル */}
-        {selectedTribe && (
-          <div className="w-80 shrink-0 bg-white rounded-2xl border border-border shadow-sm flex flex-col overflow-hidden">
+        {/* 詳細パネル：常に320px幅を確保し、選択なし時はプレースホルダーを表示 */}
+        <div className="bg-white rounded-2xl border border-border shadow-sm flex flex-col overflow-hidden">
+          {!selectedTribe ? (
+            <div className="flex flex-col items-center justify-center h-full min-h-[460px] gap-3 text-muted-foreground px-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                <Network className="h-5 w-5 text-muted-foreground/60" />
+              </div>
+              <p className="text-sm font-medium">トライブを選択してください</p>
+              <p className="text-xs text-muted-foreground/70">マップ上のバブルをクリックすると詳細が表示されます</p>
+            </div>
+          ) : (
+          <>
             {/* パネルヘッダー */}
             <div
               className="flex items-start justify-between px-5 py-4 border-b border-border"
@@ -786,8 +795,9 @@ export function TribeAnalysisContent() {
                 </div>
               </TabsContent>
             </Tabs>
-          </div>
-        )}
+          </>
+          )}
+        </div>
       </div>
 
       {/* ペルソナモーダル */}
