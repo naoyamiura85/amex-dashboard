@@ -228,7 +228,7 @@ const ALL_TRIBES: Tribe[] = [
       {
         id: "p7", name: "渡辺 隆", age: 45, gender: "男性",
         image: "/images/personas/persona-09.jpg",
-        occupation: "製造業 オーナー経営者", income: "2,000万円以上",
+        occupation: "��造業 オーナー経営者", income: "2,000万円以上",
         background: "フェラーリとポルシェを所有。モナコGPにはプライベートヨットで参戦。サーキット走行ライセンスも保有。",
         lifestyle: "週末はサーキットかドライビング体験。F1チームのスポンサーを通じた人脈形成に積極的。",
         interests: ["F1", "スーパーカー", "ヨット"], cardGoal: "F1 VIPパドックパスとスーパーカーレンタル優待",
@@ -320,7 +320,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 22,
     engagementScore: 55,
     spendPotential: 62,
-    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高額支出する層。体験の希少性・独自性を最優先とする価値観。",
+    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高額支出する層��体験の希少性・独自性を最優先とする価値観。",
     avgSpend: "¥38万/月",
     upgradeRate: "18%",
     churnRisk: "中",
@@ -656,7 +656,7 @@ export function TribeAnalysisContent() {
             >
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-lg" style={{ backgroundColor: selectedTribe.color + "20", color: selectedTribe.color }}>
-                  {selectedTribe.icon}
+                  {(() => { const Icon = selectedTribe.icon; return <Icon className="h-4 w-4" /> })()}
                 </div>
                 <div>
                   <p className="font-bold text-foreground text-[15px]">{selectedTribe.name}</p>
