@@ -38,24 +38,24 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Category mapping for mode filter
+// Category mapping for mode filter (luxury / financial)
 const categoryModeMapping: Record<string, string[]> = {
   all: [],
-  food: ["food"],
-  beverage: ["beverage"],
-  cosmetics: ["cosmetics"],
-  supplement: ["supplement"],
-  toiletry: ["toiletry"],
-  wellness: ["wellness"],
+  travel:    ["travel"],
+  dining:    ["dining"],
+  hotel:     ["hotel"],
+  concierge: ["concierge"],
+  culture:   ["culture"],
+  shopping:  ["shopping"],
 }
 
 const categoryColors: Record<string, string> = {
-  cosmetics: "bg-rose-100 text-rose-700",
-  food: "bg-emerald-100 text-emerald-700",
-  beverage: "bg-sky-100 text-sky-700",
-  supplement: "bg-amber-100 text-amber-700",
-  toiletry: "bg-blue-100 text-blue-700",
-  wellness: "bg-violet-100 text-violet-700",
+  travel:    "bg-sky-100 text-sky-700",
+  dining:    "bg-amber-100 text-amber-800",
+  hotel:     "bg-indigo-100 text-indigo-700",
+  concierge: "bg-blue-100 text-blue-700",
+  culture:   "bg-violet-100 text-violet-700",
+  shopping:  "bg-rose-100 text-rose-700",
 }
 
 const statusColors: Record<string, string> = {
@@ -150,66 +150,26 @@ export function TrendsListContent() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuCheckboxItem
-                  checked={selectedCategories.includes("cosmetics")}
-                  onCheckedChange={(checked) => {
-                    setSelectedCategories(prev => 
-                      checked ? [...prev, "cosmetics"] : prev.filter(c => c !== "cosmetics")
-                    )
-                  }}
-                >
-                  化粧品
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={selectedCategories.includes("food")}
-                  onCheckedChange={(checked) => {
-                    setSelectedCategories(prev => 
-                      checked ? [...prev, "food"] : prev.filter(c => c !== "food")
-                    )
-                  }}
-                >
-                  食品
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={selectedCategories.includes("beverage")}
-                  onCheckedChange={(checked) => {
-                    setSelectedCategories(prev => 
-                      checked ? [...prev, "beverage"] : prev.filter(c => c !== "beverage")
-                    )
-                  }}
-                >
-                  飲料
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={selectedCategories.includes("supplement")}
-                  onCheckedChange={(checked) => {
-                    setSelectedCategories(prev => 
-                      checked ? [...prev, "supplement"] : prev.filter(c => c !== "supplement")
-                    )
-                  }}
-                >
-                  サプリ
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={selectedCategories.includes("toiletry")}
-                  onCheckedChange={(checked) => {
-                    setSelectedCategories(prev => 
-                      checked ? [...prev, "toiletry"] : prev.filter(c => c !== "toiletry")
-                    )
-                  }}
-                >
-                  トイレタリー
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={selectedCategories.includes("wellness")}
-                  onCheckedChange={(checked) => {
-                    setSelectedCategories(prev => 
-                      checked ? [...prev, "wellness"] : prev.filter(c => c !== "wellness")
-                    )
-                  }}
-                >
-                  ウェルネス
-                </DropdownMenuCheckboxItem>
+                {[
+                  { value: "travel",    label: "旅行・体験" },
+                  { value: "dining",    label: "グルメ" },
+                  { value: "hotel",     label: "ホテル" },
+                  { value: "concierge", label: "コンシェルジュ" },
+                  { value: "culture",   label: "カルチャー" },
+                  { value: "shopping",  label: "ショッピング" },
+                ].map(({ value, label }) => (
+                  <DropdownMenuCheckboxItem
+                    key={value}
+                    checked={selectedCategories.includes(value)}
+                    onCheckedChange={(checked) => {
+                      setSelectedCategories(prev =>
+                        checked ? [...prev, value] : prev.filter(c => c !== value)
+                      )
+                    }}
+                  >
+                    {label}
+                  </DropdownMenuCheckboxItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
             )}
