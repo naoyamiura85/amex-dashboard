@@ -29,10 +29,12 @@ interface Persona {
   tribe: string
 }
 
+type LucideIcon = React.ComponentType<{ className?: string }>
+
 interface Tribe {
   id: string
   name: string
-  icon: React.ReactNode
+  icon: LucideIcon
   color: string          // バブル用カラー
   members: number        // 万人
   engagementScore: number   // 0–100 (y軸: 上=高)
@@ -50,7 +52,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "golf",
     name: "ゴルフ派",
-    icon: <Trophy className="h-4 w-4" />,
+    icon: Trophy,
     color: "#006FCF",
     members: 42,
     engagementScore: 85,
@@ -94,7 +96,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "globe-trotter",
     name: "ジェットセッター派",
-    icon: <Plane className="h-4 w-4" />,
+    icon: Plane,
     color: "#0051A8",
     members: 38,
     engagementScore: 90,
@@ -129,7 +131,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "art-collector",
     name: "アートコレクター派",
-    icon: <Palette className="h-4 w-4" />,
+    icon: Palette,
     color: "#4A5568",
     members: 18,
     engagementScore: 78,
@@ -164,7 +166,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "fine-dining",
     name: "美食・グルメ派",
-    icon: <Wine className="h-4 w-4" />,
+    icon: Wine,
     color: "#B4975A",
     members: 55,
     engagementScore: 72,
@@ -208,7 +210,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "f1-motor",
     name: "F1・モータースポーツ派",
-    icon: <Car className="h-4 w-4" />,
+    icon: Car,
     color: "#E53E3E",
     members: 24,
     engagementScore: 76,
@@ -243,7 +245,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "polo-equestrian",
     name: "ポロ・乗馬派",
-    icon: <Trophy className="h-4 w-4" />,
+    icon: Trophy,
     color: "#2D3748",
     members: 9,
     engagementScore: 82,
@@ -278,7 +280,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "private-aviation",
     name: "プライベートアビエーション派",
-    icon: <Plane className="h-4 w-4" />,
+    icon: Plane,
     color: "#553C9A",
     members: 12,
     engagementScore: 88,
@@ -313,7 +315,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "adventure-sport",
     name: "アドベンチャースポーツ派",
-    icon: <Mountain className="h-4 w-4" />,
+    icon: Mountain,
     color: "#276749",
     members: 22,
     engagementScore: 55,
@@ -348,7 +350,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "classical-music",
     name: "クラシック・オペラ派",
-    icon: <Music className="h-4 w-4" />,
+    icon: Music,
     color: "#744210",
     members: 16,
     engagementScore: 65,
@@ -383,7 +385,7 @@ const ALL_TRIBES: Tribe[] = [
   {
     id: "tech-investor",
     name: "テック投資家派",
-    icon: <Cpu className="h-4 w-4" />,
+    icon: Cpu,
     color: "#2B6CB0",
     members: 27,
     engagementScore: 48,

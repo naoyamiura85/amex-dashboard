@@ -51,6 +51,38 @@ interface Segment {
 // ----------------------------------------------------------------
 // 軸マスタ
 // ----------------------------------------------------------------
+// 列（ステージ）ごとの背景色 — 左から右へ水色が濃くなる
+const stageBg: Record<StageKey, { cell: string; cellHover: string; cellSelected: string; count: string; dot: string }> = {
+  prospect: {
+    cell:         "bg-slate-50",
+    cellHover:    "hover:bg-slate-100",
+    cellSelected: "bg-slate-400",
+    count:        "text-slate-500",
+    dot:          "bg-slate-400",
+  },
+  new: {
+    cell:         "bg-[#D6EAFA]",
+    cellHover:    "hover:bg-[#C2E0F7]",
+    cellSelected: "bg-[#006FCF]",
+    count:        "text-[#006FCF]",
+    dot:          "bg-[#4AABEE]",
+  },
+  active: {
+    cell:         "bg-[#A8D4F5]",
+    cellHover:    "hover:bg-[#8EC6F0]",
+    cellSelected: "bg-[#0059AA]",
+    count:        "text-[#0059AA]",
+    dot:          "bg-[#1D8CD9]",
+  },
+  premium: {
+    cell:         "bg-[#6DB8EF]",
+    cellHover:    "hover:bg-[#55ACEA]",
+    cellSelected: "bg-[#00175A]",
+    count:        "text-[#00175A]",
+    dot:          "bg-[#006FCF]",
+  },
+}
+
 const stages: { key: StageKey; label: string; sub: string }[] = [
   { key: "prospect", label: "見込み会員",  sub: "890万人" },
   { key: "new",      label: "新規会員",    sub: "430万人" },
@@ -321,9 +353,10 @@ function getSegment(eng: EngagementLevel, stage: StageKey) {
 }
 
 // ----------------------------------------------------------------
-// AvatarStack
 // ----------------------------------------------------------------
-function AvatarStack({
+// AvatarGrid — スクリーンショット準拠の格子状アバター配置
+// ----------------------------------------------------------------
+function AvatarGrid({
   personas,
   isSelected,
   onPersonaClick,
@@ -332,18 +365,20 @@ function AvatarStack({
   isSelected: boolean
   onPersonaClick: (p: Persona) => void
 }) {
-  const show = personas.slice(0, 3)
-  const extra = personas.length - 3
+  // 最大5枚表示、残りを +N バッジで表示
+  const MAX = 5
+  const show = personas.slice(0, MAX)
+  const extra = personas.length - MAX
   return (
-    <div className="flex items-center mt-2.5 gap-0.5 flex-wrap">
+    <div className="flex flex-wrap gap-1 mt-2.5" style={{ maxWidth: 120 }}>
       {show.map(p => (
         <button
           key={p.id}
           onClick={e => { e.stopPropagation(); onPersonaClick(p) }}
           title={p.name}
           className={cn(
-            "relative w-8 h-8 rounded-full overflow-hidden border-2 hover:scale-110 transition-transform shadow-sm shrink-0",
-            isSelected ? "border-white/60" : "border-white"
+            "relative w-9 h-9 rounded-full overflow-hidden border-2 hover:scale-110 transition-transform shadow-sm shrink-0",
+            isSelected ? "border-white/70" : "border-white"
           )}
         >
           <Image src={p.image} alt={p.name} fill className="object-cover" />
@@ -351,8 +386,10 @@ function AvatarStack({
       ))}
       {extra > 0 && (
         <div className={cn(
-          "w-8 h-8 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shadow-sm shrink-0",
-          isSelected ? "bg-white/20 border-white/40 text-white" : "bg-slate-100 border-white text-slate-500"
+          "w-9 h-9 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shadow-sm shrink-0",
+          isSelected
+            ? "bg-white/20 border-white/40 text-white"
+            : "bg-white border-slate-200 text-slate-500"
         )}>
           +{extra}
         </div>
@@ -551,7 +588,7 @@ function SegmentDetailPanel({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold text-slate-800 truncate">{p.name}</p>
-                  <p className="text-xs text-slate-500">{p.age}歳 / {p.gender}</p>
+                  <p className="text-xs text-slate-500">{p.age}��� / {p.gender}</p>
                   <Badge className="mt-1 text-[9px] px-1.5 py-0 bg-blue-50 text-[#006FCF] border-0 font-normal">
                     {p.interests[0]}
                   </Badge>
@@ -613,9 +650,9 @@ export function MarketOverviewContent() {
                 </div>
               </th>
               {stages.map(s => (
-                <th key={s.key} className="p-3 border-b border-r border-slate-200 bg-slate-50 text-center min-w-[160px]">
-                  <div className="w-2.5 h-2.5 rounded-full bg-slate-400 mx-auto mb-1.5" />
-                  <p className="text-sm font-bold text-slate-700">{s.label}</p>
+                <th key={s.key} className={cn("p-3 border-b border-r border-slate-200 text-center min-w-[170px]", stageBg[s.key].cell)}>
+                  <div className={cn("w-2.5 h-2.5 rounded-full mx-auto mb-1.5", stageBg[s.key].dot)} />
+                  <p className={cn("text-sm font-bold", s.key === "prospect" ? "text-slate-600" : "text-[#006FCF]")}>{s.label}</p>
                   <p className="text-xs text-slate-400 font-normal mt-0.5">{s.sub}</p>
                 </th>
               ))}
@@ -634,28 +671,23 @@ export function MarketOverviewContent() {
                   if (!seg) return <td key={s.key} className="border-b border-r border-slate-200" />
                   const isSelected = selectedCell?.eng === eng.key && selectedCell?.stage === s.key
 
+                  const bg = stageBg[s.key]
                   return (
                     <td
                       key={s.key}
                       onClick={() => handleCellClick(eng.key, s.key)}
                       className={cn(
-                        "p-3 border-b border-r border-slate-200 cursor-pointer transition-colors align-top",
-                        isSelected
-                          ? "bg-[#006FCF]"
-                          : eng.key === "H"
-                          ? "bg-blue-50 hover:bg-blue-100"
-                          : eng.key === "M"
-                          ? "bg-amber-50 hover:bg-amber-100"
-                          : "bg-slate-50 hover:bg-slate-100"
+                        "p-4 border-b border-r border-slate-200 cursor-pointer transition-colors align-top",
+                        isSelected ? bg.cellSelected : cn(bg.cell, bg.cellHover)
                       )}
                     >
                       <p className={cn(
                         "text-xl font-black leading-tight",
-                        isSelected ? "text-white" : eng.key === "H" ? "text-[#006FCF]" : eng.key === "M" ? "text-amber-600" : "text-slate-500"
+                        isSelected ? "text-white" : bg.count
                       )}>
                         {seg.count}
                       </p>
-                      <AvatarStack
+                      <AvatarGrid
                         personas={seg.personas}
                         isSelected={isSelected}
                         onPersonaClick={p => setModalPersona(p)}
