@@ -104,7 +104,7 @@ export function DashboardSidebar() {
               alt={brand.name}
               width={100} 
               height={24}
-              className="object-contain object-left brightness-200"
+              className="object-contain object-left"
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
               }}
@@ -117,7 +117,7 @@ export function DashboardSidebar() {
               {brand.shortName.charAt(0)}
             </div>
           )}
-          <div className="flex flex-col border-l border-white/20 pl-3">
+          <div className="flex flex-col border-l border-sidebar-border pl-3">
             <span className="text-xs font-bold text-sidebar-foreground leading-tight">{brand.dashboardTitle}</span>
             <span className="text-[10px] text-sidebar-foreground/60 leading-tight">{brand.name}</span>
           </div>
@@ -133,7 +133,7 @@ export function DashboardSidebar() {
             onOpenChange={() => toggleSection(section.label)}
             className="mb-3"
           >
-            <CollapsibleTrigger className="flex w-full items-center justify-between px-2 py-1.5 text-[10px] font-bold tracking-widest text-sidebar-foreground/50 uppercase hover:text-sidebar-foreground/80 transition-colors">
+            <CollapsibleTrigger className="flex w-full items-center justify-between px-2 py-1.5 text-[10px] font-bold tracking-widest text-sidebar-foreground/40 uppercase hover:text-sidebar-foreground transition-colors">
               <span>{section.label}</span>
               <ChevronDown 
                 className={`h-3.5 w-3.5 transition-transform duration-200 ${

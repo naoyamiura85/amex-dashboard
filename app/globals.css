@@ -157,14 +157,14 @@
   --chart-4: #B4975A;         /* AMEX Gold */
   --chart-5: #64B5F6;         /* Light Blue */
   --radius: 0.5rem;
-  /* Sidebar: Deep Navy - high contrast on dark background */
-  --sidebar: #00175A;
-  --sidebar-foreground: #DDEAF8;
+  /* Sidebar: Light Gray - blue accent for active state */
+  --sidebar: #F2F4F7;
+  --sidebar-foreground: #1A2B3C;
   --sidebar-primary: #006FCF;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #0A2A6E;
-  --sidebar-accent-foreground: #DDEAF8;
-  --sidebar-border: #1C3E7A;
+  --sidebar-accent: #E2EAF4;
+  --sidebar-accent-foreground: #0D1B2A;
+  --sidebar-border: #D8E2ED;
   --sidebar-ring: #006FCF;
   /* AMEX Extended Palette */
   --amex-navy-100: #E6EBF5;
