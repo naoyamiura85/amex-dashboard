@@ -97,29 +97,29 @@ export function DashboardSidebar() {
     <Sidebar className="border-r border-sidebar-border" style={{ backgroundColor: 'var(--sidebar)' }}>
       {/* Header with Logo */}
       <SidebarHeader className="p-0 border-b border-sidebar-border" style={{ backgroundColor: 'var(--sidebar)' }}>
-        <Link href="/" className="flex items-center gap-3 px-4 py-3">
+        <Link href="/" className="flex items-center gap-2 px-3 py-2.5">
           {brand.logo ? (
             <Image 
               src={brand.logo}
               alt={brand.name}
-              width={100} 
-              height={24}
-              className="object-contain object-left"
+              width={68} 
+              height={20}
+              className="object-contain object-left shrink-0"
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
               }}
             />
           ) : (
             <div 
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
+              className="w-7 h-7 rounded-md flex items-center justify-center text-white font-bold text-sm shrink-0"
               style={{ backgroundColor: brand.colors.primary }}
             >
               {brand.shortName.charAt(0)}
             </div>
           )}
-          <div className="flex flex-col border-l border-sidebar-border pl-3">
-            <span className="text-xs font-bold text-sidebar-foreground leading-tight">{brand.dashboardTitle}</span>
-            <span className="text-[10px] text-sidebar-foreground/60 leading-tight">{brand.name}</span>
+          <div className="flex flex-col border-l border-sidebar-border pl-2 min-w-0">
+            <span className="text-[11px] font-bold text-sidebar-foreground leading-tight truncate">{brand.dashboardTitle}</span>
+            <span className="text-[9px] text-sidebar-foreground/60 leading-tight truncate">{brand.name}</span>
           </div>
         </Link>
       </SidebarHeader>
