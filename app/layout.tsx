@@ -16,8 +16,8 @@ const zenKaku = Zen_Kaku_Gothic_New({
 });
 
 export const metadata: Metadata = {
-  title: 'D2Cダッシュボード',
-  description: 'AI-driven consumer intelligence platform for FMCG/CPG',
+  title: 'AMEX 会員分析ダッシュボード',
+  description: 'American Express - AI-driven member intelligence & financial analytics platform',
   generator: 'v0.app',
   icons: {
     icon: [

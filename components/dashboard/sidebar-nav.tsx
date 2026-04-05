@@ -48,31 +48,32 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 
-// Section-based navigation structure (Suntory style)
+// Section-based navigation structure (AMEX Financial Analytics)
 const navSections = [
   {
-    label: "ANALYTICS",
+    label: "OVERVIEW",
     defaultOpen: true,
     items: [
-      { title: "Market Overview", icon: Users, href: "/dashboard/market-overview" },
-      { title: "トレンド一覧", icon: TrendingUp, href: "/dashboard/trends" },
-      { title: "デジタルシェルフ分析", icon: MonitorSmartphone, href: "/dashboard/digital-shelf" },
+      { title: "エグゼクティブサマリー", icon: Users, href: "/dashboard" },
+      { title: "会員分析", icon: TrendingUp, href: "/dashboard/market-overview" },
+      { title: "カード利用分析", icon: MonitorSmartphone, href: "/dashboard/digital-shelf" },
     ],
   },
-
   {
-    label: "DEVELOPMENT",
+    label: "AI ANALYTICS",
     defaultOpen: true,
     items: [
-      { title: "コンセプト生成", icon: Lightbulb, href: "/ai/concept-generator" },
-      { title: "素材データベース", icon: FlaskConical, href: "/ai/materials" },
+      { title: "AIインサイト・予測", icon: Lightbulb, href: "/ai/predictions" },
+      { title: "競合・市場分析", icon: FlaskConical, href: "/ai/competitors" },
+      { title: "相関分析", icon: Boxes, href: "/ai/correlations" },
     ],
   },
   {
     label: "SIMULATION",
     defaultOpen: true,
     items: [
-      { title: "改定シミュレーター", icon: Boxes, href: "/ai/simulator" },
+      { title: "審査シミュレーター", icon: FlaskConical, href: "/ai/simulator" },
+      { title: "コンセプト生成", icon: Lightbulb, href: "/ai/concept-generator" },
     ],
   },
 ]
