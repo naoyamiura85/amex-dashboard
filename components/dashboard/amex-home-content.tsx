@@ -1,8 +1,8 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   ResponsiveContainer,
@@ -16,7 +16,6 @@ import {
 import {
   TrendingUp,
   ArrowUpRight,
-  ArrowDownRight,
   Globe,
   Users,
   Target,
@@ -24,10 +23,16 @@ import {
   Bookmark,
   Sparkles,
   Building2,
-  TrendingDown,
   RefreshCw,
   Download,
 } from "lucide-react"
+import type { MapRegion } from "./global-map"
+
+// react-simple-maps はSSR非対応のため dynamic import
+const GlobalMap = dynamic(
+  () => import("./global-map").then((m) => m.GlobalMap),
+  { ssr: false, loading: () => <div className="w-full rounded-xl bg-[#EFF4FB] animate-pulse" style={{ aspectRatio: "2/1" }} /> }
+)
 
 // ─── KPI ──────────────────────────────────────────────────────────────────
 const KPI_DATA = [
@@ -66,27 +71,14 @@ const KPI_DATA = [
 ]
 
 // ─── 地域データ ───────────────────────────────────────────────────────────
-interface Region {
-  id: string
-  name: string
-  marketSize: string // 表示用
-  sizeNum: number    // T USD（バブルサイズ比較用）
-  growth: string
-  growthNum: number
-  color: string
-  // SVG投影座標(%) 世界地図画像に対する相対位置
-  x: number
-  y: number
-}
-
-const REGIONS: Region[] = [
-  { id: "na",  name: "北米",       marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", x: 18, y: 32 },
-  { id: "eu",  name: "欧州",       marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", x: 46, y: 24 },
-  { id: "cn",  name: "中国",       marketSize: "$6.5T", sizeNum: 6.5, growth: "+6%",   growthNum: 6.0, color: "#E53E3E", x: 73, y: 30 },
-  { id: "in",  name: "インド",     marketSize: "$1.6T", sizeNum: 1.6, growth: "+6.7%", growthNum: 6.7, color: "#D69E2E", x: 63, y: 42 },
-  { id: "sa",  name: "南米",       marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#9B2335", x: 28, y: 65 },
-  { id: "jp",  name: "日本",       marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", x: 80, y: 30 },
-  { id: "oc",  name: "オセアニア", marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#805AD5", x: 80, y: 70 },
+const REGIONS: MapRegion[] = [
+  { id: "na",  name: "北米",       marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40]  },
+  { id: "eu",  name: "欧州",       marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [15, 51]    },
+  { id: "cn",  name: "中国",       marketSize: "$6.5T", sizeNum: 6.5, growth: "+6%",   growthNum: 6.0, color: "#E53E3E", coordinates: [104, 35]   },
+  { id: "in",  name: "インド",     marketSize: "$1.6T", sizeNum: 1.6, growth: "+6.7%", growthNum: 6.7, color: "#D69E2E", coordinates: [78, 22]    },
+  { id: "sa",  name: "南米",       marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#9B2335", coordinates: [-58, -15]  },
+  { id: "jp",  name: "日本",       marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]   },
+  { id: "oc",  name: "オセアニア", marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#805AD5", coordinates: [134, -25]  },
 ]
 
 // ─── 年間変化率 ───────────────────────────────────────────────────────────
@@ -182,12 +174,6 @@ const PERSONAS = [
   },
 ]
 
-// ─── バブルサイズ計算 ─────────────────────────────────────────────────────
-function getBubbleSize(sizeNum: number): number {
-  const min = 40, max = 90
-  const minV = 1.2, maxV = 6.5
-  return min + ((sizeNum - minV) / (maxV - minV)) * (max - min)
-}
 
 export function AmexHomeContent() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
@@ -246,60 +232,12 @@ export function AmexHomeContent() {
             <CardTitle className="text-sm font-semibold">グローバルマップ</CardTitle>
           </CardHeader>
           <CardContent className="pb-4">
-            {/* 地図エリア */}
-            <div className="relative w-full bg-slate-50 rounded-xl overflow-hidden border border-border/50" style={{ aspectRatio: "16/9" }}>
-              {/* 世界地図 SVG (簡易矩形投影) */}
-              <svg viewBox="0 0 800 450" className="absolute inset-0 w-full h-full" style={{ opacity: 0.15 }}>
-                {/* 大陸シルエット（簡易） */}
-                {/* 北米 */}
-                <path d="M 60 60 L 200 55 L 220 90 L 240 160 L 200 200 L 160 230 L 100 220 L 60 180 Z" fill="#64748b" />
-                {/* 南米 */}
-                <path d="M 150 240 L 220 230 L 230 280 L 220 370 L 180 390 L 140 360 L 130 300 Z" fill="#64748b" />
-                {/* 欧州 */}
-                <path d="M 320 50 L 420 45 L 440 80 L 420 120 L 360 130 L 320 100 Z" fill="#64748b" />
-                {/* アフリカ */}
-                <path d="M 330 130 L 420 120 L 440 200 L 420 330 L 360 360 L 310 300 L 300 200 Z" fill="#64748b" />
-                {/* アジア */}
-                <path d="M 430 40 L 680 50 L 700 150 L 650 200 L 560 210 L 480 180 L 440 120 Z" fill="#64748b" />
-                {/* 南アジア */}
-                <path d="M 530 180 L 600 190 L 600 260 L 570 280 L 530 250 Z" fill="#64748b" />
-                {/* 東南アジア */}
-                <path d="M 610 200 L 700 200 L 710 260 L 670 270 L 620 250 Z" fill="#64748b" />
-                {/* オーストラリア */}
-                <path d="M 640 300 L 750 290 L 760 370 L 700 390 L 640 370 Z" fill="#64748b" />
-                {/* 日本 */}
-                <path d="M 700 80 L 730 75 L 735 120 L 705 125 Z" fill="#64748b" />
-              </svg>
-
-              {/* 地域バブル */}
-              {REGIONS.map((r) => {
-                const size = getBubbleSize(r.sizeNum)
-                const isSelected = selectedRegion === r.id
-                return (
-                  <button
-                    key={r.id}
-                    onClick={() => setSelectedRegion(r.id === selectedRegion ? null : r.id)}
-                    className="absolute flex flex-col items-center justify-center rounded-full border-2 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:scale-110 focus:outline-none"
-                    style={{
-                      left: `${r.x}%`,
-                      top: `${r.y}%`,
-                      width: size,
-                      height: size,
-                      marginLeft: -size / 2,
-                      marginTop: -size / 2,
-                      borderColor: r.color,
-                      boxShadow: isSelected ? `0 0 0 3px ${r.color}40` : undefined,
-                      zIndex: isSelected ? 10 : 1,
-                    }}
-                  >
-                    <div className="flex items-center gap-0.5">
-                      <ArrowUpRight className="h-2.5 w-2.5" style={{ color: r.color }} />
-                    </div>
-                    <span className="text-[11px] font-bold leading-none text-foreground">{r.marketSize}</span>
-                  </button>
-                )
-              })}
-            </div>
+            {/* react-simple-maps ベースの世界地図 */}
+            <GlobalMap
+              regions={REGIONS}
+              selectedRegion={selectedRegion}
+              onSelectRegion={setSelectedRegion}
+            />
 
             {/* 凡例 */}
             <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 px-1">
@@ -336,7 +274,7 @@ export function AmexHomeContent() {
                 <p className="text-xs text-foreground leading-relaxed">
                   {selected
                     ? `${selected.name}市場は${selected.marketSize}規模、成長率${selected.growth}。プレミアム消費を牽引するUHNW（超富裕層）の増加が顕著で、AMEXシェアの拡大機会が高まっています。`
-                    : "グローバルプレミアムカード市場では、富裕層（+25.5%）とテック・デジタル消費者（+12.8%）が成長を牽引。特に35歳以下の若手富裕層でセンチュリオン・プラチナへの関心が急増。伝統的消費者層は微減傾向にあり、体験型特典の拡充が重要な戦略課題です。"}
+                    : "グローバルプレミアムカード市場では、富裕層（+25.5%）とテック・デジタル消費者（+12.8%）が成長を牽引。特に35歳以下の若手富裕層でセンチュリオン・プラチナへの関心が���増。伝統的消費者層は微減傾向にあり、体験型特典の拡充が重要な戦略課題です。"}
                 </p>
               </div>
             </div>
