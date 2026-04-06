@@ -17,7 +17,7 @@ export const initialTrends: Trend[] = [
     imageUrl: "/images/trends/lunar-tourism.jpg",
     researchStatus: "completed",
     researchData: {
-      summary: "SpaceX・Blue Origin・ispace などが提供する月周回・月面滞在プログラムへの関心が、AMEXプラチナ以上会員で前年比12倍増。「生きているうちに月を踏む」という体験の希少性が刺さっており、単なる宇宙飛行を超えた"人類の歴史に参加する"という文脈で語られ始めている。",
+      summary: "SpaceX・Blue Origin・ispace などが提供する月周回・月面滞在プログラムへの関心が、AMEXプラチナ以上会員で前年比12倍増。「生きているうちに月を踏む」という体験の希少性が刺さっており、単なる宇宙飛行を超えた「人類の歴史に参加する」という文脈で語られ始めている。",
       popularIngredients: [
         { name: "月周回フライト", share: "44%", growth: "+890%" },
         { name: "月面着陸プログラム", share: "28%", growth: "+720%" },
@@ -138,7 +138,7 @@ export const initialTrends: Trend[] = [
         { name: "東京圏", percentage: 45 },
         { name: "大阪圏", percentage: 18 },
         { name: "海外在住", percentage: 25 },
-        { name: "その他", percentage: 12 },
+        { name: "そ���他", percentage: 12 },
       ],
     },
     relatedProducts: [
