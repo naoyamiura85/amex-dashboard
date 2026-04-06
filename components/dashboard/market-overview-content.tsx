@@ -273,7 +273,7 @@ const segments: Segment[] = [
       genderRatio: "男性53% / 女性47%", avgAge: 45, marriedRate: "61%", avgSpend: "未計測",
       occupations: [{ label: "会社員", pct: 38 }, { label: "専門職", pct: 22 }, { label: "自営業", pct: 20 }, { label: "経営者", pct: 14 }],
       incomes: [{ label: "500〜700万円", pct: 42 }, { label: "700〜900万円", pct: 34 }, { label: "900万円以上", pct: 24 }],
-      summary: "比較検討中の中エンゲージメント層。マイル・ポイント還元率への関心が高く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
+      summary: "比較検討中の中エンゲージメント層。マイル・ポイント還元率への関心が���く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
     },
   },
   {
@@ -588,7 +588,7 @@ function SegmentDetailPanel({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold text-slate-800 truncate">{p.name}</p>
-                  <p className="text-xs text-slate-500">{p.age}��� / {p.gender}</p>
+                  <p className="text-xs text-slate-500">{p.age}歳 / {p.gender}</p>
                   <Badge className="mt-1 text-[9px] px-1.5 py-0 bg-blue-50 text-[#006FCF] border-0 font-normal">
                     {p.interests[0]}
                   </Badge>
