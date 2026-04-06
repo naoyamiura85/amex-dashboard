@@ -11,8 +11,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 
 // ---- データ定義 ----
 
-const CARD_STAGES = ["全体", "見込み", "新規", "アクティブ", "プレミアム"] as const
-type CardStage = typeof CARD_STAGES[number]
+const CARD_STAGES = [
+  { key: "全体",                           label: "全体" },
+  { key: "未会員（Brand Consideration 低）", label: "未会員（BC低）" },
+  { key: "未会員（Brand Consideration 高）", label: "未会員（BC高）" },
+  { key: "新規会員",                        label: "新規会員" },
+  { key: "プレミアム",                       label: "プレミアム" },
+] as const
+type CardStage = typeof CARD_STAGES[number]["key"]
 
 interface Persona {
   id: string
@@ -95,9 +101,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 8, color: "#B3D9FF" },
-      { stage: "新規", pct: 15, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 44, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 8, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 15, color: "#66B3FF" },
+      { stage: "新規会員", pct: 44, color: "#006FCF" },
       { stage: "プレミアム", pct: 33, color: "#00175A" },
     ],
   },
@@ -130,9 +136,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 5, color: "#B3D9FF" },
-      { stage: "新規", pct: 10, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 38, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 5, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 10, color: "#66B3FF" },
+      { stage: "新規会員", pct: 38, color: "#006FCF" },
       { stage: "プレミアム", pct: 47, color: "#00175A" },
     ],
   },
@@ -165,9 +171,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 4, color: "#B3D9FF" },
-      { stage: "新規", pct: 8, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 35, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 4, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 8, color: "#66B3FF" },
+      { stage: "新規会員", pct: 35, color: "#006FCF" },
       { stage: "プレミアム", pct: 53, color: "#00175A" },
     ],
   },
@@ -209,9 +215,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 15, color: "#B3D9FF" },
-      { stage: "新規", pct: 22, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 48, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 15, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 22, color: "#66B3FF" },
+      { stage: "新規会員", pct: 48, color: "#006FCF" },
       { stage: "プレミアム", pct: 15, color: "#00175A" },
     ],
   },
@@ -244,9 +250,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 10, color: "#B3D9FF" },
-      { stage: "新規", pct: 18, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 46, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 10, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 18, color: "#66B3FF" },
+      { stage: "新規会員", pct: 46, color: "#006FCF" },
       { stage: "プレミアム", pct: 26, color: "#00175A" },
     ],
   },
@@ -279,9 +285,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 3, color: "#B3D9FF" },
-      { stage: "新規", pct: 7, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 30, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 3, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 7, color: "#66B3FF" },
+      { stage: "新規会員", pct: 30, color: "#006FCF" },
       { stage: "プレミアム", pct: 60, color: "#00175A" },
     ],
   },
@@ -314,9 +320,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 2, color: "#B3D9FF" },
-      { stage: "新規", pct: 5, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 28, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 2, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 5, color: "#66B3FF" },
+      { stage: "新規会員", pct: 28, color: "#006FCF" },
       { stage: "プレミアム", pct: 65, color: "#00175A" },
     ],
   },
@@ -349,9 +355,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 22, color: "#B3D9FF" },
-      { stage: "新規", pct: 30, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 38, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 22, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 30, color: "#66B3FF" },
+      { stage: "新規会員", pct: 38, color: "#006FCF" },
       { stage: "プレミアム", pct: 10, color: "#00175A" },
     ],
   },
@@ -384,9 +390,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 12, color: "#B3D9FF" },
-      { stage: "新規", pct: 20, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 46, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 12, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 20, color: "#66B3FF" },
+      { stage: "新規会員", pct: 46, color: "#006FCF" },
       { stage: "プレミアム", pct: 22, color: "#00175A" },
     ],
   },
@@ -419,9 +425,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 20, color: "#B3D9FF" },
-      { stage: "新規", pct: 28, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 38, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 20, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 28, color: "#66B3FF" },
+      { stage: "新規会員", pct: 38, color: "#006FCF" },
       { stage: "プレミアム", pct: 14, color: "#00175A" },
     ],
   },
@@ -455,9 +461,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 12, color: "#B3D9FF" },
-      { stage: "新規", pct: 20, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 46, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 12, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 20, color: "#66B3FF" },
+      { stage: "新規会員", pct: 46, color: "#006FCF" },
       { stage: "プレミアム", pct: 22, color: "#00175A" },
     ],
   },
@@ -490,9 +496,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 18, color: "#B3D9FF" },
-      { stage: "新規", pct: 24, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 42, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 18, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 24, color: "#66B3FF" },
+      { stage: "新規会員", pct: 42, color: "#006FCF" },
       { stage: "プレミアム", pct: 16, color: "#00175A" },
     ],
   },
@@ -525,9 +531,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 24, color: "#B3D9FF" },
-      { stage: "新規", pct: 32, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 36, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 24, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 32, color: "#66B3FF" },
+      { stage: "新規会員", pct: 36, color: "#006FCF" },
       { stage: "プレミアム", pct: 8, color: "#00175A" },
     ],
   },
@@ -560,9 +566,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 14, color: "#B3D9FF" },
-      { stage: "新規", pct: 22, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 42, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 14, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 22, color: "#66B3FF" },
+      { stage: "新規会員", pct: 42, color: "#006FCF" },
       { stage: "プレミアム", pct: 22, color: "#00175A" },
     ],
   },
@@ -595,9 +601,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 28, color: "#B3D9FF" },
-      { stage: "新規", pct: 34, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 30, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 28, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 34, color: "#66B3FF" },
+      { stage: "新規会員", pct: 30, color: "#006FCF" },
       { stage: "プレミアム", pct: 8, color: "#00175A" },
     ],
   },
@@ -630,9 +636,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 32, color: "#B3D9FF" },
-      { stage: "新規", pct: 36, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 26, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 32, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 36, color: "#66B3FF" },
+      { stage: "新規会員", pct: 26, color: "#006FCF" },
       { stage: "プレミアム", pct: 6, color: "#00175A" },
     ],
   },
@@ -665,9 +671,9 @@ const ALL_TRIBES: Tribe[] = [
       },
     ],
     stageDistribution: [
-      { stage: "見込み", pct: 35, color: "#B3D9FF" },
-      { stage: "新規", pct: 38, color: "#66B3FF" },
-      { stage: "アクティブ", pct: 22, color: "#006FCF" },
+      { stage: "未会員（Brand Consideration 低）", pct: 35, color: "#B3D9FF" },
+      { stage: "未会員（Brand Consideration 高）", pct: 38, color: "#66B3FF" },
+      { stage: "新規会員", pct: 22, color: "#006FCF" },
       { stage: "プレミアム", pct: 5, color: "#00175A" },
     ],
   },
@@ -741,13 +747,18 @@ function PersonaModal({ persona, open, onClose }: { persona: Persona | null; ope
 
 // ---- メインコンポーネント ----
 export function TribeAnalysisContent() {
-  const [selectedStage, setSelectedStage] = useState<CardStage>("全体")
+  const [selectedStage, setSelectedStage] = useState<CardStage>("全体" as CardStage)
   const [selectedTribe, setSelectedTribe] = useState<Tribe | null>(null)
   const [detailTab, setDetailTab] = useState("overview")
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null)
   const [personaModalOpen, setPersonaModalOpen] = useState(false)
 
-  const filteredTribes = useMemo(() => ALL_TRIBES, [selectedStage])
+  const filteredTribes = useMemo(() => {
+    if (selectedStage === "全体") return ALL_TRIBES
+    return ALL_TRIBES.filter(t =>
+      t.stageDistribution.some(s => s.stage === selectedStage && s.pct > 0)
+    )
+  }, [selectedStage])
   const totalMembers = filteredTribes.reduce((s, t) => s + t.members, 0)
   const totalTribes = filteredTribes.length
 
@@ -796,17 +807,17 @@ export function TribeAnalysisContent() {
         </div>
         <div className="ml-auto">
           <div className="flex gap-1 bg-muted p-1 rounded-lg">
-            {CARD_STAGES.map(stage => (
+            {CARD_STAGES.map(({ key, label }) => (
               <button
-                key={stage}
-                onClick={() => setSelectedStage(stage)}
+                key={key}
+                onClick={() => setSelectedStage(key)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                  selectedStage === stage
+                  selectedStage === key
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {stage}
+                {label}
               </button>
             ))}
           </div>
@@ -824,7 +835,7 @@ export function TribeAnalysisContent() {
               <span>高エンゲージメント・高利用額</span>
             </div>
 
-            {/* マップ本体 */}
+            {/* マップ���体 */}
             <div className="relative mx-6 my-2" style={{ height: 460 }}>
               {/* 象限グリッド */}
               <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 pointer-events-none">
