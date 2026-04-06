@@ -113,7 +113,7 @@ export const initialTrends: Trend[] = [
     imageUrl: "/images/trends/volcano-fieldwork.jpg",
     researchStatus: "completed",
     researchData: {
-      summary: "地球科学の第一線研究者が案内役となるVIPフィールドリサーチ体験が、「知的好奇心を満たすアドベンチャー」として富裕層に刺さり始めている。単なるハイクではなく、リアルタイムの科学観測に参加するという体験設計が差別化要因。火山の「生きた地球」という原始的な感動が、デジタル飽和世代に対して強烈に機能している。",
+      summary: "地球科学の第一線研究者が案内役となるVIPフィールドリサーチ体験が、「知的好奇心を満たすアドベンチャー」として富裕層に刺さり始めている。単なるハイクではなく、リアルタイムの科学観測に参加するという体験設計が差別化要��。火山の「生きた地球」という原始的な感動が、デジタル飽和世代に対して強烈に機能している。",
       popularIngredients: [
         { name: "活火山火口探検", share: "42%", growth: "+560%" },
         { name: "溶岩フィールド歩行", share: "28%", growth: "+490%" },
@@ -252,7 +252,7 @@ export const initialTrends: Trend[] = [
     growthType: "up",
     status: "Emerging",
     mentions: "5.6K",
-    description: "アマゾン・パプアニューギニア・サハラの先住民コミュニティに数週間滞在し、伝統医学・狩猟採集・精神儀礼を第一線の文化人類学者と共に体験するプライベートフィールドプログラム。",
+    description: "アマゾン・パプアニューギニア・サハラの先住民コミュニティに数週間滞在し、伝統医学・狩猟採集・��神儀礼を第一線の文化人類学者と共に体験するプライベートフィールドプログラム。",
     popularityScore: 24,
     imageUrl: "/images/trends/indigenous-fieldwork.jpg",
     researchStatus: "completed",
