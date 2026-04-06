@@ -158,7 +158,7 @@ const allPersonas: Persona[] = [
     lifestyle: "出張でマイル・ポイントを最大化。家族旅行でも特典を積極活用。",
     interests: ["マイレージ最適化", "ファミリー旅行", "グルメ"],
     tribe: ["ポイント最適化派", "ファミリー重視派"],
-    cardGoal: "出張費ポイント還元・家族旅行へ転換",
+    cardGoal: "出張費ポ���ント還元・家族旅行へ転換",
   },
   {
     id: "p07", name: "渡辺 拓也", age: 28, gender: "男性",
@@ -273,7 +273,7 @@ const segments: Segment[] = [
       genderRatio: "男性53% / 女性47%", avgAge: 45, marriedRate: "61%", avgSpend: "未計測",
       occupations: [{ label: "会社員", pct: 38 }, { label: "専門職", pct: 22 }, { label: "自営業", pct: 20 }, { label: "経営者", pct: 14 }],
       incomes: [{ label: "500〜700万円", pct: 42 }, { label: "700〜900万円", pct: 34 }, { label: "900万円以上", pct: 24 }],
-      summary: "比較検討中の中エンゲージメント層。マイル・ポイント還元率への関心が���く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
+      summary: "比較検討中の中エンゲージメント層。マイル・ポイント還元率への関心が�����く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
     },
   },
   {
@@ -370,7 +370,7 @@ function AvatarGrid({
   const show = personas.slice(0, MAX)
   const extra = personas.length - MAX
   return (
-    <div className="flex flex-wrap gap-1 mt-2.5" style={{ maxWidth: 120 }}>
+    <div className="flex flex-wrap justify-center gap-1" style={{ maxWidth: 120 }}>
       {show.map(p => (
         <button
           key={p.id}
@@ -677,21 +677,23 @@ export function MarketOverviewContent() {
                       key={s.key}
                       onClick={() => handleCellClick(eng.key, s.key)}
                       className={cn(
-                        "p-4 border-b border-r border-slate-200 cursor-pointer transition-colors align-top",
+                        "p-4 border-b border-r border-slate-200 cursor-pointer transition-colors",
                         isSelected ? bg.cellSelected : cn(bg.cell, bg.cellHover)
                       )}
                     >
-                      <p className={cn(
-                        "text-xl font-black leading-tight",
-                        isSelected ? "text-white" : bg.count
-                      )}>
-                        {seg.count}
-                      </p>
-                      <AvatarGrid
-                        personas={seg.personas}
-                        isSelected={isSelected}
-                        onPersonaClick={p => setModalPersona(p)}
-                      />
+                      <div className="flex flex-col items-center justify-center gap-2 h-full">
+                        <p className={cn(
+                          "text-xl font-black leading-tight",
+                          isSelected ? "text-white" : bg.count
+                        )}>
+                          {seg.count}
+                        </p>
+                        <AvatarGrid
+                          personas={seg.personas}
+                          isSelected={isSelected}
+                          onPersonaClick={p => setModalPersona(p)}
+                        />
+                      </div>
                     </td>
                   )
                 })}
