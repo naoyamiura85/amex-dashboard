@@ -36,7 +36,11 @@ import {
   Target,
   Download,
   RefreshCw,
+  Globe,
+  MapPin,
+  ChevronRight,
 } from "lucide-react"
+
 
 // KPI データ（決済額データは未取得のため、獲得数ベースのみ表示）
 const kpiData = [
@@ -160,6 +164,142 @@ const funnelData = [
   { stage: "アクティブ", count: 280000, rate: 1.0, color: "#D4B483" },
 ]
 
+// ---------- Market Overview データ ----------
+
+const REGION_COLORS: Record<string, string> = {
+  "north-america": "#006FCF",
+  europe:          "#B4975A",
+  japan:           "#9B2335",
+  china:           "#E53E3E",
+  "asia-pacific":  "#38A169",
+  "middle-east":   "#D69E2E",
+}
+
+interface RegionMarket {
+  id: string
+  name: string
+  flag: string
+  marketSize: number   // 兆USD
+  growth: number       // %
+  amexShare: number    // %
+  members: number      // 万人
+  lat: number
+  lng: number
+  trend: { year: number; size: number }[]
+  topSegment: string
+}
+
+const REGION_MARKETS: RegionMarket[] = [
+  {
+    id: "north-america",
+    name: "北米",
+    flag: "🇺🇸",
+    marketSize: 4.8,
+    growth: 6.2,
+    amexShare: 24.5,
+    members: 5840,
+    lat: 40,
+    lng: -100,
+    trend: [
+      { year: 2020, size: 3.2 }, { year: 2021, size: 3.6 }, { year: 2022, size: 4.0 },
+      { year: 2023, size: 4.4 }, { year: 2024, size: 4.8 }, { year: 2025, size: 5.2 },
+    ],
+    topSegment: "プレミアム旅行",
+  },
+  {
+    id: "europe",
+    name: "欧州",
+    flag: "🇪🇺",
+    marketSize: 3.1,
+    growth: 4.8,
+    amexShare: 12.3,
+    members: 2940,
+    lat: 50,
+    lng: 15,
+    trend: [
+      { year: 2020, size: 2.2 }, { year: 2021, size: 2.5 }, { year: 2022, size: 2.7 },
+      { year: 2023, size: 2.9 }, { year: 2024, size: 3.1 }, { year: 2025, size: 3.4 },
+    ],
+    topSegment: "ラグジュアリー消費",
+  },
+  {
+    id: "japan",
+    name: "日本",
+    flag: "🇯🇵",
+    marketSize: 0.9,
+    growth: 5.4,
+    amexShare: 8.7,
+    members: 384,
+    lat: 36,
+    lng: 138,
+    trend: [
+      { year: 2020, size: 0.6 }, { year: 2021, size: 0.7 }, { year: 2022, size: 0.75 },
+      { year: 2023, size: 0.82 }, { year: 2024, size: 0.9 }, { year: 2025, size: 0.96 },
+    ],
+    topSegment: "ダイニング・旅行",
+  },
+  {
+    id: "china",
+    name: "中国",
+    flag: "🇨🇳",
+    marketSize: 2.4,
+    growth: 8.9,
+    amexShare: 4.2,
+    members: 1240,
+    lat: 35,
+    lng: 105,
+    trend: [
+      { year: 2020, size: 1.4 }, { year: 2021, size: 1.7 }, { year: 2022, size: 1.9 },
+      { year: 2023, size: 2.1 }, { year: 2024, size: 2.4 }, { year: 2025, size: 2.8 },
+    ],
+    topSegment: "デジタル決済",
+  },
+  {
+    id: "asia-pacific",
+    name: "アジア太平洋",
+    flag: "🌏",
+    marketSize: 1.8,
+    growth: 7.6,
+    amexShare: 6.8,
+    members: 920,
+    lat: 10,
+    lng: 115,
+    trend: [
+      { year: 2020, size: 1.1 }, { year: 2021, size: 1.3 }, { year: 2022, size: 1.5 },
+      { year: 2023, size: 1.6 }, { year: 2024, size: 1.8 }, { year: 2025, size: 2.1 },
+    ],
+    topSegment: "プレミアム旅行",
+  },
+  {
+    id: "middle-east",
+    name: "中東・アフリカ",
+    flag: "🇦🇪",
+    marketSize: 0.7,
+    growth: 9.4,
+    amexShare: 5.1,
+    members: 310,
+    lat: 25,
+    lng: 50,
+    trend: [
+      { year: 2020, size: 0.4 }, { year: 2021, size: 0.45 }, { year: 2022, size: 0.52 },
+      { year: 2023, size: 0.6 }, { year: 2024, size: 0.7 }, { year: 2025, size: 0.85 },
+    ],
+    topSegment: "ラグジュアリー消費",
+  },
+]
+
+// 全地域の成長率推移（折れ線グラフ用）
+const GROWTH_TREND_DATA = [2020, 2021, 2022, 2023, 2024, 2025].map((year) => {
+  const obj: Record<string, number | string> = { year: String(year) }
+  REGION_MARKETS.forEach((r) => {
+    const d = r.trend.find((t) => t.year === year)
+    if (d) obj[r.id] = d.size
+  })
+  return obj
+})
+
+// ---------- End Market Overview データ ----------
+
 const severityConfig: Record<string, { badge: string; dot: string }> = {
   high: { badge: "bg-red-100 text-red-700 border-red-200", dot: "bg-red-500" },
   medium: { badge: "bg-amber-100 text-amber-700 border-amber-200", dot: "bg-amber-500" },
@@ -231,7 +371,7 @@ export function AmexHomeContent() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="bg-muted/60 h-9">
           <TabsTrigger value="overview" className="text-xs">会員トレンド</TabsTrigger>
-          <TabsTrigger value="spend" className="text-xs">利用額分析</TabsTrigger>
+          <TabsTrigger value="market" className="text-xs">マーケット概要</TabsTrigger>
           <TabsTrigger value="funnel" className="text-xs">取得ファネル</TabsTrigger>
         </TabsList>
 
@@ -295,22 +435,129 @@ export function AmexHomeContent() {
           </Card>
         </TabsContent>
 
-        {/* 利用額分析（データ未連携） */}
-        <TabsContent value="spend" className="mt-4">
+        {/* マーケット概要 */}
+        <TabsContent value="market" className="mt-4 space-y-4">
+          {/* 地域別市場サマリー KPI */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            {REGION_MARKETS.map((r) => (
+              <Card key={r.id} className="border border-border shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{r.flag}</span>
+                      <span className="text-sm font-semibold text-foreground">{r.name}</span>
+                    </div>
+                    <span className={`flex items-center gap-0.5 text-xs font-semibold ${r.growth >= 0 ? "text-emerald-600" : "text-red-500"}`}>
+                      <ArrowUpRight className="h-3 w-3" />
+                      +{r.growth}%
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-3">
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">市場規模</p>
+                      <p className="text-base font-bold text-foreground">${r.marketSize}T</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">AMEX シェア</p>
+                      <p className="text-base font-bold" style={{ color: REGION_COLORS[r.id] }}>{r.amexShare}%</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">会員数</p>
+                      <p className="text-sm font-semibold text-foreground">{r.members.toLocaleString()}万人</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">主要セグメント</p>
+                      <p className="text-[11px] font-medium text-muted-foreground leading-tight mt-0.5">{r.topSegment}</p>
+                    </div>
+                  </div>
+                  {/* シェアバー */}
+                  <div className="mt-3">
+                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${r.amexShare}%`, backgroundColor: REGION_COLORS[r.id] }}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* 市場規模推移 折れ線グラフ */}
           <Card className="border border-border shadow-sm">
-            <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
-              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                <DollarSign className="h-5 w-5 text-muted-foreground/50" />
+            <CardHeader className="pb-2 flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-sm font-semibold">地域別市場規模推移（兆USD）</CardTitle>
+                <p className="text-xs text-muted-foreground mt-0.5">2020〜2025年 プレミアムカード市場</p>
               </div>
-              <div className="text-center space-y-1">
-                <p className="text-sm font-semibold text-foreground">決済額データは現在未連携です</p>
-                <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
-                  月間利用総額・カテゴリ別利用額・カード別利用額構成は、データソース連携後に表示されます。
-                </p>
+              <div className="flex flex-wrap gap-3">
+                {REGION_MARKETS.map((r) => (
+                  <span key={r.id} className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: REGION_COLORS[r.id] }} />
+                    {r.name}
+                  </span>
+                ))}
               </div>
-              <Badge variant="outline" className="text-xs text-muted-foreground border-border">
-                データ取得予定
-              </Badge>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={240}>
+                <LineChart data={GROWTH_TREND_DATA} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="year" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
+                    formatter={(v: number) => [`$${v}T`, ""]}
+                  />
+                  {REGION_MARKETS.map((r) => (
+                    <Line
+                      key={r.id}
+                      type="monotone"
+                      dataKey={r.id}
+                      name={r.name}
+                      stroke={REGION_COLORS[r.id]}
+                      strokeWidth={2}
+                      dot={{ r: 3, fill: REGION_COLORS[r.id] }}
+                      activeDot={{ r: 5 }}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* 成長率ランキング */}
+          <Card className="border border-border shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">地域別成長率ランキング（YoY）</CardTitle>
+              <p className="text-xs text-muted-foreground">高成長市場への優先投資機会</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2.5">
+                {[...REGION_MARKETS]
+                  .sort((a, b) => b.growth - a.growth)
+                  .map((r, idx) => (
+                    <div key={r.id} className="flex items-center gap-3">
+                      <span className="w-5 text-xs font-bold text-muted-foreground text-right">{idx + 1}</span>
+                      <span className="text-base">{r.flag}</span>
+                      <span className="text-xs font-medium text-foreground w-20 shrink-0">{r.name}</span>
+                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${(r.growth / 10) * 100}%`,
+                            backgroundColor: REGION_COLORS[r.id],
+                          }}
+                        />
+                      </div>
+                      <span className="text-xs font-bold w-12 text-right" style={{ color: REGION_COLORS[r.id] }}>
+                        +{r.growth}%
+                      </span>
+                      <span className="text-[10px] text-muted-foreground w-20 text-right hidden md:block">{r.topSegment}</span>
+                    </div>
+                  ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
