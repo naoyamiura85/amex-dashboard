@@ -56,28 +56,27 @@ const navSections = [
     label: "OVERVIEW",
     defaultOpen: true,
     items: [
-      { title: "エグゼクティブサマリー", icon: Users,            href: "/dashboard" },
-      { title: "会員分析",               icon: TrendingUp,       href: "/dashboard/market-overview" },
-      { title: "カード利用分析",         icon: MonitorSmartphone, href: "/dashboard/digital-shelf" },
-      { title: "トレンド分析",           icon: Sparkles,         href: "/dashboard/trends" },
-      { title: "トライブ分析",           icon: Network,          href: "/dashboard/tribe-analysis" },
+      { title: "Executive Summary",  icon: Users,             href: "/dashboard" },
+      { title: "Member Analysis",    icon: TrendingUp,        href: "/dashboard/market-overview" },
+      { title: "Card Usage",         icon: MonitorSmartphone, href: "/dashboard/digital-shelf" },
+      { title: "Trend Analysis",     icon: Sparkles,          href: "/dashboard/trends" },
+      { title: "Tribe Analysis",     icon: Network,           href: "/dashboard/tribe-analysis" },
     ],
   },
   {
     label: "AI ANALYTICS",
     defaultOpen: true,
     items: [
-      { title: "AIインサイト・予測", icon: Lightbulb,    href: "/ai/predictions" },
-      { title: "競合・市場分析",     icon: FlaskConical, href: "/ai/competitors" },
-      { title: "相関分析",           icon: Boxes,        href: "/ai/correlations" },
+      { title: "AI Insights",        icon: Lightbulb,    href: "/ai/predictions" },
+      { title: "Competitive Intel",  icon: FlaskConical, href: "/ai/competitors" },
+      { title: "Correlation",        icon: Boxes,        href: "/ai/correlations" },
     ],
   },
   {
     label: "SIMULATION",
     defaultOpen: true,
     items: [
-      { title: "審査シミュレーター", icon: FlaskConical, href: "/ai/simulator" },
-      { title: "コンセプト生成",     icon: Lightbulb,    href: "/ai/concept-generator" },
+      { title: "Concept Generator",  icon: Lightbulb,    href: "/ai/concept-generator" },
     ],
   },
 ]
