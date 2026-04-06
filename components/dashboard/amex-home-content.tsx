@@ -200,29 +200,6 @@ export function AmexHomeContent() {
         </div>
       </div>
 
-      {/* KPI カード 4枚 */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {KPI_DATA.map((k) => {
-          const Icon = k.icon
-          const Sub = k.subIcon
-          return (
-            <Card key={k.label} className="border border-border shadow-sm">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <Icon className="h-4 w-4 text-[#006FCF]" />
-                  <span className="text-xs text-muted-foreground font-medium">{k.label}</span>
-                </div>
-                <p className="text-3xl font-bold text-foreground tracking-tight leading-none">{k.value}</p>
-                <p className={`flex items-center gap-0.5 text-xs mt-2 font-medium ${k.subColor}`}>
-                  {Sub && <Sub className="h-3 w-3" />}
-                  {k.sub}
-                </p>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
-
       {/* メインパネル: 地図 + サマリー */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* 世界地図 */}
