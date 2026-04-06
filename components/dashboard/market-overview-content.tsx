@@ -91,9 +91,9 @@ const stages: { key: StageKey; label: string; sub: string }[] = [
 ]
 
 const engagements: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[] = [
-  { key: "H", label: "H", sublabel: "高エンゲージメント", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
-  { key: "M", label: "M", sublabel: "中エンゲージメント", color: "text-amber-500",  dot: "bg-amber-400"   },
-  { key: "L", label: "L", sublabel: "低エンゲージメント", color: "text-slate-400",  dot: "bg-slate-300"   },
+  { key: "H", label: "H", sublabel: "High Consideration", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
+  { key: "M", label: "M", sublabel: "Mid Consideration",  color: "text-amber-500",  dot: "bg-amber-400"   },
+  { key: "L", label: "L", sublabel: "Low Consideration",  color: "text-slate-400",  dot: "bg-slate-300"   },
 ]
 
 // ----------------------------------------------------------------
@@ -157,7 +157,7 @@ const allPersonas: Persona[] = [
     background: "大手証券会社のVP。海外出張が月複数回あり、ポイント利用に精通。",
     lifestyle: "出張でマイル・ポイントを最大化。家族旅行でも特典を積極活用。",
     interests: ["マイレージ最適化", "ファミリー旅行", "グルメ"],
-    tribe: ["ポイント最適化派", "ファミリー重視派"],
+    tribe: ["ポイント最適化派", "ファミリー重視���"],
     cardGoal: "出張費ポ���ント還元・家族旅行へ転換",
   },
   {
@@ -508,7 +508,7 @@ function SegmentDetailPanel({
           <span className="text-sm font-semibold text-slate-700">
             {stageLabel}
             <span className="mx-1.5 text-slate-300">×</span>
-            エンゲージメント
+            Brand Consideration
             <span className={cn("ml-1 font-black", engMeta.color)}>{engKey}</span>
             <span className="ml-2 text-[#006FCF] font-bold">推定 {segment.count}</span>
           </span>
@@ -646,7 +646,7 @@ export function MarketOverviewContent() {
                 <div className="flex flex-col items-stretch text-[10px] text-slate-400 font-normal">
                   <span className="text-right">ステージ</span>
                   <div className="border-t border-slate-300 my-1.5" />
-                  <span className="text-left">エンゲージメント</span>
+                  <span className="text-left">Brand Consideration</span>
                 </div>
               </th>
               {stages.map(s => (
