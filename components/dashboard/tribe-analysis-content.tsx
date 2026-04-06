@@ -31,11 +31,19 @@ interface Persona {
 
 type LucideIcon = React.ComponentType<{ className?: string }>
 
+type TribeCategory = "travel" | "dining" | "entertainment"
+
+const CATEGORY_META: Record<TribeCategory, { label: string; color: string; bg: string }> = {
+  travel:        { label: "トラベル",          color: "#006FCF", bg: "rgba(0,111,207,0.18)" },
+  dining:        { label: "ダイニング",         color: "#B4975A", bg: "rgba(180,151,90,0.18)" },
+  entertainment: { label: "エンターテイメント", color: "#9B2335", bg: "rgba(155,35,53,0.18)" },
+}
+
 interface Tribe {
   id: string
   name: string
   icon: LucideIcon
-  color: string          // バブル用カラー
+  category: TribeCategory
   members: number        // 万人
   engagementScore: number   // 0–100 (y軸: 上=高)
   spendPotential: number    // 0–100 (x軸: 右=高)
@@ -53,7 +61,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "golf",
     name: "ゴルフ派",
     icon: Trophy,
-    color: "#006FCF",
+    category: "travel",
     members: 42,
     engagementScore: 85,
     spendPotential: 88,
@@ -97,7 +105,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "globe-trotter",
     name: "ジェットセッター派",
     icon: Plane,
-    color: "#0051A8",
+    category: "travel",
     members: 38,
     engagementScore: 90,
     spendPotential: 92,
@@ -132,7 +140,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "art-collector",
     name: "アートコレクター派",
     icon: Palette,
-    color: "#4A5568",
+    category: "entertainment",
     members: 18,
     engagementScore: 78,
     spendPotential: 95,
@@ -167,7 +175,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "fine-dining",
     name: "美食・グルメ派",
     icon: Wine,
-    color: "#B4975A",
+    category: "dining",
     members: 55,
     engagementScore: 72,
     spendPotential: 78,
@@ -211,7 +219,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "f1-motor",
     name: "F1・モータースポーツ派",
     icon: Car,
-    color: "#E53E3E",
+    category: "entertainment",
     members: 24,
     engagementScore: 76,
     spendPotential: 85,
@@ -226,7 +234,7 @@ const ALL_TRIBES: Tribe[] = [
     ],
     personas: [
       {
-        id: "p7", name: "渡辺 隆", age: 45, gender: "男性",
+        id: "p7", name: "渡��� 隆", age: 45, gender: "男性",
         image: "/images/personas/persona-09.jpg",
         occupation: "����造業 オーナー経営者", income: "2,000万円以上",
         background: "フェラーリとポルシェを所有。モナコGPにはプライベートヨットで参戦。サーキット走行ライセンスも保有。",
@@ -246,7 +254,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "polo-equestrian",
     name: "ポロ・乗馬派",
     icon: Trophy,
-    color: "#2D3748",
+    category: "entertainment",
     members: 9,
     engagementScore: 82,
     spendPotential: 96,
@@ -281,7 +289,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "private-aviation",
     name: "プライベートアビエーション派",
     icon: Plane,
-    color: "#553C9A",
+    category: "travel",
     members: 12,
     engagementScore: 88,
     spendPotential: 98,
@@ -316,11 +324,11 @@ const ALL_TRIBES: Tribe[] = [
     id: "adventure-sport",
     name: "アドベンチャースポーツ派",
     icon: Mountain,
-    color: "#276749",
+    category: "travel",
     members: 22,
     engagementScore: 55,
     spendPotential: 62,
-    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高��支出する����体験の希少性・独自性を最優先とする価値観。",
+    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高���支出する����体験の希少性・独自性を最優先とする価値観。",
     avgSpend: "¥38万/月",
     upgradeRate: "18%",
     churnRisk: "中",
@@ -351,7 +359,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "classical-music",
     name: "クラシック・オペラ派",
     icon: Music,
-    color: "#744210",
+    category: "entertainment",
     members: 16,
     engagementScore: 65,
     spendPotential: 72,
@@ -386,7 +394,7 @@ const ALL_TRIBES: Tribe[] = [
     id: "tech-investor",
     name: "テック投資家派",
     icon: Cpu,
-    color: "#2B6CB0",
+    category: "entertainment",
     members: 27,
     engagementScore: 48,
     spendPotential: 70,
@@ -415,6 +423,252 @@ const ALL_TRIBES: Tribe[] = [
       { stage: "新規", pct: 28, color: "#66B3FF" },
       { stage: "アクティブ", pct: 38, color: "#006FCF" },
       { stage: "プレミアム", pct: 14, color: "#00175A" },
+    ],
+  },
+  // ---- 新規追加トライブ ----
+  {
+    id: "luxury-resort",
+    name: "ラグジュアリーリゾート派",
+    icon: Plane,
+    category: "travel",
+    members: 48,
+    engagementScore: 78,
+    spendPotential: 75,
+    description: "年3〜5回の長期滞在型リゾートを好む層。モルディブ・バリ・アマンリゾートなどを定宿とし、スパ・ヴィラ・プライベートプール付き宿泊が標準。",
+    avgSpend: "¥58万/月",
+    upgradeRate: "33%",
+    churnRisk: "低",
+    features: [
+      { label: "平均滞在日数", value: "10泊以上/回" },
+      { label: "スイート利用率", value: "88%" },
+      { label: "アマン滞在経験", value: "76%" },
+    ],
+    personas: [
+      {
+        id: "p13", name: "西村 奈津", age: 48, gender: "女性",
+        image: "/images/personas/persona-02.jpg",
+        occupation: "医師（美容外科院長）", income: "2,000万円以上",
+        background: "診療の合間に年4回の海外リゾート滞在。アマングループの全施設制覇を目指している。スパと食体験を旅の核に据える。",
+        lifestyle: "非日常の静寂と美を求める旅スタイル。SNSには載せないプライベート重視型旅行者。",
+        interests: ["スパ", "ヨガ", "美食"], cardGoal: "プレミアムリゾート優先予約とヴィラアップグレード",
+        tribe: "ラグジュアリーリゾート派"
+      },
+    ],
+    stageDistribution: [
+      { stage: "見込み", pct: 12, color: "#B3D9FF" },
+      { stage: "新規", pct: 20, color: "#66B3FF" },
+      { stage: "アクティブ", pct: 46, color: "#006FCF" },
+      { stage: "プレミアム", pct: 22, color: "#00175A" },
+    ],
+  },
+  {
+    id: "wine-sommelier",
+    name: "ワイン・ソムリエ派",
+    icon: Wine,
+    category: "dining",
+    members: 31,
+    engagementScore: 62,
+    spendPotential: 68,
+    description: "ボルドー・ブルゴーニュの一級畑を定期購入し、ワインセラーへの長期投資が特徴。テイスティングツアーや醸造家との私的交流を重視する層。",
+    avgSpend: "¥44万/月",
+    upgradeRate: "24%",
+    churnRisk: "中",
+    features: [
+      { label: "年間ワイン支出", value: "500万円以上" },
+      { label: "セラー保有本数", value: "平均800本" },
+      { label: "産地訪問", value: "年2回以上" },
+    ],
+    personas: [
+      {
+        id: "p14", name: "松本 裕二", age: 52, gender: "男性",
+        image: "/images/personas/persona-03.jpg",
+        occupation: "不動産オーナー", income: "1,800万円以上",
+        background: "ブルゴーニュ愛好家。DRCのアロケーションを持つ数少ない日本人の一人。ヴォーヌ=ロマネ村に別荘を購入し醸造家と交友。",
+        lifestyle: "食事ごとにテーマを決めペアリングを設計。仲間とのヴィンテージ垂直試飲会が月次の楽しみ。",
+        interests: ["ワイン", "フランス料理", "旅行"], cardGoal: "ワイナリーVIPツアーと希少ヴィンテージの優先購入",
+        tribe: "ワイン・ソムリエ派"
+      },
+    ],
+    stageDistribution: [
+      { stage: "見込み", pct: 18, color: "#B3D9FF" },
+      { stage: "新規", pct: 24, color: "#66B3FF" },
+      { stage: "アクティブ", pct: 42, color: "#006FCF" },
+      { stage: "プレミアム", pct: 16, color: "#00175A" },
+    ],
+  },
+  {
+    id: "private-chef",
+    name: "プライベートダイニング派",
+    icon: Fish,
+    category: "dining",
+    members: 19,
+    engagementScore: 45,
+    spendPotential: 55,
+    description: "自宅でのプライベートシェフ招聘や貸し切りレストランでのホスト体験に傾倒。ゲストをもてなす「主催者」としてのアイデンティティが強い層。",
+    avgSpend: "¥36万/月",
+    upgradeRate: "20%",
+    churnRisk: "中",
+    features: [
+      { label: "プライベートシェフ頻度", value: "月2回以上" },
+      { label: "ホームパーティ規模", value: "平均12名" },
+      { label: "貸し切りレストラン経験", value: "年4回以上" },
+    ],
+    personas: [
+      {
+        id: "p15", name: "吉田 理恵", age: 44, gender: "女性",
+        image: "/images/personas/persona-04.jpg",
+        occupation: "広告代理店 Creative Director", income: "1,200万円以上",
+        background: "食を通じた人脈形成が得意。芸術家・経営者・シェフを同じテーブルに集めるサロン文化を自宅で実践。",
+        lifestyle: "週末のホームダイニングが社交の軸。プレートデザインにも拘り、テーブルセッティングは毎回テーマを設ける。",
+        interests: ["料理", "インテリア", "現代アート"], cardGoal: "著名シェフのプライベートディナー手配とコンシェルジュ支援",
+        tribe: "プライベートダイニング派"
+      },
+    ],
+    stageDistribution: [
+      { stage: "見込み", pct: 24, color: "#B3D9FF" },
+      { stage: "新規", pct: 32, color: "#66B3FF" },
+      { stage: "アクティブ", pct: 36, color: "#006FCF" },
+      { stage: "プレミアム", pct: 8, color: "#00175A" },
+    ],
+  },
+  {
+    id: "yacht-sailing",
+    name: "ヨット・セーリング派",
+    icon: Fish,
+    category: "travel",
+    members: 14,
+    engagementScore: 30,
+    spendPotential: 42,
+    description: "地中海・カリブ海をヨットでクルーズするライフスタイル層。船舶オーナーシップまたはチャーター利用が中心で、マリーナ拠点の移動生活が特徴。",
+    avgSpend: "¥62万/月",
+    upgradeRate: "27%",
+    churnRisk: "低",
+    features: [
+      { label: "年間航海日数", value: "60日以上" },
+      { label: "保有/チャーター艇長", value: "40ft以上" },
+      { label: "地中海滞在", value: "年1回以上" },
+    ],
+    personas: [
+      {
+        id: "p16", name: "石川 健一", age: 58, gender: "男性",
+        image: "/images/personas/persona-09.jpg",
+        occupation: "商社 元役員", income: "2,500万円以上",
+        background: "定年後にヨットを購入し地中海縦断を達成。現在は地中海と日本を季節ごとに往来するノマドライフを実践。",
+        lifestyle: "「家はヨット」をモットーに国境なき生活。寄港地の市場で食材を調達し自炊することが最大の楽しみ。",
+        interests: ["セーリング", "釣り", "料理"], cardGoal: "マリーナ優先接岸とヨット修繕コンシェルジュ対応",
+        tribe: "ヨット・セーリング派"
+      },
+    ],
+    stageDistribution: [
+      { stage: "見込み", pct: 14, color: "#B3D9FF" },
+      { stage: "新規", pct: 22, color: "#66B3FF" },
+      { stage: "アクティブ", pct: 42, color: "#006FCF" },
+      { stage: "プレミアム", pct: 22, color: "#00175A" },
+    ],
+  },
+  {
+    id: "live-music",
+    name: "ライブ・フェス派",
+    icon: Music,
+    category: "entertainment",
+    members: 35,
+    engagementScore: 35,
+    spendPotential: 38,
+    description: "コーチェラ・グラストンベリー・フジロックなど国内外の音楽フェスをVIP席で体験。アーティストとのバックステージ交流や限定体験に高い支出意欲を持つ。",
+    avgSpend: "¥28万/月",
+    upgradeRate: "16%",
+    churnRisk: "高",
+    features: [
+      { label: "年間フェス参加数", value: "8回以上" },
+      { label: "VIPパッケージ利用率", value: "72%" },
+      { label: "平均年齢", value: "34歳" },
+    ],
+    personas: [
+      {
+        id: "p17", name: "小林 雄太", age: 32, gender: "男性",
+        image: "/images/personas/persona-07.jpg",
+        occupation: "音楽プロデューサー", income: "900万円以上",
+        background: "国内外の音楽シーンを渡り歩くプロデューサー。フェスはビジネスと趣味が重なる場所で、年間渡航の半分がフェス目的。",
+        lifestyle: "音楽と旅が不可分。フェスの前後に1週間の現地滞在を設け、ローカル音楽シーンも探訪。",
+        interests: ["音楽", "旅行", "写真"], cardGoal: "フェスVIPパスと現地ホテル優先予約",
+        tribe: "ライブ・フェス派"
+      },
+    ],
+    stageDistribution: [
+      { stage: "見込み", pct: 28, color: "#B3D9FF" },
+      { stage: "新規", pct: 34, color: "#66B3FF" },
+      { stage: "アクティブ", pct: 30, color: "#006FCF" },
+      { stage: "プレミアム", pct: 8, color: "#00175A" },
+    ],
+  },
+  {
+    id: "theater-film",
+    name: "シアター・映画派",
+    icon: Star,
+    category: "entertainment",
+    members: 28,
+    engagementScore: 22,
+    spendPotential: 28,
+    description: "ブロードウェイ・ウエストエンドの初演VIP席やカンヌ映画祭への参加を年間行事とする層。映画・演劇プロデュースへの出資経験を持つ者も多い。",
+    avgSpend: "¥22万/月",
+    upgradeRate: "13%",
+    churnRisk: "高",
+    features: [
+      { label: "年間観劇本数", value: "30本以上" },
+      { label: "海外シアター参加", value: "年2回以上" },
+      { label: "クリエイティブ投資", value: "42%が経験あり" },
+    ],
+    personas: [
+      {
+        id: "p18", name: "川島 麻衣", age: 38, gender: "女性",
+        image: "/images/personas/persona-05.jpg",
+        occupation: "映像ディレクター", income: "800万円以上",
+        background: "カンヌ映画祭に5年連続参加。ブロードウェイ新作の開幕初日チケットを毎シーズン確保。映画と演劇への出資も行う。",
+        lifestyle: "アートと物語への感受性が生活の核。映画・演劇・写真・文学が交差する文化的生活圏で生きる。",
+        interests: ["映画", "演劇", "写真"], cardGoal: "初演VIPシートとカンヌ映画祭パスのコンシェルジュ手配",
+        tribe: "シアター・映画派"
+      },
+    ],
+    stageDistribution: [
+      { stage: "見込み", pct: 32, color: "#B3D9FF" },
+      { stage: "新規", pct: 36, color: "#66B3FF" },
+      { stage: "アクティブ", pct: 26, color: "#006FCF" },
+      { stage: "プレミアム", pct: 6, color: "#00175A" },
+    ],
+  },
+  {
+    id: "local-gourmet",
+    name: "ローカルグルメ探訪派",
+    icon: Fish,
+    category: "dining",
+    members: 44,
+    engagementScore: 15,
+    spendPotential: 32,
+    description: "世界各地の隠れた名店・ストリートフードの探求を旅の主目的とする層。口コミゼロの秘境レストランや伝統市場での体験を最優先する新しいグルメ観。",
+    avgSpend: "¥18万/月",
+    upgradeRate: "11%",
+    churnRisk: "高",
+    features: [
+      { label: "訪問国数", value: "年15カ国以上" },
+      { label: "SNS発信頻度", value: "週5投稿以上" },
+      { label: "平均年齢", value: "31歳" },
+    ],
+    personas: [
+      {
+        id: "p19", name: "田村 さくら", age: 27, gender: "女性",
+        image: "/images/personas/persona-10.jpg",
+        occupation: "フードコンテンツクリエイター", income: "600万円以上",
+        background: "フォロワー80万人のグルメインフルエンサー。ミシュランより「地元民しか知らない名店」を優先。現地調達・現地消費が信条。",
+        lifestyle: "旅＝食の探求。言語の壁を越えてシェフと会話し、レシピを記録・発信することで生計を立てる。",
+        interests: ["グルメ", "旅行", "写真"], cardGoal: "旅行中の食体験優待と海外でのコンシェルジュ対応",
+        tribe: "ローカルグルメ探訪派"
+      },
+    ],
+    stageDistribution: [
+      { stage: "見込み", pct: 35, color: "#B3D9FF" },
+      { stage: "新規", pct: 38, color: "#66B3FF" },
+      { stage: "アクティブ", pct: 22, color: "#006FCF" },
+      { stage: "プレミアム", pct: 5, color: "#00175A" },
     ],
   },
 ]
@@ -598,6 +852,8 @@ export function TribeAnalysisContent() {
                 const x = toX(tribe.spendPotential)
                 const y = toY(tribe.engagementScore)
                 const isSelected = selectedTribe?.id === tribe.id
+                const catColor = CATEGORY_META[tribe.category].color
+                const catBg    = CATEGORY_META[tribe.category].bg
                 return (
                   <button
                     key={tribe.id}
@@ -616,23 +872,23 @@ export function TribeAnalysisContent() {
                     <div
                       className={`w-full h-full rounded-full flex flex-col items-center justify-center transition-all duration-200 ${
                         isSelected
-                          ? "ring-2 ring-offset-2 ring-primary/60 scale-110 shadow-lg"
+                          ? "ring-2 ring-offset-2 scale-110 shadow-lg"
                           : "hover:scale-105 hover:shadow-md"
                       }`}
                       style={{
-                        backgroundColor: isSelected ? tribe.color : tribe.color + "40",
+                        backgroundColor: isSelected ? catColor : catBg,
                         borderWidth: 1.5,
-                        borderColor: tribe.color,
+                        borderColor: catColor,
                         borderStyle: "solid",
                       }}
                     >
-                      <span className={`text-[10px] font-bold leading-tight text-center px-1.5 ${isSelected ? "text-white" : ""}`}
-                        style={{ color: isSelected ? "white" : tribe.color }}
+                      <span className="text-[10px] font-bold leading-tight text-center px-1.5"
+                        style={{ color: isSelected ? "white" : catColor }}
                       >
                         {tribe.name.replace(/派$/, "")}
                       </span>
-                      <span className={`text-[9px] mt-0.5`}
-                        style={{ color: isSelected ? "rgba(255,255,255,0.8)" : tribe.color + "bb" }}
+                      <span className="text-[9px] mt-0.5"
+                        style={{ color: isSelected ? "rgba(255,255,255,0.8)" : catColor + "bb" }}
                       >
                         {tribe.members}万人
                       </span>
@@ -640,6 +896,16 @@ export function TribeAnalysisContent() {
                   </button>
                 )
               })}
+            </div>
+
+            {/* カテゴリ凡例 */}
+            <div className="flex items-center justify-center gap-5 px-6 py-2 border-t border-border/30">
+              {(Object.entries(CATEGORY_META) as [TribeCategory, typeof CATEGORY_META[TribeCategory]][]).map(([, meta]) => (
+                <div key={meta.label} className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: meta.bg, borderColor: meta.color }} />
+                  <span className="text-[11px] font-medium" style={{ color: meta.color }}>{meta.label}</span>
+                </div>
+              ))}
             </div>
 
             {/* 下部ラベル */}
