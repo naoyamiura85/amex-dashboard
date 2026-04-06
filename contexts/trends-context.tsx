@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode, useMemo } from "react"
-import { initialTrends, generateMockResearchData } from "@/data/trends-data"
+import { initialTrends } from "@/data/trends-data"
 
 export type TrendStatus = "Growing" | "Stable" | "Emerging" | "Declining"
 export type ResearchStatus = "queued" | "researching" | "completed" | "failed"
