@@ -38,7 +38,7 @@ import {
   RefreshCw,
 } from "lucide-react"
 
-// KPI データ
+// KPI データ（決済額データは未取得のため、獲得数ベースのみ表示）
 const kpiData = [
   {
     title: "総会員数",
@@ -52,19 +52,19 @@ const kpiData = [
     bg: "bg-blue-50",
   },
   {
-    title: "月間利用総額",
-    value: "¥1.28兆",
-    unit: "",
-    change: "+5.7%",
+    title: "今月新規獲得（プラチナ）",
+    value: "2,840",
+    unit: "件",
+    change: "+8.3%",
     trend: "up",
     sub: "前月比",
-    icon: DollarSign,
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
+    icon: CreditCard,
+    color: "text-[#B4975A]",
+    bg: "bg-amber-50",
   },
   {
-    title: "新規申込数",
-    value: "48,320",
+    title: "今月新規獲得（ゴールド）",
+    value: "18,760",
     unit: "件",
     change: "+12.1%",
     trend: "up",
@@ -123,7 +123,7 @@ const spendByCategoryData = [
 const aiAlerts = [
   {
     type: "解約リスク",
-    message: "プラチナ会員4,200人でエンゲージメント低下を検知。過去3ヶ月の利用額が前年比-35%。",
+    message: "プラチナ会員4,200人でエンゲージメント低下を検知。過去3ヶ月のログイン・サービス利用頻度が前年比-35%。",
     severity: "high",
     time: "15分前",
     action: "対応策を見る",
@@ -295,70 +295,24 @@ export function AmexHomeContent() {
           </Card>
         </TabsContent>
 
-        {/* 利用額分析 */}
+        {/* 利用額分析（データ未連携） */}
         <TabsContent value="spend" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-            <Card className="lg:col-span-3 border border-border shadow-sm">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">カテゴリ別利用額（億円）</CardTitle>
-                <p className="text-xs text-muted-foreground">今月 vs 前月比較</p>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={260}>
-                  <BarChart data={spendByCategoryData} layout="vertical" margin={{ top: 4, right: 16, left: 4, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" />
-                    <XAxis type="number" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
-                    <YAxis dataKey="category" type="category" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} width={72} />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
-                    />
-                    <Bar dataKey="prev" name="前月" fill="#D0DCE8" radius={[0, 3, 3, 0]} barSize={10} />
-                    <Bar dataKey="amount" name="今月" fill="#006FCF" radius={[0, 3, 3, 0]} barSize={10} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-            <Card className="lg:col-span-2 border border-border shadow-sm">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">カード別利用額構成</CardTitle>
-                <p className="text-xs text-muted-foreground">今月の比率</p>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center gap-4">
-                <ResponsiveContainer width="100%" height={180}>
-                  <PieChart>
-                    <Pie
-                      data={spendByCard}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={55}
-                      outerRadius={80}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      {spendByCard.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
-                      formatter={(v) => [`${v}%`, ""]}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="grid grid-cols-1 gap-1.5 w-full text-xs">
-                  {spendByCard.map((d) => (
-                    <div key={d.name} className="flex items-center justify-between">
-                      <span className="flex items-center gap-2">
-                        <span className="inline-block w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: d.color }} />
-                        <span className="text-muted-foreground">{d.name}</span>
-                      </span>
-                      <span className="font-semibold text-foreground">{d.value}%</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <Card className="border border-border shadow-sm">
+            <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                <DollarSign className="h-5 w-5 text-muted-foreground/50" />
+              </div>
+              <div className="text-center space-y-1">
+                <p className="text-sm font-semibold text-foreground">決済額データは現在未連携です</p>
+                <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
+                  月間利用総額・カテゴリ別利用額・カード別利用額構成は、データソース連携後に表示されます。
+                </p>
+              </div>
+              <Badge variant="outline" className="text-xs text-muted-foreground border-border">
+                データ取得予定
+              </Badge>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* 取得ファネル */}
@@ -475,9 +429,9 @@ export function AmexHomeContent() {
             </CardHeader>
             <CardContent className="space-y-3">
               {[
-                { label: "新規申込", current: 48320, target: 50000, pct: 97 },
-                { label: "アクティブ率", current: 78.4, target: 80, pct: 98, isPercent: true },
-                { label: "年会費収入", current: 82, target: 100, pct: 82, isBillion: true },
+                { label: "新規申込（全体）", current: 48320, target: 50000, pct: 97 },
+                { label: "プラチナ獲得", current: 2840, target: 3000, pct: 95 },
+                { label: "ゴールド獲得", current: 18760, target: 20000, pct: 94 },
               ].map((item) => (
                 <div key={item.label}>
                   <div className="flex justify-between mb-1">
