@@ -38,24 +38,24 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Category mapping for mode filter (luxury / financial)
+// Category mapping — 5〜10年後の兆しを捉えるエマージングトレンド
 const categoryModeMapping: Record<string, string[]> = {
-  all: [],
-  travel:    ["travel"],
-  dining:    ["dining"],
-  hotel:     ["hotel"],
-  concierge: ["concierge"],
-  culture:   ["culture"],
-  shopping:  ["shopping"],
+  all:         [],
+  biotech:     ["biotech"],
+  spacetech:   ["spacetech"],
+  fintech:     ["fintech"],
+  realestate:  ["realestate"],
+  experience:  ["experience"],
+  geopolitics: ["geopolitics"],
 }
 
 const categoryColors: Record<string, string> = {
-  travel:    "bg-sky-100 text-sky-700",
-  dining:    "bg-amber-100 text-amber-800",
-  hotel:     "bg-indigo-100 text-indigo-700",
-  concierge: "bg-blue-100 text-blue-700",
-  culture:   "bg-violet-100 text-violet-700",
-  shopping:  "bg-rose-100 text-rose-700",
+  biotech:     "bg-emerald-100 text-emerald-700",
+  spacetech:   "bg-indigo-100 text-indigo-700",
+  fintech:     "bg-blue-100 text-blue-700",
+  realestate:  "bg-amber-100 text-amber-800",
+  experience:  "bg-sky-100 text-sky-700",
+  geopolitics: "bg-rose-100 text-rose-700",
 }
 
 const statusColors: Record<string, string> = {
@@ -151,12 +151,12 @@ export function TrendsListContent() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 {[
-                  { value: "travel",    label: "旅行・体験" },
-                  { value: "dining",    label: "グルメ" },
-                  { value: "hotel",     label: "ホテル" },
-                  { value: "concierge", label: "コンシェルジュ" },
-                  { value: "culture",   label: "カルチャー" },
-                  { value: "shopping",  label: "ショッピング" },
+                  { value: "biotech",     label: "バイオテック" },
+                  { value: "spacetech",   label: "スペーステック" },
+                  { value: "fintech",     label: "フィンテック" },
+                  { value: "realestate",  label: "不動産" },
+                  { value: "experience",  label: "体験・居住" },
+                  { value: "geopolitics", label: "地政学・移住" },
                 ].map(({ value, label }) => (
                   <DropdownMenuCheckboxItem
                     key={value}
