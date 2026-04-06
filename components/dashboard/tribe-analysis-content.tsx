@@ -320,7 +320,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 22,
     engagementScore: 55,
     spendPotential: 62,
-    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高額支出する����体験の希少性・独自性を最優先とする価値観。",
+    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高��支出する����体験の希少性・独自性を最優先とする価値観。",
     avgSpend: "¥38万/月",
     upgradeRate: "18%",
     churnRisk: "中",
@@ -513,9 +513,14 @@ export function TribeAnalysisContent() {
   const getBubbleRadius = (members: number) =>
     minR + ((members / maxMem) * (maxR - minR))
 
-  // 座標変換（余白確保）
-  const toX = (v: number) => 6 + v * 0.88   // %
-  const toY = (v: number) => 94 - v * 0.88  // % (反転: 上=高)
+  // 座標変換（データ範囲を正規化して全体に分散）
+  const margin = 10
+  const allX = filteredTribes.map(t => t.spendPotential)
+  const allY = filteredTribes.map(t => t.engagementScore)
+  const minX = Math.min(...allX), maxX = Math.max(...allX)
+  const minY = Math.min(...allY), maxY = Math.max(...allY)
+  const toX = (v: number) => margin + ((v - minX) / (maxX - minX)) * (100 - margin * 2)
+  const toY = (v: number) => (100 - margin) - ((v - minY) / (maxY - minY)) * (100 - margin * 2)
 
   const churnBadge: Record<string, string> = {
     低: "text-emerald-700 bg-emerald-50 border border-emerald-200",
