@@ -10,7 +10,6 @@ import {
   LogOut,
   Bell,
   TrendingUp,
-  MonitorSmartphone,
   Lightbulb,
   FlaskConical,
   Boxes,
@@ -58,7 +57,6 @@ const navSections = [
     items: [
       { title: "Executive Summary",  icon: Users,             href: "/dashboard" },
       { title: "Member Analysis",    icon: TrendingUp,        href: "/dashboard/market-overview" },
-      { title: "Card Usage",         icon: MonitorSmartphone, href: "/dashboard/digital-shelf" },
       { title: "Trend Analysis",     icon: Sparkles,          href: "/dashboard/trends" },
       { title: "Tribe Analysis",     icon: Network,           href: "/dashboard/tribe-analysis" },
     ],
