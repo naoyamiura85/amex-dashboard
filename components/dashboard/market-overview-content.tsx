@@ -136,7 +136,7 @@ const allPersonas: Persona[] = [
     id: "p04", name: "佐藤 彩花", age: 33, gender: "女性",
     image: "/images/personas/persona-04.jpg",
     occupation: "IT企業マネージャー", income: "700〜900万円",
-    background: "都内テック企業のプロダクトマネージャー。リモートワーク活用で旅しながら働く。",
+    background: "都内テック企業のプロダクトマネージャー。リモートワーク活用���旅しながら働く。",
     lifestyle: "ブティックホテルや隠れ家レストランを好む。SNSでの情報発信も積極的。",
     interests: ["ブティックホテル", "グルメ体験", "デジタルノマド"],
     tribe: ["ミレニアル富裕層", "ライフスタイル発信派"],
@@ -283,7 +283,7 @@ const segments: Segment[] = [
     personas: [allPersonas[2], allPersonas[8], allPersonas[11]],
     attributes: {
       genderRatio: "男性68% / 女性32%", avgAge: 57, marriedRate: "82%", avgSpend: "¥210万円/月",
-      occupations: [{ label: "オーナー経営者", pct: 44 }, { label: "資産家", pct: 32 }, { label: "医師", pct: 14 }, { label: "士業", pct: 10 }],
+      occupations: [{ label: "オーナー経営者", pct: 44 }, { label: "資���家", pct: 32 }, { label: "医師", pct: 14 }, { label: "士業", pct: 10 }],
       incomes: [{ label: "3,000万円以上", pct: 68 }, { label: "2,000〜3,000万円", pct: 26 }, { label: "1,500〜2,000万円", pct: 6 }],
       cards: [
         { label: "AMEX センチュリオン", pct: 52, color: "#1C1C1C" },
@@ -308,7 +308,7 @@ const segments: Segment[] = [
         { label: "その他一般カード", pct: 14, color: "#7F8C8D" },
       ],
       cardNote: "保有カード（他社）",
-      summary: "比較検討中の中エンゲージメント層。マイル・ポイント還元率への関���が�����く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
+      summary: "比較検討中の中 Brand Consideration 層。マイル・ポイント還元率への関心が高く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
     },
   },
   {
