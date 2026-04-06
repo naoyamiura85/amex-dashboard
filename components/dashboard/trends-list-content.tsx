@@ -38,24 +38,20 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Category mapping — 5〜10年後の兆しを捉えるエマージングトレンド
+// Category mapping — 体験軸・5〜10年後の兆しトレンド
 const categoryModeMapping: Record<string, string[]> = {
   all:         [],
-  biotech:     ["biotech"],
-  spacetech:   ["spacetech"],
-  fintech:     ["fintech"],
-  realestate:  ["realestate"],
-  experience:  ["experience"],
-  geopolitics: ["geopolitics"],
+  space:       ["space"],
+  expedition:  ["expedition"],
+  culture:     ["culture"],
+  sciencetech: ["sciencetech"],
 }
 
 const categoryColors: Record<string, string> = {
-  biotech:     "bg-emerald-100 text-emerald-700",
-  spacetech:   "bg-indigo-100 text-indigo-700",
-  fintech:     "bg-blue-100 text-blue-700",
-  realestate:  "bg-amber-100 text-amber-800",
-  experience:  "bg-sky-100 text-sky-700",
-  geopolitics: "bg-rose-100 text-rose-700",
+  space:       "bg-indigo-100 text-indigo-700",
+  expedition:  "bg-sky-100 text-sky-700",
+  culture:     "bg-amber-100 text-amber-800",
+  sciencetech: "bg-emerald-100 text-emerald-700",
 }
 
 const statusColors: Record<string, string> = {
@@ -151,12 +147,10 @@ export function TrendsListContent() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 {[
-                  { value: "biotech",     label: "バイオテック" },
-                  { value: "spacetech",   label: "スペーステック" },
-                  { value: "fintech",     label: "フィンテック" },
-                  { value: "realestate",  label: "不動産" },
-                  { value: "experience",  label: "体験・居住" },
-                  { value: "geopolitics", label: "地政学・移住" },
+                  { value: "space",       label: "宇宙体験" },
+                  { value: "expedition",  label: "フィールド探検" },
+                  { value: "culture",     label: "カルチャー体験" },
+                  { value: "sciencetech", label: "サイエンス体験" },
                 ].map(({ value, label }) => (
                   <DropdownMenuCheckboxItem
                     key={value}
