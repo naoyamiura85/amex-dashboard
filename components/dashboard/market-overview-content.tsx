@@ -652,8 +652,8 @@ export function MarketOverviewContent() {
               {stages.map(s => (
                 <th key={s.key} className={cn("p-3 border-b border-r border-slate-200 text-center min-w-[170px]", stageBg[s.key].cell)}>
                   <div className={cn("w-2.5 h-2.5 rounded-full mx-auto mb-1.5", stageBg[s.key].dot)} />
-                  <p className={cn("text-sm font-bold", s.key === "prospect" ? "text-slate-600" : "text-[#006FCF]")}>{s.label}</p>
-                  <p className="text-xs text-slate-400 font-normal mt-0.5">{s.sub}</p>
+                  <p className={cn("text-sm font-bold", s.key === "prospect" ? "text-slate-600" : s.key === "premium" ? "text-white" : "text-[#006FCF]")}>{s.label}</p>
+                  <p className={cn("text-xs font-normal mt-0.5", s.key === "premium" ? "text-white/80" : "text-slate-400")}>{s.sub}</p>
                 </th>
               ))}
             </tr>
