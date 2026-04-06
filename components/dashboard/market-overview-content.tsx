@@ -86,16 +86,16 @@ const stageBg: Record<StageKey, { cell: string; cellHover: string; cellSelected:
 }
 
 const stages: { key: StageKey; label: string; sub: string }[] = [
-  { key: "prospect", label: "未会員（見込み低）", sub: "890万人" },
-  { key: "new",      label: "未会員（見込み高）", sub: "430万人" },
-  { key: "active",   label: "新規会員",           sub: "210万人" },
-  { key: "premium",  label: "プレミアム",          sub: "56万人"  },
+  { key: "prospect", label: "未会員（Brand Consideration 低）", sub: "890万人" },
+  { key: "new",      label: "未会員（Brand Consideration 高）", sub: "430万人" },
+  { key: "active",   label: "新規会員",                         sub: "210万人" },
+  { key: "premium",  label: "プレミアム",                       sub: "56万人"  },
 ]
 
 const engagements: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[] = [
-  { key: "H", label: "H", sublabel: "High Consideration", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
-  { key: "M", label: "M", sublabel: "Mid Consideration",  color: "text-amber-500",  dot: "bg-amber-400"   },
-  { key: "L", label: "L", sublabel: "Low Consideration",  color: "text-slate-400",  dot: "bg-slate-300"   },
+  { key: "H", label: "H", sublabel: "世帯年収 高", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
+  { key: "M", label: "M", sublabel: "世帯年収 中", color: "text-amber-500",  dot: "bg-amber-400"   },
+  { key: "L", label: "L", sublabel: "世帯年収 低", color: "text-slate-400",  dot: "bg-slate-300"   },
 ]
 
 // ----------------------------------------------------------------
@@ -207,7 +207,7 @@ const allPersonas: Persona[] = [
     image: "/images/personas/persona-11.jpg",
     occupation: "元上場企業社長", income: "年金＋資産収入3,000万円超",
     background: "製薬会社の元社長。現在は複数の社外取締役と慈善活動に従事。",
-    lifestyle: "高級温泉旅館への季節ごとの滞在。孫へのプレゼントに高額百貨店を愛用。",
+    lifestyle: "高級温泉旅館への季節ごとの滞在。孫へのプレ��ントに高額百貨店を愛用。",
     interests: ["高級旅館", "百貨店優待", "フィランソロピー"],
     tribe: ["シニアプレステージ派", "百貨店常連派"],
     cardGoal: "百貨店優待・温泉リゾート特典",
@@ -588,7 +588,7 @@ function SegmentDetailPanel({
           <span className="text-sm font-semibold text-slate-700">
             {stageLabel}
             <span className="mx-1.5 text-slate-300">×</span>
-            Brand Consideration
+            世帯年収
             <span className={cn("ml-1 font-black", engMeta.color)}>{engKey}</span>
             <span className="ml-2 text-[#006FCF] font-bold">推定 {segment.count}</span>
           </span>
@@ -747,7 +747,7 @@ export function MarketOverviewContent() {
                 <div className="flex flex-col items-stretch text-[10px] text-slate-400 font-normal">
                   <span className="text-right">ステージ</span>
                   <div className="border-t border-slate-300 my-1.5" />
-                  <span className="text-left">Brand Consideration</span>
+                  <span className="text-left">世帯年収</span>
                 </div>
               </th>
               {stages.map(s => (
