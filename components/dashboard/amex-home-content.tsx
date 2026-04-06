@@ -15,14 +15,11 @@ import {
 } from "recharts"
 import {
   TrendingUp,
-  ArrowUpRight,
   Globe,
   Users,
-  Target,
-  BarChart2,
-  Bookmark,
-  Sparkles,
   Building2,
+  Sparkles,
+  Bookmark,
   RefreshCw,
   Download,
 } from "lucide-react"
@@ -31,74 +28,57 @@ import type { MapRegion } from "./global-map"
 // react-simple-maps はSSR非対応のため dynamic import
 const GlobalMap = dynamic(
   () => import("./global-map").then((m) => m.GlobalMap),
-  { ssr: false, loading: () => <div className="w-full rounded-xl bg-[#EFF4FB] animate-pulse" style={{ aspectRatio: "2/1" }} /> }
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="w-full rounded-xl bg-[#EFF4FB] animate-pulse"
+        style={{ aspectRatio: "2/1" }}
+      />
+    ),
+  }
 )
 
-// ─── KPI ──────────────────────────────────────────────────────────────────
-const KPI_DATA = [
-  {
-    icon: Globe,
-    label: "総市場規模",
-    value: "$13.7T",
-    sub: "YoY変動中",
-    subColor: "text-emerald-600",
-    subIcon: TrendingUp,
-  },
-  {
-    icon: Users,
-    label: "アクティブ会員",
-    value: "1,158万人",
-    sub: "+8.4% YoY",
-    subColor: "text-emerald-600",
-    subIcon: ArrowUpRight,
-  },
-  {
-    icon: Target,
-    label: "市場シェア",
-    value: "8.7%",
-    sub: "業界平均: +3.2%",
-    subColor: "text-muted-foreground",
-    subIcon: null,
-  },
-  {
-    icon: BarChart2,
-    label: "成長率",
-    value: "+6.8%",
-    sub: "業界平均: +3.2%",
-    subColor: "text-muted-foreground",
-    subIcon: null,
-  },
-]
-
-// ─── 地域データ ───────────────────────────────────────────────────────────
+// ─── 地域データ ──────────────────────────────────────────────────────────────
 const REGIONS: MapRegion[] = [
-  { id: "na",  name: "北米",       marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40]  },
-  { id: "eu",  name: "欧州",       marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [15, 51]    },
-  { id: "cn",  name: "中国",       marketSize: "$6.5T", sizeNum: 6.5, growth: "+6%",   growthNum: 6.0, color: "#E53E3E", coordinates: [104, 35]   },
-  { id: "in",  name: "インド",     marketSize: "$1.6T", sizeNum: 1.6, growth: "+6.7%", growthNum: 6.7, color: "#D69E2E", coordinates: [78, 22]    },
-  { id: "sa",  name: "南米",       marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#9B2335", coordinates: [-58, -15]  },
-  { id: "jp",  name: "日本",       marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]   },
-  { id: "oc",  name: "オセアニア", marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#805AD5", coordinates: [134, -25]  },
+  { id: "na", name: "北米",       marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40]  },
+  { id: "eu", name: "欧州",       marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [15, 51]    },
+  { id: "cn", name: "中国",       marketSize: "$6.5T", sizeNum: 6.5, growth: "+6%",   growthNum: 6.0, color: "#E53E3E", coordinates: [104, 35]   },
+  { id: "in", name: "インド",     marketSize: "$1.6T", sizeNum: 1.6, growth: "+6.7%", growthNum: 6.7, color: "#D69E2E", coordinates: [78, 22]    },
+  { id: "sa", name: "南米",       marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#9B2335", coordinates: [-58, -15]  },
+  { id: "jp", name: "日本",       marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]   },
+  { id: "oc", name: "オセアニア", marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#805AD5", coordinates: [134, -25]  },
 ]
 
-// ─── 年間変化率 ───────────────────────────────────────────────────────────
+// 地域ごとのトレンドサマリー
+const REGION_TREND: Record<string, string> = {
+  na: "北米市場は$4.7T規模。プレミアム旅行・エンタメ消費が牽引し、UHNW層のセンチュリオン利用が過去最高。Z世代富裕層の新規獲得が課題。",
+  eu: "欧州市場は$3.5T規模。ラグジュアリー・ファッション・ガストロノミー消費が堅調。EUの規制強化に伴い競合各社のシェア再編が進行中。",
+  cn: "中国市場は$6.5Tで最大規模。デジタル決済普及とプレミアム消費ブームが共存。越境消費の回復により外資系カードの機会が拡大。",
+  in: "インド市場は$1.6T規模・高成長。中間富裕層の急拡大と国際旅行需要の増加が追い風。ネットワーク拡充が優先課題。",
+  sa: "南米市場は$1.2T規模・成長率最高水準。ブラジル・メキシコが牽引。インフレ対策としてのUSD建てプレミアムカード需要が拡大。",
+  jp: "日本市場は$2.0T規模。インバウンド回復と円安によるラグジュアリー消費急増。プラチナ・センチュリオン保有者の利用額が前年比+18%。",
+  oc: "オセアニア市場は$1.2T規模・高成長。オーストラリアを中心にプレミアムライフスタイル消費が拡大。旅行特典への需要が特に高い。",
+}
+
+// ─── 年間変化率 ──────────────────────────────────────────────────────────────
 const ANNUAL_CHANGES = [
-  { label: "プレミアム富裕層",     change: 25.5, up: true },
-  { label: "健康志向消費者",       change: 18.2, up: true },
-  { label: "テック・デジタル層",   change: 12.8, up: true },
-  { label: "伝統的高額消費者",     change: 5.2,  up: false },
+  { label: "プレミアム富裕層",   change: 25.5, up: true  },
+  { label: "健康志向消費者",     change: 18.2, up: true  },
+  { label: "テック・デジタル層", change: 12.8, up: true  },
+  { label: "伝統的高額消費者",   change:  5.2, up: false },
 ]
 
-// ─── 競合シェア ───────────────────────────────────────────────────────────
+// ─── 競合シェア ──────────────────────────────────────────────────────────────
 const COMPETITOR_DATA = [
   { name: "Visa",       share: 42, color: "#1A56DB" },
   { name: "Mastercard", share: 28, color: "#E53E3E" },
   { name: "AMEX",       share: 14, color: "#006FCF" },
-  { name: "JCB",        share: 8,  color: "#38A169" },
-  { name: "Others",     share: 8,  color: "#A0AEC0" },
+  { name: "JCB",        share:  8, color: "#38A169" },
+  { name: "Others",     share:  8, color: "#A0AEC0" },
 ]
 
-// ─── 3C インサイト ────────────────────────────────────────────────────────
+// ─── 3C インサイト ────────────────────────────────────────────────────────────
 const THREE_C = [
   {
     key: "Customer",
@@ -126,7 +106,7 @@ const THREE_C = [
   },
 ]
 
-// ─── ペルソナ ─────────────────────────────────────────────────────────────
+// ─── ペルソナ ─────────────────────────────────────────────────────────────────
 const PERSONAS = [
   {
     name: "田中 雅子",
@@ -135,7 +115,6 @@ const PERSONAS = [
     location: "東京都港区",
     quote: "出張が月15日以上。ラウンジと優先搭乗は外せません。出費は惜しまないけど、それ以上の価値が欲しい。",
     quoteEn: "Business travel 15+ days/month. Lounge and priority boarding are must-haves.",
-    image: null,
     initials: "TM",
     color: "#006FCF",
   },
@@ -144,9 +123,8 @@ const PERSONAS = [
     age: 38,
     role: "Senior VP, Private Banking",
     location: "New York, USA",
-    quote: "My centurion card is the first thing clients notice. Status matters in my world.",
+    quote: "My Centurion card is the first thing clients notice. Status matters in my world.",
     quoteEn: null,
-    image: null,
     initials: "JC",
     color: "#B4975A",
   },
@@ -155,30 +133,32 @@ const PERSONAS = [
     age: 35,
     role: "Creative Director",
     location: "Paris, France",
-    quote: "Je voyage pour l'art et la gastronomie. Les avantages AMEX me donnent accès à l'inaccessible.",
+    quote: "Je voyage pour l\u2019art et la gastronomie. Les avantages AMEX me donnent acc\u00e8s \u00e0 l\u2019inaccessible.",
     quoteEn: "I travel for art and gastronomy. AMEX perks give me access to the inaccessible.",
-    image: null,
     initials: "SR",
     color: "#38A169",
   },
   {
-    name: "陈 明远",
+    name: "\u9648 \u660e\u8fdc",
     age: 44,
-    role: "科技创业者 / Tech Founder",
-    location: "上海, China",
-    quote: "国际商务中，美国运通卡是身份与信赖的象征。高端服务是我选择的核心。",
+    role: "\u79d1\u6280\u521b\u4e1a\u8005 / Tech Founder",
+    location: "\u4e0a\u6d77, China",
+    quote: "\u56fd\u9645\u5546\u52a1\u4e2d\uff0c\u7f8e\u56fd\u8fd0\u901a\u5361\u662f\u8eab\u4efd\u4e0e\u4fe1\u8d56\u7684\u8c61\u5f81\u3002\u9ad8\u7aef\u670d\u52a1\u662f\u6211\u9009\u62e9\u7684\u6838\u5fc3\u3002",
     quoteEn: "In international business, AMEX is a symbol of status and trust.",
-    image: null,
     initials: "CM",
     color: "#E53E3E",
   },
 ]
 
-
+// ─── コンポーネント ───────────────────────────────────────────────────────────
 export function AmexHomeContent() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
 
   const selected = REGIONS.find((r) => r.id === selectedRegion) ?? null
+
+  const trendText = selected
+    ? (REGION_TREND[selected.id] ?? "")
+    : "グローバルプレミアムカード市場では、富裕層（+25.5%）とテック・デジタル消費者（+12.8%）が成長を牽引。特に35歳以下の若手富裕層でセンチュリオン・プラチナへの関心が急増。伝統的消費者層は微減傾向にあり、体験型特典の拡充が重要な戦略課題です。"
 
   return (
     <div className="p-6 space-y-6">
@@ -209,20 +189,20 @@ export function AmexHomeContent() {
             <CardTitle className="text-sm font-semibold">グローバルマップ</CardTitle>
           </CardHeader>
           <CardContent className="pb-4">
-            {/* react-simple-maps ベースの世界地図 */}
             <GlobalMap
               regions={REGIONS}
               selectedRegion={selectedRegion}
               onSelectRegion={setSelectedRegion}
             />
-
             {/* 凡例 */}
             <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 px-1">
               {REGIONS.map((r) => (
                 <button
                   key={r.id}
                   onClick={() => setSelectedRegion(r.id === selectedRegion ? null : r.id)}
-                  className={`flex items-center gap-1.5 text-xs transition-opacity ${selectedRegion && selectedRegion !== r.id ? "opacity-40" : "opacity-100"}`}
+                  className={`flex items-center gap-1.5 text-xs transition-opacity ${
+                    selectedRegion && selectedRegion !== r.id ? "opacity-40" : "opacity-100"
+                  }`}
                 >
                   <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: r.color }} />
                   <span className="font-medium text-foreground">{r.name}</span>
@@ -234,7 +214,7 @@ export function AmexHomeContent() {
           </CardContent>
         </Card>
 
-        {/* 全世界 サマリー */}
+        {/* サマリーパネル */}
         <Card className="lg:col-span-2 border border-border shadow-sm">
           <CardHeader className="pb-2 flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold">
@@ -248,11 +228,7 @@ export function AmexHomeContent() {
               <p className="text-xs font-bold text-foreground mb-2">トレンド</p>
               <div className="bg-[#EEF6FF] rounded-lg p-3 flex gap-2">
                 <Sparkles className="h-3.5 w-3.5 text-[#006FCF] shrink-0 mt-0.5" />
-                <p className="text-xs text-foreground leading-relaxed">
-                  {selected
-                    ? `${selected.name}市場は${selected.marketSize}規模、成長率${selected.growth}。プレミアム消費を牽引するUHNW（超富裕層）の増加が顕著で、AMEXシェアの拡大機会が高まっています。`
-                    : "グローバルプレミアムカード市場では、富裕層（+25.5%）とテック・デジタル消費者（+12.8%）が成長を牽引。特に35歳以下の若手富裕層でセンチュリオン・プラチナへの関心が���増。伝統的消費者層は微減傾向にあり、体験型特典の拡充が重要な戦略課題です。"}
-                </p>
+                <p className="text-xs text-foreground leading-relaxed">{trendText}</p>
               </div>
             </div>
 
@@ -285,15 +261,37 @@ export function AmexHomeContent() {
                   data={COMPETITOR_DATA}
                   margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
                 >
-                  <XAxis type="number" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} domain={[0, 50]} />
-                  <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: "var(--foreground)" }} axisLine={false} tickLine={false} width={68} />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 10, fill: "#6B7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    domain={[0, 50]}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    tick={{ fontSize: 11, fill: "#111827" }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={68}
+                  />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "6px", fontSize: 11 }}
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #E5E7EB",
+                      borderRadius: "6px",
+                      fontSize: 11,
+                    }}
                     formatter={(v: number) => [`${v}%`, "シェア"]}
                   />
                   <Bar dataKey="share" radius={[0, 3, 3, 0]} barSize={10}>
                     {COMPETITOR_DATA.map((d) => (
-                      <Cell key={d.name} fill={d.name === "AMEX" ? "#006FCF" : d.color} opacity={d.name === "AMEX" ? 1 : 0.6} />
+                      <Cell
+                        key={d.name}
+                        fill={d.color}
+                        opacity={d.name === "AMEX" ? 1 : 0.6}
+                      />
                     ))}
                   </Bar>
                 </BarChart>
@@ -318,7 +316,10 @@ export function AmexHomeContent() {
             {THREE_C.map((c) => {
               const Icon = c.icon
               return (
-                <div key={c.key} className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors">
+                <div
+                  key={c.key}
+                  className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
+                >
                   <div className="flex items-start gap-3">
                     <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
                       <Icon className={`h-3.5 w-3.5 ${c.color}`} />
@@ -350,7 +351,6 @@ export function AmexHomeContent() {
             {PERSONAS.map((p) => (
               <div key={p.name} className="py-4 first:pt-0">
                 <div className="flex gap-3">
-                  {/* アバター */}
                   <div
                     className="w-12 h-12 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
                     style={{ backgroundColor: p.color }}
