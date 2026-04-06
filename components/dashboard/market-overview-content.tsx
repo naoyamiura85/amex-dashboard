@@ -207,7 +207,7 @@ const allPersonas: Persona[] = [
     image: "/images/personas/persona-11.jpg",
     occupation: "元上場企業社長", income: "年金＋資産収入3,000万円超",
     background: "製薬会社の元社長。現在は複数の社外取締役と慈善活動に従事。",
-    lifestyle: "高級温泉旅館への季節ごとの滞在。孫へのプレ��ントに高額百貨店を愛用。",
+    lifestyle: "高級温泉旅館への季節ごとの滞在。孫��のプレ��ントに高額百貨店を愛用。",
     interests: ["高級旅館", "百貨店優待", "フィランソロピー"],
     tribe: ["シニアプレステージ派", "百貨店常連派"],
     cardGoal: "百貨店優待・温泉リゾート特典",
@@ -753,7 +753,11 @@ export function MarketOverviewContent() {
               {stages.map(s => (
                 <th key={s.key} className={cn("p-3 border-b border-r border-slate-200 text-center min-w-[170px]", stageBg[s.key].cell)}>
                   <div className={cn("w-2.5 h-2.5 rounded-full mx-auto mb-1.5", stageBg[s.key].dot)} />
-                  <p className={cn("text-sm font-bold", s.key === "prospect" ? "text-slate-600" : s.key === "premium" ? "text-white" : "text-[#006FCF]")}>{s.label}</p>
+                  <p className={cn("text-sm font-bold leading-snug", s.key === "prospect" ? "text-slate-600" : s.key === "premium" ? "text-white" : "text-[#006FCF]")}>
+                    {(s.key === "prospect" || s.key === "new")
+                      ? <>未会員<br />（{s.key === "prospect" ? "Brand Consideration 低" : "Brand Consideration 高"}）</>
+                      : s.label}
+                  </p>
                   <p className={cn("text-xs font-normal mt-0.5", s.key === "premium" ? "text-white/80" : "text-slate-400")}>{s.sub}</p>
                 </th>
               ))}
