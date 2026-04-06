@@ -37,6 +37,8 @@ interface SegmentAttributes {
   avgSpend: string
   occupations: { label: string; pct: number }[]
   incomes: { label: string; pct: number }[]
+  cards: { label: string; pct: number; color: string }[]
+  cardNote?: string
   summary: string
 }
 
@@ -233,6 +235,13 @@ const segments: Segment[] = [
       genderRatio: "男性56% / 女性44%", avgAge: 38, marriedRate: "44%", avgSpend: "未計測",
       occupations: [{ label: "IT・テック", pct: 32 }, { label: "金融", pct: 24 }, { label: "専門職", pct: 18 }, { label: "経営者", pct: 12 }],
       incomes: [{ label: "500〜900万円", pct: 48 }, { label: "900〜1,500万円", pct: 30 }, { label: "1,500万円以上", pct: 22 }],
+      cards: [
+        { label: "三井住友プラチナ", pct: 38, color: "#1A5276" },
+        { label: "JCBザ・クラス", pct: 28, color: "#145A32" },
+        { label: "ダイナースプレミアム", pct: 18, color: "#6E2F1A" },
+        { label: "楽天プレミアム", pct: 12, color: "#C0392B" },
+      ],
+      cardNote: "保有カード（他社）",
       summary: "高い情報感度を持つ30〜40代。競合プレミアムカードのヘビーユーザーだが、AMEX特典への関心が急上昇。デジタル接点でのエンゲージメントが高く、SNSや比較サイトからの流入が多い。",
     },
   },
@@ -243,6 +252,13 @@ const segments: Segment[] = [
       genderRatio: "男性48% / 女性52%", avgAge: 41, marriedRate: "58%", avgSpend: "¥32万円/月",
       occupations: [{ label: "管理職", pct: 36 }, { label: "専門職", pct: 28 }, { label: "経営者", pct: 20 }, { label: "その他", pct: 16 }],
       incomes: [{ label: "900〜1,500万円", pct: 42 }, { label: "1,500〜2,000万円", pct: 35 }, { label: "2,000万円以上", pct: 23 }],
+      cards: [
+        { label: "三井住友プラチナ", pct: 42, color: "#1A5276" },
+        { label: "ダイナースプレミアム", pct: 26, color: "#6E2F1A" },
+        { label: "JCBゴールド", pct: 20, color: "#145A32" },
+        { label: "その他プレミアム", pct: 12, color: "#7F8C8D" },
+      ],
+      cardNote: "入会前の保有カード（他社）",
       summary: "申込後3ヶ月以内の高エンゲージメント新規会員。入会特典を積極利用しており継続率が高い。コンシェルジュや空港ラウンジの初回利用率が他セグメント比2.3倍。",
     },
   },
@@ -253,6 +269,12 @@ const segments: Segment[] = [
       genderRatio: "男性62% / 女性38%", avgAge: 52, marriedRate: "74%", avgSpend: "¥87万円/月",
       occupations: [{ label: "経営者", pct: 34 }, { label: "医師・士業", pct: 26 }, { label: "金融", pct: 22 }, { label: "管理職", pct: 18 }],
       incomes: [{ label: "1,500〜2,000万円", pct: 38 }, { label: "2,000〜3,000万円", pct: 34 }, { label: "3,000万円以上", pct: 28 }],
+      cards: [
+        { label: "AMEX グリーン", pct: 44, color: "#006FCF" },
+        { label: "AMEX ゴールド", pct: 35, color: "#B4975A" },
+        { label: "AMEX プラチナ検討中", pct: 21, color: "#8E44AD" },
+      ],
+      cardNote: "保有AMEXカード / 検討中",
       summary: "利用額・頻度ともに最上位層。出張・グルメ・旅行の3カテゴリで全消費の72%を占める。プラチナカードへのアップグレード見込みが高く、コンシェルジュ満足度も最高水準。",
     },
   },
@@ -263,6 +285,12 @@ const segments: Segment[] = [
       genderRatio: "男性68% / 女性32%", avgAge: 57, marriedRate: "82%", avgSpend: "¥210万円/月",
       occupations: [{ label: "オーナー経営者", pct: 44 }, { label: "資産家", pct: 32 }, { label: "医師", pct: 14 }, { label: "士業", pct: 10 }],
       incomes: [{ label: "3,000万円以上", pct: 68 }, { label: "2,000〜3,000万円", pct: 26 }, { label: "1,500〜2,000万円", pct: 6 }],
+      cards: [
+        { label: "AMEX センチュリオン", pct: 52, color: "#1C1C1C" },
+        { label: "AMEX プラチナ", pct: 34, color: "#8E44AD" },
+        { label: "AMEX ビジネスプラチナ", pct: 14, color: "#2E4057" },
+      ],
+      cardNote: "保有AMEXカード",
       summary: "センチュリオン・プラチナ会員の中核。年間消費額は平均2,500万円超。プライベートジェットや専用コンシェルジュの利用率が高く、特別招待イベントが最重要リテンション施策。",
     },
   },
@@ -270,9 +298,16 @@ const segments: Segment[] = [
     engagement: "M", stage: "prospect", count: "287万人",
     personas: [allPersonas[5], allPersonas[9], allPersonas[3]],
     attributes: {
-      genderRatio: "男性53% / 女性47%", avgAge: 45, marriedRate: "61%", avgSpend: "未計測",
+      genderRatio: "男性53% / 女性47%", avgAge: 45, marriedRate: "61%", avgSpend: "未計��",
       occupations: [{ label: "会社員", pct: 38 }, { label: "専門職", pct: 22 }, { label: "自営業", pct: 20 }, { label: "経営者", pct: 14 }],
       incomes: [{ label: "500〜700万円", pct: 42 }, { label: "700〜900万円", pct: 34 }, { label: "900万円以上", pct: 24 }],
+      cards: [
+        { label: "楽天プレミアム", pct: 36, color: "#C0392B" },
+        { label: "三井住友ゴールド", pct: 28, color: "#1A5276" },
+        { label: "イオンゴールド", pct: 22, color: "#F39C12" },
+        { label: "その他一般カード", pct: 14, color: "#7F8C8D" },
+      ],
+      cardNote: "保有カード（他社）",
       summary: "比較検討中の中エンゲージメント層。マイル・ポイント還元率への関���が�����く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
     },
   },
@@ -283,6 +318,13 @@ const segments: Segment[] = [
       genderRatio: "男性51% / 女性49%", avgAge: 39, marriedRate: "55%", avgSpend: "¥18万円/月",
       occupations: [{ label: "会社員", pct: 44 }, { label: "専門職", pct: 24 }, { label: "自営業", pct: 18 }, { label: "その他", pct: 14 }],
       incomes: [{ label: "700〜900万円", pct: 38 }, { label: "900〜1,200万円", pct: 32 }, { label: "1,200万円以上", pct: 30 }],
+      cards: [
+        { label: "JCBゴールド", pct: 36, color: "#145A32" },
+        { label: "三井住友ゴールド", pct: 32, color: "#1A5276" },
+        { label: "ダイナースクラブ", pct: 22, color: "#6E2F1A" },
+        { label: "その他", pct: 10, color: "#7F8C8D" },
+      ],
+      cardNote: "入会前の保有カード（他社）",
       summary: "入会後に利用が伸び悩んでいる中間層。グルメ特典や国内ホテル優待の認知が低く、特典案内メールの開封率が低い。オンボーディング施策の改善で活性化できる可能性が高い。",
     },
   },
@@ -293,6 +335,12 @@ const segments: Segment[] = [
       genderRatio: "男性57% / 女性43%", avgAge: 49, marriedRate: "68%", avgSpend: "¥45万円/月",
       occupations: [{ label: "管理職", pct: 32 }, { label: "医師・士業", pct: 24 }, { label: "経営者", pct: 22 }, { label: "その他", pct: 22 }],
       incomes: [{ label: "1,200〜1,800万円", pct: 44 }, { label: "1,800〜2,500万円", pct: 32 }, { label: "2,500万円以上", pct: 24 }],
+      cards: [
+        { label: "AMEX ゴールド", pct: 58, color: "#B4975A" },
+        { label: "AMEX グリーン", pct: 28, color: "#006FCF" },
+        { label: "AMEX プラチナ検討中", pct: 14, color: "#8E44AD" },
+      ],
+      cardNote: "保有AMEXカード / 検討中",
       summary: "安定した利用実績を持つ中間アクティブ層。旅行・グルメでの利用が中心で法人カードとの併用率が高い。コンシェルジュ利用は少ないが特典認知が上がれば利用拡大の余地が大きい。",
     },
   },
@@ -303,6 +351,12 @@ const segments: Segment[] = [
       genderRatio: "男性60% / 女性40%", avgAge: 60, marriedRate: "78%", avgSpend: "¥120万円/月",
       occupations: [{ label: "資産家", pct: 36 }, { label: "経営者", pct: 30 }, { label: "医師", pct: 20 }, { label: "士業", pct: 14 }],
       incomes: [{ label: "2,000〜3,000万円", pct: 48 }, { label: "3,000万円以上", pct: 40 }, { label: "1,500〜2,000万円", pct: 12 }],
+      cards: [
+        { label: "AMEX プラチナ", pct: 62, color: "#8E44AD" },
+        { label: "AMEX センチュリオン", pct: 24, color: "#1C1C1C" },
+        { label: "AMEX ビジネスプラチナ", pct: 14, color: "#2E4057" },
+      ],
+      cardNote: "保有AMEXカード",
       summary: "プレミアム会員ながら特典の活用頻度が低下しているセグメント。長期会員のため継続意向は高いが最新特典の認知が低い。パーソナライズされたリテンションアプローチが有効。",
     },
   },
@@ -313,6 +367,13 @@ const segments: Segment[] = [
       genderRatio: "男性49% / 女性51%", avgAge: 51, marriedRate: "63%", avgSpend: "未計測",
       occupations: [{ label: "会社員", pct: 46 }, { label: "専門職", pct: 20 }, { label: "自営業", pct: 18 }, { label: "主婦・主夫", pct: 16 }],
       incomes: [{ label: "300〜500万円", pct: 38 }, { label: "500〜700万円", pct: 36 }, { label: "700万円以上", pct: 26 }],
+      cards: [
+        { label: "楽天カード", pct: 44, color: "#C0392B" },
+        { label: "PayPayカード", pct: 28, color: "#F39C12" },
+        { label: "イオンカード", pct: 18, color: "#1ABC9C" },
+        { label: "その他一般カード", pct: 10, color: "#7F8C8D" },
+      ],
+      cardNote: "保有カード（他社）",
       summary: "低関与だが潜在的な需要を持つ大規模セグメント。特定のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
     },
   },
@@ -323,6 +384,13 @@ const segments: Segment[] = [
       genderRatio: "男性48% / 女性52%", avgAge: 36, marriedRate: "48%", avgSpend: "¥8万円/月",
       occupations: [{ label: "会社員", pct: 52 }, { label: "専門職", pct: 20 }, { label: "自営業", pct: 16 }, { label: "その他", pct: 12 }],
       incomes: [{ label: "500〜700万円", pct: 44 }, { label: "700〜900万円", pct: 32 }, { label: "900万円以上", pct: 24 }],
+      cards: [
+        { label: "三井住友一般", pct: 38, color: "#1A5276" },
+        { label: "JCB一般", pct: 30, color: "#145A32" },
+        { label: "楽天カード", pct: 22, color: "#C0392B" },
+        { label: "その他", pct: 10, color: "#7F8C8D" },
+      ],
+      cardNote: "入会前の保有カード（他社）",
       summary: "入会後の休眠リスクが最も高いセグメント。初月以降の利用が急減しており3ヶ月以内の離脱率が32%に上る。初回特典消化後の次のアクションを促すコミュニケーション設計が急務。",
     },
   },
@@ -333,6 +401,12 @@ const segments: Segment[] = [
       genderRatio: "男性55% / 女性45%", avgAge: 55, marriedRate: "72%", avgSpend: "¥22万円/月",
       occupations: [{ label: "管理職", pct: 28 }, { label: "経営者", pct: 26 }, { label: "医師・士業", pct: 24 }, { label: "その他", pct: 22 }],
       incomes: [{ label: "1,200〜1,800万円", pct: 40 }, { label: "1,800万円以上", pct: 38 }, { label: "1,000〜1,200万円", pct: 22 }],
+      cards: [
+        { label: "AMEX ゴールド", pct: 46, color: "#B4975A" },
+        { label: "AMEX グリーン", pct: 32, color: "#006FCF" },
+        { label: "AMEX プラチナ検討中", pct: 22, color: "#8E44AD" },
+      ],
+      cardNote: "保有AMEXカード / 検討中",
       summary: "収入は高いが利用頻度が低い要注目セグメント。他社カードとの使い分けが多く、特典訴求によってシェアオブウォレット拡大の余地が大きい。",
     },
   },
@@ -343,6 +417,12 @@ const segments: Segment[] = [
       genderRatio: "男性70% / 女性30%", avgAge: 65, marriedRate: "85%", avgSpend: "¥55万円/月",
       occupations: [{ label: "退職経営者", pct: 42 }, { label: "資産家", pct: 34 }, { label: "士業", pct: 14 }, { label: "その他", pct: 10 }],
       incomes: [{ label: "3,000万円以上（資産）", pct: 56 }, { label: "2,000〜3,000万円", pct: 30 }, { label: "1,500〜2,000万円", pct: 14 }],
+      cards: [
+        { label: "AMEX プラチナ", pct: 54, color: "#8E44AD" },
+        { label: "AMEX センチュリオン", pct: 30, color: "#1C1C1C" },
+        { label: "AMEX ゴールド（併用）", pct: 16, color: "#B4975A" },
+      ],
+      cardNote: "保有AMEXカード",
       summary: "プレミアム会員だが利用額が著しく低下しているシニア層。百貨店優待・旅館特典など国内向けのサービス訴求と専任担当者による関係維持が有効。",
     },
   },
@@ -567,7 +647,28 @@ function SegmentDetailPanel({
               </div>
             </div>
           </div>
-          <div className="mt-4 bg-slate-50 rounded-lg p-3.5">
+          {/* 保有/検討カード状況 */}
+          <div className="mt-4 border border-slate-100 rounded-lg p-3.5">
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-2.5">
+              {segment.attributes.cardNote ?? "保有/検討カード状況"}
+            </p>
+            <div className="space-y-2">
+              {segment.attributes.cards.map(c => (
+                <div key={c.label} className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
+                  <span className="text-xs text-slate-600 flex-1">{c.label}</span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className="w-20 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${c.pct}%`, backgroundColor: c.color, opacity: 0.7 }} />
+                    </div>
+                    <span className="text-xs font-semibold text-slate-700 w-7 text-right">{c.pct}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-3 bg-slate-50 rounded-lg p-3.5">
             <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">サマリー</p>
             <p className="text-sm text-slate-700 leading-relaxed">{segment.attributes.summary}</p>
           </div>
