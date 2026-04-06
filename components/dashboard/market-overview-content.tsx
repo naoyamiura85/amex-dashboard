@@ -84,10 +84,10 @@ const stageBg: Record<StageKey, { cell: string; cellHover: string; cellSelected:
 }
 
 const stages: { key: StageKey; label: string; sub: string }[] = [
-  { key: "prospect", label: "見込み会員",  sub: "890万人" },
-  { key: "new",      label: "新規会員",    sub: "430万人" },
-  { key: "active",   label: "アクティブ",  sub: "210万人" },
-  { key: "premium",  label: "プレミアム",  sub: "56万人"  },
+  { key: "prospect", label: "未会員（見込み低）", sub: "890万人" },
+  { key: "new",      label: "未会員（見込み高）", sub: "430万人" },
+  { key: "active",   label: "新規会員",           sub: "210万人" },
+  { key: "premium",  label: "プレミアム",          sub: "56万人"  },
 ]
 
 const engagements: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[] = [
@@ -273,7 +273,7 @@ const segments: Segment[] = [
       genderRatio: "男性53% / 女性47%", avgAge: 45, marriedRate: "61%", avgSpend: "未計測",
       occupations: [{ label: "会社員", pct: 38 }, { label: "専門職", pct: 22 }, { label: "自営業", pct: 20 }, { label: "経営者", pct: 14 }],
       incomes: [{ label: "500〜700万円", pct: 42 }, { label: "700〜900万円", pct: 34 }, { label: "900万円以上", pct: 24 }],
-      summary: "比較検討中の中エンゲージメント層。マイル・ポイント還元率への関心が�����く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
+      summary: "比較検討中の中エンゲージメント層。マイル・ポイント還元率への関���が�����く、年会費対比コスパを重視する傾向。適切な特典訴求で申込意向が高まる可能性がある。",
     },
   },
   {
