@@ -7,8 +7,8 @@ export default function PredictionsPage() {
   return (
     <>
       <DashboardHeader
-        title="トレンド予測"
-        breadcrumb={["AI分析", "トレンド予測"]}
+        title="AIインサイト・予測"
+        breadcrumb={["AI分析", "AIインサイト・予測"]}
       />
       <AIPredictionsContent />
     </>

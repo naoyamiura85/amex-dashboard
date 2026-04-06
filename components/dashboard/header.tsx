@@ -26,14 +26,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-// 商品の定義（サントリーD2C商品）
+// カード商品の定義（AMEX）
 const products = [
-  { id: "all", name: "全商品", category: "", image: "" },
-  { id: "menphys", name: "menphys", category: "健康ドリンク", image: "/images/products/menphys.jpg" },
-  { id: "tokucha", name: "特茶/胡麻麦茶", category: "健康飲料", image: "/images/products/tokucha.jpg" },
-  { id: "maintenansu", name: "すっきりメンテナン酢", category: "機能性表示食品", image: "/images/products/maintenansu.jpg" },
-  { id: "coffee", name: "SUNTORY COFFEE ROASTERY", category: "プレミアムコーヒー", image: "/images/products/coffee-roastery.jpg" },
-  { id: "zone", name: "ZONe", category: "エナジードリンク", image: "/images/products/zone.jpg" },
+  { id: "all", name: "全カード", category: "", image: "" },
+  { id: "platinum", name: "プラチナ・カード", category: "プレミアムカード", image: "/images/products/amex-platinum.png" },
+  { id: "gold", name: "ゴールド・カード", category: "プレミアムカード", image: "/images/products/amex-gold.png" },
+  { id: "green", name: "グリーン・カード", category: "スタンダードカード", image: "/images/products/amex-green.png" },
+  { id: "blue", name: "ブルー・カード", category: "エントリーカード", image: "/images/products/amex-blue.png" },
+  { id: "business-gold", name: "ビジネス・ゴールド", category: "法人カード", image: "/images/products/amex-business.png" },
 ]
 
 interface DashboardHeaderProps {
@@ -45,51 +45,59 @@ interface DashboardHeaderProps {
   onProductChange?: (productId: string) => void
 }
 
-// Map routes to icons and descriptions
+// Map routes to icons and descriptions (AMEX Financial Analytics)
 const pageConfig: Record<string, { icon: LucideIcon; description: string }> = {
+  "/dashboard": { 
+    icon: BarChart3, 
+    description: "会員数・利用動向・収益KPIのエグゼクティブサマリー" 
+  },
   "/dashboard/market-overview": { 
     icon: Users, 
-    description: "定期顧客化ポテンシャルとウェルネスレベルごとのペルソナ分布" 
+    description: "会員セグメント・ファネル・ペルソナ別の詳細分析" 
   },
   "/dashboard/trends": { 
     icon: TrendingUp, 
-    description: "未購入ユーザーの興味関心から検出した消費財カテゴリの成長トレンド" 
+    description: "会員行動トレンドと市場変化の時系列分析" 
+  },
+  "/dashboard/tribe-analysis": { 
+    icon: Users, 
+    description: "趣味・行動ベースの会員グループ（トライブ）ごとのクラスター分析" 
   },
   "/dashboard/digital-shelf": { 
     icon: MonitorSmartphone, 
-    description: "購入ユーザーのペルソナデータとEC行動データの統合分析" 
+    description: "カード利用カテゴリ・チャネル別の消費行動分析" 
   },
   "/ai/correlations": { 
     icon: Cpu, 
-    description: "クロスカテゴリー相関と素材シナジーの自動検出" 
+    description: "会員属性×利用行動の相関分析とシナジー検出" 
   },
   "/ai/predictions": { 
     icon: BarChart3, 
-    description: "トレンド到来予測と寿命分析" 
+    description: "AI による解約予測・アップグレード予測・チャーン分析" 
   },
   "/ai/competitors": { 
     icon: Swords, 
-    description: "競合新商品の自動検知と成分比較分析" 
+    description: "競合カード会社の動向・シェア変化・差別化分析" 
   },
   "/ai/concept-generator": { 
     icon: Lightbulb, 
-    description: "トレンド×ターゲット×素材からコンセプト自動生成" 
+    description: "会員ターゲット×ベネフィットからのカードコンセプト自動生成" 
   },
   "/ai/materials": { 
     icon: FlaskConical, 
-    description: "原材料マスタ管理とトレンド相関分析" 
+    description: "特典・サービスデータベースとトレンド相関分析" 
   },
   "/ai/simulator": { 
     icon: Boxes, 
-    description: "What-If分析と製品改定シミュレーション" 
+    description: "審査基準変更の影響シミュレーションと収益予測" 
   },
   "/insights/explorer": { 
     icon: Search, 
-    description: "自然言語による統合データ検索" 
+    description: "自然言語による会員データ統合検索" 
   },
   "/channels": { 
     icon: Store, 
-    description: "販売チャネル別のパフォーマンス分析" 
+    description: "申込チャネル別のコンバージョン・コスト分析" 
   },
   "/reports": { 
     icon: Zap, 
@@ -107,7 +115,7 @@ export function DashboardHeader({ title, description, breadcrumb, icon, selected
   const Icon = icon || config.icon
   const desc = description || config.description
 
-  // デジタルシェルフ分析ページかどうかを判定
+  // カード利用分析ページかどうかを判定
   const isDigitalShelfPage = pathname === "/dashboard/digital-shelf"
   const currentProduct = products.find(p => p.id === selectedProduct)
 

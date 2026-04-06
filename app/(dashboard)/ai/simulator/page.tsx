@@ -7,8 +7,8 @@ export default function SimulatorPage() {
   return (
     <>
       <DashboardHeader
-        title="改定シミュレーター"
-        breadcrumb={["商品開発支援", "改定シミュレーター"]}
+        title="審査シミュレーター"
+        breadcrumb={["AI分析", "審査シミュレーター"]}
       />
       <AISimulatorContent />
     </>

@@ -3,14 +3,17 @@ import { MarketOverviewContent } from "@/components/dashboard/market-overview-co
 import { DashboardHeader } from "@/components/dashboard/header"
 
 export const metadata: Metadata = {
-  title: "Market Overview | D2Cダッシュボード",
-  description: "定期顧客化ポテンシャルとウェルネスレベルごとのペルソナ分布",
+  title: "会員分析 | AMEX 会員分析ダッシュボード",
+  description: "会員セグメント・ファネル・ペルソナ別の詳細分析",
 }
 
 export default function MarketOverviewPage() {
   return (
     <>
-      <DashboardHeader title="Market Overview" />
+      <DashboardHeader
+        title="会員分析"
+        breadcrumb={["ダッシュボード", "会員分析"]}
+      />
       <MarketOverviewContent />
     </>
   )

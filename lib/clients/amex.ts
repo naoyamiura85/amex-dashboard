@@ -8,11 +8,11 @@ export const amexConfig: ClientConfig = {
     logo: "/images/clients/amex-logo.png",
     dashboardTitle: "会員分析ダッシュボード",
     colors: {
-      primary: "#D4AF37",      // Premium Gold
-      secondary: "#2563EB",    // AMEX Blue  
-      accent: "#10B981",       // Emerald
+      primary: "#006FCF",      // AMEX Corporate Blue
+      secondary: "#00175A",    // AMEX Deep Navy
+      accent: "#B4975A",       // AMEX Gold
     },
-    darkMode: true,
+    darkMode: false,
   },
   features: {
     marketOverview: true,

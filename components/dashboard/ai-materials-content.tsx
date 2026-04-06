@@ -27,563 +27,359 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { 
-  Search, 
+import { Progress } from "@/components/ui/progress"
+import {
+  Search,
   Filter,
-  Leaf,
-  Beaker,
-  Heart,
-  Sparkles,
-  Shield,
-  Zap,
-  Brain,
-  Eye,
-  Droplets,
-  Sun,
-  Moon,
-  Dna,
-  Smile,
-  Coffee,
-  Flame,
-  Wind,
+  Plane,
+  Hotel,
+  Utensils,
+  Music,
+  ShieldCheck,
+  Gem,
+  Smartphone,
+  Globe,
   Star,
-  Award,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  ExternalLink,
 } from "lucide-react"
 
-// 素材カテゴリ定義
+// 特典カテゴリ
 const categories = [
   { id: "all", name: "すべて" },
-  { id: "vitamin", name: "ビタミン類" },
-  { id: "mineral", name: "ミネラル" },
-  { id: "amino", name: "アミノ酸" },
-  { id: "botanical", name: "植物由来" },
-  { id: "functional", name: "機能性成分" },
-  { id: "probiotic", name: "プロバイオティクス" },
-  { id: "collagen", name: "コラーゲン・タンパク" },
+  { id: "travel", name: "トラベル" },
+  { id: "hotel", name: "ホテル" },
+  { id: "dining", name: "ダイニング" },
+  { id: "entertainment", name: "エンタメ" },
+  { id: "insurance", name: "保険・補償" },
+  { id: "luxury", name: "ラグジュアリー" },
+  { id: "digital", name: "デジタル" },
 ]
 
-// 効能タグ定義
-const effectTags = [
-  { id: "beauty", name: "美容", icon: Sparkles, color: "bg-pink-100 text-pink-700 border-pink-200" },
-  { id: "health", name: "健康維持", icon: Heart, color: "bg-red-100 text-red-700 border-red-200" },
-  { id: "energy", name: "活力", icon: Zap, color: "bg-yellow-100 text-yellow-700 border-yellow-200" },
-  { id: "immunity", name: "免疫", icon: Shield, color: "bg-green-100 text-green-700 border-green-200" },
-  { id: "cognitive", name: "認知機能", icon: Brain, color: "bg-purple-100 text-purple-700 border-purple-200" },
-  { id: "eye", name: "アイケア", icon: Eye, color: "bg-blue-100 text-blue-700 border-blue-200" },
-  { id: "hydration", name: "保湿", icon: Droplets, color: "bg-cyan-100 text-cyan-700 border-cyan-200" },
-  { id: "sleep", name: "睡眠", icon: Moon, color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
-  { id: "antiaging", name: "エイジング", icon: Sun, color: "bg-orange-100 text-orange-700 border-orange-200" },
-  { id: "natural", name: "天然由来", icon: Leaf, color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
-]
+const categoryIcons: Record<string, React.ElementType> = {
+  travel: Plane,
+  hotel: Hotel,
+  dining: Utensils,
+  entertainment: Music,
+  insurance: ShieldCheck,
+  luxury: Gem,
+  digital: Smartphone,
+}
 
-// 商品DNAファクター定義（消費者に与える感情・気持ち）
-const dnaFactors = [
-  { id: "refresh", name: "リフレッシュ", icon: Wind, color: "bg-sky-50 text-sky-600 border-sky-200" },
-  { id: "relax", name: "リラックス", icon: Coffee, color: "bg-amber-50 text-amber-600 border-amber-200" },
-  { id: "vitality", name: "活力・元気", icon: Flame, color: "bg-orange-50 text-orange-600 border-orange-200" },
-  { id: "confidence", name: "自信", icon: Star, color: "bg-yellow-50 text-yellow-600 border-yellow-200" },
-  { id: "comfort", name: "安心感", icon: Shield, color: "bg-green-50 text-green-600 border-green-200" },
-  { id: "joy", name: "喜び・幸福", icon: Smile, color: "bg-pink-50 text-pink-600 border-pink-200" },
-  { id: "premium", name: "プレミアム感", icon: Award, color: "bg-violet-50 text-violet-600 border-violet-200" },
-  { id: "smart", name: "知的・賢さ", icon: Brain, color: "bg-indigo-50 text-indigo-600 border-indigo-200" },
-]
-
-// 素材データベース
-const materialsData = [
+// パートナー特典データ
+const partnersData = [
   {
     id: 1,
-    name: "ビタミンC",
-    nameEn: "Vitamin C / Ascorbic Acid",
-    category: "vitamin",
-    effects: ["beauty", "immunity", "antiaging"],
-    dna: ["refresh", "confidence", "vitality"],
-    origin: "合成/天然",
-    description: "抗酸化作用、コラーゲン生成促進、美白効果",
-    relatedTrends: ["美白ケア", "インナービューティー"],
+    name: "プライオリティ・パス",
+    category: "travel",
+    tier: "プラチナ以上",
+    utilizationRate: 87,
+    trend: "up",
+    satisfactionScore: 4.8,
+    partnerSince: 2008,
+    annualUsers: 148000,
+    description: "世界1,400か所以上の空港ラウンジに無制限アクセス",
+    tags: ["フライト前後", "ビジネスクラス相当", "同伴者1名無料"],
   },
   {
     id: 2,
-    name: "ヒアルロン酸",
-    nameEn: "Hyaluronic Acid",
-    category: "functional",
-    effects: ["beauty", "hydration", "antiaging"],
-    dna: ["confidence", "premium", "joy"],
-    origin: "発酵法",
-    description: "高い保水力、肌のハリ・弾力向上",
-    relatedTrends: ["保湿ケア", "エイジングケア"],
+    name: "ザ・ペニンシュラ 東京",
+    category: "hotel",
+    tier: "プラチナ以上",
+    utilizationRate: 62,
+    trend: "up",
+    satisfactionScore: 4.9,
+    partnerSince: 2015,
+    annualUsers: 28400,
+    description: "スイートルームへの優先アップグレード、アーリーチェックイン/レイトチェックアウト",
+    tags: ["スイート優先", "朝食無料", "ウェルカムアメニティ"],
   },
   {
     id: 3,
-    name: "セラミド",
-    nameEn: "Ceramide",
-    category: "functional",
-    effects: ["beauty", "hydration"],
-    dna: ["comfort", "confidence", "premium"],
-    origin: "植物由来",
-    description: "肌バリア機能強化、保湿効果",
-    relatedTrends: ["敏感肌ケア", "バリア機能"],
+    name: "NOBU レストラン",
+    category: "dining",
+    tier: "ゴールド以上",
+    utilizationRate: 54,
+    trend: "up",
+    satisfactionScore: 4.7,
+    partnerSince: 2019,
+    annualUsers: 52000,
+    description: "国内外NOBU全店にて優先予約、シェフズテーブルへの特別アクセス",
+    tags: ["優先予約", "シェフズテーブル", "ペアリングサービス"],
   },
   {
     id: 4,
-    name: "GABA",
-    nameEn: "Gamma-Aminobutyric Acid",
-    category: "amino",
-    effects: ["sleep", "health", "cognitive"],
-    dna: ["relax", "comfort", "smart"],
-    origin: "発酵法",
-    description: "リラックス効果、睡眠の質向上、血圧サポート",
-    relatedTrends: ["睡眠改善", "ストレスケア"],
+    name: "ネットフリックス プレミアム",
+    category: "digital",
+    tier: "グリーン以上",
+    utilizationRate: 78,
+    trend: "up",
+    satisfactionScore: 4.3,
+    partnerSince: 2022,
+    annualUsers: 320000,
+    description: "月額費用の全額クレジット還元（プレミアムプラン）",
+    tags: ["月額全額還元", "4Kストリーミング", "最大4デバイス"],
   },
   {
     id: 5,
-    name: "コラーゲンペプチド",
-    nameEn: "Collagen Peptide",
-    category: "collagen",
-    effects: ["beauty", "antiaging", "health"],
-    dna: ["confidence", "joy", "premium"],
-    origin: "魚由来/豚由来",
-    description: "肌のハリ・弾力、関節サポート",
-    relatedTrends: ["インナービューティー", "関節ケア"],
+    name: "スパ＆ウェルネス by アンダーズ",
+    category: "luxury",
+    tier: "プラチナ以上",
+    utilizationRate: 41,
+    trend: "stable",
+    satisfactionScore: 4.6,
+    partnerSince: 2020,
+    annualUsers: 18600,
+    description: "全国一流スパでの優待割引と予約優先権",
+    tags: ["20%割引", "優先予約", "アロマウェルカム"],
   },
   {
     id: 6,
-    name: "ルテイン",
-    nameEn: "Lutein",
-    category: "botanical",
-    effects: ["eye", "antiaging"],
-    dna: ["comfort", "smart", "vitality"],
-    origin: "マリーゴールド由来",
-    description: "ブルーライト対策、目の健康維持",
-    relatedTrends: ["アイケア", "デジタルデトックス"],
+    name: "東京海上 旅行総合保険",
+    category: "insurance",
+    tier: "全カード",
+    utilizationRate: 95,
+    trend: "stable",
+    satisfactionScore: 4.5,
+    partnerSince: 2005,
+    annualUsers: 620000,
+    description: "海外旅行保険最高1億円、国内旅行保険最高5,000万円の自動付帯",
+    tags: ["自動付帯", "家族も補償", "24h緊急対応"],
   },
   {
     id: 7,
-    name: "NMN",
-    nameEn: "Nicotinamide Mononucleotide",
-    category: "functional",
-    effects: ["antiaging", "energy", "health"],
-    dna: ["premium", "vitality", "confidence"],
-    origin: "発酵法",
-    description: "NAD+前駆体、細胞エネルギー産生、抗老化",
-    relatedTrends: ["長寿科学", "エイジングケア"],
+    name: "ミシュランガイド 掲載店",
+    category: "dining",
+    tier: "ゴールド以上",
+    utilizationRate: 38,
+    trend: "up",
+    satisfactionScore: 4.8,
+    partnerSince: 2021,
+    annualUsers: 41000,
+    description: "3つ星・2つ星レストランへの専用テーブル確保サービス",
+    tags: ["専用テーブル", "オマカセ対応", "ソムリエ選定"],
   },
   {
     id: 8,
-    name: "乳酸菌（ラクトバチルス）",
-    nameEn: "Lactobacillus",
-    category: "probiotic",
-    effects: ["immunity", "health"],
-    dna: ["comfort", "vitality", "joy"],
-    origin: "発酵法",
-    description: "腸内環境改善、免疫力向上",
-    relatedTrends: ["腸活", "免疫ケア"],
-  },
-  {
-    id: 9,
-    name: "ポストバイオティクス",
-    nameEn: "Postbiotics",
-    category: "probiotic",
-    effects: ["immunity", "health"],
-    dna: ["smart", "comfort", "premium"],
-    origin: "発酵法",
-    description: "死菌体・代謝産物、安定性が高い次世代成分",
-    relatedTrends: ["次世代腸活", "免疫ケア"],
-  },
-  {
-    id: 10,
-    name: "レチノール",
-    nameEn: "Retinol",
-    category: "vitamin",
-    effects: ["beauty", "antiaging"],
-    dna: ["confidence", "premium", "joy"],
-    origin: "合成",
-    description: "ターンオーバー促進、シワ改善",
-    relatedTrends: ["エイジングケア", "シワ対策"],
-  },
-  {
-    id: 11,
-    name: "ナイアシンアミド",
-    nameEn: "Niacinamide",
-    category: "vitamin",
-    effects: ["beauty", "hydration", "antiaging"],
-    dna: ["refresh", "confidence", "comfort"],
-    origin: "合成",
-    description: "毛穴ケア、美白、バリア機能強化",
-    relatedTrends: ["毛穴ケア", "美白"],
-  },
-  {
-    id: 12,
-    name: "アスタキサンチン",
-    nameEn: "Astaxanthin",
-    category: "botanical",
-    effects: ["antiaging", "eye", "beauty"],
-    dna: ["premium", "vitality", "confidence"],
-    origin: "藻類由来",
-    description: "強力な抗酸化作用、目の疲労回復",
-    relatedTrends: ["抗酸化", "アイケア"],
-  },
-  {
-    id: 13,
-    name: "テアニン",
-    nameEn: "L-Theanine",
-    category: "amino",
-    effects: ["sleep", "cognitive"],
-    dna: ["relax", "smart", "comfort"],
-    origin: "茶葉由来",
-    description: "リラックス効果、集中力向上",
-    relatedTrends: ["ストレスケア", "集中力"],
-  },
-  {
-    id: 14,
-    name: "亜鉛",
-    nameEn: "Zinc",
-    category: "mineral",
-    effects: ["immunity", "health", "beauty"],
-    dna: ["vitality", "comfort", "confidence"],
-    origin: "ミネラル",
-    description: "免疫機能、味覚維持、肌の健康",
-    relatedTrends: ["免疫ケア", "男性向け"],
-  },
-  {
-    id: 15,
-    name: "ビタミンD",
-    nameEn: "Vitamin D",
-    category: "vitamin",
-    effects: ["immunity", "health"],
-    dna: ["vitality", "comfort", "joy"],
-    origin: "合成/天然",
-    description: "骨の健康、免疫機能サポート",
-    relatedTrends: ["免疫ケア", "骨の健康"],
-  },
-  {
-    id: 16,
-    name: "バクチオール",
-    nameEn: "Bakuchiol",
-    category: "botanical",
-    effects: ["beauty", "antiaging", "natural"],
-    dna: ["premium", "confidence", "comfort"],
-    origin: "植物由来",
-    description: "天然レチノール代替、低刺激エイジングケア",
-    relatedTrends: ["クリーンビューティー", "エイジングケア"],
-  },
-  {
-    id: 17,
-    name: "CBD",
-    nameEn: "Cannabidiol",
-    category: "botanical",
-    effects: ["sleep", "health", "natural"],
-    dna: ["relax", "comfort", "premium"],
-    origin: "麻由来",
-    description: "リラックス、睡眠サポート（法規制注意）",
-    relatedTrends: ["ウェルネス", "睡眠改善"],
-  },
-  {
-    id: 18,
-    name: "プラセンタ",
-    nameEn: "Placenta Extract",
-    category: "functional",
-    effects: ["beauty", "antiaging", "energy"],
-    dna: ["premium", "vitality", "confidence"],
-    origin: "豚/馬由来",
-    description: "細胞活性化、美肌効果",
-    relatedTrends: ["エイジングケア"],
+    name: "ブルガリ ジャパン",
+    category: "luxury",
+    tier: "プラチナ以上",
+    utilizationRate: 22,
+    trend: "down",
+    satisfactionScore: 4.4,
+    partnerSince: 2017,
+    annualUsers: 9800,
+    description: "新作コレクション優先内覧、刻印・カスタマイズサービス",
+    tags: ["優先内覧", "カスタマイズ", "限定モデル"],
   },
 ]
+
+const tierColors: Record<string, string> = {
+  "プラチナ以上": "bg-primary/15 text-primary border-primary/30",
+  "ゴールド以上": "bg-accent/15 text-accent border-accent/30",
+  "グリーン以上": "bg-emerald-500/15 text-emerald-600 border-emerald-500/30",
+  "全カード": "bg-secondary/15 text-secondary border-secondary/30",
+}
 
 export function AIMaterialsContent() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
-  const [selectedEffects, setSelectedEffects] = useState<string[]>([])
-  const [selectedDnaFactors, setSelectedDnaFactors] = useState<string[]>([])
-  const [selectedMaterial, setSelectedMaterial] = useState<typeof materialsData[0] | null>(null)
+  const [selectedPartner, setSelectedPartner] = useState<typeof partnersData[0] | null>(null)
 
-  // フィルタリング
-  const filteredMaterials = useMemo(() => {
-    return materialsData.filter((material) => {
-      const matchesSearch = material.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        material.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesCategory = selectedCategory === "all" || material.category === selectedCategory
-      const matchesEffects = selectedEffects.length === 0 || 
-        selectedEffects.some(effect => material.effects.includes(effect))
-      const matchesDna = selectedDnaFactors.length === 0 ||
-        selectedDnaFactors.some(dna => material.dna.includes(dna))
-      return matchesSearch && matchesCategory && matchesEffects && matchesDna
+  const filtered = useMemo(() => {
+    return partnersData.filter((p) => {
+      const matchCat = selectedCategory === "all" || p.category === selectedCategory
+      const matchSearch =
+        !searchQuery ||
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.description.toLowerCase().includes(searchQuery.toLowerCase())
+      return matchCat && matchSearch
     })
-  }, [searchQuery, selectedCategory, selectedEffects, selectedDnaFactors])
+  }, [searchQuery, selectedCategory])
 
-  const toggleEffect = (effectId: string) => {
-    setSelectedEffects(prev => 
-      prev.includes(effectId) 
-        ? prev.filter(e => e !== effectId)
-        : [...prev, effectId]
-    )
-  }
-
-  const toggleDnaFactor = (dnaId: string) => {
-    setSelectedDnaFactors(prev => 
-      prev.includes(dnaId) 
-        ? prev.filter(d => d !== dnaId)
-        : [...prev, dnaId]
-    )
+  const TrendIcon = ({ trend }: { trend: string }) => {
+    if (trend === "up") return <TrendingUp className="h-4 w-4 text-emerald-500" />
+    if (trend === "down") return <TrendingDown className="h-4 w-4 text-destructive" />
+    return <Minus className="h-4 w-4 text-muted-foreground" />
   }
 
   return (
-    <div className="p-6 space-y-6 bg-muted/30 min-h-screen">
-      {/* 検索・フィルター */}
-      <Card className="rounded-xl">
-        <CardContent className="p-4 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* 検索 */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="素材名で検索..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            {/* カテゴリフィルター */}
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-[180px]">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="カテゴリ" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+    <div className="p-6 space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+          <Gem className="h-6 w-6 text-primary" />
+          特典・パートナーデータベース
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          全カード種別の提携パートナー・特典マスターとトレンド相関分析
+        </p>
+      </div>
 
-          {/* 効能タグフィルター */}
-          <div>
-            <p className="text-xs text-muted-foreground mb-2">効能で絞り込み</p>
-            <div className="flex flex-wrap gap-2">
-              {effectTags.map((tag) => {
-                const Icon = tag.icon
-                const isSelected = selectedEffects.includes(tag.id)
-                return (
-                  <button
-                    key={tag.id}
-                    onClick={() => toggleEffect(tag.id)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                      isSelected 
-                        ? tag.color + " ring-2 ring-offset-1 ring-primary/30" 
-                        : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
-                    }`}
-                  >
-                    <Icon className="h-3 w-3" />
-                    {tag.name}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+      {/* サマリーKPI */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "提携パートナー数", value: "1,240", sub: "+32 今月追加" },
+          { label: "平均満足度", value: "4.6", sub: "★ 5点満点" },
+          { label: "総特典利用者数", value: "120万人", sub: "直近30日" },
+          { label: "高評価特典", value: "318", sub: "スコア4.5以上" },
+        ].map((kpi) => (
+          <Card key={kpi.label} className="rounded-xl border-border">
+            <CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">{kpi.label}</p>
+              <p className="text-2xl font-bold text-foreground mt-1">{kpi.value}</p>
+              <p className="text-xs text-primary mt-0.5">{kpi.sub}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-          {/* 商品DNAフィルター */}
-          <div>
-            <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
-              <Dna className="h-3 w-3" />
-              商品DNA（消費者に与える感情）で絞り込み
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {dnaFactors.map((factor) => {
-                const Icon = factor.icon
-                const isSelected = selectedDnaFactors.includes(factor.id)
-                return (
-                  <button
-                    key={factor.id}
-                    onClick={() => toggleDnaFactor(factor.id)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                      isSelected 
-                        ? factor.color + " ring-2 ring-offset-1 ring-primary/30" 
-                        : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
-                    }`}
-                  >
-                    <Icon className="h-3 w-3" />
-                    {factor.name}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* カテゴリフィルター */}
+      <div className="flex flex-wrap gap-2">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+              selectedCategory === cat.id
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-muted/30 text-foreground border-border hover:border-primary/50"
+            }`}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
 
-      {/* 素材一覧テーブル */}
-      <Card className="rounded-xl">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base flex items-center justify-between">
-            <span>素材一覧（{filteredMaterials.length}件）</span>
-          </CardTitle>
-        </CardHeader>
+      {/* 検索 */}
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="パートナー名・特典内容で検索..."
+            className="pl-9 rounded-lg"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <Select defaultValue="utilization">
+          <SelectTrigger className="w-40 rounded-lg">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="utilization">利用率順</SelectItem>
+            <SelectItem value="satisfaction">満足度順</SelectItem>
+            <SelectItem value="users">利用者数順</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* テーブル */}
+      <Card className="rounded-xl border-border">
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/30">
-                  <TableHead className="w-[200px]">素材名</TableHead>
-                  <TableHead className="w-[120px]">カテゴリ</TableHead>
-                  <TableHead className="w-[280px]">効能タグ</TableHead>
-                  <TableHead>
-                    <span className="flex items-center gap-1">
-                      <Dna className="h-3.5 w-3.5" />
-                      商品DNA
-                    </span>
-                  </TableHead>
-                  <TableHead className="w-[80px]">詳細</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredMaterials.map((material) => {
-                  return (
-                    <TableRow key={material.id} className="hover:bg-muted/30">
-                      <TableCell>
-                        <div>
-                          <p className="font-medium text-foreground">{material.name}</p>
-                          <p className="text-[10px] text-muted-foreground">{material.nameEn}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="text-[10px]">
-                          {categories.find(c => c.id === material.category)?.name}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {material.effects.slice(0, 3).map((effectId) => {
-                            const tag = effectTags.find(t => t.id === effectId)
-                            if (!tag) return null
-                            const Icon = tag.icon
-                            return (
-                              <span 
-                                key={effectId} 
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${tag.color}`}
-                              >
-                                <Icon className="h-2.5 w-2.5" />
-                                {tag.name}
-                              </span>
-                            )
-                          })}
-                          {material.effects.length > 3 && (
-                            <span className="text-[10px] text-muted-foreground">+{material.effects.length - 3}</span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {material.dna.map((dnaId) => {
-                            const factor = dnaFactors.find(f => f.id === dnaId)
-                            if (!factor) return null
-                            const Icon = factor.icon
-                            return (
-                              <span 
-                                key={dnaId} 
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${factor.color}`}
-                              >
-                                <Icon className="h-2.5 w-2.5" />
-                                {factor.name}
-                              </span>
-                            )
-                          })}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={() => setSelectedMaterial(material)}
-                            >
-                              詳細
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-lg">
-                            <DialogHeader>
-                              <DialogTitle className="flex items-center gap-2">
-                                <Beaker className="h-5 w-5 text-primary" />
-                                {material.name}
-                              </DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4">
-                              <p className="text-sm text-muted-foreground">{material.nameEn}</p>
-                              
-                              <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                  <p className="text-xs text-muted-foreground">カテゴリ</p>
-                                  <p className="font-medium">{categories.find(c => c.id === material.category)?.name}</p>
-                                </div>
-                                <div>
-                                  <p className="text-xs text-muted-foreground">原料由来</p>
-                                  <p className="font-medium">{material.origin}</p>
-                                </div>
+          <Table>
+            <TableHeader>
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="text-muted-foreground text-xs w-8"></TableHead>
+                <TableHead className="text-muted-foreground text-xs">パートナー名</TableHead>
+                <TableHead className="text-muted-foreground text-xs">対象カード</TableHead>
+                <TableHead className="text-muted-foreground text-xs">利用率</TableHead>
+                <TableHead className="text-muted-foreground text-xs">満足度</TableHead>
+                <TableHead className="text-muted-foreground text-xs">年間利用者</TableHead>
+                <TableHead className="text-muted-foreground text-xs">トレンド</TableHead>
+                <TableHead className="text-muted-foreground text-xs w-16"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((partner) => {
+                const Icon = categoryIcons[partner.category] || Globe
+                return (
+                  <TableRow key={partner.id} className="border-border hover:bg-muted/30 transition-colors">
+                    <TableCell>
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Icon className="h-4 w-4 text-primary" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{partner.name}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{partner.description}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={`text-xs border ${tierColors[partner.tier] ?? ""}`}>
+                        {partner.tier}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1 w-24">
+                        <span className="text-xs font-semibold text-foreground">{partner.utilizationRate}%</span>
+                        <Progress value={partner.utilizationRate} className="h-1.5" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3.5 w-3.5 text-accent fill-accent" />
+                        <span className="text-sm font-semibold text-foreground">{partner.satisfactionScore}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm text-foreground">{partner.annualUsers.toLocaleString()}</span>
+                    </TableCell>
+                    <TableCell>
+                      <TrendIcon trend={partner.trend} />
+                    </TableCell>
+                    <TableCell>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => setSelectedPartner(partner)}
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>{partner.name}</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <p className="text-sm text-muted-foreground">{partner.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {partner.tags.map((tag) => (
+                                <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+                              ))}
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="p-3 bg-muted/40 rounded-lg">
+                                <p className="text-xs text-muted-foreground">年間利用者数</p>
+                                <p className="text-lg font-bold text-foreground">{partner.annualUsers.toLocaleString()}</p>
                               </div>
-
-                              <div>
-                                <p className="text-xs text-muted-foreground mb-2">効能・効果</p>
-                                <div className="flex flex-wrap gap-2">
-                                  {material.effects.map((effectId) => {
-                                    const tag = effectTags.find(t => t.id === effectId)
-                                    if (!tag) return null
-                                    const Icon = tag.icon
-                                    return (
-                                      <span key={effectId} className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border ${tag.color}`}>
-                                        <Icon className="h-3 w-3" />
-                                        {tag.name}
-                                      </span>
-                                    )
-                                  })}
-                                </div>
+                              <div className="p-3 bg-muted/40 rounded-lg">
+                                <p className="text-xs text-muted-foreground">満足度スコア</p>
+                                <p className="text-lg font-bold text-foreground">{partner.satisfactionScore} / 5.0</p>
                               </div>
-
-                              <div>
-                                <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
-                                  <Dna className="h-3 w-3" />
-                                  商品DNA（消費者に与える感情）
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                  {material.dna.map((dnaId) => {
-                                    const factor = dnaFactors.find(f => f.id === dnaId)
-                                    if (!factor) return null
-                                    const Icon = factor.icon
-                                    return (
-                                      <span key={dnaId} className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border ${factor.color}`}>
-                                        <Icon className="h-3 w-3" />
-                                        {factor.name}
-                                      </span>
-                                    )
-                                  })}
-                                </div>
+                              <div className="p-3 bg-muted/40 rounded-lg">
+                                <p className="text-xs text-muted-foreground">利用率</p>
+                                <p className="text-lg font-bold text-foreground">{partner.utilizationRate}%</p>
                               </div>
-
-                              <div>
-                                <p className="text-xs text-muted-foreground mb-1">説明</p>
-                                <p className="text-sm">{material.description}</p>
-                              </div>
-
-                              <div>
-                                <p className="text-xs text-muted-foreground mb-2">関連トレンド</p>
-                                <div className="flex flex-wrap gap-2">
-                                  {material.relatedTrends.map((trend, idx) => (
-                                    <Badge key={idx} variant="secondary" className="text-xs">
-                                      {trend}
-                                    </Badge>
-                                  ))}
-                                </div>
+                              <div className="p-3 bg-muted/40 rounded-lg">
+                                <p className="text-xs text-muted-foreground">提携開始年</p>
+                                <p className="text-lg font-bold text-foreground">{partner.partnerSince}年</p>
                               </div>
                             </div>
-                          </DialogContent>
-                        </Dialog>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

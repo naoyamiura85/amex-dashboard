@@ -13,212 +13,286 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   ReferenceLine,
 } from "recharts"
-import { BarChart3, TrendingUp, TrendingDown, Minus, Globe, Bell, Clock } from "lucide-react"
+import { Sparkles, TrendingDown, ArrowUpRight, AlertTriangle, CheckCircle, Download } from "lucide-react"
 
-const trendArrivalData = [
-  { trend: "ポストバイオティクス", origin: "米国", arrivalMonth: "2025年7月", confidence: 92, growth: "+180%", status: "到来直前" },
-  { trend: "クリーンビューティー2.0", origin: "欧州", arrivalMonth: "2025年9月", confidence: 87, growth: "+145%", status: "準備期" },
-  { trend: "バイオミメティクス成分", origin: "韓国", arrivalMonth: "2025年5月", confidence: 94, growth: "+210%", status: "到来直前" },
-  { trend: "スキンマイクロバイオーム", origin: "米国", arrivalMonth: "2026年1月", confidence: 78, growth: "+98%", status: "浸透中" },
-  { trend: "量子コスメ", origin: "日本", arrivalMonth: "2026年4月", confidence: 61, growth: "+67%", status: "萌芽期" },
+// --- 予測データ ---
+const churnForecastData = [
+  { month: "4月", actual: 1.92, forecast: null, lower: null, upper: null },
+  { month: "5月", actual: 1.88, forecast: null, lower: null, upper: null },
+  { month: "6月", actual: 1.85, forecast: null, lower: null, upper: null },
+  { month: "7月", actual: 1.82, forecast: null, lower: null, upper: null },
+  { month: "8月", actual: 1.83, forecast: null, lower: null, upper: null },
+  { month: "9月", actual: 1.80, forecast: null, lower: null, upper: null },
+  { month: "10月(現在)", actual: 1.80, forecast: 1.80, lower: 1.75, upper: 1.85 },
+  { month: "11月", actual: null, forecast: 1.77, lower: 1.70, upper: 1.84 },
+  { month: "12月", actual: null, forecast: 1.74, lower: 1.64, upper: 1.84 },
+  { month: "1月", actual: null, forecast: 1.78, lower: 1.65, upper: 1.91 },
+  { month: "2月", actual: null, forecast: 1.75, lower: 1.60, upper: 1.90 },
+  { month: "3月", actual: null, forecast: 1.71, lower: 1.54, upper: 1.88 },
 ]
 
-const trendLifecycleData = [
-  {
-    name: "バクチオール",
-    data: [
-      { month: "24/01", value: 20 }, { month: "24/04", value: 45 }, { month: "24/07", value: 72 },
-      { month: "24/10", value: 88 }, { month: "25/01", value: 95 }, { month: "25/04", value: 91 },
-      { month: "25/07", value: 82, predicted: true }, { month: "25/10", value: 70, predicted: true },
-    ],
-    phase: "成熟",
-    color: "#3700FF",
-  },
-  {
-    name: "CICA",
-    data: [
-      { month: "24/01", value: 65 }, { month: "24/04", value: 71 }, { month: "24/07", value: 78 },
-      { month: "24/10", value: 80 }, { month: "25/01", value: 79 }, { month: "25/04", value: 75 },
-      { month: "25/07", value: 68, predicted: true }, { month: "25/10", value: 59, predicted: true },
-    ],
-    phase: "衰退",
-    color: "#94a3b8",
-  },
-  {
-    name: "ポストバイオティクス",
-    data: [
-      { month: "24/01", value: 5 }, { month: "24/04", value: 8 }, { month: "24/07", value: 15 },
-      { month: "24/10", value: 28 }, { month: "25/01", value: 42 }, { month: "25/04", value: 61 },
-      { month: "25/07", value: 78, predicted: true }, { month: "25/10", value: 90, predicted: true },
-    ],
-    phase: "急成長",
-    color: "#C8FF00",
-  },
+const upgradeData = [
+  { segment: "グリーン→ゴールド", count: 28400, score: 74, color: "#006FCF" },
+  { segment: "ゴールド→プラチナ", count: 13200, score: 68, color: "#B4975A" },
+  { segment: "ブルー→グリーン", count: 42800, score: 61, color: "#10B981" },
 ]
 
-const breakpointAlerts = [
-  { trend: "ポストバイオティクス", type: "急上昇", message: "過去30日で検索量が+340%急増。ブレイクポイント検知。", time: "2時間前", severity: "high" },
-  { trend: "更年期ケア成分", type: "新興", message: "新規参入ブランドが急増、カテゴリ形成の兆候あり", time: "6時間前", severity: "medium" },
-  { trend: "CICA", type: "鈍化", message: "成長率が前月比-18pt。ピークアウトの可能性", time: "1日前", severity: "low" },
-  { trend: "バイオミメティクス", type: "急上昇", message: "韓国発トレンドが日本市場に波及開始", time: "3時間前", severity: "high" },
+const memberGrowthForecast = [
+  { month: "10月", actual: 3847, forecast: null },
+  { month: "11月", actual: null, forecast: 3880 },
+  { month: "12月", actual: null, forecast: 3910 },
+  { month: "1月", actual: null, forecast: 3895 },
+  { month: "2月", actual: null, forecast: 3925 },
+  { month: "3月", actual: null, forecast: 3962 },
 ]
 
-const phaseColors: Record<string, string> = {
-  急成長: "bg-emerald-100 text-emerald-700",
-  成熟: "bg-blue-100 text-blue-700",
-  衰退: "bg-gray-100 text-gray-600",
-  萌芽期: "bg-amber-100 text-amber-700",
-  到来直前: "bg-red-100 text-red-700",
-  準備期: "bg-orange-100 text-orange-700",
-  浸透中: "bg-blue-100 text-blue-700",
-}
+const riskMembers = [
+  { id: "PT-00182", segment: "プラチナ", risk: 87, reason: "直近3ヶ月利用 -41%、年会費更新月接近", action: "専任担当者によるコンタクト" },
+  { id: "GD-01924", segment: "ゴールド", risk: 76, reason: "特典未利用 9ヶ月、ログイン頻度低下", action: "特典リマインドキャンペーン" },
+  { id: "GD-03841", segment: "ゴールド", risk: 71, reason: "競合カード保有検知、利用シェア低下", action: "ポイント加速オファー" },
+  { id: "GN-18204", segment: "グリーン", risk: 68, reason: "申込後6ヶ月以内、初回利用なし", action: "オンボーディング促進" },
+]
 
-const allLifecyclePoints = trendLifecycleData[0].data.map((d) => {
-  const result: Record<string, string | number | boolean> = { month: d.month }
-  trendLifecycleData.forEach((t) => {
-    const point = t.data.find((p) => p.month === d.month)
-    if (point) {
-      result[t.name] = point.value
-      result[`${t.name}_predicted`] = point.predicted ?? false
-    }
-  })
-  return result
-})
+const aiInsights = [
+  {
+    type: "解約予測",
+    icon: TrendingDown,
+    color: "text-red-600",
+    bg: "bg-red-50",
+    border: "border-red-200",
+    headline: "プラチナ会員 4,200人 が高リスク",
+    detail: "年会費更新月（翌月）前の利用額が前年同期比 -35% を下回るセグメント。過去データから解約確率 72%。",
+    confidence: 87,
+  },
+  {
+    type: "アップグレード予測",
+    icon: ArrowUpRight,
+    color: "text-[#006FCF]",
+    bg: "bg-[#E6F2FF]",
+    border: "border-[#B3D9FF]",
+    headline: "ゴールド 13,200人 がプラチナ移行に適合",
+    detail: "旅行・ダイニング利用比率と決済金額の増加パターンがプラチナ移行前会員の行動と高相関（r=0.83）。",
+    confidence: 81,
+  },
+  {
+    type: "収益予測",
+    icon: CheckCircle,
+    color: "text-emerald-600",
+    bg: "bg-emerald-50",
+    border: "border-emerald-200",
+    headline: "Q1 手数料収益 前年比 +6.2% 見込み",
+    detail: "プラチナ新規獲得ペース (+12%) と利用額単価の増加を織り込んだ予測。年会費改定効果も寄与。",
+    confidence: 79,
+  },
+  {
+    type: "リスク警告",
+    icon: AlertTriangle,
+    color: "text-amber-600",
+    bg: "bg-amber-50",
+    border: "border-amber-200",
+    headline: "ブルー 18,000人 が60日以内に失効リスク",
+    detail: "入会後 90日以内の非アクティブ会員。ファーストトランザクション誘導施策の効果が検証済み。",
+    confidence: 83,
+  },
+]
 
 export function AIPredictionsContent() {
+  const [activeTab, setActiveTab] = useState("churn")
+
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 flex items-center gap-4">
-        <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center shrink-0">
-          <BarChart3 className="h-6 w-6 text-primary-foreground" />
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-[#E6F2FF]">
+            <Sparkles className="h-4 w-4 text-[#006FCF]" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-foreground">AI 予測エンジン</p>
+            <p className="text-xs text-muted-foreground">モデル更新: 2026/10/01 | 精度: 84.3%</p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-base font-bold">トレンド予測エンジン</h2>
-          <p className="text-sm text-muted-foreground">海外トレンドの到来予測・寿命予測・ブレイクポイント検知でビジネス判断を先読み</p>
-        </div>
+        <Button variant="outline" size="sm" className="gap-2 text-xs">
+          <Download className="h-3.5 w-3.5" />
+          レポート出力
+        </Button>
       </div>
 
-      <Tabs defaultValue="arrival">
-        <TabsList className="h-9">
-          <TabsTrigger value="arrival" className="text-xs">海外トレンド到来予測</TabsTrigger>
-          <TabsTrigger value="lifecycle" className="text-xs">トレンド寿命予測</TabsTrigger>
-          <TabsTrigger value="alerts" className="text-xs">ブレイクポイント検知</TabsTrigger>
+      {/* AI インサイトカード */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {aiInsights.map((insight) => {
+          const Icon = insight.icon
+          return (
+            <div
+              key={insight.type}
+              className={`p-4 rounded-xl border ${insight.border} ${insight.bg}`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`p-1.5 rounded-lg bg-white/70 flex-shrink-0`}>
+                  <Icon className={`h-4 w-4 ${insight.color}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className={`text-[10px] font-bold ${insight.color}`}>{insight.type}</span>
+                    <span className="text-[10px] text-muted-foreground">信頼度 {insight.confidence}%</span>
+                  </div>
+                  <p className="text-xs font-semibold text-foreground mb-1">{insight.headline}</p>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">{insight.detail}</p>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* 予測グラフタブ */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="bg-muted/60 h-9">
+          <TabsTrigger value="churn" className="text-xs">解約率予測</TabsTrigger>
+          <TabsTrigger value="upgrade" className="text-xs">アップグレード予測</TabsTrigger>
+          <TabsTrigger value="growth" className="text-xs">会員数予測</TabsTrigger>
+          <TabsTrigger value="risk" className="text-xs">高リスク会員</TabsTrigger>
         </TabsList>
 
-        {/* 到来予測 */}
-        <TabsContent value="arrival" className="mt-4 space-y-3">
-          <p className="text-xs text-muted-foreground">海外市場データから日本への到来時期をAIが予測。先行開発のリードタイムを確保できます。</p>
-          {trendArrivalData.map((t, i) => (
-            <Card key={i} className="rounded-xl">
-              <CardContent className="py-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <p className="text-sm font-semibold">{t.trend}</p>
-                      <Badge className={`text-[10px] ${phaseColors[t.status] || "bg-gray-100 text-gray-600"}`}>{t.status}</Badge>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Globe className="h-3 w-3 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">発祥: {t.origin}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 shrink-0">
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground">日本到来予測</p>
-                      <p className="text-sm font-bold">{t.arrivalMonth}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground">確信度</p>
-                      <p className="text-lg font-bold text-primary">{t.confidence}%</p>
-                    </div>
-                    <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs">{t.growth}</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </TabsContent>
-
-        {/* 寿命予測 */}
-        <TabsContent value="lifecycle" className="mt-4 space-y-4">
-          <p className="text-xs text-muted-foreground">各トレンドの成長→成熟→衰退フェーズをAIが予測。破線部分はAI予測値。投資判断の最適化に活用。</p>
-          <Card className="rounded-xl">
+        {/* 解約率予測 */}
+        <TabsContent value="churn" className="mt-4">
+          <Card className="border border-border shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm">トレンド寿命マップ（過去12ヶ月 + 6ヶ月予測）</CardTitle>
+              <CardTitle className="text-sm font-semibold">月次チャーン率 実績 + AI予測（%）</CardTitle>
+              <p className="text-xs text-muted-foreground">信頼区間 90% | 破線: AI予測値</p>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-4 mb-3 flex-wrap">
-                {trendLifecycleData.map((t) => (
-                  <div key={t.name} className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: t.color }} />
-                    <span className="text-xs text-muted-foreground">{t.name}</span>
-                    <Badge className={`text-[10px] ${phaseColors[t.phase] || ""}`}>{t.phase}</Badge>
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={churnForecastData} margin={{ top: 8, right: 12, left: -16, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="actualGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#006FCF" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#006FCF" stopOpacity={0.02} />
+                    </linearGradient>
+                    <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#B4975A" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#B4975A" stopOpacity={0.02} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[1.5, 2.1]} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
+                    formatter={(v: number | null) => v != null ? [`${v.toFixed(2)}%`, ""] : ["-", ""]}
+                  />
+                  <ReferenceLine x="10月(現在)" stroke="var(--muted-foreground)" strokeDasharray="4 4" strokeWidth={1} />
+                  <Area type="monotone" dataKey="actual" name="実績" stroke="#006FCF" fill="url(#actualGrad)" strokeWidth={2} dot={false} connectNulls={false} />
+                  <Area type="monotone" dataKey="forecast" name="予測" stroke="#B4975A" fill="url(#forecastGrad)" strokeWidth={2} strokeDasharray="6 3" dot={false} connectNulls={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* アップグレード予測 */}
+        <TabsContent value="upgrade" className="mt-4">
+          <Card className="border border-border shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">アップグレード対象会員予測</CardTitle>
+              <p className="text-xs text-muted-foreground">次の90日以内にアップグレードの可能性が高い会員数</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4 mt-2">
+                {upgradeData.map((item) => (
+                  <div key={item.segment} className="p-4 rounded-lg border border-border bg-muted/30">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-semibold text-foreground">{item.segment}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-muted-foreground">AIスコア</span>
+                        <span className="text-sm font-bold" style={{ color: item.color }}>{item.score}</span>
+                        <Badge className="text-[10px]" style={{ backgroundColor: item.color, color: "#fff", border: "none" }}>
+                          {item.count.toLocaleString()}人
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{ width: `${item.score}%`, backgroundColor: item.color }}
+                      />
+                    </div>
                   </div>
                 ))}
-              </div>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={allLifecyclePoints} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="month" tick={{ fontSize: 10 }} />
-                    <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `${v}`} />
-                    <Tooltip contentStyle={{ fontSize: 12 }} />
-                    <ReferenceLine x="25/04" stroke="#e5e7eb" strokeDasharray="4 4" label={{ value: "現在", fontSize: 10 }} />
-                    {trendLifecycleData.map((t) => (
-                      <Line
-                        key={t.name}
-                        type="monotone"
-                        dataKey={t.name}
-                        stroke={t.color}
-                        strokeWidth={2}
-                        dot={false}
-                      />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        {/* ブレイクポイント検知 */}
-        <TabsContent value="alerts" className="mt-4 space-y-3">
-          <p className="text-xs text-muted-foreground">AIが異常な成長パターンを検知し、ブレイクポイントを早期にアラート。機会損失を防ぎます。</p>
-          {breakpointAlerts.map((alert, i) => (
-            <Card key={i} className={`rounded-xl ${alert.severity === "high" ? "border-red-200 bg-red-50/30" : alert.severity === "medium" ? "border-amber-200 bg-amber-50/30" : ""}`}>
-              <CardContent className="py-4">
-                <div className="flex items-start gap-3">
-                  <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
-                    alert.severity === "high" ? "bg-red-100" : alert.severity === "medium" ? "bg-amber-100" : "bg-gray-100"
-                  }`}>
-                    {alert.type === "急上昇" ? (
-                      <TrendingUp className={`h-4 w-4 ${alert.severity === "high" ? "text-red-600" : "text-amber-600"}`} />
-                    ) : alert.type === "鈍化" ? (
-                      <TrendingDown className="h-4 w-4 text-gray-500" />
-                    ) : (
-                      <Bell className="h-4 w-4 text-amber-600" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-semibold">{alert.trend}</p>
-                      <Badge variant="outline" className="text-[10px]">{alert.type}</Badge>
+        {/* 会員数予測 */}
+        <TabsContent value="growth" className="mt-4">
+          <Card className="border border-border shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">総会員数 予測推移（千人）</CardTitle>
+              <p className="text-xs text-muted-foreground">翌6ヶ月の会員数予測</p>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={memberGrowthForecast} margin={{ top: 8, right: 12, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[3800, 4000]} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
+                  />
+                  <Bar dataKey="actual" name="実績" fill="#006FCF" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="forecast" name="予測" fill="#B4975A" radius={[4, 4, 0, 0]} opacity={0.8} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* 高リスク会員 */}
+        <TabsContent value="risk" className="mt-4">
+          <Card className="border border-border shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">解約高リスク会員（サンプル）</CardTitle>
+              <p className="text-xs text-muted-foreground">リスクスコア上位 / 推奨アクション付き</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {riskMembers.map((m) => (
+                  <div key={m.id} className="flex items-center gap-4 p-3 rounded-lg border border-border/70 bg-muted/20">
+                    <div className="text-center w-12 flex-shrink-0">
+                      <p className="text-[10px] text-muted-foreground">スコア</p>
+                      <p className={`text-lg font-bold ${m.risk >= 80 ? "text-red-600" : m.risk >= 70 ? "text-amber-600" : "text-[#006FCF]"}`}>
+                        {m.risk}
+                      </p>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">{alert.message}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="text-xs font-semibold text-foreground">{m.id}</span>
+                        <Badge
+                          className="text-[10px] border-0"
+                          style={{
+                            backgroundColor: m.segment === "プラチナ" ? "#B4975A" : m.segment === "ゴールド" ? "#006FCF" : "#10B981",
+                            color: "#fff",
+                          }}
+                        >
+                          {m.segment}
+                        </Badge>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground leading-snug">{m.reason}</p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-[10px] text-muted-foreground">推奨アクション</p>
+                      <p className="text-[11px] font-semibold text-[#006FCF]">{m.action}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
-                    <Clock className="h-3 w-3" />
-                    {alert.time}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

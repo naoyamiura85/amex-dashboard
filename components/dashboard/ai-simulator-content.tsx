@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
 import {
@@ -14,587 +13,438 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { 
-  Boxes, 
-  Play, 
-  Package, 
-  FlaskConical, 
-  Sparkles,
-  TrendingUp,
-  TrendingDown,
-  Users,
-  RefreshCw,
-  Zap,
-  Target,
-  DollarSign,
-  BarChart3,
-} from "lucide-react"
-import { FUNNEL_COLORS } from "@/lib/constants"
+import { Label } from "@/components/ui/label"
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+} from "recharts"
+import { Settings, Play, RotateCcw, TrendingUp, TrendingDown, Users, CreditCard, AlertTriangle, CheckCircle } from "lucide-react"
 
-// 商品の定義
-const products = [
-  { id: "menphys", name: "menphys", category: "健康ドリンク", image: "/images/products/menphys.jpg", basePrice: 3980 },
-  { id: "tokucha", name: "特茶/胡麻麦茶", category: "健康飲料", image: "/images/products/tokucha.jpg", basePrice: 170 },
-  { id: "maintenansu", name: "すっきりメンテナン酢", category: "機能性表示食品", image: "/images/products/maintenansu.jpg", basePrice: 2980 },
-  { id: "coffee", name: "SUNTORY COFFEE ROASTERY", category: "プレミアムコーヒー", image: "/images/products/coffee-roastery.jpg", basePrice: 450 },
-  { id: "zone", name: "ZONe", category: "エナジードリンク", image: "/images/products/zone.jpg", basePrice: 200 },
-]
-
-// 素材オプション
-const materialOptions = [
-  { id: "gaba", name: "GABA配合", effect: { lm: 5, mh: 8, purchase: 12, regular: 15 }, cost: 50 },
-  { id: "collagen", name: "コラーゲン強化", effect: { lm: 3, mh: 10, purchase: 8, regular: 5 }, cost: 80 },
-  { id: "vitamin", name: "ビタミンD追加", effect: { lm: 8, mh: 6, purchase: 4, regular: 3 }, cost: 30 },
-  { id: "probiotic", name: "プロバイオティクス", effect: { lm: 6, mh: 12, purchase: 15, regular: 20 }, cost: 100 },
-  { id: "omega3", name: "オメガ3脂肪酸", effect: { lm: 4, mh: 7, purchase: 10, regular: 12 }, cost: 70 },
-]
-
-// 企画オプション
-const campaignOptions = [
-  { id: "subscription", name: "定期購入割引20%", effect: { lm: 2, mh: 5, purchase: 8, regular: 25 }, cost: -15 },
-  { id: "bundle", name: "セット販売", effect: { lm: 5, mh: 8, purchase: 15, regular: 10 }, cost: 0 },
-  { id: "trial", name: "お試しサイズ展開", effect: { lm: 15, mh: 10, purchase: 5, regular: 2 }, cost: -20 },
-  { id: "influencer", name: "インフルエンサー連携", effect: { lm: 20, mh: 15, purchase: 8, regular: 3 }, cost: 200 },
-  { id: "eco", name: "エコパッケージ", effect: { lm: 8, mh: 12, purchase: 6, regular: 8 }, cost: 40 },
-]
-
-// ファネルデータ（ベース）
-const baseFunnelData = {
-  menphys: { lm: 1200, mh: 283, purchase: 128, regular: 79 },
-  tokucha: { lm: 1800, mh: 340, purchase: 107, regular: 57 },
-  maintenansu: { lm: 1500, mh: 227, purchase: 85, regular: 34 },
-  coffee: { lm: 980, mh: 185, purchase: 62, regular: 28 },
-  zone: { lm: 2200, mh: 420, purchase: 156, regular: 89 },
+// --- デフォルト審査パラメータ ---
+const defaultParams = {
+  cardType: "gold",
+  minIncome: 400,           // 万円
+  minCreditScore: 680,      // 信用スコア
+  maxDebtRatio: 35,         // 負債比率（%）
+  employmentRequired: true, // 在職証明必須
+  minAge: 20,
+  strictFraudCheck: true,
 }
 
-// ペルソナデータ
-const personasByProduct: Record<string, { name: string; image: string; segment: string }[]> = {
-  menphys: [
-    { name: "佐藤健一", image: "/images/personas/senior_man1.jpg", segment: "lm" },
-    { name: "田中正雄", image: "/images/personas/casual_man1.jpg", segment: "mh" },
-    { name: "山本洋子", image: "/images/personas/senior_woman1.jpg", segment: "purchase" },
-    { name: "山田美和", image: "/images/personas/housewife2.jpg", segment: "regular" },
-  ],
-  tokucha: [
-    { name: "中村一郎", image: "/images/personas/casual_man1.jpg", segment: "lm" },
-    { name: "加藤美咲", image: "/images/personas/young_woman1.jpg", segment: "mh" },
-    { name: "吉田浩", image: "/images/personas/young_man1.jpg", segment: "purchase" },
-  ],
-  maintenansu: [
-    { name: "鈴木太郎", image: "/images/personas/middle_woman1.jpg", segment: "lm" },
-    { name: "高橋由美", image: "/images/personas/housewife1.jpg", segment: "mh" },
-  ],
-  coffee: [
-    { name: "北村誠一", image: "/images/personas/senior_man1.jpg", segment: "mh" },
-    { name: "藤井恵子", image: "/images/personas/housewife1.jpg", segment: "purchase" },
-  ],
-  zone: [
-    { name: "岡本翔太", image: "/images/personas/young_man1.jpg", segment: "lm" },
-    { name: "鈴木翔", image: "/images/personas/student1.jpg", segment: "mh" },
-    { name: "山本彩", image: "/images/personas/young_woman1.jpg", segment: "purchase" },
-  ],
+// 審査結果の計算（擬似ロジック）
+function calcResults(params: typeof defaultParams) {
+  const incomeMultiplier = Math.max(0.5, 1 - (params.minIncome - 300) / 1000)
+  const scoreMultiplier = Math.max(0.4, 1 - (params.minCreditScore - 600) / 800)
+  const debtMultiplier = Math.min(1.2, params.maxDebtRatio / 35)
+  const employmentPenalty = params.employmentRequired ? 0.88 : 1.0
+  const agePenalty = Math.min(1.0, (params.minAge - 18) / 12 * -0.05 + 1)
+
+  const baseApplicants = 580000
+  const baseApproval = 0.707
+  const baseDefault = 0.012
+
+  const approvalRate = Math.min(0.95, Math.max(0.25,
+    baseApproval * scoreMultiplier * incomeMultiplier * debtMultiplier * employmentPenalty * agePenalty
+  ))
+  const applicants = Math.round(baseApplicants * (1 + (1 - scoreMultiplier) * 0.3 + (1 - incomeMultiplier) * 0.2))
+  const approved = Math.round(applicants * approvalRate)
+  const defaultRate = Math.max(0.003, Math.min(0.05,
+    baseDefault * (1 / scoreMultiplier) * (1 / incomeMultiplier) * (params.strictFraudCheck ? 0.85 : 1.1)
+  ))
+  const expectedRevenue = Math.round(approved * 25000 * (1 - defaultRate))
+
+  return {
+    applicants,
+    approvalRate: (approvalRate * 100).toFixed(1),
+    approved,
+    defaultRate: (defaultRate * 100).toFixed(2),
+    expectedRevenue,
+    riskLevel: defaultRate > 0.025 ? "high" : defaultRate > 0.015 ? "medium" : "low",
+  }
+}
+
+const cardTypes = [
+  { value: "blue", label: "ブルー・カード", minIncome: 200, minScore: 620 },
+  { value: "green", label: "グリーン・カード", minIncome: 300, minScore: 650 },
+  { value: "gold", label: "ゴールド・カード", minIncome: 400, minScore: 680 },
+  { value: "platinum", label: "プラチナ・カード", minIncome: 1000, minScore: 750 },
+  { value: "business-gold", label: "ビジネス・ゴールド", minIncome: 600, minScore: 700 },
+]
+
+const riskConfig: Record<string, { label: string; color: string; bg: string; border: string }> = {
+  low: { label: "低リスク", color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200" },
+  medium: { label: "中リスク", color: "text-amber-700", bg: "bg-amber-50", border: "border-amber-200" },
+  high: { label: "高リスク", color: "text-red-700", bg: "bg-red-50", border: "border-red-200" },
 }
 
 export function AISimulatorContent() {
-  const [selectedProduct, setSelectedProduct] = useState("menphys")
-  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([])
-  const [selectedCampaigns, setSelectedCampaigns] = useState<string[]>([])
-  const [priceAdjustment, setPriceAdjustment] = useState(0)
-  const [isSimulating, setIsSimulating] = useState(false)
-  const [simulationComplete, setSimulationComplete] = useState(false)
-  const [animatedValues, setAnimatedValues] = useState<Record<string, number>>({})
-  const [enableSound, setEnableSound] = useState(true)
+  const [params, setParams] = useState(defaultParams)
+  const [results, setResults] = useState(() => calcResults(defaultParams))
+  const [baseResults] = useState(() => calcResults(defaultParams))
+  const [isRunning, setIsRunning] = useState(false)
+  const [hasChanged, setHasChanged] = useState(false)
 
-  const currentProduct = products.find(p => p.id === selectedProduct)
-  const baseFunnel = baseFunnelData[selectedProduct as keyof typeof baseFunnelData]
-  const personas = personasByProduct[selectedProduct] || []
-
-  // シミュレーション効果を計算
-  const calculateEffects = () => {
-    let effects = { lm: 0, mh: 0, purchase: 0, regular: 0 }
-    
-    selectedMaterials.forEach(matId => {
-      const mat = materialOptions.find(m => m.id === matId)
-      if (mat) {
-        effects.lm += mat.effect.lm
-        effects.mh += mat.effect.mh
-        effects.purchase += mat.effect.purchase
-        effects.regular += mat.effect.regular
-      }
-    })
-    
-    selectedCampaigns.forEach(campId => {
-      const camp = campaignOptions.find(c => c.id === campId)
-      if (camp) {
-        effects.lm += camp.effect.lm
-        effects.mh += camp.effect.mh
-        effects.purchase += camp.effect.purchase
-        effects.regular += camp.effect.regular
-      }
-    })
-    
-    // 価格調整の影響（価格を下げると購入系が上がる、上げると下がる）
-    effects.purchase += priceAdjustment * -0.5
-    effects.regular += priceAdjustment * -0.3
-    
-    return effects
-  }
-
-  const effects = calculateEffects()
-  
-  // 新しいファネル値を計算
-  const newFunnel = {
-    lm: Math.round(baseFunnel.lm * (1 + effects.lm / 100)),
-    mh: Math.round(baseFunnel.mh * (1 + effects.mh / 100)),
-    purchase: Math.round(baseFunnel.purchase * (1 + effects.purchase / 100)),
-    regular: Math.round(baseFunnel.regular * (1 + effects.regular / 100)),
-  }
-
-  // コスト計算
-  const calculateCost = () => {
-    let cost = 0
-    selectedMaterials.forEach(matId => {
-      const mat = materialOptions.find(m => m.id === matId)
-      if (mat) cost += mat.cost
-    })
-    selectedCampaigns.forEach(campId => {
-      const camp = campaignOptions.find(c => c.id === campId)
-      if (camp) cost += camp.cost
-    })
-    return cost
-  }
-
-  // シミュレーション実行
   const runSimulation = () => {
-    setIsSimulating(true)
-    setSimulationComplete(false)
-    
-    // アニメーション用に段階的に値を更新
-    const steps = 20
-    const duration = 1500
-    const stepDuration = duration / steps
-    
-    let currentStep = 0
-    const interval = setInterval(() => {
-      currentStep++
-      const progress = currentStep / steps
-      
-      setAnimatedValues({
-        lm: Math.round(baseFunnel.lm + (newFunnel.lm - baseFunnel.lm) * progress),
-        mh: Math.round(baseFunnel.mh + (newFunnel.mh - baseFunnel.mh) * progress),
-        purchase: Math.round(baseFunnel.purchase + (newFunnel.purchase - baseFunnel.purchase) * progress),
-        regular: Math.round(baseFunnel.regular + (newFunnel.regular - baseFunnel.regular) * progress),
-      })
-      
-      if (currentStep >= steps) {
-        clearInterval(interval)
-        setIsSimulating(false)
-        setSimulationComplete(true)
-      }
-    }, stepDuration)
+    setIsRunning(true)
+    setTimeout(() => {
+      setResults(calcResults(params))
+      setIsRunning(false)
+      setHasChanged(false)
+    }, 800)
   }
 
-  // リセット
-  const resetSimulation = () => {
-    setAnimatedValues({})
-    setSimulationComplete(false)
+  const resetParams = () => {
+    setParams(defaultParams)
+    setResults(calcResults(defaultParams))
+    setHasChanged(false)
   }
 
-  const displayFunnel = simulationComplete || isSimulating ? animatedValues : baseFunnel
+  const updateParam = <K extends keyof typeof defaultParams>(key: K, value: typeof defaultParams[K]) => {
+    setParams((prev) => ({ ...prev, [key]: value }))
+    setHasChanged(true)
+  }
 
-  // ファネルステージ定義（共通定数の色を使用）
-  const funnelStages = [
-    { id: "lm", name: "LM(ポテンシャル小)", color: FUNNEL_COLORS.lm, icon: Users },
-    { id: "mh", name: "MH(ポテンシャル大)", color: FUNNEL_COLORS.mh, icon: Target },
-    { id: "purchase", name: "購入ユーザー", color: FUNNEL_COLORS.purchase, icon: DollarSign },
-    { id: "regular", name: "定期購入", color: FUNNEL_COLORS.regular, icon: Sparkles },
+  const diff = {
+    applicants: results.applicants - baseResults.applicants,
+    approvalRate: (parseFloat(results.approvalRate) - parseFloat(baseResults.approvalRate)).toFixed(1),
+    approved: results.approved - baseResults.approved,
+    defaultRate: (parseFloat(results.defaultRate) - parseFloat(baseResults.defaultRate)).toFixed(2),
+    revenue: results.expectedRevenue - baseResults.expectedRevenue,
+  }
+
+  const radarData = [
+    { metric: "承認率", current: parseFloat(results.approvalRate), base: parseFloat(baseResults.approvalRate) },
+    { metric: "安全性", current: (1 - parseFloat(results.defaultRate) / 5) * 100, base: (1 - parseFloat(baseResults.defaultRate) / 5) * 100 },
+    { metric: "収益性", current: Math.min(100, results.expectedRevenue / 1500000 * 100), base: Math.min(100, baseResults.expectedRevenue / 1500000 * 100) },
+    { metric: "成長性", current: Math.min(100, results.applicants / 700000 * 100), base: Math.min(100, baseResults.applicants / 700000 * 100) },
+    { metric: "信頼スコア", current: 100 - parseFloat(results.defaultRate) * 20, base: 100 - parseFloat(baseResults.defaultRate) * 20 },
+  ]
+
+  const kpiBarData = [
+    {
+      name: "承認率(%)",
+      current: parseFloat(results.approvalRate),
+      base: parseFloat(baseResults.approvalRate),
+    },
+    {
+      name: "デフォルト率(%)",
+      current: parseFloat(results.defaultRate),
+      base: parseFloat(baseResults.defaultRate),
+    },
   ]
 
   return (
-    <div className="p-6 space-y-6 bg-muted/30 min-h-screen">
-      {/* ========== 上部: パラメータ設定エリア ========== */}
-      <Card className="border-primary/20">
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* 商品選択 */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Package className="h-4 w-4 text-primary" />
-                対象商品
-              </div>
-              <Select value={selectedProduct} onValueChange={(v) => { setSelectedProduct(v); resetSimulation(); }}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {products.map((product) => (
-                    <SelectItem key={product.id} value={product.id}>
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded overflow-hidden bg-white border flex-shrink-0">
-                          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                        </div>
-                        <span>{product.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {currentProduct && (
-                <div className="p-3 bg-muted/50 rounded-lg flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-white border flex-shrink-0">
-                    <img src={currentProduct.image} alt={currentProduct.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-sm truncate">{currentProduct.name}</p>
-                    <p className="text-xs text-muted-foreground">{currentProduct.category}</p>
-                    <p className="text-sm font-medium text-primary">
-                      ¥{(currentProduct.basePrice + priceAdjustment).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* 素材オプション */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <FlaskConical className="h-4 w-4 text-primary" />
-                素材改定
-              </div>
-              <div className="space-y-1.5 max-h-[180px] overflow-y-auto pr-1">
-                {materialOptions.map((mat) => (
-                  <label
-                    key={mat.id}
-                    className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors text-sm ${
-                      selectedMaterials.includes(mat.id) ? "bg-primary/10 border border-primary/30" : "bg-muted/30 hover:bg-muted/50"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={selectedMaterials.includes(mat.id)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedMaterials([...selectedMaterials, mat.id])
-                          } else {
-                            setSelectedMaterials(selectedMaterials.filter(id => id !== mat.id))
-                          }
-                          resetSimulation()
-                        }}
-                      />
-                      <span className="font-medium">{mat.name}</span>
-                    </div>
-                    <Badge variant="outline" className="text-[10px] shrink-0">
-                      +¥{mat.cost}
-                    </Badge>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* 企画オプション */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Sparkles className="h-4 w-4 text-primary" />
-                企画施策
-              </div>
-              <div className="space-y-1.5 max-h-[180px] overflow-y-auto pr-1">
-                {campaignOptions.map((camp) => (
-                  <label
-                    key={camp.id}
-                    className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors text-sm ${
-                      selectedCampaigns.includes(camp.id) ? "bg-primary/10 border border-primary/30" : "bg-muted/30 hover:bg-muted/50"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={selectedCampaigns.includes(camp.id)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedCampaigns([...selectedCampaigns, camp.id])
-                          } else {
-                            setSelectedCampaigns(selectedCampaigns.filter(id => id !== camp.id))
-                          }
-                          resetSimulation()
-                        }}
-                      />
-                      <span className="font-medium">{camp.name}</span>
-                    </div>
-                    <Badge variant={camp.cost > 0 ? "outline" : "secondary"} className="text-[10px] shrink-0">
-                      {camp.cost > 0 ? `+¥${camp.cost}` : camp.cost < 0 ? `${camp.cost}%` : "±0"}
-                    </Badge>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* 価格調整 */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <DollarSign className="h-4 w-4 text-primary" />
-                価格調整
-              </div>
-              <div className="p-4 bg-muted/30 rounded-lg space-y-4">
-                <div className="text-center">
-                  <span className={`text-2xl font-bold ${priceAdjustment > 0 ? "text-red-500" : priceAdjustment < 0 ? "text-green-500" : "text-foreground"}`}>
-                    {priceAdjustment > 0 ? "+" : ""}{priceAdjustment === 0 ? "±0" : `¥${priceAdjustment}`}
-                  </span>
-                </div>
-                <Slider
-                  value={[priceAdjustment]}
-                  onValueChange={([v]) => { setPriceAdjustment(v); resetSimulation(); }}
-                  min={-500}
-                  max={500}
-                  step={50}
-                />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>-¥500</span>
-                  <span>+¥500</span>
-                </div>
-              </div>
-              {/* 選択中の要約 */}
-              <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
-                <p className="text-xs text-muted-foreground mb-1">選択中の改定</p>
-                <div className="flex flex-wrap gap-1">
-                  {selectedMaterials.length === 0 && selectedCampaigns.length === 0 && (
-                    <span className="text-xs text-muted-foreground">なし</span>
-                  )}
-                  {selectedMaterials.map(id => {
-                    const mat = materialOptions.find(m => m.id === id)
-                    return mat && (
-                      <Badge key={id} variant="secondary" className="text-[10px]">
-                        {mat.name}
-                      </Badge>
-                    )
-                  })}
-                  {selectedCampaigns.map(id => {
-                    const camp = campaignOptions.find(c => c.id === id)
-                    return camp && (
-                      <Badge key={id} variant="outline" className="text-[10px]">
-                        {camp.name}
-                      </Badge>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
+    <div className="p-6 space-y-6">
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-[#E6F2FF]">
+            <Settings className="h-4 w-4 text-[#006FCF]" />
           </div>
-        </CardContent>
-        <div className="px-6 pb-6">
-          <Button 
-            className="w-full gap-2 h-12" 
+          <div>
+            <p className="text-sm font-semibold text-foreground">審査基準 シミュレーター</p>
+            <p className="text-xs text-muted-foreground">審査条件の変更が承認率・デフォルト率・収益に与える影響を試算</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="gap-2 text-xs" onClick={resetParams}>
+            <RotateCcw className="h-3.5 w-3.5" />
+            リセット
+          </Button>
+          <Button
+            size="sm"
+            className="gap-2 text-xs bg-[#006FCF] hover:bg-[#0051A8] text-white"
             onClick={runSimulation}
-            disabled={isSimulating}
+            disabled={isRunning || !hasChanged}
           >
-            {isSimulating ? (
-              <>
-                <RefreshCw className="h-4 w-4 animate-spin" />
-                シミュレーション中...
-              </>
-            ) : (
-              <>
-                <Play className="h-4 w-4" />
-                シミュレーション実行
-              </>
-            )}
+            <Play className="h-3.5 w-3.5" />
+            {isRunning ? "計算中..." : "シミュレーション実行"}
           </Button>
         </div>
-      </Card>
+      </div>
 
-      {/* ========== 下部: 結果表示エリア ========== */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 左側: ファネル変化と収益インパクト（2カラム幅） */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* ファネル変化予測 */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5" />
-                    ファネル変化予測
-                  </CardTitle>
-                  <CardDescription>改定による各ステージの人数変化</CardDescription>
-                </div>
-                {simulationComplete && (
-                  <Badge className="bg-green-100 text-green-700">シミュレーション完了</Badge>
-                )}
-              </div>
+        {/* 左: パラメータ設定 */}
+        <div className="space-y-5">
+          <Card className="border border-border shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold">審査条件の設定</CardTitle>
+              <CardDescription className="text-xs">パラメータを変更して実行ボタンを押してください</CardDescription>
             </CardHeader>
-            <CardContent className="p-0">
-              {/* テーブル形式のファネル表示 */}
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  {/* ヘッダー行 */}
-                  <thead>
-                    <tr className="border-b bg-muted/30">
-                      <th className="text-left p-4 w-48">
-                        <div className="text-xs text-muted-foreground">ステージ</div>
-                        <div className="text-xs text-muted-foreground">商品</div>
-                      </th>
-                      {funnelStages.map((stage) => (
-                        <th key={stage.id} className="p-4 text-center min-w-[140px]">
-                          <div className="flex flex-col items-center gap-1">
-                            <div 
-                              className="w-2 h-2 rounded-full"
-                              style={{ backgroundColor: stage.color }}
-                            />
-                            <span className="text-sm font-medium" style={{ color: stage.color }}>
-                              {stage.name}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              {baseFunnel[stage.id as keyof typeof baseFunnel] * 10}万人
-                            </span>
-                          </div>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  {/* データ行 */}
-                  <tbody>
-                    <tr className="border-b">
-                      {/* 商品情報 */}
-                      <td className="p-4 bg-muted/20">
-                        <div className="flex items-center gap-3">
-                          {currentProduct && (
-                            <>
-                              <div className="w-12 h-12 rounded-lg overflow-hidden bg-white border flex-shrink-0">
-                                <img src={currentProduct.image} alt={currentProduct.name} className="w-full h-full object-cover" />
-                              </div>
-                              <div>
-                                <p className="font-semibold text-sm">{currentProduct.name}</p>
-                                <p className="text-xs text-muted-foreground">{currentProduct.category}</p>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                      {/* 各ステージのデータ */}
-                      {funnelStages.map((stage) => {
-                        const baseValue = baseFunnel[stage.id as keyof typeof baseFunnel]
-                        const currentValue = displayFunnel[stage.id as keyof typeof displayFunnel] || baseValue
-                        const diff = currentValue - baseValue
-                        const stagePersonas = personas.filter(p => p.segment === stage.id)
-                        
-                        return (
-                          <td 
-                            key={stage.id} 
-                            className="p-4 text-center transition-all duration-300"
-                            style={{ backgroundColor: simulationComplete && diff > 0 ? `${stage.color}10` : "transparent" }}
-                          >
-                            {/* 人数 */}
-                            <p 
-                              className="text-2xl font-bold mb-2 transition-all duration-300"
-                              style={{ color: stage.color }}
-                            >
-                              {currentValue}
-                              <span className="text-sm font-normal">万人</span>
-                            </p>
-                            
-                            {/* 変化量 */}
-                            {simulationComplete && diff !== 0 && (
-                              <div className="text-xs text-green-600 font-medium mb-3">
-                                +{diff}万人 (+{((diff / baseValue) * 100).toFixed(1)}%)
-                              </div>
-                            )}
-                            
-                            {/* ペルソナアバター */}
-                            <div className="flex justify-center -space-x-2">
-                              {stagePersonas.map((persona, i) => (
-                                <Avatar 
-                                  key={i} 
-                                  className="h-9 w-9 border-2 border-white ring-2 transition-all duration-300"
-                                  style={{ 
-                                    ringColor: simulationComplete && diff > 0 ? stage.color : "transparent",
-                                    zIndex: stagePersonas.length - i
-                                  }}
-                                >
-                                  <AvatarImage src={persona.image} alt={persona.name} />
-                                  <AvatarFallback>{persona.name.slice(0, 1)}</AvatarFallback>
-                                </Avatar>
-                              ))}
-                              {stagePersonas.length === 0 && (
-                                <div className="text-xs text-muted-foreground">-</div>
-                              )}
-                            </div>
-                          </td>
-                        )
-                      })}
-                    </tr>
-                  </tbody>
-                </table>
+            <CardContent className="space-y-5">
+              {/* カード種別 */}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-muted-foreground">対象カード</Label>
+                <Select
+                  value={params.cardType}
+                  onValueChange={(v) => updateParam("cardType", v)}
+                >
+                  <SelectTrigger className="h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cardTypes.map((ct) => (
+                      <SelectItem key={ct.value} value={ct.value} className="text-xs">
+                        {ct.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            </CardContent>
-          </Card>
 
-          {/* 収益インパクト予測 */}
-          <Card className={`transition-all duration-500 ${simulationComplete ? "bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20" : ""}`}>
-            <CardContent className="pt-6">
-              {simulationComplete ? (
+              {/* 最低年収 */}
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-muted-foreground">予測最大売上増加額</span>
-                  <span className="text-2xl font-bold text-primary">
-                    +{(((newFunnel.purchase - baseFunnel.purchase) * currentProduct!.basePrice * 0.8 + (newFunnel.regular - baseFunnel.regular) * currentProduct!.basePrice * 2.5) / 1000000).toFixed(1)}百万円
-                  </span>
+                  <Label className="text-xs font-medium text-muted-foreground">最低年収</Label>
+                  <span className="text-xs font-bold text-foreground">{params.minIncome}万円</span>
                 </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-6 text-muted-foreground">
-                  <p className="text-sm">シミュレーション実行で</p>
-                  <p className="text-sm">売上予測が表示されます</p>
+                <Slider
+                  min={200}
+                  max={1500}
+                  step={50}
+                  value={[params.minIncome]}
+                  onValueChange={([v]) => updateParam("minIncome", v)}
+                  className="[&_[role=slider]]:bg-[#006FCF] [&_[role=slider]]:border-[#006FCF]"
+                />
+                <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <span>200万</span><span>1,500万</span>
                 </div>
-              )}
+              </div>
+
+              {/* 信用スコア閾値 */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-medium text-muted-foreground">最低信用スコア</Label>
+                  <span className="text-xs font-bold text-foreground">{params.minCreditScore}</span>
+                </div>
+                <Slider
+                  min={550}
+                  max={800}
+                  step={10}
+                  value={[params.minCreditScore]}
+                  onValueChange={([v]) => updateParam("minCreditScore", v)}
+                  className="[&_[role=slider]]:bg-[#006FCF] [&_[role=slider]]:border-[#006FCF]"
+                />
+                <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <span>550</span><span>800</span>
+                </div>
+              </div>
+
+              {/* 負債比率 */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-medium text-muted-foreground">最大負債比率</Label>
+                  <span className="text-xs font-bold text-foreground">{params.maxDebtRatio}%</span>
+                </div>
+                <Slider
+                  min={10}
+                  max={60}
+                  step={5}
+                  value={[params.maxDebtRatio]}
+                  onValueChange={([v]) => updateParam("maxDebtRatio", v)}
+                  className="[&_[role=slider]]:bg-[#006FCF] [&_[role=slider]]:border-[#006FCF]"
+                />
+                <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <span>10%</span><span>60%</span>
+                </div>
+              </div>
+
+              {/* 最低年齢 */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-medium text-muted-foreground">最低申込年齢</Label>
+                  <span className="text-xs font-bold text-foreground">{params.minAge}歳</span>
+                </div>
+                <Slider
+                  min={18}
+                  max={30}
+                  step={1}
+                  value={[params.minAge]}
+                  onValueChange={([v]) => updateParam("minAge", v)}
+                  className="[&_[role=slider]]:bg-[#006FCF] [&_[role=slider]]:border-[#006FCF]"
+                />
+                <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <span>18歳</span><span>30歳</span>
+                </div>
+              </div>
+
+              {/* スイッチ */}
+              <div className="space-y-3 pt-1">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs text-foreground">在職証明を必須とする</Label>
+                  <Switch
+                    checked={params.employmentRequired}
+                    onCheckedChange={(v) => updateParam("employmentRequired", v)}
+                    className="data-[state=checked]:bg-[#006FCF]"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs text-foreground">厳格な不正チェック</Label>
+                  <Switch
+                    checked={params.strictFraudCheck}
+                    onCheckedChange={(v) => updateParam("strictFraudCheck", v)}
+                    className="data-[state=checked]:bg-[#006FCF]"
+                  />
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* 右側: ペルソナ分析（1カラム） */}
-        <div className="space-y-6">
-          {/* ペルソナ影響分析 */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                影響を受けるペルソナ
-              </CardTitle>
-              <CardDescription className="text-xs">改定により行動変化が予測されるユーザー像</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {personas.map((persona, index) => {
-                  const segmentEffect = effects[persona.segment as keyof typeof effects] || 0
-                  const isPositive = segmentEffect > 0
-                  const stage = funnelStages.find(s => s.id === persona.segment)
-                  
-                  return (
-                    <div 
-                      key={index}
-                      className={`p-3 rounded-xl border transition-all duration-500 ${
-                        simulationComplete && isPositive 
-                          ? "border-green-200 bg-green-50/50" 
-                          : "border-border bg-card"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border-2" style={{ borderColor: stage?.color }}>
-                          <AvatarImage src={persona.image} alt={persona.name} />
-                          <AvatarFallback>{persona.name.slice(0, 2)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{persona.name}</p>
-                          <p className="text-xs text-muted-foreground">{stage?.name}</p>
-                        </div>
-                        {simulationComplete && segmentEffect !== 0 && (
-                          <div className={`flex items-center gap-1 text-xs font-medium ${isPositive ? "text-green-600" : "text-red-600"}`}>
-                            {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                            <span>{isPositive ? "+" : ""}{segmentEffect}%</span>
-                          </div>
-                        )}
-                      </div>
+        {/* 右: 結果表示 */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* KPI 結果 */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              {
+                label: "申込推定数",
+                value: results.applicants.toLocaleString(),
+                unit: "件",
+                icon: Users,
+                change: diff.applicants,
+                isHighGood: true,
+              },
+              {
+                label: "承認率",
+                value: results.approvalRate,
+                unit: "%",
+                icon: CheckCircle,
+                change: parseFloat(diff.approvalRate),
+                isHighGood: true,
+              },
+              {
+                label: "デフォルト率",
+                value: results.defaultRate,
+                unit: "%",
+                icon: AlertTriangle,
+                change: parseFloat(diff.defaultRate),
+                isHighGood: false,
+              },
+              {
+                label: "期待収益",
+                value: `¥${(results.expectedRevenue / 1000000).toFixed(1)}M`,
+                unit: "",
+                icon: CreditCard,
+                change: diff.revenue,
+                isHighGood: true,
+              },
+            ].map((kpi) => {
+              const Icon = kpi.icon
+              const isPositive = kpi.change > 0
+              const isGood = kpi.isHighGood ? isPositive : !isPositive
+              return (
+                <Card key={kpi.label} className="border border-border shadow-sm">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <Icon className="h-4 w-4 text-[#006FCF]" />
+                      {kpi.change !== 0 && (
+                        <span className={`flex items-center text-[10px] font-semibold ${isGood ? "text-emerald-600" : "text-red-600"}`}>
+                          {isPositive ? <TrendingUp className="h-3 w-3 mr-0.5" /> : <TrendingDown className="h-3 w-3 mr-0.5" />}
+                          {isPositive ? "+" : ""}{typeof kpi.change === "number" ? kpi.change.toLocaleString() : kpi.change}
+                        </span>
+                      )}
                     </div>
-                  )
-                })}
+                    <p className="text-xl font-bold text-foreground">
+                      {kpi.value}
+                      <span className="text-xs font-normal ml-0.5 text-muted-foreground">{kpi.unit}</span>
+                    </p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{kpi.label}</p>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+
+          {/* リスク判定 */}
+          {(() => {
+            const cfg = riskConfig[results.riskLevel]
+            return (
+              <div className={`p-3.5 rounded-xl border ${cfg.border} ${cfg.bg} flex items-center gap-3`}>
+                {results.riskLevel === "low"
+                  ? <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+                  : results.riskLevel === "medium"
+                  ? <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+                  : <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0" />}
+                <div>
+                  <span className={`text-xs font-bold ${cfg.color}`}>{cfg.label}</span>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    {results.riskLevel === "low"
+                      ? "現在の審査基準は安全性と収益性のバランスが取れています。"
+                      : results.riskLevel === "medium"
+                      ? "デフォルト率がやや上昇しています。信用スコア閾値の引き上げを検討してください。"
+                      : "デフォルト率が高水準です。審査基準の厳格化を強く推奨します。"}
+                  </p>
+                </div>
+                <Badge className={`ml-auto text-xs border ${cfg.border} ${cfg.bg} ${cfg.color}`}>
+                  デフォルト率 {results.defaultRate}%
+                </Badge>
               </div>
-            </CardContent>
-          </Card>
+            )
+          })()}
+
+          {/* レーダーチャート + バー比較 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <Card className="border border-border shadow-sm">
+              <CardHeader className="pb-1">
+                <CardTitle className="text-xs font-semibold">審査バランスレーダー</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={220}>
+                  <RadarChart data={radarData} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
+                    <PolarGrid stroke="var(--border)" />
+                    <PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
+                    <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
+                    <Radar dataKey="base" name="現行基準" stroke="#D0DCE8" fill="#D0DCE8" fillOpacity={0.3} strokeWidth={1.5} />
+                    <Radar dataKey="current" name="シミュレーション" stroke="#006FCF" fill="#006FCF" fillOpacity={0.2} strokeWidth={2} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 11 }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+                <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground mt-1">
+                  <span className="flex items-center gap-1">
+                    <span className="inline-block w-3 h-2 rounded-sm bg-[#D0DCE8]" />
+                    現行基準
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="inline-block w-3 h-2 rounded-sm bg-[#006FCF]" />
+                    シミュレーション
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-border shadow-sm">
+              <CardHeader className="pb-1">
+                <CardTitle className="text-xs font-semibold">承認率 / デフォルト率 比較</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={220}>
+                  <BarChart data={kpiBarData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                    <XAxis dataKey="name" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
+                      formatter={(v: number) => [`${v.toFixed(2)}%`, ""]}
+                    />
+                    <Bar dataKey="base" name="現行基準" fill="#D0DCE8" radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="current" name="シミュレーション" fill="#006FCF" radius={[3, 3, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

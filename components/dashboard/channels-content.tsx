@@ -1,27 +1,25 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Progress } from "@/components/ui/progress"
-import { 
+import {
   Search,
   TrendingUp,
   TrendingDown,
   Minus,
-  ExternalLink,
-  ShoppingCart,
-  Store,
   Globe,
   BarChart3,
-  Star,
-  MessageSquare,
-  Package,
-  Filter
+  Smartphone,
+  Users,
+  Mail,
+  Store,
+  Phone,
+  Tv,
 } from "lucide-react"
 import {
   BarChart,
@@ -31,354 +29,223 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  LineChart,
+  Line,
   PieChart,
   Pie,
   Cell,
-  Legend
+  Legend,
 } from "recharts"
 
-// Mock data for retailers
-const retailers = [
-  { 
-    id: 1, 
-    name: "Amazon Japan", 
-    type: "EC", 
-    marketShare: 28.5, 
+// 申込チャネルデータ
+const channels = [
+  {
+    id: 1,
+    name: "公式ウェブサイト",
+    type: "デジタル",
+    icon: Globe,
+    monthlyApps: 18420,
+    approvalRate: 68.4,
+    cac: 8200,
     trend: "up",
-    products: 15420,
-    avgRating: 4.2,
-    reviews: 892340,
-    topCategory: "Health Foods"
+    delta: 14.2,
+    avgAge: 34,
   },
-  { 
-    id: 2, 
-    name: "Rakuten", 
-    type: "EC", 
-    marketShare: 22.1, 
+  {
+    id: 2,
+    name: "モバイルアプリ",
+    type: "デジタル",
+    icon: Smartphone,
+    monthlyApps: 12380,
+    approvalRate: 71.2,
+    cac: 6800,
     trend: "up",
-    products: 12380,
-    avgRating: 4.0,
-    reviews: 654210,
-    topCategory: "Supplements"
+    delta: 28.6,
+    avgAge: 30,
   },
-  { 
-    id: 3, 
-    name: "Matsumoto Kiyoshi", 
-    type: "Drugstore", 
-    marketShare: 12.8, 
-    trend: "stable",
-    products: 8540,
-    avgRating: 4.3,
-    reviews: 125680,
-    topCategory: "Cosmetics"
-  },
-  { 
-    id: 4, 
-    name: "AEON", 
-    type: "Supermarket", 
-    marketShare: 10.2, 
+  {
+    id: 3,
+    name: "店頭（百貨店等）",
+    type: "対面",
+    icon: Store,
+    monthlyApps: 8940,
+    approvalRate: 74.8,
+    cac: 14600,
     trend: "down",
-    products: 6230,
-    avgRating: 3.9,
-    reviews: 89450,
-    topCategory: "Food"
+    delta: -8.3,
+    avgAge: 46,
   },
-  { 
-    id: 5, 
-    name: "Welcia", 
-    type: "Drugstore", 
-    marketShare: 8.5, 
+  {
+    id: 4,
+    name: "ダイレクトメール",
+    type: "オフライン",
+    icon: Mail,
+    monthlyApps: 5210,
+    approvalRate: 66.1,
+    cac: 18200,
+    trend: "down",
+    delta: -12.7,
+    avgAge: 52,
+  },
+  {
+    id: 5,
+    name: "テレマーケティング",
+    type: "対面",
+    icon: Phone,
+    monthlyApps: 4180,
+    approvalRate: 58.3,
+    cac: 22400,
+    trend: "down",
+    delta: -18.4,
+    avgAge: 50,
+  },
+  {
+    id: 6,
+    name: "SNS広告",
+    type: "デジタル",
+    icon: Users,
+    monthlyApps: 9640,
+    approvalRate: 62.8,
+    cac: 9400,
     trend: "up",
-    products: 5120,
-    avgRating: 4.1,
-    reviews: 67230,
-    topCategory: "Toiletry"
+    delta: 32.1,
+    avgAge: 28,
   },
-  { 
-    id: 6, 
-    name: "Lohaco", 
-    type: "EC", 
-    marketShare: 6.4, 
-    trend: "up",
-    products: 4280,
-    avgRating: 4.4,
-    reviews: 45120,
-    topCategory: "Wellness"
+  {
+    id: 7,
+    name: "TV・OOH広告",
+    type: "オフライン",
+    icon: Tv,
+    monthlyApps: 3820,
+    approvalRate: 64.5,
+    cac: 31800,
+    trend: "stable",
+    delta: 1.2,
+    avgAge: 44,
   },
 ]
 
-const channelTypeData = [
-  { name: "EC", value: 56.8, color: "hsl(var(--chart-1))" },
-  { name: "Drugstore", value: 21.3, color: "hsl(var(--chart-2))" },
-  { name: "Supermarket", value: 15.4, color: "hsl(var(--chart-3))" },
-  { name: "Convenience", value: 6.5, color: "hsl(var(--chart-4))" },
+// 月次申込件数推移
+const monthlyApps = [
+  { month: "10月", web: 14200, app: 8400, store: 10200, sns: 5800 },
+  { month: "11月", web: 15800, app: 9600, store: 9800, sns: 7200 },
+  { month: "12月", web: 17200, app: 10800, store: 11400, sns: 8400 },
+  { month: "1月", web: 16400, app: 11200, store: 8600, sns: 8900 },
+  { month: "2月", web: 17800, app: 11900, store: 8200, sns: 9400 },
+  { month: "3月", web: 18420, app: 12380, store: 8940, sns: 9640 },
 ]
 
-const reviewTrendsData = [
-  { month: "Oct", positive: 78, negative: 12, neutral: 10 },
-  { month: "Nov", positive: 75, negative: 15, neutral: 10 },
-  { month: "Dec", positive: 82, negative: 10, neutral: 8 },
-  { month: "Jan", positive: 79, negative: 11, neutral: 10 },
-  { month: "Feb", positive: 85, negative: 8, neutral: 7 },
-  { month: "Mar", positive: 88, negative: 7, neutral: 5 },
+// チャネル別シェア
+const channelShare = [
+  { name: "ウェブ", value: 30.2, color: "#006FCF" },
+  { name: "モバイル", value: 20.3, color: "#00175A" },
+  { name: "SNS広告", value: 15.8, color: "#B4975A" },
+  { name: "店頭", value: 14.7, color: "#64B5F6" },
+  { name: "DM", value: 8.5, color: "#4CAF50" },
+  { name: "その他", value: 10.5, color: "#90A4AE" },
 ]
 
-const topMentions = [
-  { keyword: "natural ingredients", count: 8542, sentiment: "positive" },
-  { keyword: "fast delivery", count: 6234, sentiment: "positive" },
-  { keyword: "good value", count: 5891, sentiment: "positive" },
-  { keyword: "packaging issue", count: 2145, sentiment: "negative" },
-  { keyword: "effective results", count: 4521, sentiment: "positive" },
-]
+const typeColors: Record<string, string> = {
+  "デジタル": "bg-primary/15 text-primary border-primary/30",
+  "対面": "bg-accent/15 text-accent border-accent/30",
+  "オフライン": "bg-muted text-muted-foreground border-border",
+}
+
+const TrendIcon = ({ trend }: { trend: string }) => {
+  if (trend === "up") return <TrendingUp className="h-4 w-4 text-emerald-500" />
+  if (trend === "down") return <TrendingDown className="h-4 w-4 text-destructive" />
+  return <Minus className="h-4 w-4 text-muted-foreground" />
+}
 
 export function ChannelsContent() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedType, setSelectedType] = useState<string | null>(null)
-
-  const filteredRetailers = retailers.filter(r => {
-    const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesType = !selectedType || r.type === selectedType
-    return matchesSearch && matchesType
-  })
-
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case "up": return <TrendingUp className="h-4 w-4 text-green-600" />
-      case "down": return <TrendingDown className="h-4 w-4 text-red-600" />
-      default: return <Minus className="h-4 w-4 text-muted-foreground" />
-    }
-  }
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "EC": return <Globe className="h-4 w-4" />
-      case "Drugstore": return <Store className="h-4 w-4" />
-      case "Supermarket": return <ShoppingCart className="h-4 w-4" />
-      default: return <Package className="h-4 w-4" />
-    }
-  }
-
   return (
     <div className="p-6 space-y-6">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Channel Intelligence</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Retailer performance and review analytics across distribution channels
-          </p>
-        </div>
-        <Button className="bg-primary hover:bg-primary/90">
-          <BarChart3 className="h-4 w-4 mr-2" />
-          Export Report
-        </Button>
+      <div>
+        <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+          <BarChart3 className="h-6 w-6 text-primary" />
+          申込チャネル分析
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          チャネル別の新規申込件数・承認率・獲得コストのパフォーマンス分析
+        </p>
       </div>
 
-      {/* Channel Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Store className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Total Retailers</p>
-                <p className="text-2xl font-semibold">128</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Package className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Products Tracked</p>
-                <p className="text-2xl font-semibold">52.4K</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-100 rounded-lg">
-                <Star className="h-5 w-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Avg Rating</p>
-                <p className="text-2xl font-semibold">4.1</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <MessageSquare className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Reviews Analyzed</p>
-                <p className="text-2xl font-semibold">2.1M</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* KPI サマリー */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "月間総申込数", value: "62,590件", sub: "前月比 +8.4%" },
+          { label: "平均承認率", value: "66.9%", sub: "業界平均 +4.2pt" },
+          { label: "平均獲得コスト", value: "¥15,800", sub: "前月比 -6.1%" },
+          { label: "デジタル申込比率", value: "66.3%", sub: "前月比 +5.8pt" },
+        ].map((kpi) => (
+          <Card key={kpi.label} className="rounded-xl border-border">
+            <CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">{kpi.label}</p>
+              <p className="text-2xl font-bold text-foreground mt-1">{kpi.value}</p>
+              <p className="text-xs text-primary mt-0.5">{kpi.sub}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Channel Distribution Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Channel Type Distribution</CardTitle>
-            <CardDescription>Market share by channel type</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[250px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={channelTypeData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    paddingAngle={2}
-                    dataKey="value"
-                  >
-                    {channelTypeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => `${value}%`} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Review Sentiment Trends */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-base">Review Sentiment Trends</CardTitle>
-            <CardDescription>6-month sentiment analysis across channels</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[250px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={reviewTrendsData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="month" fontSize={12} />
-                  <YAxis fontSize={12} />
-                  <Tooltip />
-                  <Bar dataKey="positive" stackId="a" fill="hsl(var(--chart-2))" name="Positive" />
-                  <Bar dataKey="neutral" stackId="a" fill="hsl(var(--chart-5))" name="Neutral" />
-                  <Bar dataKey="negative" stackId="a" fill="hsl(var(--destructive))" name="Negative" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tabs for different views */}
-      <Tabs defaultValue="retailers" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="retailers">Retailers</TabsTrigger>
-          <TabsTrigger value="mentions">Top Mentions</TabsTrigger>
-          <TabsTrigger value="products">Product Rankings</TabsTrigger>
+      <Tabs defaultValue="table">
+        <TabsList className="mb-4">
+          <TabsTrigger value="table">チャネル一覧</TabsTrigger>
+          <TabsTrigger value="trends">推移グラフ</TabsTrigger>
+          <TabsTrigger value="share">シェア</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="retailers" className="space-y-4">
-          {/* Search and Filter */}
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search retailers..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button 
-                variant={selectedType === null ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedType(null)}
-              >
-                All
-              </Button>
-              {["EC", "Drugstore", "Supermarket"].map(type => (
-                <Button
-                  key={type}
-                  variant={selectedType === type ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedType(type)}
-                >
-                  {type}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Retailers Table */}
-          <Card>
+        <TabsContent value="table">
+          <Card className="rounded-xl border-border">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Retailer</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Market Share</TableHead>
-                    <TableHead>Products</TableHead>
-                    <TableHead>Avg Rating</TableHead>
-                    <TableHead>Reviews</TableHead>
-                    <TableHead>Top Category</TableHead>
-                    <TableHead></TableHead>
+                  <TableRow className="border-border hover:bg-transparent">
+                    <TableHead className="text-xs text-muted-foreground">チャネル</TableHead>
+                    <TableHead className="text-xs text-muted-foreground">種別</TableHead>
+                    <TableHead className="text-xs text-muted-foreground">月間申込数</TableHead>
+                    <TableHead className="text-xs text-muted-foreground">承認率</TableHead>
+                    <TableHead className="text-xs text-muted-foreground">獲得コスト</TableHead>
+                    <TableHead className="text-xs text-muted-foreground">平均年齢</TableHead>
+                    <TableHead className="text-xs text-muted-foreground">前月比</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredRetailers.map((retailer) => (
-                    <TableRow key={retailer.id}>
-                      <TableCell className="font-medium">
+                  {channels.map((ch) => (
+                    <TableRow key={ch.id} className="border-border hover:bg-muted/30">
+                      <TableCell>
                         <div className="flex items-center gap-2">
-                          {retailer.name}
-                          {getTrendIcon(retailer.trend)}
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <ch.icon className="h-4 w-4 text-primary" />
+                          </div>
+                          <span className="text-sm font-medium text-foreground">{ch.name}</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-1.5">
-                          {getTypeIcon(retailer.type)}
-                          <span>{retailer.type}</span>
+                        <Badge className={`text-xs border ${typeColors[ch.type]}`}>{ch.type}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm font-semibold text-foreground">{ch.monthlyApps.toLocaleString()}</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1 w-20">
+                          <span className="text-xs font-semibold text-foreground">{ch.approvalRate}%</span>
+                          <Progress value={ch.approvalRate} className="h-1.5" />
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Progress value={retailer.marketShare} className="w-16 h-2" />
-                          <span className="text-sm">{retailer.marketShare}%</span>
-                        </div>
+                        <span className="text-sm text-foreground">¥{ch.cac.toLocaleString()}</span>
                       </TableCell>
-                      <TableCell>{retailer.products.toLocaleString()}</TableCell>
+                      <TableCell>
+                        <span className="text-sm text-foreground">{ch.avgAge}歳</span>
+                      </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                          {retailer.avgRating}
+                          <TrendIcon trend={ch.trend} />
+                          <span className={`text-xs font-semibold ${ch.trend === "up" ? "text-emerald-600" : ch.trend === "down" ? "text-destructive" : "text-muted-foreground"}`}>
+                            {ch.delta > 0 ? "+" : ""}{ch.delta}%
+                          </span>
                         </div>
-                      </TableCell>
-                      <TableCell>{retailer.reviews.toLocaleString()}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{retailer.topCategory}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="ghost" size="sm">
-                          <ExternalLink className="h-4 w-4" />
-                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -388,45 +255,62 @@ export function ChannelsContent() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="mentions" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Top Keyword Mentions in Reviews</CardTitle>
-              <CardDescription>Most frequently mentioned terms across all channels</CardDescription>
+        <TabsContent value="trends">
+          <Card className="rounded-xl border-border">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">主要チャネル月次申込推移</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {topMentions.map((mention, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <span className="text-sm font-medium w-40">{mention.keyword}</span>
-                    <div className="flex-1">
-                      <Progress 
-                        value={(mention.count / 10000) * 100} 
-                        className={`h-2 ${mention.sentiment === 'negative' ? '[&>div]:bg-red-500' : ''}`}
-                      />
-                    </div>
-                    <span className="text-sm text-muted-foreground w-16 text-right">
-                      {mention.count.toLocaleString()}
-                    </span>
-                    <Badge 
-                      variant={mention.sentiment === "positive" ? "default" : "destructive"}
-                      className="w-20 justify-center"
-                    >
-                      {mention.sentiment}
-                    </Badge>
-                  </div>
-                ))}
+              <div className="h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={monthlyApps} margin={{ top: 4, right: 16, bottom: 4, left: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                    <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} />
+                    <Tooltip contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }} />
+                    <Legend wrapperStyle={{ fontSize: 11 }} />
+                    <Line type="monotone" dataKey="web" name="ウェブ" stroke="#006FCF" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="app" name="モバイル" stroke="#00175A" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="sns" name="SNS広告" stroke="#B4975A" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="store" name="店頭" stroke="#64B5F6" strokeWidth={2} dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="products">
-          <Card>
-            <CardContent className="pt-6">
-              <p className="text-center text-muted-foreground py-8">
-                Product rankings feature coming soon...
-              </p>
+        <TabsContent value="share">
+          <Card className="rounded-xl border-border">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">チャネル別申込シェア</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-8 h-64">
+                <div className="flex-1 h-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={channelShare} innerRadius={60} outerRadius={96} paddingAngle={2} dataKey="value">
+                        {channelShare.map((entry, i) => (
+                          <Cell key={i} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="space-y-3">
+                  {channelShare.map((d) => (
+                    <div key={d.name} className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm text-foreground w-20">{d.name}</span>
+                        <span className="text-sm font-bold text-foreground">{d.value}%</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

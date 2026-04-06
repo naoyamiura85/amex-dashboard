@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode, useMemo } from "react"
-import { initialTrends, generateMockResearchData } from "@/data/trends-data"
+import { initialTrends } from "@/data/trends-data"
 
 export type TrendStatus = "Growing" | "Stable" | "Emerging" | "Declining"
 export type ResearchStatus = "queued" | "researching" | "completed" | "failed"
@@ -73,8 +73,16 @@ export function TrendsProvider({ children }: { children: ReactNode }) {
         ))
       }
 
-      // Complete research with mock data
-      const mockResearchData = generateMockResearchData(currentTrend.name, currentTrend.categoryLabel)
+      // Complete research with inline mock data
+      const mockResearchData = {
+        summary: `${currentTrend.name}に関するリサーチが完了しました。5〜10年以内にAMEX会員の行動に影響を与える可能性のある兆しが確認されました。`,
+        keyInsights: [
+          "超富裕層の先行行動として認知が拡大しつつある",
+          "AMEXプレミアム会員との親和性が高い体験軸のトレンド",
+          "今後3〜5年でメインストリーム化の兆候あり",
+        ],
+        opportunityScore: Math.floor(Math.random() * 30) + 70,
+      }
 
       setTrends(prev => prev.map(t => 
         t.id === currentTrend.id 
