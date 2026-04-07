@@ -150,6 +150,7 @@ export function DashboardSidebar() {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                         asChild
+                        tooltip={{ children: null, hidden: true }}
                         className={`gap-3 h-10 rounded-lg transition-all ${
                           active 
                             ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold hover:bg-sidebar-primary/90" 
