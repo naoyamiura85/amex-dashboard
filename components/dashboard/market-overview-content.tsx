@@ -2,11 +2,18 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { X, User, MapPin, Star, Heart, Users, Briefcase, ChevronRight, TrendingUp, Download, Filter } from "lucide-react"
+import { X, User, MapPin, Star, Heart, Users, Briefcase, ChevronRight, TrendingUp, Download, Filter, ChevronDown } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
 // ----------------------------------------------------------------
@@ -92,11 +99,32 @@ const stages: { key: StageKey; label: string; sub: string }[] = [
   { key: "premium",  label: "プレミアム",                       sub: "56万人"  },
 ]
 
-const engagements: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[] = [
+// 縦軸タイプ
+type YAxisType = "income" | "adExperience"
+
+const Y_AXIS_OPTIONS: { value: YAxisType; label: string }[] = [
+  { value: "income",       label: "世帯年収" },
+  { value: "adExperience", label: "Premium Ad Experience" },
+]
+
+// 世帯年収軸
+const engagementsIncome: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[] = [
   { key: "H", label: "H", sublabel: "世帯年収 高", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
   { key: "M", label: "M", sublabel: "世帯年収 中", color: "text-amber-500",  dot: "bg-amber-400"   },
   { key: "L", label: "L", sublabel: "世帯年収 低", color: "text-slate-400",  dot: "bg-slate-300"   },
 ]
+
+// Premium Ad Experience 軸
+const engagementsAdExp: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[] = [
+  { key: "H", label: "H", sublabel: "良質広告体験 高", color: "text-emerald-600", dot: "bg-emerald-500" },
+  { key: "M", label: "M", sublabel: "良質広告体験 中", color: "text-sky-500",     dot: "bg-sky-400"     },
+  { key: "L", label: "L", sublabel: "良質広告体験 低", color: "text-rose-400",    dot: "bg-rose-300"    },
+]
+
+// 縦軸タイプに応じた engagements を返す
+function getEngagements(yAxis: YAxisType) {
+  return yAxis === "income" ? engagementsIncome : engagementsAdExp
+}
 
 // ----------------------------------------------------------------
 // ペルソナマスタ
@@ -158,7 +186,7 @@ const allPersonas: Persona[] = [
     occupation: "金融機関管理職", income: "1,200〜1,500万円",
     background: "大手証券会社のVP。海外出張が月複数回あり、ポイント利用に精通。",
     lifestyle: "出張でマイル・ポイントを最大化。家族旅行でも特典を積極活用。",
-    interests: ["マイレージ最適化", "ファミリー旅行", "グルメ"],
+    interests: ["マイレージ最適化", "ファ���リー旅行", "グルメ"],
     tribe: ["ポイント最適化派", "ファミリー重視���"],
     cardGoal: "出張費ポ���ント還元・家族旅行へ転換",
   },
@@ -275,7 +303,7 @@ const segments: Segment[] = [
         { label: "AMEX プラチナ検討中", pct: 21, color: "#8E44AD" },
       ],
       cardNote: "保有AMEXカード / 検討中",
-      summary: "利用額・頻度ともに最上位層。出張・グルメ・旅行の3カテゴリで全消費の72%を占める。プラチナカードへのアップグレード見込みが高く、コンシェルジュ満足度も最高水準。",
+      summary: "利用額・頻度ともに最上位層。出張・グルメ・旅行の3カテゴリで全消費の72%を占める。プラチナカードへ��アップグレード見込みが高く、コンシェルジュ満足度も最高水準。",
     },
   },
   {
@@ -391,7 +419,7 @@ const segments: Segment[] = [
         { label: "その他", pct: 10, color: "#7F8C8D" },
       ],
       cardNote: "入会前の保有カード（他社）",
-      summary: "入会後の休眠リスクが最も高いセグメント。初月以降の利用が急減しており3ヶ月以内の離脱率が32%に上る。初回特典消化後の次のアクションを促すコミュニケーション設計が急務。",
+      summary: "入会後の休眠リスクが最��高いセグメント。初月以降の利用が急減しており3ヶ月以内の離脱率が32%に上る。初回特典消化後の次のアクションを促すコミュニケーション設計が急務。",
     },
   },
   {
@@ -710,6 +738,10 @@ function SegmentDetailPanel({
 export function MarketOverviewContent() {
   const [selectedCell, setSelectedCell] = useState<{ eng: EngagementLevel; stage: StageKey } | null>(null)
   const [modalPersona, setModalPersona] = useState<Persona | null>(null)
+  const [yAxisType, setYAxisType] = useState<YAxisType>("income")
+
+  const engagements = getEngagements(yAxisType)
+  const yAxisLabel = Y_AXIS_OPTIONS.find(o => o.value === yAxisType)?.label ?? "世帯年収"
 
   const handleCellClick = (eng: EngagementLevel, stage: StageKey) => {
     if (selectedCell?.eng === eng && selectedCell?.stage === stage) {
@@ -725,8 +757,26 @@ export function MarketOverviewContent() {
   return (
     <div className="p-6 space-y-4">
       {/* ツールバー */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">2026年10月 | データ更新: 本日 09:15</p>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-4">
+          <p className="text-sm text-muted-foreground">2026年10月 | データ更新: 本日 09:15</p>
+          {/* 縦軸切り替えプルダウン */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">縦軸:</span>
+            <Select value={yAxisType} onValueChange={(v) => setYAxisType(v as YAxisType)}>
+              <SelectTrigger className="w-[200px] h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Y_AXIS_OPTIONS.map(opt => (
+                  <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="gap-1.5 text-xs h-8">
             <Filter className="h-3.5 w-3.5" /> フィルター
@@ -747,7 +797,7 @@ export function MarketOverviewContent() {
                 <div className="flex flex-col items-stretch text-[10px] text-slate-400 font-normal">
                   <span className="text-right">ステージ</span>
                   <div className="border-t border-slate-300 my-1.5" />
-                  <span className="text-left">世帯年収</span>
+                  <span className="text-left">{yAxisLabel}</span>
                 </div>
               </th>
               {stages.map(s => (
