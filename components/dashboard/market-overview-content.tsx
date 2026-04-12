@@ -223,7 +223,7 @@ const allPersonas: Persona[] = [
   {
     id: "p10", name: "松田 優子", age: 38, gender: "女性",
     image: "/images/personas/persona-10.jpg",
-    occupation: "クリエイティブディレクター", income: "900〜1,200万円",
+    occupation: "クリ���イティブディレクター", income: "900〜1,200万円",
     background: "広告代理店のクリエイティブ責任者。トレンド発掘のため世界各地を旅する。",
     lifestyle: "デザインホテルやポップアップ体験を好む。アートフェア・ファッションウィークに参加。",
     interests: ["デザインホテル", "現代アート", "ファッション"],
@@ -402,7 +402,7 @@ const segments: Segment[] = [
         { label: "その他一般カード", pct: 10, color: "#7F8C8D" },
       ],
       cardNote: "保有カード（他社）",
-      summary: "低関与だが潜在的な需要を持つ大規模セグメント。特定のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
+      summary: "低関与だが潜在的な需要を持つ大���模セグメント。特定のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
     },
   },
   {
@@ -630,6 +630,7 @@ function SegmentDetailPanel({
         <TabsList className="mb-4 h-8">
           <TabsTrigger value="attributes" className="text-xs">属性・概要</TabsTrigger>
           <TabsTrigger value="personas" className="text-xs">AIペルソナ</TabsTrigger>
+          <TabsTrigger value="adExperience" className="text-xs">Premium Ad Experience</TabsTrigger>
         </TabsList>
 
         {/* 属性・概要タブ */}
@@ -725,6 +726,102 @@ function SegmentDetailPanel({
                 <ChevronRight className="w-4 h-4 text-slate-300 shrink-0" />
               </button>
             ))}
+          </div>
+        </TabsContent>
+
+        {/* Premium Ad Experience タブ */}
+        <TabsContent value="adExperience">
+          <div className="space-y-4">
+            {/* 現在のAd Experienceレベル */}
+            <div className="bg-gradient-to-r from-emerald-50 to-sky-50 rounded-lg p-4 border border-emerald-100">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">現在の良質広告体験レベル</p>
+                  <p className="text-2xl font-bold text-emerald-600 mt-1">Medium</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-slate-500">スコア</p>
+                  <p className="text-xl font-bold text-slate-700">62<span className="text-sm font-normal text-slate-400">/100</span></p>
+                </div>
+              </div>
+              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-emerald-400 to-sky-400 rounded-full" style={{ width: "62%" }} />
+              </div>
+              <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>Low</span>
+                <span>Medium</span>
+                <span>High</span>
+              </div>
+            </div>
+
+            {/* 推計プラン */}
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-3">推計アップリフトプラン</p>
+              <div className="space-y-3">
+                {[
+                  { 
+                    plan: "プレミアム動画広告",
+                    desc: "高品質なストーリーテリング動画で認知向上",
+                    impact: "+12pt",
+                    cost: "¥2,400万",
+                    reach: "推定リーチ: 85%",
+                    color: "bg-[#006FCF]"
+                  },
+                  { 
+                    plan: "パーソナライズドDM",
+                    desc: "属性・行動に基づく個別最適化DM",
+                    impact: "+8pt",
+                    cost: "¥1,800万",
+                    reach: "推定リーチ: 72%",
+                    color: "bg-amber-500"
+                  },
+                  { 
+                    plan: "イベント体験施策",
+                    desc: "AMEXラウンジ・限定イベント招待",
+                    impact: "+15pt",
+                    cost: "¥3,200万",
+                    reach: "推定リーチ: 45%",
+                    color: "bg-emerald-500"
+                  },
+                ].map(item => (
+                  <div key={item.plan} className="border border-slate-100 rounded-lg p-3 hover:border-[#006FCF]/30 hover:bg-blue-50/30 transition-all">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-2 h-2 rounded-full ${item.color}`} />
+                          <p className="text-sm font-semibold text-slate-800">{item.plan}</p>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-1 ml-4">{item.desc}</p>
+                        <p className="text-[10px] text-slate-400 mt-1 ml-4">{item.reach}</p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-lg font-bold text-emerald-600">{item.impact}</p>
+                        <p className="text-[10px] text-slate-400">{item.cost}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 期待効果サマリー */}
+            <div className="bg-slate-50 rounded-lg p-3.5">
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-2">期待効果サマリー</p>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="text-center">
+                  <p className="text-lg font-bold text-[#006FCF]">+35pt</p>
+                  <p className="text-[10px] text-slate-500">総合スコア上昇</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-lg font-bold text-amber-500">¥7,400万</p>
+                  <p className="text-[10px] text-slate-500">総投資額</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-lg font-bold text-emerald-600">2.8x</p>
+                  <p className="text-[10px] text-slate-500">推定ROI</p>
+                </div>
+              </div>
+            </div>
           </div>
         </TabsContent>
       </Tabs>
