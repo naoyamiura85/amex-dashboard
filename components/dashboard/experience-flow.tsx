@@ -118,15 +118,16 @@ export function ExperienceFlow() {
   }, [])
 
   const { w, h } = dims
-  const PAD = { t: 60, b: 40, l: 20, r: 20 }
+  const PAD = { t: 60, b: 40, l: 130, r: 20 }
   const innerH = h - PAD.t - PAD.b
 
   // 列 X 位置
+  const usableW = w - PAD.l - PAD.r
   const colX = {
-    tribe:      PAD.l + w * 0.02,
-    touchpoint: PAD.l + w * 0.28,
-    motive:     PAD.l + w * 0.58,
-    pattern:    PAD.l + w * 0.82,
+    tribe:      PAD.l + usableW * 0.00,
+    touchpoint: PAD.l + usableW * 0.30,
+    motive:     PAD.l + usableW * 0.60,
+    pattern:    PAD.l + usableW * 0.88,
   }
 
   // ノードの Y 位置を計算
@@ -199,16 +200,16 @@ export function ExperienceFlow() {
       >
         {/* 列ヘッダー */}
         {[
-          { label: "Tribe",        x: colX.tribe },
-          { label: "タッチポイント", x: colX.touchpoint },
-          { label: "購買動機",       x: colX.motive },
-          { label: "パターン",       x: colX.pattern },
+          { label: "Tribe",        x: colX.tribe,      anchor: "end"    },
+          { label: "タッチポイント", x: colX.touchpoint, anchor: "middle" },
+          { label: "購買動機",       x: colX.motive,     anchor: "middle" },
+          { label: "パターン",       x: colX.pattern,    anchor: "middle" },
         ].map(col => (
           <text
             key={col.label}
             x={col.x}
             y={PAD.t - 20}
-            textAnchor="start"
+            textAnchor={col.anchor as "end" | "middle" | "start"}
             fontSize={11}
             fill="#64748B"
             fontWeight={600}
