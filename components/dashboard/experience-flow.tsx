@@ -104,21 +104,26 @@ function getConnectedIds(activeId: string | null): Set<string> {
 export function ExperienceFlow() {
   const svgRef = useRef<SVGSVGElement>(null)
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [dims, setDims] = useState({ w: 1100, h: 680 })
+  const [dims, setDims] = useState({ w: 1100 })
 
   useEffect(() => {
     const el = svgRef.current?.parentElement
     if (!el) return
     const ro = new ResizeObserver(entries => {
       const { width } = entries[0].contentRect
-      setDims({ w: Math.max(900, width), h: 680 })
+      setDims({ w: Math.max(900, width) })
     })
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
 
-  const { w, h } = dims
-  const PAD = { t: 60, b: 40, l: 130, r: 20 }
+  const { w } = dims
+  const PAD = { t: 60, b: 60, l: 130, r: 20 }
+
+  // 最も多いノード数に合わせて高さを動的計算（最低間隔 72px）
+  const maxNodes = Math.max(TRIBES.length, TOUCHPOINTS.length, MOTIVES.length, PATTERNS.length)
+  const ROW_GAP = 72
+  const h = PAD.t + PAD.b + maxNodes * ROW_GAP
   const innerH = h - PAD.t - PAD.b
 
   // 列 X 位置
@@ -130,13 +135,13 @@ export function ExperienceFlow() {
     pattern:    PAD.l + usableW * 0.88,
   }
 
-  // ノードの Y 位置を計算
+  // ノードの Y 位置を計算（列ごとに innerH を均等分割）
   function nodePositions<T extends { id: string }>(nodes: T[], x: number) {
-    const gap = innerH / (nodes.length + 1)
+    const count = nodes.length
     return nodes.map((n, i) => ({
       ...n,
       x,
-      y: PAD.t + gap * (i + 1),
+      y: PAD.t + (innerH / (count + 1)) * (i + 1),
     }))
   }
 
@@ -172,7 +177,7 @@ export function ExperienceFlow() {
   }, [])
 
   return (
-    <div className="w-full rounded-xl bg-white border border-slate-100 overflow-hidden select-none">
+      <div className="w-full rounded-xl bg-white border border-slate-100 overflow-visible select-none">
       {/* 凡例 */}
       <div className="flex items-center gap-6 px-5 py-3 border-b border-slate-100 text-xs text-slate-500">
         {[
