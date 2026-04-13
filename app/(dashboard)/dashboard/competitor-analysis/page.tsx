@@ -47,9 +47,9 @@ export default function CompetitorAnalysisPage() {
             <CardContent className="pt-6">
               <p className="text-sm font-medium text-muted-foreground mb-4">市場シェア（%）</p>
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={COMPETITORS} layout="vertical">
+                <BarChart data={COMPETITORS} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
                   <XAxis type="number" domain={[0, 35]} />
-                  <YAxis type="category" dataKey="name" width={80} />
+                  <YAxis type="category" dataKey="name" width={72} tick={{ fontSize: 13 }} />
                   <Tooltip formatter={(v) => [`${v}%`, "シェア"]} />
                   <Bar dataKey="share" radius={[0, 4, 4, 0]}>
                     {COMPETITORS.map((c, i) => (
@@ -66,9 +66,9 @@ export default function CompetitorAnalysisPage() {
             <CardContent className="pt-6">
               <p className="text-sm font-medium text-muted-foreground mb-4">推計広告投資額（億円/年）</p>
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={COMPETITORS} layout="vertical">
+                <BarChart data={COMPETITORS} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
                   <XAxis type="number" domain={[0, 200]} />
-                  <YAxis type="category" dataKey="name" width={80} />
+                  <YAxis type="category" dataKey="name" width={72} tick={{ fontSize: 13 }} />
                   <Tooltip formatter={(v) => [`${v}億円`, "広告投資額"]} />
                   <Bar dataKey="adSpend" radius={[0, 4, 4, 0]}>
                     {COMPETITORS.map((c, i) => (
