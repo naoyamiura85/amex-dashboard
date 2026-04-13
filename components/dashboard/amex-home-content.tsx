@@ -158,22 +158,16 @@ export function AmexHomeContent() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* ページヘッダー */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">市場オーバービュー</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">グローバルプレミアムカード市場の動向とインサイト</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-            <RefreshCw className="h-3.5 w-3.5" />
-            更新
-          </Button>
-          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-            <Download className="h-3.5 w-3.5" />
-            レポート出力
-          </Button>
-        </div>
+      {/* ツールバー */}
+      <div className="flex items-center justify-end gap-2">
+        <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+          <RefreshCw className="h-3.5 w-3.5" />
+          更新
+        </Button>
+        <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+          <Download className="h-3.5 w-3.5" />
+          レポート出力
+        </Button>
       </div>
 
       {/* メインパネル: 地図 + サマリー */}
