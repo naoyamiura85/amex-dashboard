@@ -25,7 +25,7 @@ export default function MacroSimulationPage() {
   const [isSimulated, setIsSimulated] = useState(false)
 
   const adRecallLift = Math.min(50, adSpend * 0.3)
-  const ltcsLift = Math.min(30, adSpend * 0.18)
+  const applicationLift = Math.min(30, adSpend * 0.18)
 
   const handleSimulate = () => {
     setIsSimulated(true)
@@ -44,7 +44,7 @@ export default function MacroSimulationPage() {
       />
       <div className="p-6 space-y-6">
         <p className="text-sm text-muted-foreground">
-          9セグメントの変動と「Ad Recall」「LTCS」のリフトをシミュレート
+          9セグメントの変動と「Ad Recall」「Application」のリフトをシミュレート
         </p>
 
         {/* コントロール */}
@@ -92,8 +92,8 @@ export default function MacroSimulationPage() {
               </Card>
               <Card className="border shadow-sm">
                 <CardContent className="p-5 text-center">
-                  <p className="text-sm text-muted-foreground">LTCS リフト</p>
-                  <p className="text-4xl font-bold text-[#B4975A] mt-2">+{ltcsLift.toFixed(1)}%</p>
+                  <p className="text-sm text-muted-foreground">Application（申し込み）リフト</p>
+                  <p className="text-4xl font-bold text-[#B4975A] mt-2">+{applicationLift.toFixed(1)}%</p>
                 </CardContent>
               </Card>
             </div>
