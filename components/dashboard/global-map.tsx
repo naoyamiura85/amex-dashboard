@@ -8,9 +8,10 @@ import {
   Marker,
   ZoomableGroup,
 } from "react-simple-maps"
-import { ChevronLeft, TrendingUp } from "lucide-react"
+import { ChevronLeft } from "lucide-react"
 
 const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"
+// ローカルフォールバック: /public/world-110m.json が存在すれば "/world-110m.json" に切り替え可能
 
 export interface MapRegion {
   id: string
@@ -321,8 +322,6 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                     <animate attributeName="opacity" from={0.35} to={0} dur="2s" repeatCount="indefinite" />
                   </circle>
                   <circle r={radius} fill={drillConfig.color + "1A"} stroke={drillConfig.color} strokeWidth={1.8} style={{ pointerEvents: "none" }} />
-                  {/* 成長アイコン */}
-                  <TrendingUp style={{ display: "none" }} />
                   <text x={-3} y={-radius * 0.26} fontSize={radius * 0.28} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↑</text>
                   {/* 市場規模 */}
                   <text x={0} y={radius * 0.05} fontSize={radius * 0.32} fontWeight={700} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
