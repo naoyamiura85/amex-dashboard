@@ -1,457 +1,386 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   ResponsiveContainer,
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
   Cell,
 } from "recharts"
 import {
   TrendingUp,
-  TrendingDown,
+  Globe,
   Users,
-  CreditCard,
-  DollarSign,
-  AlertTriangle,
-  ArrowUpRight,
-  ArrowDownRight,
+  Building2,
   Sparkles,
-  Shield,
-  Activity,
-  Target,
-  Download,
+  Bookmark,
   RefreshCw,
+  Download,
 } from "lucide-react"
+import type { MapRegion } from "./global-map"
 
-// KPI データ（決済額データは未取得のため、獲得数ベースのみ表示）
-const kpiData = [
+// react-simple-maps はSSR非対応のため dynamic import
+const GlobalMap = dynamic(
+  () => import("./global-map").then((m) => m.GlobalMap),
   {
-    title: "総会員数",
-    value: "3,847,200",
-    unit: "人",
-    change: "+2.4%",
-    trend: "up",
-    sub: "前月比",
+    ssr: false,
+    loading: () => (
+      <div
+        className="w-full rounded-xl bg-[#EFF4FB] animate-pulse"
+        style={{ aspectRatio: "2/1" }}
+      />
+    ),
+  }
+)
+
+// ─── 地域データ ──────────────────────────────────────────────────────────────
+const REGIONS: MapRegion[] = [
+  { id: "na", name: "北米",       marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40]  },
+  { id: "eu", name: "欧州",       marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [15, 51]    },
+  { id: "cn", name: "中国",       marketSize: "$6.5T", sizeNum: 6.5, growth: "+6%",   growthNum: 6.0, color: "#E53E3E", coordinates: [104, 35]   },
+  { id: "in", name: "インド",     marketSize: "$1.6T", sizeNum: 1.6, growth: "+6.7%", growthNum: 6.7, color: "#D69E2E", coordinates: [78, 22]    },
+  { id: "sa", name: "南米",       marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#9B2335", coordinates: [-58, -15]  },
+  { id: "jp", name: "日本",       marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]   },
+  { id: "oc", name: "オセアニア", marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#805AD5", coordinates: [134, -25]  },
+]
+
+// 地域ごとのトレンドサマリー
+const REGION_TREND: Record<string, string> = {
+  na: "北米市場は$4.7T規模。プレミアム旅行・エンタメ消費が牽引し、UHNW層のセンチュリオン利用が過去最高。Z世代富裕層の新規獲得が課題。",
+  eu: "欧州市場は$3.5T規模。ラグジュアリー・ファッション・ガストロノミー消費が堅調。EUの規制強化に伴い競合各社のシェア再編が進行中。",
+  cn: "中国市場は$6.5Tで最大規模。デジタル決済普及とプレミアム消費ブームが共存。越境消費の回復により外資系カードの機会が拡大。",
+  in: "インド市場は$1.6T規模・高成長。中間富裕層の急拡大と国際旅行需要の増加が追い風。ネットワーク拡充が優先課題。",
+  sa: "南米市場は$1.2T規模・成長率最高水準。ブラジル・メキシコが牽引。インフレ対策としてのUSD建てプレミアムカード需要が拡大。",
+  jp: "日本市場は$2.0T規模。インバウンド回復と円安によるラグジュアリー消費急増。プラチナ・センチュリオン保有者の利用額が前年比+18%。",
+  oc: "オセアニア市場は$1.2T規模・高成長。オーストラリアを中心にプレミアムライフスタイル消費が拡大。旅行特典への需要が特に高い。",
+}
+
+// ─── 年間変化率 ──────────────────────────────────────────────────────────────
+const ANNUAL_CHANGES = [
+  { label: "プレミアム富裕層",   change: 25.5, up: true  },
+  { label: "健康志向消費者",     change: 18.2, up: true  },
+  { label: "テック・デジタル層", change: 12.8, up: true  },
+  { label: "伝統的高額消費者",   change:  5.2, up: false },
+]
+
+// ─── 競合シェア ──────────────────────────────────────────────────────────────
+const COMPETITOR_DATA = [
+  { name: "Visa",       share: 42, color: "#1A56DB" },
+  { name: "Mastercard", share: 28, color: "#E53E3E" },
+  { name: "AMEX",       share: 14, color: "#006FCF" },
+  { name: "JCB",        share:  8, color: "#38A169" },
+  { name: "Others",     share:  8, color: "#A0AEC0" },
+]
+
+// ─── 3C インサイト ────────────────────────────────────────────────────────────
+const THREE_C = [
+  {
+    key: "Customer",
+    label: "Customer（顧客）",
     icon: Users,
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-  },
-  {
-    title: "今月新規獲得（プラチナ）",
-    value: "2,840",
-    unit: "件",
-    change: "+8.3%",
-    trend: "up",
-    sub: "前月比",
-    icon: CreditCard,
-    color: "text-[#B4975A]",
-    bg: "bg-amber-50",
-  },
-  {
-    title: "今月新規獲得（ゴールド）",
-    value: "18,760",
-    unit: "件",
-    change: "+12.1%",
-    trend: "up",
-    sub: "前月比",
-    icon: CreditCard,
     color: "text-[#006FCF]",
     bg: "bg-[#E6F2FF]",
+    text: "プレミアム富裕層が前年比+25.5%成長。若年富裕層の「体験消費」トレンドが定着しており、旅行・ダイニングへの高額支出が継続拡大しています。",
   },
   {
-    title: "チャーン率",
-    value: "1.8%",
-    unit: "",
-    change: "-0.3pt",
-    trend: "down-good",
-    sub: "前月比",
-    icon: AlertTriangle,
-    color: "text-amber-600",
+    key: "Company",
+    label: "Company（自社）",
+    icon: Building2,
+    color: "text-[#B4975A]",
     bg: "bg-amber-50",
-  },
-]
-
-// 月次会員数推移
-const memberTrendData = [
-  { month: "1月", total: 3540, platinum: 420, gold: 980, green: 1240, blue: 900 },
-  { month: "2月", total: 3620, platinum: 435, gold: 1005, green: 1265, blue: 915 },
-  { month: "3月", total: 3680, platinum: 448, gold: 1020, green: 1288, blue: 924 },
-  { month: "4月", total: 3710, platinum: 455, gold: 1035, green: 1295, blue: 925 },
-  { month: "5月", total: 3760, platinum: 462, gold: 1048, green: 1318, blue: 932 },
-  { month: "6月", total: 3790, platinum: 470, gold: 1062, green: 1328, blue: 930 },
-  { month: "7月", total: 3810, platinum: 475, gold: 1075, green: 1335, blue: 925 },
-  { month: "8月", total: 3825, platinum: 480, gold: 1082, green: 1338, blue: 925 },
-  { month: "9月", total: 3840, platinum: 485, gold: 1088, green: 1342, blue: 925 },
-  { month: "10月", total: 3847, platinum: 490, gold: 1095, green: 1345, blue: 917 },
-]
-
-// カード別利用額構成
-const spendByCard = [
-  { name: "プラチナ", value: 42, color: "#B4975A" },
-  { name: "ゴールド", value: 31, color: "#006FCF" },
-  { name: "グリーン", value: 16, color: "#10B981" },
-  { name: "ブルー", value: 8, color: "#64B5F6" },
-  { name: "ビジネス", value: 3, color: "#00175A" },
-]
-
-// カテゴリ別利用額
-const spendByCategoryData = [
-  { category: "旅行・交通", amount: 3820, prev: 3540 },
-  { category: "飲食", amount: 2640, prev: 2480 },
-  { category: "ショッピング", amount: 2210, prev: 2380 },
-  { category: "ホテル", amount: 1870, prev: 1750 },
-  { category: "エンタメ", amount: 980, prev: 920 },
-  { category: "その他", amount: 760, prev: 810 },
-]
-
-// AIアラート
-const aiAlerts = [
-  {
-    type: "解約リスク",
-    message: "プラチナ会員4,200人でエンゲージメント低下を検知。過去3ヶ月のログイン・サービス利用頻度が前年比-35%。",
-    severity: "high",
-    time: "15分前",
-    action: "対応策を見る",
+    text: "AMEXのグローバル会員数が1,158万人に到達。アジア太平洋・中東での新規獲得を加速しており、センチュリオン会員は過去最高水準を更新。",
   },
   {
-    type: "アップグレード機会",
-    message: "ゴールド会員の12%（約13万人）がプラチナ移行の行動パターンに合致。",
-    severity: "medium",
-    time: "2時間前",
-    action: "セグメントを見る",
-  },
-  {
-    type: "不正検知",
-    message: "東南アジア発の異常な利用パターン検知。対象カード数: 284件。",
-    severity: "high",
-    time: "32分前",
-    action: "詳細確認",
-  },
-  {
-    type: "申込増加",
-    message: "20代の新規申込が前月比+28%。SNSキャンペーン効果と相関。",
-    severity: "info",
-    time: "本日",
-    action: "分析を見る",
+    key: "Competitor",
+    label: "Competitor（競合）",
+    icon: TrendingUp,
+    color: "text-rose-600",
+    bg: "bg-rose-50",
+    text: "Visaがプレミアム領域に参入強化。一方でAMEXの会員ロイヤルティ指標（NPS: 72）は業界トップを維持しており、プレミアム特典での差別化が奏功。",
   },
 ]
 
-// ファネルデータ
-const funnelData = [
-  { stage: "認知", count: 28500000, rate: 100, color: "#006FCF" },
-  { stage: "検討", count: 4200000, rate: 14.7, color: "#0051A8" },
-  { stage: "申込", count: 580000, rate: 2.0, color: "#003D80" },
-  { stage: "審査通過", count: 410000, rate: 1.4, color: "#B4975A" },
-  { stage: "アクティブ", count: 280000, rate: 1.0, color: "#D4B483" },
+// ─── ペルソナ ─────────────────────────────────────────────────────────────────
+const PERSONAS = [
+  {
+    name: "田中 雅子",
+    age: 42,
+    role: "外資系コンサル パートナー",
+    location: "東京都港区",
+    quote: "出張が月15日以上。ラウンジと優先搭乗は外せません。出費は惜しまないけど、それ以上の価値が欲しい。",
+    quoteEn: "Business travel 15+ days/month. Lounge and priority boarding are must-haves.",
+    initials: "TM",
+    color: "#006FCF",
+  },
+  {
+    name: "James Carter",
+    age: 38,
+    role: "Senior VP, Private Banking",
+    location: "New York, USA",
+    quote: "My Centurion card is the first thing clients notice. Status matters in my world.",
+    quoteEn: null,
+    initials: "JC",
+    color: "#B4975A",
+  },
+  {
+    name: "Sophie Renard",
+    age: 35,
+    role: "Creative Director",
+    location: "Paris, France",
+    quote: "Je voyage pour l\u2019art et la gastronomie. Les avantages AMEX me donnent acc\u00e8s \u00e0 l\u2019inaccessible.",
+    quoteEn: "I travel for art and gastronomy. AMEX perks give me access to the inaccessible.",
+    initials: "SR",
+    color: "#38A169",
+  },
+  {
+    name: "\u9648 \u660e\u8fdc",
+    age: 44,
+    role: "\u79d1\u6280\u521b\u4e1a\u8005 / Tech Founder",
+    location: "\u4e0a\u6d77, China",
+    quote: "\u56fd\u9645\u5546\u52a1\u4e2d\uff0c\u7f8e\u56fd\u8fd0\u901a\u5361\u662f\u8eab\u4efd\u4e0e\u4fe1\u8d56\u7684\u8c61\u5f81\u3002\u9ad8\u7aef\u670d\u52a1\u662f\u6211\u9009\u62e9\u7684\u6838\u5fc3\u3002",
+    quoteEn: "In international business, AMEX is a symbol of status and trust.",
+    initials: "CM",
+    color: "#E53E3E",
+  },
 ]
 
-const severityConfig: Record<string, { badge: string; dot: string }> = {
-  high: { badge: "bg-red-100 text-red-700 border-red-200", dot: "bg-red-500" },
-  medium: { badge: "bg-amber-100 text-amber-700 border-amber-200", dot: "bg-amber-500" },
-  info: { badge: "bg-blue-100 text-blue-700 border-blue-200", dot: "bg-blue-500" },
-}
-
-function formatNumber(n: number) {
-  if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`
-  if (n >= 1000) return `${(n / 1000).toFixed(0)}K`
-  return n.toString()
-}
-
+// ─── コンポーネント ───────────────────────────────────────────────────────────
 export function AmexHomeContent() {
-  const [activeTab, setActiveTab] = useState("overview")
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
+
+  const selected = REGIONS.find((r) => r.id === selectedRegion) ?? null
+
+  const trendText = selected
+    ? (REGION_TREND[selected.id] ?? "")
+    : "グローバルプレミアムカード市場では、富裕層（+25.5%）とテック・デジタル消費者（+12.8%）が成長を牽引。特に35歳以下の若手富裕層でセンチュリオン・プラチナへの関心が急増。伝統的消費者層は微減傾向にあり、体験型特典の拡充が重要な戦略課題です。"
 
   return (
     <div className="p-6 space-y-6">
-      {/* ページ上部ツールバー */}
-      <div className="flex items-center justify-between">
+      {/* ページヘッダー */}
+      <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-muted-foreground">2026年10月 | データ更新: 本日 09:15</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">市場オーバービュー</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">グローバルプレミアムカード市場の動向とインサイト</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-2 text-xs">
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
             <RefreshCw className="h-3.5 w-3.5" />
             更新
           </Button>
-          <Button variant="outline" size="sm" className="gap-2 text-xs">
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
             <Download className="h-3.5 w-3.5" />
             レポート出力
           </Button>
         </div>
       </div>
 
-      {/* KPI カード */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpiData.map((kpi) => {
-          const Icon = kpi.icon
-          const isUp = kpi.trend === "up"
-          const isDownGood = kpi.trend === "down-good"
-          return (
-            <Card key={kpi.title} className="border border-border shadow-sm">
-              <CardContent className="p-5">
-                <div className="flex items-start justify-between mb-3">
-                  <div className={`p-2 rounded-lg ${kpi.bg}`}>
-                    <Icon className={`h-4 w-4 ${kpi.color}`} />
-                  </div>
-                  <span className={`flex items-center gap-0.5 text-xs font-medium ${
-                    isUp ? "text-emerald-600" : isDownGood ? "text-emerald-600" : "text-red-600"
-                  }`}>
-                    {isUp ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                    {kpi.change}
-                  </span>
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-2xl font-bold text-foreground tracking-tight">
-                    {kpi.value}
-                    <span className="text-sm font-normal ml-1 text-muted-foreground">{kpi.unit}</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">{kpi.title}</p>
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
+      {/* メインパネル: 地図 + サマリー */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* 世界地図 */}
+        <Card className="lg:col-span-3 border border-border shadow-sm">
+          <CardHeader className="pb-2 flex-row items-center gap-2">
+            <Globe className="h-4 w-4 text-[#006FCF]" />
+            <CardTitle className="text-sm font-semibold">グローバルマップ</CardTitle>
+          </CardHeader>
+          <CardContent className="pb-4">
+            <GlobalMap
+              regions={REGIONS}
+              selectedRegion={selectedRegion}
+              onSelectRegion={setSelectedRegion}
+            />
+            {/* 凡例 */}
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 px-1">
+              {REGIONS.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => setSelectedRegion(r.id === selectedRegion ? null : r.id)}
+                  className={`flex items-center gap-1.5 text-xs transition-opacity ${
+                    selectedRegion && selectedRegion !== r.id ? "opacity-40" : "opacity-100"
+                  }`}
+                >
+                  <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: r.color }} />
+                  <span className="font-medium text-foreground">{r.name}</span>
+                  <span className="font-bold" style={{ color: r.color }}>{r.marketSize}</span>
+                  <span className="text-emerald-600 font-semibold">{r.growth}</span>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* メインコンテンツ: タブ切り替え */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="bg-muted/60 h-9">
-          <TabsTrigger value="overview" className="text-xs">会員トレンド</TabsTrigger>
-          <TabsTrigger value="spend" className="text-xs">利用額分析</TabsTrigger>
-          <TabsTrigger value="funnel" className="text-xs">取得ファネル</TabsTrigger>
-        </TabsList>
-
-        {/* 会員トレンド */}
-        <TabsContent value="overview" className="mt-4">
-          <Card className="border border-border shadow-sm">
-            <CardHeader className="pb-2 flex-row items-center justify-between">
-              <div>
-                <CardTitle className="text-sm font-semibold">月次会員数推移（千人）</CardTitle>
-                <p className="text-xs text-muted-foreground mt-0.5">カード種別の積み上げ推移</p>
-              </div>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                {[
-                  { name: "プラチナ", color: "#B4975A" },
-                  { name: "ゴールド", color: "#006FCF" },
-                  { name: "グリーン", color: "#10B981" },
-                  { name: "ブルー", color: "#64B5F6" },
-                ].map((l) => (
-                  <span key={l.name} className="flex items-center gap-1">
-                    <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: l.color }} />
-                    {l.name}
-                  </span>
-                ))}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={280}>
-                <AreaChart data={memberTrendData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="platinum" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#B4975A" stopOpacity={0.5} />
-                      <stop offset="95%" stopColor="#B4975A" stopOpacity={0.05} />
-                    </linearGradient>
-                    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#006FCF" stopOpacity={0.5} />
-                      <stop offset="95%" stopColor="#006FCF" stopOpacity={0.05} />
-                    </linearGradient>
-                    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#10B981" stopOpacity={0.05} />
-                    </linearGradient>
-                    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#64B5F6" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#64B5F6" stopOpacity={0.05} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
-                    labelStyle={{ fontWeight: 600 }}
-                  />
-                  <Area type="monotone" dataKey="platinum" stackId="1" stroke="#B4975A" fill="url(#platinum)" strokeWidth={1.5} />
-                  <Area type="monotone" dataKey="gold" stackId="1" stroke="#006FCF" fill="url(#gold)" strokeWidth={1.5} />
-                  <Area type="monotone" dataKey="green" stackId="1" stroke="#10B981" fill="url(#green)" strokeWidth={1.5} />
-                  <Area type="monotone" dataKey="blue" stackId="1" stroke="#64B5F6" fill="url(#blue)" strokeWidth={1.5} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* 利用額分析（データ未連携） */}
-        <TabsContent value="spend" className="mt-4">
-          <Card className="border border-border shadow-sm">
-            <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
-              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                <DollarSign className="h-5 w-5 text-muted-foreground/50" />
-              </div>
-              <div className="text-center space-y-1">
-                <p className="text-sm font-semibold text-foreground">決済額データは現在未連携です</p>
-                <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
-                  月間利用総額・カテゴリ別利用額・カード別利用額構成は、データソース連携後に表示されます。
-                </p>
-              </div>
-              <Badge variant="outline" className="text-xs text-muted-foreground border-border">
-                データ取得予定
-              </Badge>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* 取得ファネル */}
-        <TabsContent value="funnel" className="mt-4">
-          <Card className="border border-border shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold">会員取得ファネル（今月）</CardTitle>
-              <p className="text-xs text-muted-foreground">認知からアクティブ会員化までの転換率</p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3 mt-2">
-                {funnelData.map((stage, idx) => (
-                  <div key={stage.stage} className="flex items-center gap-4">
-                    <div className="w-20 text-right">
-                      <span className="text-xs font-medium text-muted-foreground">{stage.stage}</span>
-                    </div>
-                    <div className="flex-1 relative h-9 rounded-md overflow-hidden bg-muted/50">
-                      <div
-                        className="h-full rounded-md flex items-center pl-3 transition-all duration-500"
-                        style={{ width: `${stage.rate}%`, backgroundColor: stage.color }}
-                      >
-                        <span className="text-white text-xs font-semibold whitespace-nowrap">
-                          {formatNumber(stage.count)}人
-                        </span>
-                      </div>
-                    </div>
-                    <div className="w-12 text-right">
-                      <span className="text-xs font-bold text-foreground">{stage.rate}%</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      {/* 下段: AIアラート + クイックアクセス */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* AIアラート */}
+        {/* サマリーパネル */}
         <Card className="lg:col-span-2 border border-border shadow-sm">
-          <CardHeader className="pb-3 flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-[#E6F2FF]">
-                <Sparkles className="h-4 w-4 text-[#006FCF]" />
-              </div>
-              <div>
-                <CardTitle className="text-sm font-semibold">AI インサイト・アラート</CardTitle>
-                <p className="text-xs text-muted-foreground">リアルタイム検知</p>
+          <CardHeader className="pb-2 flex-row items-center justify-between">
+            <CardTitle className="text-sm font-semibold">
+              {selected ? `${selected.name} サマリー` : "全世界 サマリー"}
+            </CardTitle>
+            <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+          </CardHeader>
+          <CardContent className="space-y-5">
+            {/* トレンド */}
+            <div>
+              <p className="text-xs font-bold text-foreground mb-2">トレンド</p>
+              <div className="bg-[#EEF6FF] rounded-lg p-3 flex gap-2">
+                <Sparkles className="h-3.5 w-3.5 text-[#006FCF] shrink-0 mt-0.5" />
+                <p className="text-xs text-foreground leading-relaxed">{trendText}</p>
               </div>
             </div>
-            <Badge variant="secondary" className="text-xs bg-[#E6F2FF] text-[#006FCF] border-0">
-              4件 新着
-            </Badge>
+
+            {/* 年間変化率 */}
+            <div>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-2">
+                年間変化率（セグメント別）
+              </p>
+              <div className="space-y-1.5">
+                {ANNUAL_CHANGES.map((c) => (
+                  <div key={c.label} className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">{c.label}</span>
+                    <span className={`text-xs font-bold ${c.up ? "text-emerald-600" : "text-red-500"}`}>
+                      {c.up ? "↑" : "↓"} {c.change}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 競合シェア */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">競合</p>
+                <p className="text-[10px] text-muted-foreground">市場シェア（%）</p>
+              </div>
+              <ResponsiveContainer width="100%" height={110}>
+                <BarChart
+                  layout="vertical"
+                  data={COMPETITOR_DATA}
+                  margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
+                >
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 10, fill: "#6B7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    domain={[0, 50]}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    tick={{ fontSize: 11, fill: "#111827" }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={68}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #E5E7EB",
+                      borderRadius: "6px",
+                      fontSize: 11,
+                    }}
+                    formatter={(v: number) => [`${v}%`, "シェア"]}
+                  />
+                  <Bar dataKey="share" radius={[0, 3, 3, 0]} barSize={10}>
+                    {COMPETITOR_DATA.map((d) => (
+                      <Cell
+                        key={d.name}
+                        fill={d.color}
+                        opacity={d.name === "AMEX" ? 1 : 0.6}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 下段: 3C分析 + ペルソナ分析 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* 3C分析インサイト */}
+        <Card className="border border-border shadow-sm">
+          <CardHeader className="pb-3 flex-row items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Globe className="h-4 w-4 text-[#006FCF]" />
+              <CardTitle className="text-sm font-semibold">全世界 - 3C分析インサイト</CardTitle>
+            </div>
+            <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
           </CardHeader>
           <CardContent className="space-y-3">
-            {aiAlerts.map((alert, idx) => {
-              const cfg = severityConfig[alert.severity] || severityConfig.info
+            {THREE_C.map((c) => {
+              const Icon = c.icon
               return (
-                <div key={idx} className="flex gap-3 p-3 rounded-lg bg-muted/40 border border-border/50">
-                  <div className="mt-1 flex-shrink-0">
-                    <span className={`inline-block w-2 h-2 rounded-full ${cfg.dot}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${cfg.badge}`}>
-                        {alert.type}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground">{alert.time}</span>
+                <div
+                  key={c.key}
+                  className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
+                      <Icon className={`h-3.5 w-3.5 ${c.color}`} />
                     </div>
-                    <p className="text-xs text-foreground leading-relaxed">{alert.message}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <p className="text-xs font-bold text-foreground">{c.label}</p>
+                        <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
+                    </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-[10px] text-[#006FCF] h-7 px-2 flex-shrink-0 hover:bg-[#E6F2FF]">
-                    {alert.action}
-                  </Button>
                 </div>
               )
             })}
           </CardContent>
         </Card>
 
-        {/* クイックアクセス & ステータス */}
-        <div className="space-y-4">
-          <Card className="border border-border shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                <Shield className="h-4 w-4 text-[#006FCF]" />
-                セキュリティステータス
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2.5">
-              {[
-                { label: "不正検知件数（今月）", value: "284", status: "warn" },
-                { label: "ブロック済み件数", value: "261", status: "good" },
-                { label: "調査中", value: "23", status: "warn" },
-                { label: "不正率", value: "0.007%", status: "good" },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center justify-between py-1.5 border-b border-border/50 last:border-0">
-                  <span className="text-xs text-muted-foreground">{item.label}</span>
-                  <span className={`text-xs font-semibold ${item.status === "warn" ? "text-amber-600" : "text-emerald-600"}`}>
-                    {item.value}
-                  </span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          <Card className="border border-border shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                <Target className="h-4 w-4 text-[#006FCF]" />
-                月次目標達成率
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {[
-                { label: "新規申込（全体）", current: 48320, target: 50000, pct: 97 },
-                { label: "プラチナ獲得", current: 2840, target: 3000, pct: 95 },
-                { label: "ゴールド獲得", current: 18760, target: 20000, pct: 94 },
-              ].map((item) => (
-                <div key={item.label}>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-xs text-muted-foreground">{item.label}</span>
-                    <span className="text-xs font-semibold text-foreground">{item.pct}%</span>
+        {/* ペルソナ分析 */}
+        <Card className="border border-border shadow-sm">
+          <CardHeader className="pb-3 flex-row items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-[#006FCF]" />
+              <CardTitle className="text-sm font-semibold">全世界 - ペルソナ分析</CardTitle>
+            </div>
+            <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+          </CardHeader>
+          <CardContent className="space-y-0 divide-y divide-border/60">
+            {PERSONAS.map((p) => (
+              <div key={p.name} className="py-4 first:pt-0">
+                <div className="flex gap-3">
+                  <div
+                    className="w-12 h-12 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
+                    style={{ backgroundColor: p.color }}
+                  >
+                    {p.initials}
                   </div>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${item.pct}%`,
-                        backgroundColor: item.pct >= 90 ? "#10B981" : item.pct >= 70 ? "#006FCF" : "#D73B3B",
-                      }}
-                    />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-bold text-foreground">{p.name}</span>
+                      <span className="text-xs text-muted-foreground">{p.age}歳 · {p.role}</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">{p.location}</p>
+                    <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
+                      &ldquo;{p.quote}&rdquo;
+                    </p>
+                    {p.quoteEn && (
+                      <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                        {p.quoteEn}
+                      </p>
+                    )}
+                    <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-2 hover:text-foreground">
+                      <Bookmark className="h-3 w-3" />
+                      保存
+                    </button>
                   </div>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

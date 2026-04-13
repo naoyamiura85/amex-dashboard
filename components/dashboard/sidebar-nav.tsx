@@ -10,13 +10,18 @@ import {
   LogOut,
   Bell,
   TrendingUp,
-  Lightbulb,
-  FlaskConical,
-  Boxes,
   ChevronRight,
-  Users,
-  Sparkles,
   Network,
+  Globe,
+  BarChart2,
+  UserSearch,
+  Target,
+  PieChart,
+  Route,
+  Swords,
+  Layers,
+  BrainCircuit,
+  SlidersHorizontal,
 } from "lucide-react"
 import { getClientConfig } from "@/lib/client-config"
 
@@ -52,29 +57,38 @@ import {
 // Section-based navigation structure (AMEX Financial Analytics)
 const navSections = [
   {
-    label: "OVERVIEW",
+    label: "GLOBAL VIEW",
     defaultOpen: true,
     items: [
-      { title: "Executive Summary",  icon: Users,             href: "/dashboard" },
-      { title: "Member Analysis",    icon: TrendingUp,        href: "/dashboard/market-overview" },
-      { title: "Trend Analysis",     icon: Sparkles,          href: "/dashboard/trends" },
-      { title: "Tribe Analysis",     icon: Network,           href: "/dashboard/tribe-analysis" },
+      { title: "Market Overview",        icon: Globe,          href: "/dashboard" },
+      { title: "Trend Analysis",         icon: TrendingUp,     href: "/dashboard/trends" },
+      { title: "KPI Tracking",           icon: BarChart2,      href: "/dashboard/kpi-tracking" },
+      { title: "Audience Profile",       icon: UserSearch,     href: "/dashboard/audience-profile" },
     ],
   },
   {
-    label: "AI ANALYTICS",
+    label: "JAPAN MARKET",
     defaultOpen: true,
     items: [
-      { title: "AI Insights",        icon: Lightbulb,    href: "/ai/predictions" },
-      { title: "Competitive Intel",  icon: FlaskConical, href: "/ai/competitors" },
-      { title: "Correlation",        icon: Boxes,        href: "/ai/correlations" },
+      { title: "Market Analysis",        icon: PieChart,       href: "/dashboard/market-overview" },
+      { title: "Tribe Analysis",         icon: Network,        href: "/dashboard/tribe-analysis" },
+      { title: "Experience Analysis",    icon: Route,          href: "/dashboard/experience-analysis" },
     ],
   },
   {
-    label: "SIMULATION",
-    defaultOpen: true,
+    label: "JAPAN BRAND PLAN",
+    defaultOpen: false,
     items: [
-      { title: "Concept Generator",  icon: Lightbulb,    href: "/ai/concept-generator" },
+      { title: "Competitor Analysis",    icon: Swords,         href: "/dashboard/competitor-analysis" },
+      { title: "Media Allocation",       icon: Layers,         href: "/dashboard/media-allocation" },
+    ],
+  },
+  {
+    label: "PLAN SIMULATION",
+    defaultOpen: false,
+    items: [
+      { title: "Macro Simulation",       icon: SlidersHorizontal, href: "/dashboard/macro-simulation" },
+      { title: "Micro Simulation",       icon: BrainCircuit,   href: "/dashboard/micro-simulation" },
     ],
   },
 ]
@@ -150,6 +164,7 @@ export function DashboardSidebar() {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                         asChild
+                        tooltip={{ children: null, hidden: true }}
                         className={`gap-3 h-10 rounded-lg transition-all ${
                           active 
                             ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold hover:bg-sidebar-primary/90" 
