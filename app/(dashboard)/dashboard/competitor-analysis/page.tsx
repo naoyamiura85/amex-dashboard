@@ -1,7 +1,7 @@
 "use client"
 
 import { DashboardHeader } from "@/components/dashboard/header"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
   ResponsiveContainer,
@@ -44,15 +44,13 @@ export default function CompetitorAnalysisPage() {
         <div className="grid lg:grid-cols-2 gap-6">
           {/* 市場シェア */}
           <Card className="border shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-base">市場シェア（%）</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
+              <p className="text-sm font-medium text-muted-foreground mb-4">市場シェア（%）</p>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={COMPETITORS} layout="vertical">
                   <XAxis type="number" domain={[0, 35]} />
                   <YAxis type="category" dataKey="name" width={80} />
-                  <Tooltip />
+                  <Tooltip formatter={(v) => [`${v}%`, "シェア"]} />
                   <Bar dataKey="share" radius={[0, 4, 4, 0]}>
                     {COMPETITORS.map((c, i) => (
                       <Cell key={i} fill={c.color} />
@@ -65,15 +63,13 @@ export default function CompetitorAnalysisPage() {
 
           {/* 推計広告投資額 */}
           <Card className="border shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-base">推計広告投資額（億円/年）</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
+              <p className="text-sm font-medium text-muted-foreground mb-4">推計広告投資額（億円/年）</p>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={COMPETITORS} layout="vertical">
-                  <XAxis type="number" domain={[0, 200]} unit="億" />
+                  <XAxis type="number" domain={[0, 200]} />
                   <YAxis type="category" dataKey="name" width={80} />
-                  <Tooltip />
+                  <Tooltip formatter={(v) => [`${v}億円`, "広告投資額"]} />
                   <Bar dataKey="adSpend" radius={[0, 4, 4, 0]}>
                     {COMPETITORS.map((c, i) => (
                       <Cell key={i} fill={c.color} />
@@ -87,10 +83,8 @@ export default function CompetitorAnalysisPage() {
 
         {/* シェア変動 */}
         <Card className="border shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-base">シェア変動（前年比）</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
+            <p className="text-sm font-medium text-muted-foreground mb-4">シェア変動（前年比）</p>
             <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
               {COMPETITORS.map((c, i) => (
                 <div key={i} className="text-center p-3 rounded-lg border">
@@ -113,13 +107,11 @@ export default function CompetitorAnalysisPage() {
 
         {/* 競合動向 */}
         <Card className="border shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-amber-500" />
+          <CardContent className="pt-6">
+            <p className="text-sm font-medium text-muted-foreground mb-4 flex items-center gap-2">
+              <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
               最新の競合動向
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </p>
             <div className="space-y-3">
               {COMPETITOR_MOVES.map((m, i) => (
                 <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
