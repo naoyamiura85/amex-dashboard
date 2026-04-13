@@ -164,7 +164,7 @@ const allPersonas: Persona[] = [
     id: "p04", name: "佐藤 彩花", age: 33, gender: "女性",
     image: "/images/personas/persona-04.jpg",
     occupation: "IT企業マネージャー", income: "700〜900万円",
-    background: "都内テック企業のプロダクトマネージャー。リモートワーク活用���旅しながら働く。",
+    background: "都内テック企業のプロダクトマネージャー。リモートワーク活用で旅しながら働く。",
     lifestyle: "ブティックホテルや隠れ家レストランを好む。SNSでの情報発信も積極的。",
     interests: ["ブティックホテル", "グルメ体験", "デジタルノマド"],
     tribe: ["ミレニアル富裕層", "ライフスタイル発信派"],
@@ -186,9 +186,9 @@ const allPersonas: Persona[] = [
     occupation: "金融機関管理職", income: "1,200〜1,500万円",
     background: "大手証券会社のVP。海外出張が月複数回あり、ポイント利用に精通。",
     lifestyle: "出張でマイル・ポイントを最大化。家族旅行でも特典を積極活用。",
-    interests: ["マイレージ最適化", "ファ���リー旅行", "グルメ"],
-    tribe: ["ポイント最適化派", "ファミリー重視���"],
-    cardGoal: "出張費ポ���ント還元・家族旅行へ転換",
+    interests: ["マイレージ最適化", "ファミリー旅行", "グルメ"],
+    tribe: ["ポイント最適化派", "ファミリー重視派"],
+    cardGoal: "出張費ポイント還元・家族旅行へ転換",
   },
   {
     id: "p07", name: "渡辺 拓也", age: 28, gender: "男性",
@@ -223,7 +223,7 @@ const allPersonas: Persona[] = [
   {
     id: "p10", name: "松田 優子", age: 38, gender: "女性",
     image: "/images/personas/persona-10.jpg",
-    occupation: "クリ���イティブディレクター", income: "900〜1,200万円",
+    occupation: "クリエイティブディレクター", income: "900〜1,200万円",
     background: "広告代理店のクリエイティブ責任者。トレンド発掘のため世界各地を旅する。",
     lifestyle: "デザインホテルやポップアップ体験を好む。アートフェア・ファッションウィークに参加。",
     interests: ["デザインホテル", "現代アート", "ファッション"],
@@ -287,7 +287,7 @@ const segments: Segment[] = [
         { label: "その他プレミアム", pct: 12, color: "#7F8C8D" },
       ],
       cardNote: "入会前の保有カード（他社）",
-      summary: "申込後3ヶ月以内の高エンゲージメント新規会員。入会特典を積極利用しており継続率が高い。コンシェルジュや空港ラウンジの初回利用率が他セグメント比2.3倍。",
+      summary: "申込後3ヶ月以内の高エンゲージメント新規会員。入会特典を積極利用しており継続率が高い。コンシェルジ��や空港ラウンジの初回利用率が他セグメント比2.3倍。",
     },
   },
   {
@@ -311,7 +311,7 @@ const segments: Segment[] = [
     personas: [allPersonas[2], allPersonas[8], allPersonas[11]],
     attributes: {
       genderRatio: "男性68% / 女性32%", avgAge: 57, marriedRate: "82%", avgSpend: "¥210万円/月",
-      occupations: [{ label: "オーナー経営者", pct: 44 }, { label: "資���家", pct: 32 }, { label: "医師", pct: 14 }, { label: "士業", pct: 10 }],
+      occupations: [{ label: "オーナー経営者", pct: 44 }, { label: "資産家", pct: 32 }, { label: "医師", pct: 14 }, { label: "士業", pct: 10 }],
       incomes: [{ label: "3,000万円以上", pct: 68 }, { label: "2,000〜3,000万円", pct: 26 }, { label: "1,500〜2,000万円", pct: 6 }],
       cards: [
         { label: "AMEX センチュリオン", pct: 52, color: "#1C1C1C" },
@@ -402,7 +402,7 @@ const segments: Segment[] = [
         { label: "その他一般カード", pct: 10, color: "#7F8C8D" },
       ],
       cardNote: "保有カード（他社）",
-      summary: "低関与だが潜在的な需要を持つ大���模セグメント。特定のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
+      summary: "低関与だが潜在的な需要を持つ大規模セグメント。特定のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
     },
   },
   {

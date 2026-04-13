@@ -240,9 +240,9 @@ const ALL_TRIBES: Tribe[] = [
     ],
     personas: [
       {
-        id: "p7", name: "渡��� 隆", age: 45, gender: "男性",
+        id: "p7", name: "渡辺 隆", age: 45, gender: "男性",
         image: "/images/personas/persona-09.jpg",
-        occupation: "����造業 オーナー経営者", income: "2,000万円以上",
+        occupation: "製造業 オーナー経営者", income: "2,000万円以上",
         background: "フェラーリとポルシェを所有。モナコGPにはプライベートヨットで参戦。サーキット走行ライセンスも保有。",
         lifestyle: "週末はサーキットかドライビング体験。F1チームのスポンサーを通じた人脈形成に積極的。",
         interests: ["F1", "スーパーカー", "ヨット"], cardGoal: "F1 VIPパドックパスとスーパーカーレンタル優待",
@@ -313,7 +313,7 @@ const ALL_TRIBES: Tribe[] = [
         id: "p9", name: "安田 武雄", age: 72, gender: "男性",
         image: "/images/personas/persona-11.jpg",
         occupation: "資産家・名誉会長", income: "10億円以上",
-        background: "国内工場視察から海外子会社訪問まで、すべてプライベートジェットで移動。ガルフストリームG650のオーナーで、機体管理チームを保有。",
+        background: "国内工場視察から海外子会社訪問まで、すべてプライベートジェット��移動。ガルフストリームG650のオーナーで、機体管理チームを保有。",
         lifestyle: "時間を最も贅沢なものと考え、待ち時間ゼロを徹底。同じ価値観を持つエグゼクティブとのネットワーク構築に注力。",
         interests: ["プライベートジェット", "ゴルフ", "ヴィンテージワイン"], cardGoal: "FBO（プライベートターミナル）サービスとジェット手配コンシェルジュ",
         tribe: "プライベートアビエーション派"
@@ -334,7 +334,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 22,
     engagementScore: 55,
     spendPotential: 62,
-    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高���支出する����体験の希少性・独自性を最優先とする価値観。",
+    description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高額支出する層。体験の希少性・独自性を最優先とする価値観。",
     avgSpend: "¥38万/月",
     upgradeRate: "18%",
     churnRisk: "中",
@@ -454,7 +454,7 @@ const ALL_TRIBES: Tribe[] = [
         id: "p13", name: "西村 奈津", age: 48, gender: "女性",
         image: "/images/personas/persona-02.jpg",
         occupation: "医師（美容外科院長）", income: "2,000万円以上",
-        background: "診療の合間に年4回の海外リゾート滞在。アマングループの全施設制覇を目指している。スパと食体験を旅の核に据える。",
+        background: "診療の合間に年4回の海外リゾ��ト滞在。アマングループの全施設制覇を目指している。スパと食体験を旅の核に据える。",
         lifestyle: "非日常の静寂と美を求める旅スタイル。SNSには載せないプライベート重視型旅行者。",
         interests: ["スパ", "ヨガ", "美食"], cardGoal: "プレミアムリゾート優先予約とヴィラアップグレード",
         tribe: "ラグジュアリーリゾート派"
@@ -835,7 +835,7 @@ export function TribeAnalysisContent() {
               <span>高エンゲージメント・高利用額</span>
             </div>
 
-            {/* マップ���体 */}
+            {/* マップ全体 */}
             <div className="relative mx-6 my-2" style={{ height: 460 }}>
               {/* 象限グリッド */}
               <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 pointer-events-none">
@@ -935,7 +935,7 @@ export function TribeAnalysisContent() {
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                 <Network className="h-5 w-5 text-muted-foreground/60" />
               </div>
-              <p className="text-sm font-medium">トライブを選択してください</p>
+              <p className="text-sm font-medium">トラ��ブを選択してください</p>
               <p className="text-xs text-muted-foreground/70">マップ上のバブルをクリックすると詳細が表示されます</p>
             </div>
           ) : (
