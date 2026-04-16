@@ -112,7 +112,7 @@ const COUNTRY_TO_REGION: Record<string, string> = {
   "036": "oc", "554": "oc", "598": "oc",
 }
 
-const GLOBAL_CONFIG = { center: [138, 15] as [number, number], zoom: 1.0 }
+const GLOBAL_CONFIG = { center: [0, 15] as [number, number], zoom: 1.0 }
 
 const MARKER_MIN = 28
 const MARKER_MAX = 68
@@ -211,7 +211,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
 
       <ComposableMap
         projection="geoNaturalEarth1"
-        projectionConfig={{ scale: 155, center: [138, 10] }}
+        projectionConfig={{ scale: 155, center: [0, 10], rotate: [-138, 0, 0] }}
         style={{ width: "100%", height: "100%" }}
       >
         <ZoomableGroup
@@ -299,7 +299,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                   </circle>
                   <circle r={radius} fill={drillConfig.color + "1A"} stroke={drillConfig.color} strokeWidth={1.8} style={{ pointerEvents: "none" }} />
                   <text x={-3} y={-radius * 0.26} fontSize={radius * 0.28} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↑</text>
-                  {/* 市場規模 */}
+                  {/* 市場���模 */}
                   <text x={0} y={radius * 0.05} fontSize={radius * 0.32} fontWeight={700} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
                     {sub.marketSize}
                   </text>
