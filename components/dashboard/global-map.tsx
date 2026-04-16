@@ -114,8 +114,8 @@ const COUNTRY_TO_REGION: Record<string, string> = {
 
 const GLOBAL_CONFIG = { center: [0, 15] as [number, number], zoom: 1.0 }
 
-const MARKER_MIN = 28
-const MARKER_MAX = 68
+const MARKER_MIN = 38
+const MARKER_MAX = 85
 function markerRadius(sizeNum: number, min: number, max: number): number {
   return MARKER_MIN + ((sizeNum - min) / (max - min)) * (MARKER_MAX - MARKER_MIN)
 }
@@ -267,18 +267,24 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                   onClick={() => handleRegionClick(r.id)}
                   style={{ cursor: "pointer" }}
                 >
-                  {active && (
-                    <circle r={radius + 7} fill="none" stroke={r.color} strokeWidth={1.5} opacity={0.45} style={{ pointerEvents: "none" }} />
-                  )}
+                  {/* ドロップシャドウ用の下層円 */}
                   <circle
                     r={radius}
-                    fill={active ? r.color + "22" : "#FFFFFFBB"}
-                    stroke={r.color}
-                    strokeWidth={active ? 2 : 1.2}
+                    fill="rgba(0,0,0,0.08)"
+                    style={{ pointerEvents: "none", transform: "translate(2px, 3px)" }}
+                  />
+                  {/* メインバブル - 白塗りつぶし */}
+                  <circle
+                    r={radius}
+                    fill="#FFFFFF"
+                    stroke={active ? r.color : "rgba(0,0,0,0.06)"}
+                    strokeWidth={active ? 2 : 1}
                     style={{ transition: "all 0.2s" }}
                   />
-                  <text x={-3} y={-radius * 0.24} fontSize={radius * 0.24} fill={r.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↑</text>
-                  <text x={0} y={radius * 0.12} fontSize={radius * 0.3} fontWeight={700} fill={active ? r.color : "#1A202C"} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
+                  {/* 緑の矢印 */}
+                  <text x={radius * 0.35} y={-radius * 0.15} fontSize={radius * 0.32} fill="#10B981" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↗</text>
+                  {/* 市場規模テキスト - 濃紺で大きく */}
+                  <text x={0} y={radius * 0.18} fontSize={radius * 0.42} fontWeight={700} fill="#1E3A5F" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
                     {r.marketSize}
                   </text>
                 </Marker>
