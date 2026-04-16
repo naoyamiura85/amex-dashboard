@@ -73,22 +73,17 @@ const navSections = [
       { title: "Market Analysis",        icon: PieChart,       href: "/dashboard/market-overview" },
       { title: "Tribe Analysis",         icon: Network,        href: "/dashboard/tribe-analysis" },
       { title: "Experience Analysis",    icon: Route,          href: "/dashboard/experience-analysis" },
+      { title: "Insight Analysis",       icon: BrainCircuit,   href: "/dashboard/micro-simulation" },
     ],
   },
   {
     label: "JAPAN BRAND PLAN",
     defaultOpen: false,
     items: [
-      { title: "Competitor Analysis",    icon: Swords,         href: "/dashboard/competitor-analysis" },
-      { title: "Media Allocation",       icon: Layers,         href: "/dashboard/media-allocation" },
-    ],
-  },
-  {
-    label: "PLAN SIMULATION",
-    defaultOpen: false,
-    items: [
-      { title: "Macro Simulation",       icon: SlidersHorizontal, href: "/dashboard/macro-simulation" },
-      { title: "Micro Simulation",       icon: BrainCircuit,   href: "/dashboard/micro-simulation" },
+      { title: "Scenario Generator（準備中）", icon: Target,           href: "#", disabled: true },
+      { title: "Macro Simulation",            icon: SlidersHorizontal, href: "/dashboard/macro-simulation" },
+      { title: "Competitor Analysis",         icon: Swords,            href: "/dashboard/competitor-analysis" },
+      { title: "Plan Simulation",             icon: Layers,            href: "/dashboard/media-allocation" },
     ],
   },
 ]
@@ -160,24 +155,34 @@ export function DashboardSidebar() {
               <SidebarMenu className="mt-1">
                 {section.items.map((item) => {
                   const active = isActive(item.href)
+                  const isDisabled = 'disabled' in item && item.disabled
                   return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
-                        asChild
+                        asChild={!isDisabled}
                         tooltip={{ children: null, hidden: true }}
                         className={`gap-3 h-10 rounded-lg transition-all ${
-                          active 
-                            ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold hover:bg-sidebar-primary/90" 
-                            : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                          isDisabled
+                            ? "text-sidebar-foreground/40 cursor-not-allowed"
+                            : active 
+                              ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold hover:bg-sidebar-primary/90" 
+                              : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                         }`}
                       >
-                        <Link href={item.href} className="flex items-center justify-between">
+                        {isDisabled ? (
                           <span className="flex items-center gap-3">
                             <item.icon className="h-4 w-4 shrink-0" />
                             <span className="text-sm leading-tight">{item.title}</span>
                           </span>
-                          {active && <ChevronRight className="h-4 w-4 shrink-0 opacity-80" />}
-                        </Link>
+                        ) : (
+                          <Link href={item.href} className="flex items-center justify-between">
+                            <span className="flex items-center gap-3">
+                              <item.icon className="h-4 w-4 shrink-0" />
+                              <span className="text-sm leading-tight">{item.title}</span>
+                            </span>
+                            {active && <ChevronRight className="h-4 w-4 shrink-0 opacity-80" />}
+                          </Link>
+                        )}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )
