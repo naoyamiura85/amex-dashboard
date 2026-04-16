@@ -93,10 +93,10 @@ const stageBg: Record<StageKey, { cell: string; cellHover: string; cellSelected:
 }
 
 const stages: { key: StageKey; label: string; sub: string }[] = [
-  { key: "prospect", label: "未会員（Brand Consideration 低）", sub: "890万人" },
-  { key: "new",      label: "未会員（Brand Consideration 高）", sub: "430万人" },
-  { key: "active",   label: "新規会員",                         sub: "210万人" },
-  { key: "premium",  label: "プレミアム",                       sub: "56万人"  },
+  { key: "prospect", label: "Brand Consideration 低", sub: "890万人" },
+  { key: "new",      label: "Brand Consideration 中", sub: "430万人" },
+  { key: "active",   label: "Brand Consideration 高", sub: "210万人" },
+  { key: "premium",  label: "プレミアム",             sub: "56万人"  },
 ]
 
 // 縦軸タイプ
@@ -109,9 +109,9 @@ const Y_AXIS_OPTIONS: { value: YAxisType; label: string }[] = [
 
 // 世帯年収軸
 const engagementsIncome: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[] = [
-  { key: "H", label: "H", sublabel: "世帯年収 高", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
-  { key: "M", label: "M", sublabel: "世帯年収 中", color: "text-amber-500",  dot: "bg-amber-400"   },
-  { key: "L", label: "L", sublabel: "世帯年収 低", color: "text-slate-400",  dot: "bg-slate-300"   },
+  { key: "H", label: "H", sublabel: "1,500万〜", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
+  { key: "M", label: "M", sublabel: "1,000万〜", color: "text-amber-500",  dot: "bg-amber-400"   },
+  { key: "L", label: "L", sublabel: "500万〜",   color: "text-slate-400",  dot: "bg-slate-300"   },
 ]
 
 // Premium Ad Experience 軸
@@ -224,7 +224,7 @@ const allPersonas: Persona[] = [
     id: "p10", name: "松田 優子", age: 38, gender: "女性",
     image: "/images/personas/persona-10.jpg",
     occupation: "クリエイティブディレクター", income: "900〜1,200万円",
-    background: "広告代理店のクリエイティブ責任者。トレンド発掘のため世界各地を旅する。",
+    background: "広告代理���のクリエイティブ責任者。トレンド発掘のため世界各地を旅する。",
     lifestyle: "デザインホテルやポップアップ体験を好む。アートフェア・ファッションウィークに参加。",
     interests: ["デザインホテル", "現代アート", "ファッション"],
     tribe: ["クリエイティブ派", "カルチャー消費派"],
@@ -287,7 +287,7 @@ const segments: Segment[] = [
         { label: "その他プレミアム", pct: 12, color: "#7F8C8D" },
       ],
       cardNote: "入会前の保有カード（他社）",
-      summary: "申込後3ヶ月以内の高エンゲージメント新規会員。入会特典を積極利用しており継続率が高い。コンシェルジ��や空港ラウンジの初回利用率が他セグメント比2.3倍。",
+      summary: "申込後3ヶ月以内の高エンゲージメント新規会員。入会特典を積極利用しており継続率が高い。コンシェルジ��や空港ラウンジの��回利用率が他セグメント比2.3倍。",
     },
   },
   {
@@ -402,7 +402,7 @@ const segments: Segment[] = [
         { label: "その他一般カード", pct: 10, color: "#7F8C8D" },
       ],
       cardNote: "保有カード（他社）",
-      summary: "低関与だが潜在的な需要を持つ大規模セグメント。特定のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
+      summary: "低関与だが潜在的な需要を持つ大規模セグメント。特���のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
     },
   },
   {
@@ -889,7 +889,7 @@ export function MarketOverviewContent() {
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              {/* 軸ラベルセル */}
+              {/* 軸ラベル���ル */}
               <th className="w-28 p-3 border-b border-r border-slate-200 bg-slate-50 align-bottom">
                 <div className="flex flex-col items-stretch text-[10px] text-slate-400 font-normal">
                   <span className="text-right">ステージ</span>
@@ -901,9 +901,7 @@ export function MarketOverviewContent() {
                 <th key={s.key} className={cn("p-3 border-b border-r border-slate-200 text-center min-w-[170px]", stageBg[s.key].cell)}>
                   <div className={cn("w-2.5 h-2.5 rounded-full mx-auto mb-1.5", stageBg[s.key].dot)} />
                   <p className={cn("text-sm font-bold leading-snug", s.key === "prospect" ? "text-slate-600" : s.key === "premium" ? "text-white" : "text-[#006FCF]")}>
-                    {(s.key === "prospect" || s.key === "new")
-                      ? <>未会員<br />（{s.key === "prospect" ? "Brand Consideration 低" : "Brand Consideration 高"}）</>
-                      : s.label}
+                    {s.label}
                   </p>
                   <p className={cn("text-xs font-normal mt-0.5", s.key === "premium" ? "text-white/80" : "text-slate-400")}>{s.sub}</p>
                 </th>
