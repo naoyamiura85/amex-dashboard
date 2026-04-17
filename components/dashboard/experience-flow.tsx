@@ -40,7 +40,6 @@ const PATTERNS = [
   { id: "p1", label: "プラチナ申込", count: "3.2万人", color: "#006FCF" },
   { id: "p2", label: "ゴールド申込", count: "8.7万人", color: "#B4975A" },
   { id: "p3", label: "グリーン申込", count: "20.1万人", color: "#38A169" },
-  { id: "p4", label: "見送り", count: "9.5万人", color: "#94A3B8" },
 ]
 
 // 接続データ（from → to）
@@ -70,7 +69,7 @@ const EDGES: { from: string; to: string; weight: number }[] = [
   { from: "m3", to: "p1", weight: 3 }, { from: "m3", to: "p2", weight: 3 },
   { from: "m4", to: "p2", weight: 2 }, { from: "m4", to: "p3", weight: 4 },
   { from: "m5", to: "p1", weight: 2 }, { from: "m5", to: "p2", weight: 3 },
-  { from: "m6", to: "p2", weight: 3 }, { from: "m6", to: "p3", weight: 2 }, { from: "m6", to: "p4", weight: 2 },
+  { from: "m6", to: "p2", weight: 3 }, { from: "m6", to: "p3", weight: 2 },
 ]
 
 // ─── カラー ────────────────────────────────────────────────────────────────────
