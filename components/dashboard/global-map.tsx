@@ -112,7 +112,7 @@ const COUNTRY_TO_REGION: Record<string, string> = {
   "036": "oc", "554": "oc", "598": "oc",
 }
 
-const GLOBAL_CONFIG = { center: [40, 40] as [number, number], zoom: 1.0 }
+const GLOBAL_CONFIG = { center: [40, 45] as [number, number], zoom: 1.0 }
 
 const MARKER_MIN = 38
 const MARKER_MAX = 85
@@ -211,7 +211,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
 
       <ComposableMap
         projection="geoMercator"
-        projectionConfig={{ scale: 120, center: [40, 40] }}
+        projectionConfig={{ scale: 160, center: [40, 45] }}
         style={{ width: "100%", height: "100%" }}
       >
         <ZoomableGroup
@@ -298,7 +298,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
               const radius = subRadius(sub.sizeNum, sMin, sMax)
               return (
                 <Marker key={i} coordinates={sub.coordinates} style={{ cursor: "default" }}>
-                  {/* パルスリング */}
+                  {/* パルスリン��� */}
                   <circle r={radius + 5} fill="none" stroke={drillConfig.color} strokeWidth={1} opacity={0.35} style={{ pointerEvents: "none" }}>
                     <animate attributeName="r" from={radius + 5} to={radius + 12} dur="2s" repeatCount="indefinite" />
                     <animate attributeName="opacity" from={0.35} to={0} dur="2s" repeatCount="indefinite" />
