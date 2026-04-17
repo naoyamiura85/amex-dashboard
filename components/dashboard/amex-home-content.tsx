@@ -39,22 +39,18 @@ const GlobalMap = dynamic(
   }
 )
 
-// ─── 地域データ ──────────────────────────────────────────────────────────────
+// ─── 地域データ（3地域: 欧州・日本・北米）──────────────────────────────────────
 const REGIONS: MapRegion[] = [
-  { id: "na", name: "北米",       marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40]  },
-  { id: "eu", name: "欧州",       marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [15, 51]    },
-  { id: "sa", name: "南米",       marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#9B2335", coordinates: [-58, -15]  },
-  { id: "jp", name: "日本",       marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]   },
-  { id: "oc", name: "オセアニア", marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#805AD5", coordinates: [134, -25]  },
+  { id: "eu", name: "欧州", marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [10, 50]   },
+  { id: "jp", name: "日本", marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]  },
+  { id: "na", name: "北米", marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40] },
 ]
 
-// 地域ごとのトレンドサマリー
+// 地域ごとのトレンドサマリー（3地域）
 const REGION_TREND: Record<string, string> = {
-  na: "北米市場は$4.7T規模。プレミアム旅行・エンタメ消費が牽引し、UHNW層のセンチュリオン利用が過去最高。Z世代富裕層の新規獲得が課題。",
   eu: "欧州市場は$3.5T規模。ラグジュアリー・ファッション・ガストロノミー消費が堅調。EUの規制強化に伴い競合各社のシェア再編が進行中。",
-  sa: "南米市場は$1.2T規模・成長率最高水準。ブラジル・メキシコが牽引。インフレ対策としてのUSD建てプレミアムカード需要が拡大。",
   jp: "日本市場は$2.0T規模。インバウンド回復と円安によるラグジュアリー消費急増。プラチナ・センチュリオン保有者の利用額が前年比+18%。",
-  oc: "オセアニア市場は$1.2T規模・高成長。オーストラリアを中心にプレミアムライフスタイル消費が拡大。旅行特典への需要が特に高い。",
+  na: "北米市場は$4.7T規模。プレミアム旅行・エンタメ消費が牽引し、UHNW層のセンチュリオン利用が過去最高。Z世代富裕層の新規獲得が課題。",
 }
 
 // ─── 年間変化率 ──────────────────────────────────────────────────────────────
