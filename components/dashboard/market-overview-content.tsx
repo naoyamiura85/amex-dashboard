@@ -217,7 +217,7 @@ const allPersonas: Persona[] = [
     image: "/images/personas/persona-10.jpg",
     occupation: "クリエイティブディレクター", income: "900〜1,200万円",
     background: "広告代理���のクリエイティブ責任者。トレンド発掘のため世界各地を旅する。",
-    lifestyle: "デザインホテルやポップアップ体験を好む。アートフェア・ファッションウィークに参加。",
+    lifestyle: "デザインホテルや���ップアップ体験を好む。アートフェア・ファッションウィークに参加。",
     interests: ["デザインホテル", "現代アート", "ファッション"],
     tribe: ["クリエイティブ派", "カルチャー消費派"],
     cardGoal: "文化体験特典・トレンドアクセス",
@@ -539,12 +539,14 @@ function SegmentDetailPanel({
   segment,
   stageLabel,
   engKey,
+  engagements,
   onClose,
   onPersonaClick,
 }: {
   segment: Segment
   stageLabel: string
   engKey: EngagementLevel
+  engagements: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[]
   onClose: () => void
   onPersonaClick: (p: Persona) => void
 }) {
@@ -903,6 +905,7 @@ export function MarketOverviewContent() {
           segment={selectedSegment}
           stageLabel={selectedStageLabel}
           engKey={selectedCell.eng}
+          engagements={engagements}
           onClose={() => setSelectedCell(null)}
           onPersonaClick={p => setModalPersona(p)}
         />
