@@ -219,7 +219,7 @@ const ALL_TRIBES: Tribe[] = [
         occupation: "外資系コンサルタント", income: "1,500万円以上",
         background: "世界60カ国以上の食体験を持つ美食家。ミシュランガイドは創刊年から収集。ソムリエ資格を保有。",
         lifestyle: "週末はカウンター席でペアリングディナー。食の探求が人生の軸。新星シェフの発掘が趣味。",
-        interests: ["グルメ", "ワイン", "料理"], cardGoal: "ダイニング特典とプライベートシェフ予約コンシェルジュ",
+        interests: ["グルメ", "ワイン", "料理"], cardGoal: "ダイニング特典とプライベート��ェフ予約コンシェルジュ",
         tribe: "美食・グルメ派"
       },
       {
@@ -774,7 +774,7 @@ function PersonaModal({ persona, open, onClose }: { persona: Persona | null; ope
           </div>
           <div>
             <p className="text-xs font-bold text-primary mb-1.5 flex items-center gap-1.5">
-              <CreditCard className="h-3.5 w-3.5" /> カード活用ゴール
+              <CreditCard className="h-3.5 w-3.5" /> カード活用ゴー��
             </p>
             <p className="text-sm text-foreground font-medium bg-primary/5 rounded-lg px-3 py-2.5 border border-primary/15">
               {persona.cardGoal}
@@ -951,7 +951,6 @@ export function TribeAnalysisContent() {
               <span>低年収・高BC</span>
             </div>
           </div>
-        </div>
         </div>
 
         {/* 詳細パネル：常に320px幅を確保し、選択なし時はプレースホルダーを表示 */}
