@@ -39,7 +39,7 @@ export function YappiChat() {
       {
         id: "init",
         role: "assistant",
-        content: "こんにちは! YappiGPTです。消費者インサイトやトレンド分析について、何でもお聞きください。",
+        content: "こんにちは! AI Assistantです。消費者インサイトやトレンド分析について、何でもお聞きください。",
       }
     ]
   })
@@ -115,7 +115,7 @@ export function YappiChat() {
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-background" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm text-foreground">YappiGPT</h3>
+            <h3 className="font-semibold text-sm text-foreground">AI Assistant</h3>
             <p className="text-[10px] text-muted-foreground">AI Consumer Intelligence</p>
           </div>
         </div>

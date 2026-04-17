@@ -8,9 +8,10 @@ import {
   Marker,
   ZoomableGroup,
 } from "react-simple-maps"
-import { ChevronLeft, TrendingUp } from "lucide-react"
+import { ChevronLeft } from "lucide-react"
 
 const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"
+// ローカルフォールバック: /public/world-110m.json が存在すれば "/world-110m.json" に切り替え可能
 
 export interface MapRegion {
   id: string
@@ -61,28 +62,6 @@ const SUB_REGIONS: Record<string, {
       { name: "Nordic/East", marketSize: "$370B", sizeNum: 370, growth: "+5.8%", coordinates: [22, 58]  },
     ],
   },
-  cn: {
-    center: [104, 36],
-    zoom: 3,
-    color: "#E53E3E",
-    subs: [
-      { name: "北京・東北",   marketSize: "$1,800B", sizeNum: 1800, growth: "+5.8%", coordinates: [117, 40] },
-      { name: "上海・長三角", marketSize: "$2,100B", sizeNum: 2100, growth: "+6.5%", coordinates: [121, 31] },
-      { name: "広東・南部",   marketSize: "$1,600B", sizeNum: 1600, growth: "+6.1%", coordinates: [113, 23] },
-      { name: "内陸部",       marketSize: "$1,000B", sizeNum: 1000, growth: "+8.2%", coordinates: [104, 30] },
-    ],
-  },
-  in: {
-    center: [78, 22],
-    zoom: 3.5,
-    color: "#D69E2E",
-    subs: [
-      { name: "Mumbai",    marketSize: "$520B", sizeNum: 520, growth: "+7.4%", coordinates: [72, 19]  },
-      { name: "Delhi",     marketSize: "$430B", sizeNum: 430, growth: "+6.8%", coordinates: [77, 29]  },
-      { name: "Bangalore", marketSize: "$360B", sizeNum: 360, growth: "+8.9%", coordinates: [77, 13]  },
-      { name: "Other",     marketSize: "$290B", sizeNum: 290, growth: "+5.9%", coordinates: [82, 22]  },
-    ],
-  },
   sa: {
     center: [-58, -15],
     zoom: 2.8,
@@ -125,27 +104,25 @@ const COUNTRY_TO_REGION: Record<string, string> = {
   "752": "eu", "756": "eu", "616": "eu", "203": "eu", "040": "eu",
   "056": "eu", "620": "eu", "372": "eu", "208": "eu", "246": "eu",
   "578": "eu", "348": "eu", "703": "eu", "705": "eu", "191": "eu",
-  "100": "eu", "642": "eu", "300": "eu",
-  "156": "cn",
+  "100": "eu", "642": "eu", "300": "eu", "826": "eu",
   "392": "jp",
-  "356": "in",
   "076": "sa", "032": "sa", "152": "sa", "170": "sa", "604": "sa",
   "218": "sa", "858": "sa", "591": "sa", "600": "sa", "068": "sa",
   "862": "sa", "328": "sa", "740": "sa", "780": "sa",
   "036": "oc", "554": "oc", "598": "oc",
 }
 
-const GLOBAL_CONFIG = { center: [20, 15] as [number, number], zoom: 1.8 }
+const GLOBAL_CONFIG = { center: [40, 45] as [number, number], zoom: 1.0 }
 
-const MARKER_MIN = 28
-const MARKER_MAX = 68
+const MARKER_MIN = 38
+const MARKER_MAX = 85
 function markerRadius(sizeNum: number, min: number, max: number): number {
   return MARKER_MIN + ((sizeNum - min) / (max - min)) * (MARKER_MAX - MARKER_MIN)
 }
 
 // サブ地域用のバブルサイズ（smaller range）
-const SUB_MIN = 18
-const SUB_MAX = 46
+const SUB_MIN = 12
+const SUB_MAX = 32
 function subRadius(sizeNum: number, min: number, max: number): number {
   return SUB_MIN + ((sizeNum - min) / (max - min)) * (SUB_MAX - SUB_MIN)
 }
@@ -233,8 +210,8 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
       )}
 
       <ComposableMap
-        projection="geoNaturalEarth1"
-        projectionConfig={{ scale: 185, center: [20, 10] }}
+        projection="geoMercator"
+        projectionConfig={{ scale: 190, center: [40, 45] }}
         style={{ width: "100%", height: "100%" }}
       >
         <ZoomableGroup
@@ -290,18 +267,24 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                   onClick={() => handleRegionClick(r.id)}
                   style={{ cursor: "pointer" }}
                 >
-                  {active && (
-                    <circle r={radius + 7} fill="none" stroke={r.color} strokeWidth={1.5} opacity={0.45} style={{ pointerEvents: "none" }} />
-                  )}
+                  {/* ドロップシャドウ用の下層円 */}
                   <circle
                     r={radius}
-                    fill={active ? r.color + "22" : "#FFFFFFBB"}
-                    stroke={r.color}
-                    strokeWidth={active ? 2 : 1.2}
+                    fill="rgba(0,0,0,0.08)"
+                    style={{ pointerEvents: "none", transform: "translate(2px, 3px)" }}
+                  />
+                  {/* メインバブル - 白塗りつぶし */}
+                  <circle
+                    r={radius}
+                    fill="#FFFFFF"
+                    stroke={active ? r.color : "rgba(0,0,0,0.06)"}
+                    strokeWidth={active ? 2 : 1}
                     style={{ transition: "all 0.2s" }}
                   />
-                  <text x={-3} y={-radius * 0.24} fontSize={radius * 0.24} fill={r.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↑</text>
-                  <text x={0} y={radius * 0.12} fontSize={radius * 0.3} fontWeight={700} fill={active ? r.color : "#1A202C"} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
+                  {/* 緑の矢印 */}
+                  <text x={radius * 0.35} y={-radius * 0.15} fontSize={radius * 0.32} fill="#10B981" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↗</text>
+                  {/* 市場規模テキスト - 濃紺で大きく */}
+                  <text x={0} y={radius * 0.18} fontSize={radius * 0.42} fontWeight={700} fill="#1E3A5F" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
                     {r.marketSize}
                   </text>
                 </Marker>
@@ -315,16 +298,14 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
               const radius = subRadius(sub.sizeNum, sMin, sMax)
               return (
                 <Marker key={i} coordinates={sub.coordinates} style={{ cursor: "default" }}>
-                  {/* パルスリング */}
+                  {/* パルスリン���� */}
                   <circle r={radius + 5} fill="none" stroke={drillConfig.color} strokeWidth={1} opacity={0.35} style={{ pointerEvents: "none" }}>
                     <animate attributeName="r" from={radius + 5} to={radius + 12} dur="2s" repeatCount="indefinite" />
                     <animate attributeName="opacity" from={0.35} to={0} dur="2s" repeatCount="indefinite" />
                   </circle>
                   <circle r={radius} fill={drillConfig.color + "1A"} stroke={drillConfig.color} strokeWidth={1.8} style={{ pointerEvents: "none" }} />
-                  {/* 成長アイコン */}
-                  <TrendingUp style={{ display: "none" }} />
                   <text x={-3} y={-radius * 0.26} fontSize={radius * 0.28} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↑</text>
-                  {/* 市場規模 */}
+                  {/* 市場���模 */}
                   <text x={0} y={radius * 0.05} fontSize={radius * 0.32} fontWeight={700} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
                     {sub.marketSize}
                   </text>

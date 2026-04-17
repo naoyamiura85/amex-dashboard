@@ -15,6 +15,7 @@ import {
 } from "recharts"
 import {
   TrendingUp,
+  TrendingDown,
   Globe,
   Users,
   Building2,
@@ -22,7 +23,10 @@ import {
   Bookmark,
   RefreshCw,
   Download,
+  BarChart3,
+  UserCircle,
 } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import type { MapRegion } from "./global-map"
 
 // react-simple-maps はSSR非対応のため dynamic import
@@ -39,26 +43,18 @@ const GlobalMap = dynamic(
   }
 )
 
-// ─── 地域データ ──────────────────────────────────────────────────────────────
+// ─── 地域データ（3地域: 欧州・日本・北米）──────────────────────────────────────
 const REGIONS: MapRegion[] = [
-  { id: "na", name: "北米",       marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40]  },
-  { id: "eu", name: "欧州",       marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [15, 51]    },
-  { id: "cn", name: "中国",       marketSize: "$6.5T", sizeNum: 6.5, growth: "+6%",   growthNum: 6.0, color: "#E53E3E", coordinates: [104, 35]   },
-  { id: "in", name: "インド",     marketSize: "$1.6T", sizeNum: 1.6, growth: "+6.7%", growthNum: 6.7, color: "#D69E2E", coordinates: [78, 22]    },
-  { id: "sa", name: "南米",       marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#9B2335", coordinates: [-58, -15]  },
-  { id: "jp", name: "日本",       marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]   },
-  { id: "oc", name: "オセアニア", marketSize: "$1.2T", sizeNum: 1.2, growth: "+8.9%", growthNum: 8.9, color: "#805AD5", coordinates: [134, -25]  },
+  { id: "eu", name: "欧州", marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [10, 50]   },
+  { id: "jp", name: "日本", marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]  },
+  { id: "na", name: "北米", marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40] },
 ]
 
-// 地域ごとのトレンドサマリー
+// 地域ごとのトレンドサマリー（3地域）
 const REGION_TREND: Record<string, string> = {
-  na: "北米市場は$4.7T規模。プレミアム旅行・エンタメ消費が牽引し、UHNW層のセンチュリオン利用が過去最高。Z世代富裕層の新規獲得が課題。",
   eu: "欧州市場は$3.5T規模。ラグジュアリー・ファッション・ガストロノミー消費が堅調。EUの規制強化に伴い競合各社のシェア再編が進行中。",
-  cn: "中国市場は$6.5Tで最大規模。デジタル決済普及とプレミアム消費ブームが共存。越境消費の回復により外資系カードの機会が拡大。",
-  in: "インド市場は$1.6T規模・高成長。中間富裕層の急拡大と国際旅行需要の増加が追い風。ネットワーク拡充が優先課題。",
-  sa: "南米市場は$1.2T規模・成長率最高水準。ブラジル・メキシコが牽引。インフレ対策としてのUSD建てプレミアムカード需要が拡大。",
   jp: "日本市場は$2.0T規模。インバウンド回復と円安によるラグジュアリー消費急増。プラチナ・センチュリオン保有者の利用額が前年比+18%。",
-  oc: "オセアニア市場は$1.2T規模・高成長。オーストラリアを中心にプレミアムライフスタイル消費が拡大。旅行特典への需要が特に高い。",
+  na: "北米市場は$4.7T規模。プレミアム旅行・エンタメ消費が牽引し、UHNW層のセンチュリオン利用が過去最高。Z世代富裕層の新規獲得が課題。",
 }
 
 // ─── 年間変化率 ──────────────────────────────────────────────────────────────
@@ -105,6 +101,72 @@ const THREE_C = [
     text: "Visaがプレミアム領域に参入強化。一方でAMEXの会員ロイヤルティ指標（NPS: 72）は業界トップを維持しており、プレミアム特典での差別化が奏功。",
   },
 ]
+
+// ─── 地域別KPIデータ ───────────────────────────────────────────────────────────
+const REGION_KPI: Record<string, { ar: number; ar_change: number; ltcs: number; ltcs_change: number; bc: number; bc_change: number }> = {
+  global: { ar: 58, ar_change: 6, ltcs: 72, ltcs_change: 5, bc: 44, bc_change: 5 },
+  eu: { ar: 56, ar_change: 5, ltcs: 70, ltcs_change: 5, bc: 45, bc_change: 5 },
+  jp: { ar: 50, ar_change: 8, ltcs: 73, ltcs_change: 5, bc: 37, bc_change: 5 },
+  na: { ar: 65, ar_change: 7, ltcs: 77, ltcs_change: 5, bc: 50, bc_change: 5 },
+}
+
+const KPI_METRICS = [
+  { id: "ad-recall", key: "ar", changeKey: "ar_change", name: "Ad Recall", color: "#006FCF" },
+  { id: "ltcs", key: "ltcs", changeKey: "ltcs_change", name: "LTCS", color: "#B4975A" },
+  { id: "brand-consideration", key: "bc", changeKey: "bc_change", name: "Brand Consideration", color: "#00175A" },
+]
+
+// ─── 地域別Audienceデータ ──────────────────────────────────────────────────────
+const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: string }[]; personas: { name: string; age: string; occupation: string; income: string; interests: string[]; quote: string }[] }> = {
+  global: {
+    demographics: [
+      { label: "平均年齢", value: "42歳" },
+      { label: "平均世帯年収", value: "$180K" },
+      { label: "男女比", value: "60:40" },
+      { label: "都市部居住率", value: "78%" },
+    ],
+    personas: [
+      { name: "Global Executive", age: "45歳", occupation: "経営幹部", income: "$200K+", interests: ["ビジネス旅行", "ゴルフ", "ファインダイニング"], quote: "グローバルで信頼されるカードが必要です" },
+      { name: "Affluent Professional", age: "38歳", occupation: "専門職", income: "$150K+", interests: ["旅行", "アート", "ウェルネス"], quote: "プレミアムな体験と特典を重視しています" },
+    ],
+  },
+  eu: {
+    demographics: [
+      { label: "平均年齢", value: "44歳" },
+      { label: "平均世帯年収", value: "€165K" },
+      { label: "男女比", value: "62:38" },
+      { label: "都市部居住率", value: "75%" },
+    ],
+    personas: [
+      { name: "James Thompson", age: "48歳", occupation: "弁護士", income: "€180K+", interests: ["劇場", "ワイン", "旅行"], quote: "伝統と名声が私には重要です" },
+      { name: "Sophie Renard", age: "35歳", occupation: "クリエイティブディレクター", income: "€150K+", interests: ["アート", "ガストロノミー", "旅行"], quote: "AMEXの特典で特別な体験にアクセスできます" },
+    ],
+  },
+  jp: {
+    demographics: [
+      { label: "平均年齢", value: "38歳" },
+      { label: "平均世帯年収", value: "1,250万円" },
+      { label: "男女比", value: "65:35" },
+      { label: "都市部居住率", value: "78%" },
+    ],
+    personas: [
+      { name: "田中 健一", age: "42歳", occupation: "外資系企業 部長", income: "1,500万円+", interests: ["ゴルフ", "高級ダイニング", "海外旅行"], quote: "ステータスと実用性を兼ね備えたカードを求めています" },
+      { name: "佐藤 美咲", age: "35歳", occupation: "医師", income: "1,200万円+", interests: ["ワイン", "アート", "ウェルネス"], quote: "特別な体験と手厚いサービスが決め手です" },
+    ],
+  },
+  na: {
+    demographics: [
+      { label: "平均年齢", value: "42歳" },
+      { label: "平均世帯年収", value: "$220K" },
+      { label: "男女比", value: "58:42" },
+      { label: "都市部居住率", value: "82%" },
+    ],
+    personas: [
+      { name: "Michael Chen", age: "45歳", occupation: "Tech Executive", income: "$250K+", interests: ["旅行", "高級ダイニング", "ゴルフ"], quote: "プレミアム特典とグローバルな利用を重視しています" },
+      { name: "Sarah Williams", age: "38歳", occupation: "投資銀行家", income: "$300K+", interests: ["ラグジュアリーショッピング", "スパ", "アート"], quote: "コンシェルジュサービスは他に類を見ません" },
+    ],
+  },
+}
 
 // ─── ペルソナ ─────────────────────────────────────────────────────────────────
 const PERSONAS = [
@@ -162,22 +224,16 @@ export function AmexHomeContent() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* ページヘッダー */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">市場オーバービュー</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">グローバルプレミアムカード市場の動向とインサイト</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-            <RefreshCw className="h-3.5 w-3.5" />
-            更新
-          </Button>
-          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-            <Download className="h-3.5 w-3.5" />
-            レポート出力
-          </Button>
-        </div>
+      {/* ツールバー */}
+      <div className="flex items-center justify-end gap-2">
+        <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+          <RefreshCw className="h-3.5 w-3.5" />
+          更新
+        </Button>
+        <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+          <Download className="h-3.5 w-3.5" />
+          レポート出力
+        </Button>
       </div>
 
       {/* メインパネル: 地図 + サマリー */}
@@ -301,87 +357,137 @@ export function AmexHomeContent() {
         </Card>
       </div>
 
-      {/* 下段: 3C分析 + ペルソナ分析 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* 3C分析インサイト */}
-        <Card className="border border-border shadow-sm">
-          <CardHeader className="pb-3 flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Globe className="h-4 w-4 text-[#006FCF]" />
-              <CardTitle className="text-sm font-semibold">全世界 - 3C分析インサイト</CardTitle>
-            </div>
-            <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {THREE_C.map((c) => {
-              const Icon = c.icon
-              return (
-                <div
-                  key={c.key}
-                  className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
-                      <Icon className={`h-3.5 w-3.5 ${c.color}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-xs font-bold text-foreground">{c.label}</p>
-                        <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
-                      </div>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
-                    </div>
+      {/* KPIトラッキング + 3C分析 / Audience Profile（常に表示、選択地域または全世界） */}
+      {(() => {
+        const regionId = selected?.id ?? "global"
+        const regionName = selected?.name ?? "全世界"
+        const kpi = REGION_KPI[regionId]
+        const audience = REGION_AUDIENCE[regionId]
+        return (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* 左カラム: KPIトラッキング + 3C分析 */}
+            <div className="space-y-4">
+              {/* KPIトラッキング */}
+              <Card className="border border-border shadow-sm">
+                <CardHeader className="pb-3 flex-row items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-[#006FCF]" />
+                  <CardTitle className="text-sm font-semibold">{regionName} - KPI Tracking</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-3 gap-3">
+                    {KPI_METRICS.map((m) => {
+                      const value = kpi[m.key as keyof typeof kpi] as number
+                      const change = kpi[m.changeKey as keyof typeof kpi] as number
+                      return (
+                        <div key={m.id} className="rounded-lg border border-border/60 p-3 text-center">
+                          <p className="text-xs text-muted-foreground mb-1">{m.name}</p>
+                          <p className="text-2xl font-bold" style={{ color: m.color }}>{value}%</p>
+                          <div className="flex items-center justify-center gap-1 mt-1">
+                            {change >= 0 ? (
+                              <TrendingUp className="h-3 w-3 text-emerald-500" />
+                            ) : (
+                              <TrendingDown className="h-3 w-3 text-red-500" />
+                            )}
+                            <span className={`text-xs font-medium ${change >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+                              {change >= 0 ? "+" : ""}{change}% YoY
+                            </span>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
-                </div>
-              )
-            })}
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
 
-        {/* ペルソナ分析 */}
-        <Card className="border border-border shadow-sm">
-          <CardHeader className="pb-3 flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-[#006FCF]" />
-              <CardTitle className="text-sm font-semibold">全世界 - ペルソナ分析</CardTitle>
+              {/* 3C分析インサイト */}
+              <Card className="border border-border shadow-sm">
+                <CardHeader className="pb-3 flex-row items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Globe className="h-4 w-4 text-[#006FCF]" />
+                    <CardTitle className="text-sm font-semibold">{regionName} - 3C分析インサイト</CardTitle>
+                  </div>
+                  <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {THREE_C.map((c) => {
+                    const Icon = c.icon
+                    return (
+                      <div
+                        key={c.key}
+                        className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
+                            <Icon className={`h-3.5 w-3.5 ${c.color}`} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <p className="text-xs font-bold text-foreground">{c.label}</p>
+                              <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
+                            </div>
+                            <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </CardContent>
+              </Card>
             </div>
-            <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-0 divide-y divide-border/60">
-            {PERSONAS.map((p) => (
-              <div key={p.name} className="py-4 first:pt-0">
-                <div className="flex gap-3">
-                  <div
-                    className="w-12 h-12 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
-                    style={{ backgroundColor: p.color }}
-                  >
-                    {p.initials}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-bold text-foreground">{p.name}</span>
-                      <span className="text-xs text-muted-foreground">{p.age}歳 · {p.role}</span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{p.location}</p>
-                    <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
-                      &ldquo;{p.quote}&rdquo;
-                    </p>
-                    {p.quoteEn && (
-                      <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-                        {p.quoteEn}
-                      </p>
-                    )}
-                    <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-2 hover:text-foreground">
-                      <Bookmark className="h-3 w-3" />
-                      保存
-                    </button>
-                  </div>
+
+            {/* 右カラム: Audience Profile + ペルソナ分析 */}
+            <Card className="border border-border shadow-sm">
+              <CardHeader className="pb-3 flex-row items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <UserCircle className="h-4 w-4 text-[#006FCF]" />
+                  <CardTitle className="text-sm font-semibold">{regionName} - Audience Profile</CardTitle>
                 </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+                <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Demographics */}
+                <div className="grid grid-cols-4 gap-2">
+                  {audience?.demographics.map((d, i) => (
+                    <div key={i} className="text-center p-2 rounded-lg bg-slate-50">
+                      <p className="text-[10px] text-muted-foreground">{d.label}</p>
+                      <p className="text-sm font-bold text-[#006FCF]">{d.value}</p>
+                    </div>
+                  ))}
+                </div>
+                {/* ペルソナ分析 */}
+                <div className="space-y-0 divide-y divide-border/60">
+                  {PERSONAS.map((p) => (
+                    <div key={p.name} className="py-3 first:pt-0">
+                      <div className="flex gap-3">
+                        <div
+                          className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
+                          style={{ backgroundColor: p.color }}
+                        >
+                          {p.initials}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-sm font-bold text-foreground">{p.name}</span>
+                            <span className="text-xs text-muted-foreground">{p.age}歳 · {p.role}</span>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">{p.location}</p>
+                          <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
+                            &ldquo;{p.quote}&rdquo;
+                          </p>
+                          <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5 hover:text-foreground">
+                            <Bookmark className="h-3 w-3" />
+                            保存
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      })()}
     </div>
   )
 }

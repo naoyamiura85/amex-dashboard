@@ -38,6 +38,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+// メインタブ定義: Travel / Dining / Entertainment
+const MAIN_TABS = [
+  { key: "travel",        label: "Travel",        categories: ["space", "expedition"] },
+  { key: "dining",        label: "Dining",        categories: ["culture"] },
+  { key: "entertainment", label: "Entertainment", categories: ["sciencetech"] },
+] as const
+type MainTabKey = typeof MAIN_TABS[number]["key"]
+
 // Category mapping — 体験軸・5〜10年後の兆しトレンド
 const categoryModeMapping: Record<string, string[]> = {
   all:         [],
@@ -66,15 +74,21 @@ export function TrendsListContent() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("growth")
+  const [selectedTab, setSelectedTab] = useState<MainTabKey>("travel")
   const { mode, modeLabel } = useCategoryMode()
   const modeConfig = categoryModeConfig[mode]
   const { trends } = useTrends()
+  
+  const currentTabConfig = MAIN_TABS.find(t => t.key === selectedTab)!
 
-  // First filter by category mode, then by additional filters
+  // First filter by main tab, then by additional filters
   const filteredTrends = useMemo(() => {
     return trends
       .filter(trend => {
-        // Apply category mode filter first
+        // Apply main tab filter first
+        const matchesTab = currentTabConfig.categories.includes(trend.category)
+        
+        // Apply category mode filter
         const modeCategories = categoryModeMapping[mode]
         const matchesMode = modeCategories.length === 0 || modeCategories.includes(trend.category)
         
@@ -85,7 +99,7 @@ export function TrendsListContent() {
         // Then apply additional category filter (only if mode is "all")
         const matchesCategory = mode !== "all" || selectedCategories.length === 0 || selectedCategories.includes(trend.category)
         
-        return matchesMode && matchesSearch && matchesCategory
+        return matchesTab && matchesMode && matchesSearch && matchesCategory
       })
       .sort((a, b) => {
         if (sortBy === "growth") {
@@ -101,7 +115,7 @@ export function TrendsListContent() {
         }
         return 0
       })
-  }, [trends, mode, searchQuery, selectedCategories, sortBy])
+  }, [trends, mode, searchQuery, selectedCategories, sortBy, currentTabConfig])
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">
@@ -109,7 +123,23 @@ export function TrendsListContent() {
           {/* Filters Row */}
           <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            {/* Main Tabs: Travel / Dining / Entertainment */}
+            <div className="flex gap-1 p-1 bg-slate-100 rounded-lg">
+              {MAIN_TABS.map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setSelectedTab(tab.key)}
+                  className={`px-6 py-2 rounded-md text-sm font-semibold transition-all ${
+                    selectedTab === tab.key
+                      ? "bg-white text-[#006FCF] shadow-sm"
+                      : "text-slate-500 hover:text-slate-700"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
             {mode !== "all" && (
               <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${modeConfig.bgColor} ${modeConfig.color}`}>
                 {modeLabel}モード

@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils"
 // 型定義
 // ----------------------------------------------------------------
 type EngagementLevel = "H" | "M" | "L"
-type StageKey = "prospect" | "new" | "active" | "premium"
+type StageKey = "prospect" | "new" | "active"
 
 interface Persona {
   id: string
@@ -83,20 +83,12 @@ const stageBg: Record<StageKey, { cell: string; cellHover: string; cellSelected:
     count:        "text-[#0059AA]",
     dot:          "bg-[#1D8CD9]",
   },
-  premium: {
-    cell:         "bg-[#6DB8EF]",
-    cellHover:    "hover:bg-[#55ACEA]",
-    cellSelected: "bg-[#00175A]",
-    count:        "text-[#00175A]",
-    dot:          "bg-[#006FCF]",
-  },
 }
 
 const stages: { key: StageKey; label: string; sub: string }[] = [
-  { key: "prospect", label: "未会員（Brand Consideration 低）", sub: "890万人" },
-  { key: "new",      label: "未会員（Brand Consideration 高）", sub: "430万人" },
-  { key: "active",   label: "新規会員",                         sub: "210万人" },
-  { key: "premium",  label: "プレミアム",                       sub: "56万人"  },
+  { key: "prospect", label: "Brand Consideration 低", sub: "890万人" },
+  { key: "new",      label: "Brand Consideration 中", sub: "430万人" },
+  { key: "active",   label: "Brand Consideration 高", sub: "210万人" },
 ]
 
 // 縦軸タイプ
@@ -109,9 +101,9 @@ const Y_AXIS_OPTIONS: { value: YAxisType; label: string }[] = [
 
 // 世帯年収軸
 const engagementsIncome: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[] = [
-  { key: "H", label: "H", sublabel: "世帯年収 高", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
-  { key: "M", label: "M", sublabel: "世帯年収 中", color: "text-amber-500",  dot: "bg-amber-400"   },
-  { key: "L", label: "L", sublabel: "世帯年収 低", color: "text-slate-400",  dot: "bg-slate-300"   },
+  { key: "H", label: "H", sublabel: "1,500万〜", color: "text-[#006FCF]", dot: "bg-[#006FCF]" },
+  { key: "M", label: "M", sublabel: "1,000万〜", color: "text-amber-500",  dot: "bg-amber-400"   },
+  { key: "L", label: "L", sublabel: "500万〜",   color: "text-slate-400",  dot: "bg-slate-300"   },
 ]
 
 // Premium Ad Experience 軸
@@ -164,7 +156,7 @@ const allPersonas: Persona[] = [
     id: "p04", name: "佐藤 彩花", age: 33, gender: "女性",
     image: "/images/personas/persona-04.jpg",
     occupation: "IT企業マネージャー", income: "700〜900万円",
-    background: "都内テック企業のプロダクトマネージャー。リモートワーク活用���旅しながら働く。",
+    background: "都内テック企業のプロダクトマネージャー。リモートワーク活用で旅しながら働く。",
     lifestyle: "ブティックホテルや隠れ家レストランを好む。SNSでの情報発信も積極的。",
     interests: ["ブティックホテル", "グルメ体験", "デジタルノマド"],
     tribe: ["ミレニアル富裕層", "ライフスタイル発信派"],
@@ -186,9 +178,9 @@ const allPersonas: Persona[] = [
     occupation: "金融機関管理職", income: "1,200〜1,500万円",
     background: "大手証券会社のVP。海外出張が月複数回あり、ポイント利用に精通。",
     lifestyle: "出張でマイル・ポイントを最大化。家族旅行でも特典を積極活用。",
-    interests: ["マイレージ最適化", "ファ���リー旅行", "グルメ"],
-    tribe: ["ポイント最適化派", "ファミリー重視���"],
-    cardGoal: "出張費ポ���ント還元・家族旅行へ転換",
+    interests: ["マイレージ最適化", "ファミリー旅行", "グルメ"],
+    tribe: ["ポイント最適化派", "ファミリー重視派"],
+    cardGoal: "出張費ポイント還元・家族旅行へ転換",
   },
   {
     id: "p07", name: "渡辺 拓也", age: 28, gender: "男性",
@@ -223,9 +215,9 @@ const allPersonas: Persona[] = [
   {
     id: "p10", name: "松田 優子", age: 38, gender: "女性",
     image: "/images/personas/persona-10.jpg",
-    occupation: "クリ���イティブディレクター", income: "900〜1,200万円",
-    background: "広告代理店のクリエイティブ責任者。トレンド発掘のため世界各地を旅する。",
-    lifestyle: "デザインホテルやポップアップ体験を好む。アートフェア・ファッションウィークに参加。",
+    occupation: "クリエイティブディレクター", income: "900〜1,200万円",
+    background: "広告代理���のクリエイティブ責任者。トレンド発掘のため世界各地を旅する。",
+    lifestyle: "デザインホテルや���ップアップ体験を好む。アートフェア・ファッションウィークに参加。",
     interests: ["デザインホテル", "現代アート", "ファッション"],
     tribe: ["クリエイティブ派", "カルチャー消費派"],
     cardGoal: "文化体験特典・トレンドアクセス",
@@ -287,7 +279,7 @@ const segments: Segment[] = [
         { label: "その他プレミアム", pct: 12, color: "#7F8C8D" },
       ],
       cardNote: "入会前の保有カード（他社）",
-      summary: "申込後3ヶ月以内の高エンゲージメント新規会員。入会特典を積極利用しており継続率が高い。コンシェルジュや空港ラウンジの初回利用率が他セグメント比2.3倍。",
+      summary: "申込後3ヶ月以内の高エンゲージメント新規会員。入会特典を積極利用しており継続率が高い。コンシェルジ��や空港ラウンジの��回利用率が他セグメント比2.3倍。",
     },
   },
   {
@@ -304,22 +296,6 @@ const segments: Segment[] = [
       ],
       cardNote: "保有AMEXカード / 検討中",
       summary: "利用額・頻度ともに最上位層。出張・グルメ・旅行の3カテゴリで全消費の72%を占める。プラチナカードへ��アップグレード見込みが高く、コンシェルジュ満足度も最高水準。",
-    },
-  },
-  {
-    engagement: "H", stage: "premium", count: "31万人",
-    personas: [allPersonas[2], allPersonas[8], allPersonas[11]],
-    attributes: {
-      genderRatio: "男性68% / 女性32%", avgAge: 57, marriedRate: "82%", avgSpend: "¥210万円/月",
-      occupations: [{ label: "オーナー経営者", pct: 44 }, { label: "資���家", pct: 32 }, { label: "医師", pct: 14 }, { label: "士業", pct: 10 }],
-      incomes: [{ label: "3,000万円以上", pct: 68 }, { label: "2,000〜3,000万円", pct: 26 }, { label: "1,500〜2,000万円", pct: 6 }],
-      cards: [
-        { label: "AMEX センチュリオン", pct: 52, color: "#1C1C1C" },
-        { label: "AMEX プラチナ", pct: 34, color: "#8E44AD" },
-        { label: "AMEX ビジネスプラチナ", pct: 14, color: "#2E4057" },
-      ],
-      cardNote: "保有AMEXカード",
-      summary: "センチュリオン・プラチナ会員の中核。年間消費額は平均2,500万円超。プライベートジェットや専用コンシェルジュの利用率が高く、特別招待イベントが最重要リテンション施策。",
     },
   },
   {
@@ -373,22 +349,6 @@ const segments: Segment[] = [
     },
   },
   {
-    engagement: "M", stage: "premium", count: "15万人",
-    personas: [allPersonas[10], allPersonas[7], allPersonas[4]],
-    attributes: {
-      genderRatio: "男性60% / 女性40%", avgAge: 60, marriedRate: "78%", avgSpend: "¥120万円/月",
-      occupations: [{ label: "資産家", pct: 36 }, { label: "経営者", pct: 30 }, { label: "医師", pct: 20 }, { label: "士業", pct: 14 }],
-      incomes: [{ label: "2,000〜3,000万円", pct: 48 }, { label: "3,000万円以上", pct: 40 }, { label: "1,500〜2,000万円", pct: 12 }],
-      cards: [
-        { label: "AMEX プラチナ", pct: 62, color: "#8E44AD" },
-        { label: "AMEX センチュリオン", pct: 24, color: "#1C1C1C" },
-        { label: "AMEX ビジネスプラチナ", pct: 14, color: "#2E4057" },
-      ],
-      cardNote: "保有AMEXカード",
-      summary: "プレミアム会員ながら特典の活用頻度が低下しているセグメント。長期会員のため継続意向は高いが最新特典の認知が低い。パーソナライズされたリテンションアプローチが有効。",
-    },
-  },
-  {
     engagement: "L", stage: "prospect", count: "461万人",
     personas: [allPersonas[10], allPersonas[11], allPersonas[7]],
     attributes: {
@@ -402,7 +362,7 @@ const segments: Segment[] = [
         { label: "その他一般カード", pct: 10, color: "#7F8C8D" },
       ],
       cardNote: "保有カード（他社）",
-      summary: "低関与だが潜在的な需要を持つ大���模セグメント。特定のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
+      summary: "低関与だが潜在的な需要を持つ大規模セグメント。特���のライフイベント（昇進・結婚・海外赴任）でのタッチポイント設計が転換の鍵。",
     },
   },
   {
@@ -436,22 +396,6 @@ const segments: Segment[] = [
       ],
       cardNote: "保有AMEXカード / 検討中",
       summary: "収入は高いが利用頻度が低い要注目セグメント。他社カードとの使い分けが多く、特典訴求によってシェアオブウォレット拡大の余地が大きい。",
-    },
-  },
-  {
-    engagement: "L", stage: "premium", count: "10万人",
-    personas: [allPersonas[2], allPersonas[10], allPersonas[0]],
-    attributes: {
-      genderRatio: "男性70% / 女性30%", avgAge: 65, marriedRate: "85%", avgSpend: "¥55万円/月",
-      occupations: [{ label: "退職経営者", pct: 42 }, { label: "資産家", pct: 34 }, { label: "士業", pct: 14 }, { label: "その他", pct: 10 }],
-      incomes: [{ label: "3,000万円以上（資産）", pct: 56 }, { label: "2,000〜3,000万円", pct: 30 }, { label: "1,500〜2,000万円", pct: 14 }],
-      cards: [
-        { label: "AMEX プラチナ", pct: 54, color: "#8E44AD" },
-        { label: "AMEX センチュリオン", pct: 30, color: "#1C1C1C" },
-        { label: "AMEX ゴールド（併用）", pct: 16, color: "#B4975A" },
-      ],
-      cardNote: "保有AMEXカード",
-      summary: "プレミアム会員だが利用額が著しく低下しているシニア層。百貨店優待・旅館特典など国内向けのサービス訴求と専任担当者による関係維持が有効。",
     },
   },
 ]
@@ -595,12 +539,14 @@ function SegmentDetailPanel({
   segment,
   stageLabel,
   engKey,
+  engagements,
   onClose,
   onPersonaClick,
 }: {
   segment: Segment
   stageLabel: string
   engKey: EngagementLevel
+  engagements: { key: EngagementLevel; label: string; sublabel: string; color: string; dot: string }[]
   onClose: () => void
   onPersonaClick: (p: Persona) => void
 }) {
@@ -889,7 +835,7 @@ export function MarketOverviewContent() {
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              {/* 軸ラベルセル */}
+              {/* 軸ラベル���ル */}
               <th className="w-28 p-3 border-b border-r border-slate-200 bg-slate-50 align-bottom">
                 <div className="flex flex-col items-stretch text-[10px] text-slate-400 font-normal">
                   <span className="text-right">ステージ</span>
@@ -900,12 +846,10 @@ export function MarketOverviewContent() {
               {stages.map(s => (
                 <th key={s.key} className={cn("p-3 border-b border-r border-slate-200 text-center min-w-[170px]", stageBg[s.key].cell)}>
                   <div className={cn("w-2.5 h-2.5 rounded-full mx-auto mb-1.5", stageBg[s.key].dot)} />
-                  <p className={cn("text-sm font-bold leading-snug", s.key === "prospect" ? "text-slate-600" : s.key === "premium" ? "text-white" : "text-[#006FCF]")}>
-                    {(s.key === "prospect" || s.key === "new")
-                      ? <>未会員<br />（{s.key === "prospect" ? "Brand Consideration 低" : "Brand Consideration 高"}）</>
-                      : s.label}
+                  <p className={cn("text-sm font-bold leading-snug", s.key === "prospect" ? "text-slate-600" : "text-[#006FCF]")}>
+                    {s.label}
                   </p>
-                  <p className={cn("text-xs font-normal mt-0.5", s.key === "premium" ? "text-white/80" : "text-slate-400")}>{s.sub}</p>
+                  <p className="text-xs font-normal mt-0.5 text-slate-400">{s.sub}</p>
                 </th>
               ))}
             </tr>
@@ -961,6 +905,7 @@ export function MarketOverviewContent() {
           segment={selectedSegment}
           stageLabel={selectedStageLabel}
           engKey={selectedCell.eng}
+          engagements={engagements}
           onClose={() => setSelectedCell(null)}
           onPersonaClick={p => setModalPersona(p)}
         />

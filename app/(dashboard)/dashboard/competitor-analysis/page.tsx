@@ -1,7 +1,7 @@
 "use client"
 
 import { DashboardHeader } from "@/components/dashboard/header"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
   ResponsiveContainer,
@@ -15,18 +15,18 @@ import {
 import { TrendingUp, TrendingDown, AlertCircle } from "lucide-react"
 
 const COMPETITORS = [
-  { name: "AMEX", share: 8.7, adSpend: 120, color: "#006FCF", trend: "+0.5%" },
-  { name: "JCB", share: 24.2, adSpend: 85, color: "#0F4C81", trend: "-0.2%" },
-  { name: "VISA", share: 32.5, adSpend: 150, color: "#1A1F71", trend: "+0.3%" },
-  { name: "Mastercard", share: 18.4, adSpend: 95, color: "#EB001B", trend: "+0.1%" },
-  { name: "Diners", share: 2.8, adSpend: 25, color: "#004080", trend: "-0.3%" },
-  { name: "Others", share: 13.4, adSpend: 45, color: "#94A3B8", trend: "-0.4%" },
+  { name: "Amex",    share: 8.7,  adSpend: 120, color: "#006FCF", trend: "+0.5%" },
+  { name: "SMCC",    share: 28.4, adSpend: 165, color: "#0F4C81", trend: "+0.3%" },
+  { name: "JCB",     share: 22.1, adSpend: 85,  color: "#1A3A6B", trend: "-0.2%" },
+  { name: "Rakuten", share: 19.8, adSpend: 140, color: "#BF0000", trend: "+1.2%" },
+  { name: "Others",  share: 21.0, adSpend: 55,  color: "#94A3B8", trend: "-1.8%" },
 ]
 
 const COMPETITOR_MOVES = [
-  { company: "JCB", move: "ポイント還元率を1.5倍に引き上げ", impact: "高", date: "2026/03" },
-  { company: "VISA", move: "新規入会キャンペーン強化", impact: "中", date: "2026/04" },
-  { company: "Mastercard", move: "海外旅行保険を自動付帯に変更", impact: "中", date: "2026/02" },
+  { company: "SMCC",    move: "Vポイント連携強化・新規入会特典を倍増",          impact: "高", date: "2026/03" },
+  { company: "Rakuten", move: "楽天市場での還元率最大5%キャンペーン展開",        impact: "高", date: "2026/04" },
+  { company: "JCB",     move: "ポイント還元率を1.5倍に引き上げ",                impact: "中", date: "2026/02" },
+  { company: "Amex",    move: "プラチナカード向けラウンジ・特典を国内拡充",      impact: "中", date: "2026/03" },
 ]
 
 export default function CompetitorAnalysisPage() {
@@ -44,15 +44,13 @@ export default function CompetitorAnalysisPage() {
         <div className="grid lg:grid-cols-2 gap-6">
           {/* 市場シェア */}
           <Card className="border shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-base">市場シェア（%）</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={COMPETITORS} layout="vertical">
-                  <XAxis type="number" domain={[0, 40]} />
-                  <YAxis type="category" dataKey="name" width={80} />
-                  <Tooltip />
+            <CardContent className="pt-6">
+              <p className="text-sm font-medium text-muted-foreground mb-4">市場シェア（%）</p>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={COMPETITORS} layout="vertical" barSize={28} margin={{ left: 8, right: 24, top: 4, bottom: 4 }}>
+                  <XAxis type="number" domain={[0, 45]} tickCount={6} />
+                  <YAxis type="category" dataKey="name" width={75} tick={{ fontSize: 13 }} />
+                  <Tooltip formatter={(v: number) => [`${v}%`, "シェア"]} />
                   <Bar dataKey="share" radius={[0, 4, 4, 0]}>
                     {COMPETITORS.map((c, i) => (
                       <Cell key={i} fill={c.color} />
@@ -65,15 +63,13 @@ export default function CompetitorAnalysisPage() {
 
           {/* 推計広告投資額 */}
           <Card className="border shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-base">推計広告投資額（億円/年）</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={COMPETITORS} layout="vertical">
-                  <XAxis type="number" domain={[0, 200]} />
-                  <YAxis type="category" dataKey="name" width={80} />
-                  <Tooltip />
+            <CardContent className="pt-6">
+              <p className="text-sm font-medium text-muted-foreground mb-4">推計広告投資額（億円/年）</p>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={COMPETITORS} layout="vertical" barSize={28} margin={{ left: 8, right: 24, top: 4, bottom: 4 }}>
+                  <XAxis type="number" domain={[0, 200]} tickCount={6} />
+                  <YAxis type="category" dataKey="name" width={75} tick={{ fontSize: 13 }} />
+                  <Tooltip formatter={(v: number) => [`${v}億円`, "広告投資額"]} />
                   <Bar dataKey="adSpend" radius={[0, 4, 4, 0]}>
                     {COMPETITORS.map((c, i) => (
                       <Cell key={i} fill={c.color} />
@@ -87,10 +83,8 @@ export default function CompetitorAnalysisPage() {
 
         {/* シェア変動 */}
         <Card className="border shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-base">シェア変動（前年比）</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
+            <p className="text-sm font-medium text-muted-foreground mb-4">シェア変動（前年比）</p>
             <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
               {COMPETITORS.map((c, i) => (
                 <div key={i} className="text-center p-3 rounded-lg border">
@@ -113,13 +107,11 @@ export default function CompetitorAnalysisPage() {
 
         {/* 競合動向 */}
         <Card className="border shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-amber-500" />
+          <CardContent className="pt-6">
+            <p className="text-sm font-medium text-muted-foreground mb-4 flex items-center gap-2">
+              <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
               最新の競合動向
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </p>
             <div className="space-y-3">
               {COMPETITOR_MOVES.map((m, i) => (
                 <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">

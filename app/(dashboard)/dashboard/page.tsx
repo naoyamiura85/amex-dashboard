@@ -7,8 +7,8 @@ export default function DashboardPage() {
   return (
     <>
       <DashboardHeader
-        title="エグゼクティブサマリー"
-        breadcrumb={["ダッシュボード", "エグゼクティブサマリー"]}
+        title="Market Overview"
+        breadcrumb={["ダッシュボード", "Market Overview"]}
       />
       <AmexHomeContent />
     </>

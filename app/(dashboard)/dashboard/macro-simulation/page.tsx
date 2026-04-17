@@ -6,26 +6,50 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { useState } from "react"
-import { Play, RotateCcw } from "lucide-react"
+import { Play, RotateCcw, TrendingUp, ArrowRight } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-const SEGMENTS = [
-  { id: "bc_low_500", label: "BC低 / 500万〜", base: 890 },
-  { id: "bc_low_1000", label: "BC低 / 1000万〜", base: 320 },
-  { id: "bc_low_1500", label: "BC低 / 1500万〜", base: 120 },
-  { id: "bc_mid_500", label: "BC中 / 500万〜", base: 430 },
-  { id: "bc_mid_1000", label: "BC中 / 1000万〜", base: 210 },
-  { id: "bc_mid_1500", label: "BC中 / 1500万〜", base: 85 },
-  { id: "bc_high_500", label: "BC高 / 500万〜", base: 180 },
-  { id: "bc_high_1000", label: "BC高 / 1000万〜", base: 95 },
-  { id: "bc_high_1500", label: "BC高 / 1500万〜", base: 42 },
+// マトリクス用定数
+const stages = [
+  { key: "prospect", label: "Brand Consideration 低", sub: "890万人" },
+  { key: "new", label: "Brand Consideration 中", sub: "430万人" },
+  { key: "active", label: "Brand Consideration 高", sub: "210万人" },
 ]
+
+const engagements = [
+  { key: "H", label: "H", sublabel: "1,500万〜" },
+  { key: "M", label: "M", sublabel: "1,000万〜" },
+  { key: "L", label: "L", sublabel: "500万〜" },
+]
+
+// 9セグメントのベースデータ（マトリクス形式）
+const MATRIX_DATA: Record<string, Record<string, number>> = {
+  H: { prospect: 142, new: 58, active: 89 },
+  M: { prospect: 287, new: 112, active: 76 },
+  L: { prospect: 461, new: 128, active: 45 },
+}
+
+// 背景色設定
+const stageBg: Record<string, { cell: string; cellHover: string }> = {
+  prospect: { cell: "bg-white", cellHover: "hover:bg-slate-50" },
+  new:      { cell: "bg-[#C5E4FC]", cellHover: "hover:bg-[#B0D9F9]" },
+  active:   { cell: "bg-[#8ACDF6]", cellHover: "hover:bg-[#6BC0F3]" },
+}
 
 export default function MacroSimulationPage() {
   const [adSpend, setAdSpend] = useState(100)
   const [isSimulated, setIsSimulated] = useState(false)
 
   const adRecallLift = Math.min(50, adSpend * 0.3)
-  const ltcsLift = Math.min(30, adSpend * 0.18)
+  const applicationLift = Math.min(30, adSpend * 0.18)
+
+  // セグメントごとの変動計算
+  const getSegmentLift = (eng: string, stage: string) => {
+    const baseLift = adSpend * 0.1
+    const stageMultiplier = stage === "active" ? 1.5 : stage === "new" ? 1.0 : 0.5
+    const engMultiplier = eng === "H" ? 1.3 : eng === "M" ? 1.0 : 0.7
+    return Math.round(baseLift * stageMultiplier * engMultiplier)
+  }
 
   const handleSimulate = () => {
     setIsSimulated(true)
@@ -44,7 +68,7 @@ export default function MacroSimulationPage() {
       />
       <div className="p-6 space-y-6">
         <p className="text-sm text-muted-foreground">
-          9セグメントの変動と「Ad Recall」「LTCS」のリフトをシミュレート
+          9セグメントの変動と「Ad Recall」「Application」のリフトをシミュレート
         </p>
 
         {/* コントロール */}
@@ -92,32 +116,95 @@ export default function MacroSimulationPage() {
               </Card>
               <Card className="border shadow-sm">
                 <CardContent className="p-5 text-center">
-                  <p className="text-sm text-muted-foreground">LTCS リフト</p>
-                  <p className="text-4xl font-bold text-[#B4975A] mt-2">+{ltcsLift.toFixed(1)}%</p>
+                  <p className="text-sm text-muted-foreground">Application（申し込み）リフト</p>
+                  <p className="text-4xl font-bold text-[#B4975A] mt-2">+{applicationLift.toFixed(1)}%</p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* 9セグメント変動 */}
+            {/* マトリクス変動予測（統合版） */}
             <Card className="border shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base">9セグメント変動予測</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-[#006FCF]" />
+                  9セグメント変動予測
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-3 gap-3">
-                  {SEGMENTS.map((seg) => {
-                    const lift = seg.id.includes("high") ? adSpend * 0.15 : seg.id.includes("mid") ? adSpend * 0.08 : adSpend * 0.03
-                    const projected = seg.base + Math.round(lift)
-                    return (
-                      <div key={seg.id} className="p-3 rounded-lg border text-center">
-                        <p className="text-xs text-muted-foreground">{seg.label}</p>
-                        <p className="text-lg font-bold mt-1">{projected.toLocaleString()}万人</p>
-                        <Badge variant="secondary" className="text-xs mt-1">
-                          +{Math.round(lift).toLocaleString()}
-                        </Badge>
+                <div className="overflow-hidden rounded-lg border border-border">
+                  {/* ヘッダー */}
+                  <div className="grid grid-cols-[80px_repeat(3,1fr)]">
+                    <div className="p-3 border-b border-r border-border bg-slate-50">
+                      <p className="text-[10px] text-muted-foreground text-center">ステージ</p>
+                      <p className="text-[10px] text-muted-foreground text-center">世帯年収</p>
+                    </div>
+                    {stages.map((s) => (
+                      <div key={s.key} className={cn("p-3 border-b border-r last:border-r-0 border-border text-center", stageBg[s.key].cell)}>
+                        <div className="flex items-center justify-center gap-1 mb-0.5">
+                          <div className={cn("w-2 h-2 rounded-full", s.key === "prospect" ? "bg-slate-400" : "bg-[#006FCF]")} />
+                        </div>
+                        <p className={cn("text-sm font-bold", s.key === "prospect" ? "text-slate-600" : "text-[#006FCF]")}>{s.label}</p>
+                        <p className="text-[10px] text-slate-400">{s.sub}</p>
                       </div>
-                    )
-                  })}
+                    ))}
+                  </div>
+                  {/* ボディ */}
+                  {engagements.map((eng) => (
+                    <div key={eng.key} className="grid grid-cols-[80px_repeat(3,1fr)]">
+                      <div className="p-3 border-r border-b last:border-b-0 border-border bg-slate-50 flex flex-col items-center justify-center">
+                        <span className="text-xl font-bold text-[#006FCF]">{eng.label}</span>
+                        <span className="text-[10px] text-muted-foreground">{eng.sublabel}</span>
+                      </div>
+                      {stages.map((stage) => {
+                        const base = MATRIX_DATA[eng.key][stage.key]
+                        const lift = getSegmentLift(eng.key, stage.key)
+                        const projected = base + lift
+                        return (
+                          <div
+                            key={stage.key}
+                            className={cn(
+                              "p-4 border-r border-b last:border-r-0 last:border-b-0 border-border/50 text-center",
+                              stageBg[stage.key].cell
+                            )}
+                          >
+                            <div className="flex items-center justify-center gap-2">
+                              <span className="text-sm text-muted-foreground">{base}万人</span>
+                              <ArrowRight className="h-3 w-3 text-[#006FCF]" />
+                              <span className="text-lg font-bold text-[#1A202C]">{projected}万人</span>
+                            </div>
+                            <Badge className="text-[10px] bg-emerald-100 text-emerald-700 mt-2">
+                              +{lift}万人
+                            </Badge>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ))}
+                </div>
+
+                {/* 合計変動サマリー */}
+                <div className="mt-6 p-4 rounded-lg bg-slate-50 border border-border">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold">総人数変動</p>
+                      <p className="text-xs text-muted-foreground">全9セグメント合計</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-[#006FCF]">
+                        +{engagements.reduce((sum, eng) => 
+                          sum + stages.reduce((s, stage) => s + getSegmentLift(eng.key, stage.key), 0), 0
+                        )}万人
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {Object.values(MATRIX_DATA).reduce((sum, row) => sum + Object.values(row).reduce((s, v) => s + v, 0), 0)}万人 → {
+                          Object.values(MATRIX_DATA).reduce((sum, row) => sum + Object.values(row).reduce((s, v) => s + v, 0), 0) +
+                          engagements.reduce((sum, eng) => 
+                            sum + stages.reduce((s, stage) => s + getSegmentLift(eng.key, stage.key), 0), 0
+                          )
+                        }万人
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>

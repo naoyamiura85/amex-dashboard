@@ -138,7 +138,7 @@ export const initialTrends: Trend[] = [
         { name: "東京圏", percentage: 45 },
         { name: "大阪圏", percentage: 18 },
         { name: "海外在住", percentage: 25 },
-        { name: "そ���他", percentage: 12 },
+        { name: "その他", percentage: 12 },
       ],
     },
     relatedProducts: [
