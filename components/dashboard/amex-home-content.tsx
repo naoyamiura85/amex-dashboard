@@ -380,11 +380,14 @@ export function AmexHomeContent() {
             </CardContent>
           </Card>
 
-          {/* Audience Profile */}
+          {/* Audience Profile + ペルソナ分析 統合 */}
           <Card className="border border-border shadow-sm">
-            <CardHeader className="pb-3 flex-row items-center gap-2">
-              <UserCircle className="h-4 w-4 text-[#006FCF]" />
-              <CardTitle className="text-sm font-semibold">{selected.name} - Audience Profile</CardTitle>
+            <CardHeader className="pb-3 flex-row items-center justify-between">
+              <div className="flex items-center gap-2">
+                <UserCircle className="h-4 w-4 text-[#006FCF]" />
+                <CardTitle className="text-sm font-semibold">{selected.name} - Audience Profile</CardTitle>
+              </div>
+              <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Demographics */}
@@ -396,25 +399,30 @@ export function AmexHomeContent() {
                   </div>
                 ))}
               </div>
-              {/* Personas */}
-              <div className="space-y-3">
-                {REGION_AUDIENCE[selected.id]?.personas.map((p, i) => (
-                  <div key={i} className="rounded-lg border border-border/60 p-3">
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#006FCF] text-white flex items-center justify-center text-sm font-bold shrink-0">
-                        {p.name[0]}
+              {/* ペルソナ分析 */}
+              <div className="space-y-0 divide-y divide-border/60">
+                {PERSONAS.map((p) => (
+                  <div key={p.name} className="py-3 first:pt-0">
+                    <div className="flex gap-3">
+                      <div
+                        className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
+                        style={{ backgroundColor: p.color }}
+                      >
+                        {p.initials}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold">{p.name}</p>
-                        <p className="text-xs text-muted-foreground">{p.age} / {p.occupation}</p>
-                        <div className="flex flex-wrap gap-1 mt-1.5">
-                          {p.interests.map((int, j) => (
-                            <Badge key={j} variant="secondary" className="text-[10px] px-1.5 py-0">{int}</Badge>
-                          ))}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-bold text-foreground">{p.name}</span>
+                          <span className="text-xs text-muted-foreground">{p.age}歳 · {p.role}</span>
                         </div>
-                        <p className="text-xs italic text-muted-foreground mt-2 border-l-2 border-[#006FCF] pl-2">
+                        <p className="text-[11px] text-muted-foreground mt-0.5">{p.location}</p>
+                        <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
                           &ldquo;{p.quote}&rdquo;
                         </p>
+                        <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5 hover:text-foreground">
+                          <Bookmark className="h-3 w-3" />
+                          保存
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -425,87 +433,40 @@ export function AmexHomeContent() {
         </div>
       )}
 
-      {/* 下段: 3C分析 + ペルソナ分析 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* 3C分析インサイト */}
-        <Card className="border border-border shadow-sm">
-          <CardHeader className="pb-3 flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Globe className="h-4 w-4 text-[#006FCF]" />
-              <CardTitle className="text-sm font-semibold">全世界 - 3C分析インサイト</CardTitle>
-            </div>
-            <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {THREE_C.map((c) => {
-              const Icon = c.icon
-              return (
-                <div
-                  key={c.key}
-                  className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
-                      <Icon className={`h-3.5 w-3.5 ${c.color}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-xs font-bold text-foreground">{c.label}</p>
-                        <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
-                      </div>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </CardContent>
-        </Card>
-
-        {/* ペルソナ分析 */}
-        <Card className="border border-border shadow-sm">
-          <CardHeader className="pb-3 flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-[#006FCF]" />
-              <CardTitle className="text-sm font-semibold">全世界 - ペルソナ分析</CardTitle>
-            </div>
-            <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-0 divide-y divide-border/60">
-            {PERSONAS.map((p) => (
-              <div key={p.name} className="py-4 first:pt-0">
-                <div className="flex gap-3">
-                  <div
-                    className="w-12 h-12 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
-                    style={{ backgroundColor: p.color }}
-                  >
-                    {p.initials}
+      {/* 下段: 3C分析インサイト */}
+      <Card className="border border-border shadow-sm">
+        <CardHeader className="pb-3 flex-row items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Globe className="h-4 w-4 text-[#006FCF]" />
+            <CardTitle className="text-sm font-semibold">全世界 - 3C分析インサイト</CardTitle>
+          </div>
+          <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {THREE_C.map((c) => {
+            const Icon = c.icon
+            return (
+              <div
+                key={c.key}
+                className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
+                    <Icon className={`h-3.5 w-3.5 ${c.color}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-bold text-foreground">{p.name}</span>
-                      <span className="text-xs text-muted-foreground">{p.age}歳 · {p.role}</span>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <p className="text-xs font-bold text-foreground">{c.label}</p>
+                      <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
                     </div>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{p.location}</p>
-                    <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
-                      &ldquo;{p.quote}&rdquo;
-                    </p>
-                    {p.quoteEn && (
-                      <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-                        {p.quoteEn}
-                      </p>
-                    )}
-                    <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-2 hover:text-foreground">
-                      <Bookmark className="h-3 w-3" />
-                      保存
-                    </button>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
                   </div>
                 </div>
               </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+            )
+          })}
+        </CardContent>
+      </Card>
     </div>
   )
 }
