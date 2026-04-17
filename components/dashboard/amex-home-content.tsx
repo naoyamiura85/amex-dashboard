@@ -15,6 +15,7 @@ import {
 } from "recharts"
 import {
   TrendingUp,
+  TrendingDown,
   Globe,
   Users,
   Building2,
@@ -22,7 +23,10 @@ import {
   Bookmark,
   RefreshCw,
   Download,
+  BarChart3,
+  UserCircle,
 } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import type { MapRegion } from "./global-map"
 
 // react-simple-maps はSSR非対応のため dynamic import
@@ -97,6 +101,59 @@ const THREE_C = [
     text: "Visaがプレミアム領域に参入強化。一方でAMEXの会員ロイヤルティ指標（NPS: 72）は業界トップを維持しており、プレミアム特典での差別化が奏功。",
   },
 ]
+
+// ─── 地域別KPIデータ ───────────────────────────────────────────────────────────
+const REGION_KPI: Record<string, { ar: number; ar_change: number; ltcs: number; ltcs_change: number; bc: number; bc_change: number }> = {
+  eu: { ar: 56, ar_change: 5, ltcs: 70, ltcs_change: 5, bc: 45, bc_change: 5 },
+  jp: { ar: 50, ar_change: 8, ltcs: 73, ltcs_change: 5, bc: 37, bc_change: 5 },
+  na: { ar: 65, ar_change: 7, ltcs: 77, ltcs_change: 5, bc: 50, bc_change: 5 },
+}
+
+const KPI_METRICS = [
+  { id: "ad-recall", key: "ar", changeKey: "ar_change", name: "Ad Recall", color: "#006FCF" },
+  { id: "ltcs", key: "ltcs", changeKey: "ltcs_change", name: "LTCS", color: "#B4975A" },
+  { id: "brand-consideration", key: "bc", changeKey: "bc_change", name: "Brand Consideration", color: "#00175A" },
+]
+
+// ─── 地域別Audienceデータ ──────────────────────────────────────────────────────
+const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: string }[]; personas: { name: string; age: string; occupation: string; income: string; interests: string[]; quote: string }[] }> = {
+  eu: {
+    demographics: [
+      { label: "平均年齢", value: "44歳" },
+      { label: "平均世帯年収", value: "€165K" },
+      { label: "男女比", value: "62:38" },
+      { label: "都市部居住率", value: "75%" },
+    ],
+    personas: [
+      { name: "James Thompson", age: "48歳", occupation: "弁護士", income: "€180K+", interests: ["劇場", "ワイン", "旅行"], quote: "伝統と名声が私には重要です" },
+      { name: "Sophie Renard", age: "35歳", occupation: "クリエイティブディレクター", income: "€150K+", interests: ["アート", "ガストロノミー", "旅行"], quote: "AMEXの特典で特別な体験にアクセスできます" },
+    ],
+  },
+  jp: {
+    demographics: [
+      { label: "平均年齢", value: "38歳" },
+      { label: "平均世帯年収", value: "1,250万円" },
+      { label: "男女比", value: "65:35" },
+      { label: "都市部居住率", value: "78%" },
+    ],
+    personas: [
+      { name: "田中 健一", age: "42歳", occupation: "外資系企業 部長", income: "1,500万円+", interests: ["ゴルフ", "高級ダイニング", "海外旅行"], quote: "ステータスと実用性を兼ね備えたカードを求めています" },
+      { name: "佐藤 美咲", age: "35歳", occupation: "医師", income: "1,200万円+", interests: ["ワイン", "アート", "ウェルネス"], quote: "特別な体験と手厚いサービスが決め手です" },
+    ],
+  },
+  na: {
+    demographics: [
+      { label: "平均年齢", value: "42歳" },
+      { label: "平均世帯年収", value: "$220K" },
+      { label: "男女比", value: "58:42" },
+      { label: "都市部居住率", value: "82%" },
+    ],
+    personas: [
+      { name: "Michael Chen", age: "45歳", occupation: "Tech Executive", income: "$250K+", interests: ["旅行", "高級ダイニング", "ゴルフ"], quote: "プレミアム特典とグローバルな利用を重視しています" },
+      { name: "Sarah Williams", age: "38歳", occupation: "投資銀行家", income: "$300K+", interests: ["ラグジュアリーショッピング", "スパ", "アート"], quote: "コンシェルジュサービスは他に類を見ません" },
+    ],
+  },
+}
 
 // ─── ペルソナ ─────────────────────────────────────────────────────────────────
 const PERSONAS = [
@@ -286,6 +343,87 @@ export function AmexHomeContent() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 地域選択時: KPIトラッキング + Audience Profile */}
+      {selected && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* KPIトラッキング */}
+          <Card className="border border-border shadow-sm">
+            <CardHeader className="pb-3 flex-row items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-[#006FCF]" />
+              <CardTitle className="text-sm font-semibold">{selected.name} - KPI Tracking</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-3 gap-3">
+                {KPI_METRICS.map((m) => {
+                  const kpi = REGION_KPI[selected.id]
+                  const value = kpi[m.key as keyof typeof kpi] as number
+                  const change = kpi[m.changeKey as keyof typeof kpi] as number
+                  return (
+                    <div key={m.id} className="rounded-lg border border-border/60 p-3 text-center">
+                      <p className="text-xs text-muted-foreground mb-1">{m.name}</p>
+                      <p className="text-2xl font-bold" style={{ color: m.color }}>{value}%</p>
+                      <div className="flex items-center justify-center gap-1 mt-1">
+                        {change >= 0 ? (
+                          <TrendingUp className="h-3 w-3 text-emerald-500" />
+                        ) : (
+                          <TrendingDown className="h-3 w-3 text-red-500" />
+                        )}
+                        <span className={`text-xs font-medium ${change >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+                          {change >= 0 ? "+" : ""}{change}% YoY
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Audience Profile */}
+          <Card className="border border-border shadow-sm">
+            <CardHeader className="pb-3 flex-row items-center gap-2">
+              <UserCircle className="h-4 w-4 text-[#006FCF]" />
+              <CardTitle className="text-sm font-semibold">{selected.name} - Audience Profile</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Demographics */}
+              <div className="grid grid-cols-4 gap-2">
+                {REGION_AUDIENCE[selected.id]?.demographics.map((d, i) => (
+                  <div key={i} className="text-center p-2 rounded-lg bg-slate-50">
+                    <p className="text-[10px] text-muted-foreground">{d.label}</p>
+                    <p className="text-sm font-bold text-[#006FCF]">{d.value}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Personas */}
+              <div className="space-y-3">
+                {REGION_AUDIENCE[selected.id]?.personas.map((p, i) => (
+                  <div key={i} className="rounded-lg border border-border/60 p-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#006FCF] text-white flex items-center justify-center text-sm font-bold shrink-0">
+                        {p.name[0]}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold">{p.name}</p>
+                        <p className="text-xs text-muted-foreground">{p.age} / {p.occupation}</p>
+                        <div className="flex flex-wrap gap-1 mt-1.5">
+                          {p.interests.map((int, j) => (
+                            <Badge key={j} variant="secondary" className="text-[10px] px-1.5 py-0">{int}</Badge>
+                          ))}
+                        </div>
+                        <p className="text-xs italic text-muted-foreground mt-2 border-l-2 border-[#006FCF] pl-2">
+                          &ldquo;{p.quote}&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* 下段: 3C分析 + ペルソナ分析 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

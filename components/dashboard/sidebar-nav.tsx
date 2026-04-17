@@ -62,8 +62,6 @@ const navSections = [
     items: [
       { title: "Market Overview",        icon: Globe,          href: "/dashboard" },
       { title: "Trend Analysis",         icon: TrendingUp,     href: "/dashboard/trends" },
-      { title: "KPI Tracking",           icon: BarChart2,      href: "/dashboard/kpi-tracking" },
-      { title: "Audience Profile",       icon: UserSearch,     href: "/dashboard/audience-profile" },
     ],
   },
   {
