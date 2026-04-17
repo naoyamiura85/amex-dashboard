@@ -181,7 +181,7 @@ export function ExperienceFlow() {
       <div className="flex items-center gap-6 px-5 py-3 border-b border-slate-100 text-xs text-slate-500">
         {[
           { label: "Tribe",        color: COL_COLORS.tribe },
-          { label: "タッチポイント", color: COL_COLORS.touchpoint },
+          { label: "ブランド接点", color: COL_COLORS.touchpoint },
           { label: "購買動機",       color: COL_COLORS.motive },
           { label: "パターン",       color: COL_COLORS.pattern },
         ].map(l => (
@@ -205,7 +205,7 @@ export function ExperienceFlow() {
         {/* 列ヘッダー */}
         {[
           { label: "Tribe",        x: colX.tribe,      anchor: "end"    },
-          { label: "タッチポイント", x: colX.touchpoint, anchor: "middle" },
+          { label: "ブランド接点", x: colX.touchpoint, anchor: "middle" },
           { label: "購買動機",       x: colX.motive,     anchor: "middle" },
           { label: "パターン",       x: colX.pattern,    anchor: "middle" },
         ].map(col => (
@@ -263,7 +263,7 @@ export function ExperienceFlow() {
           </g>
         ))}
 
-        {/* タッチポイント ノード */}
+        {/* ブランド接点 ノード */}
         {touchpointNodes.map(n => (
           <g
             key={n.id}
