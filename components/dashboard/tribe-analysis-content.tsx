@@ -460,7 +460,7 @@ const ALL_TRIBES: Tribe[] = [
     engagementScore: 78,
     spendPotential: 75,
     incomeLevel: "high",
-    description: "年3〜5回の長期滞在型リゾートを好む層。モルディブ・バリ・アマンリゾートなどを定宿とし、スパ・ヴィラ・プライベートプール付き宿泊が標準。",
+    description: "年3〜5回の長期滞在型リゾートを好む層。モルディブ・バ��・アマンリゾートなどを定宿とし、スパ・ヴィラ・プライベートプール付き宿泊が標準。",
     avgSpend: "¥58万/月",
     upgradeRate: "33%",
     churnRisk: "低",
@@ -773,6 +773,7 @@ function PersonaModal({ persona, open, onClose }: { persona: Persona | null; ope
 
 // ---- メインコンポーネント ----
 export function TribeAnalysisContent() {
+  const [viewMode, setViewMode] = useState<"matrix" | "cluster">("matrix")
   const [selectedTribe, setSelectedTribe] = useState<Tribe | null>(null)
   const [detailTab, setDetailTab] = useState("overview")
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null)
@@ -794,6 +795,21 @@ export function TribeAnalysisContent() {
     setSelectedTribe(prev => prev?.id === tribe.id ? null : tribe)
     setDetailTab("overview")
   }
+
+  // クラスターマップ用: バブル半径マッピング
+  const minR = 32, maxR = 72
+  const maxMem = Math.max(...ALL_TRIBES.map(t => t.members))
+  const getBubbleRadius = (members: number) =>
+    minR + ((members / maxMem) * (maxR - minR))
+
+  // 座標変換（データ範囲を正規化して全体に分散）
+  const margin = 10
+  const allX = ALL_TRIBES.map(t => t.spendPotential)
+  const allY = ALL_TRIBES.map(t => t.engagementScore)
+  const minX = Math.min(...allX), maxX = Math.max(...allX)
+  const minY = Math.min(...allY), maxY = Math.max(...allY)
+  const toX = (v: number) => margin + ((v - minX) / (maxX - minX)) * (100 - margin * 2)
+  const toY = (v: number) => (100 - margin) - ((v - minY) / (maxY - minY)) * (100 - margin * 2)
 
   const handlePersonaClick = (persona: Persona) => {
     setSelectedPersona(persona)
@@ -827,7 +843,7 @@ export function TribeAnalysisContent() {
           <span className="text-sm text-muted-foreground">推定会員</span>
         </div>
         {/* カテゴリ凡例 */}
-        <div className="ml-auto flex items-center gap-4">
+        <div className="flex items-center gap-4">
           {(Object.entries(CATEGORY_META) as [TribeCategory, typeof CATEGORY_META[TribeCategory]][]).map(([, meta]) => (
             <div key={meta.label} className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: meta.bg, borderColor: meta.color }} />
@@ -835,78 +851,194 @@ export function TribeAnalysisContent() {
             </div>
           ))}
         </div>
+        {/* ビュー切り替え */}
+        <div className="ml-auto flex gap-1 bg-muted p-1 rounded-lg">
+          <button
+            onClick={() => setViewMode("matrix")}
+            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+              viewMode === "matrix"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            マトリクス
+          </button>
+          <button
+            onClick={() => setViewMode("cluster")}
+            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+              viewMode === "cluster"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            クラスターマップ
+          </button>
+        </div>
       </div>
 
-      {/* メインレイアウト: マトリクス + 詳細パネル */}
+      {/* メインレイアウト: マトリクス/クラスター + 詳細パネル */}
       <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 320px" }}>
-        {/* マトリクス表：縦軸=平均世帯年収、横軸=ステージ */}
+        {/* ビューエリア */}
         <div className="min-w-0">
-          <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
-            {/* ヘッダー行 */}
-            <div className="grid grid-cols-[80px_repeat(4,1fr)]">
-              <div className="p-3 border-b border-r border-border bg-slate-50">
-                <p className="text-[10px] text-muted-foreground text-center">ステージ</p>
-                <p className="text-[10px] text-muted-foreground text-center">世帯年収</p>
-              </div>
-              {STAGES.map((s) => (
-                <div key={s.key} className={`p-3 border-b border-r last:border-r-0 border-border text-center ${stageBg[s.key]}`}>
-                  <div className="flex items-center justify-center gap-1 mb-0.5">
-                    <div className={`w-2 h-2 rounded-full ${s.key === "bc_low" ? "bg-slate-400" : "bg-[#006FCF]"}`} />
+          {viewMode === "matrix" ? (
+            /* マトリクス表：縦軸=平均世帯年収、横軸=ステージ */
+            <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+              {/* ヘッダー行 */}
+              <div className="grid grid-cols-[80px_repeat(4,1fr)]">
+                <div className="p-3 border-b border-r border-border bg-slate-50">
+                  <p className="text-[10px] text-muted-foreground text-center">ステージ</p>
+                  <p className="text-[10px] text-muted-foreground text-center">世帯年収</p>
+                </div>
+                {STAGES.map((s) => (
+                  <div key={s.key} className={`p-3 border-b border-r last:border-r-0 border-border text-center ${stageBg[s.key]}`}>
+                    <div className="flex items-center justify-center gap-1 mb-0.5">
+                      <div className={`w-2 h-2 rounded-full ${s.key === "bc_low" ? "bg-slate-400" : "bg-[#006FCF]"}`} />
+                    </div>
+                    <p className={`text-xs font-bold ${s.key === "bc_low" ? "text-slate-600" : "text-[#006FCF]"}`}>{s.label}</p>
                   </div>
-                  <p className={`text-xs font-bold ${s.key === "bc_low" ? "text-slate-600" : "text-[#006FCF]"}`}>{s.label}</p>
+                ))}
+              </div>
+              {/* ボディ行 */}
+              {INCOME_LEVELS.map((income) => (
+                <div key={income.key} className="grid grid-cols-[80px_repeat(4,1fr)]">
+                  <div className="p-3 border-r border-b last:border-b-0 border-border bg-slate-50 flex flex-col items-center justify-center">
+                    <span className="text-xl font-bold text-[#006FCF]">{income.label}</span>
+                    <span className="text-[10px] text-muted-foreground">{income.sublabel}</span>
+                  </div>
+                  {STAGES.map((stage) => {
+                    const tribes = getTribesForCell(income.key, stage.key)
+                    return (
+                      <div
+                        key={stage.key}
+                        className={`p-2 border-r border-b last:border-r-0 last:border-b-0 border-border/50 min-h-[120px] ${stageBg[stage.key]}`}
+                      >
+                        <div className="flex flex-wrap gap-1.5">
+                          {tribes.map((tribe) => {
+                            const isSelected = selectedTribe?.id === tribe.id
+                            const catColor = CATEGORY_META[tribe.category].color
+                            const catBg = CATEGORY_META[tribe.category].bg
+                            return (
+                              <button
+                                key={tribe.id}
+                                onClick={() => handleTribeClick(tribe)}
+                                className={`px-2 py-1 rounded-full text-[10px] font-medium transition-all ${
+                                  isSelected
+                                    ? "ring-2 ring-offset-1 shadow-md scale-105"
+                                    : "hover:scale-105 hover:shadow-sm"
+                                }`}
+                                style={{
+                                  backgroundColor: isSelected ? catColor : catBg,
+                                  color: isSelected ? "white" : catColor,
+                                  borderWidth: 1,
+                                  borderColor: catColor,
+                                  borderStyle: "solid",
+                                }}
+                              >
+                                {tribe.name.replace(/派$/, "")}
+                              </button>
+                            )
+                          })}
+                          {tribes.length === 0 && (
+                            <span className="text-[10px] text-muted-foreground/50">-</span>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               ))}
             </div>
-            {/* ボディ行 */}
-            {INCOME_LEVELS.map((income) => (
-              <div key={income.key} className="grid grid-cols-[80px_repeat(4,1fr)]">
-                <div className="p-3 border-r border-b last:border-b-0 border-border bg-slate-50 flex flex-col items-center justify-center">
-                  <span className="text-xl font-bold text-[#006FCF]">{income.label}</span>
-                  <span className="text-[10px] text-muted-foreground">{income.sublabel}</span>
+          ) : (
+            /* クラスターマップ */
+            <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+              {/* 上部ラベル */}
+              <div className="flex justify-between px-10 pt-3 pb-0 text-[10px] text-muted-foreground font-medium">
+                <span>高エンゲージメント・低利用額</span>
+                <span>高エンゲージメント・高利用額</span>
+              </div>
+
+              {/* マップ全体 */}
+              <div className="relative mx-6 my-2" style={{ height: 460 }}>
+                {/* 象限グリッド */}
+                <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 pointer-events-none">
+                  <div className="border-r border-b border-dashed border-border/60 bg-sky-50/30" />
+                  <div className="border-b border-dashed border-border/60 bg-primary/[0.04]" />
+                  <div className="border-r border-dashed border-border/60 bg-muted/20" />
+                  <div className="bg-blue-50/40" />
                 </div>
-                {STAGES.map((stage) => {
-                  const tribes = getTribesForCell(income.key, stage.key)
+                {/* 中心線 */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border/40" />
+                  <div className="absolute top-1/2 left-0 right-0 h-px bg-border/40" />
+                </div>
+                {/* 縦軸ラベル */}
+                <div
+                  className="absolute text-[10px] text-muted-foreground font-medium whitespace-nowrap pointer-events-none select-none"
+                  style={{ left: -36, top: "50%", transform: "rotate(-90deg) translateX(-50%)", transformOrigin: "left center" }}
+                >
+                  エンゲージメントスコア →
+                </div>
+
+                {/* バブル */}
+                {ALL_TRIBES.map((tribe) => {
+                  const r = getBubbleRadius(tribe.members)
+                  const x = toX(tribe.spendPotential)
+                  const y = toY(tribe.engagementScore)
+                  const isSelected = selectedTribe?.id === tribe.id
+                  const catColor = CATEGORY_META[tribe.category].color
+                  const catBg    = CATEGORY_META[tribe.category].bg
                   return (
-                    <div
-                      key={stage.key}
-                      className={`p-2 border-r border-b last:border-r-0 last:border-b-0 border-border/50 min-h-[120px] ${stageBg[stage.key]}`}
+                    <button
+                      key={tribe.id}
+                      onClick={() => handleTribeClick(tribe)}
+                      className="absolute group focus:outline-none"
+                      style={{
+                        left: `${x}%`,
+                        top: `${y}%`,
+                        width: r * 2,
+                        height: r * 2,
+                        marginLeft: -r,
+                        marginTop: -r,
+                        zIndex: isSelected ? 10 : 1,
+                      }}
                     >
-                      <div className="flex flex-wrap gap-1.5">
-                        {tribes.map((tribe) => {
-                          const isSelected = selectedTribe?.id === tribe.id
-                          const catColor = CATEGORY_META[tribe.category].color
-                          const catBg = CATEGORY_META[tribe.category].bg
-                          return (
-                            <button
-                              key={tribe.id}
-                              onClick={() => handleTribeClick(tribe)}
-                              className={`px-2 py-1 rounded-full text-[10px] font-medium transition-all ${
-                                isSelected
-                                  ? "ring-2 ring-offset-1 shadow-md scale-105"
-                                  : "hover:scale-105 hover:shadow-sm"
-                              }`}
-                              style={{
-                                backgroundColor: isSelected ? catColor : catBg,
-                                color: isSelected ? "white" : catColor,
-                                borderWidth: 1,
-                                borderColor: catColor,
-                                borderStyle: "solid",
-                              }}
-                            >
-                              {tribe.name.replace(/派$/, "")}
-                            </button>
-                          )
-                        })}
-                        {tribes.length === 0 && (
-                          <span className="text-[10px] text-muted-foreground/50">-</span>
-                        )}
+                      <div
+                        className={`w-full h-full rounded-full flex flex-col items-center justify-center transition-all duration-200 ${
+                          isSelected
+                            ? "ring-2 ring-offset-2 scale-110 shadow-lg"
+                            : "hover:scale-105 hover:shadow-md"
+                        }`}
+                        style={{
+                          backgroundColor: isSelected ? catColor : catBg,
+                          borderWidth: 1.5,
+                          borderColor: catColor,
+                          borderStyle: "solid",
+                        }}
+                      >
+                        <span className="text-[10px] font-bold leading-tight text-center px-1.5"
+                          style={{ color: isSelected ? "white" : catColor }}
+                        >
+                          {tribe.name.replace(/派$/, "")}
+                        </span>
+                        <span className="text-[9px] mt-0.5"
+                          style={{ color: isSelected ? "rgba(255,255,255,0.8)" : catColor + "bb" }}
+                        >
+                          {tribe.members}万人
+                        </span>
                       </div>
-                    </div>
+                    </button>
                   )
                 })}
               </div>
-            ))}
-          </div>
+
+              {/* 下部ラベル */}
+              <div className="flex justify-between px-10 pt-0 pb-2 text-[10px] text-muted-foreground font-medium border-t border-border/30">
+                <span>低エンゲージメント・低利用額</span>
+                <span className="flex-1 text-center">← 利用額ポテンシャル →</span>
+                <span>低エンゲージメント・高利用額</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 詳細パネル：常に320px幅を確保し、選択なし時はプレースホルダーを表示 */}
@@ -917,7 +1049,7 @@ export function TribeAnalysisContent() {
                 <Network className="h-5 w-5 text-muted-foreground/60" />
               </div>
               <p className="text-sm font-medium">トライブを選択してください</p>
-              <p className="text-xs text-muted-foreground/70">マトリクス上のトライブをクリックすると詳細が表示されます</p>
+              <p className="text-xs text-muted-foreground/70">{viewMode === "matrix" ? "マトリクス" : "マップ"}上のトライブをクリックすると詳細が表示されます</p>
             </div>
           ) : (
           <>
