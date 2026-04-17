@@ -357,7 +357,7 @@ export function AmexHomeContent() {
         </Card>
       </div>
 
-      {/* KPIトラッキング + Audience Profile（常に表示、選択地域または全世界） */}
+      {/* KPIトラッキング + 3C分析 / Audience Profile（常に表示、選択地域または全世界） */}
       {(() => {
         const regionId = selected?.id ?? "global"
         const regionName = selected?.name ?? "全世界"
@@ -365,39 +365,77 @@ export function AmexHomeContent() {
         const audience = REGION_AUDIENCE[regionId]
         return (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* KPIトラッキング */}
-            <Card className="border border-border shadow-sm">
-              <CardHeader className="pb-3 flex-row items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-[#006FCF]" />
-                <CardTitle className="text-sm font-semibold">{regionName} - KPI Tracking</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-3 gap-3">
-                  {KPI_METRICS.map((m) => {
-                    const value = kpi[m.key as keyof typeof kpi] as number
-                    const change = kpi[m.changeKey as keyof typeof kpi] as number
+            {/* 左カラム: KPIトラッキング + 3C分析 */}
+            <div className="space-y-4">
+              {/* KPIトラッキング */}
+              <Card className="border border-border shadow-sm">
+                <CardHeader className="pb-3 flex-row items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-[#006FCF]" />
+                  <CardTitle className="text-sm font-semibold">{regionName} - KPI Tracking</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-3 gap-3">
+                    {KPI_METRICS.map((m) => {
+                      const value = kpi[m.key as keyof typeof kpi] as number
+                      const change = kpi[m.changeKey as keyof typeof kpi] as number
+                      return (
+                        <div key={m.id} className="rounded-lg border border-border/60 p-3 text-center">
+                          <p className="text-xs text-muted-foreground mb-1">{m.name}</p>
+                          <p className="text-2xl font-bold" style={{ color: m.color }}>{value}%</p>
+                          <div className="flex items-center justify-center gap-1 mt-1">
+                            {change >= 0 ? (
+                              <TrendingUp className="h-3 w-3 text-emerald-500" />
+                            ) : (
+                              <TrendingDown className="h-3 w-3 text-red-500" />
+                            )}
+                            <span className={`text-xs font-medium ${change >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+                              {change >= 0 ? "+" : ""}{change}% YoY
+                            </span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 3C分析インサイト */}
+              <Card className="border border-border shadow-sm">
+                <CardHeader className="pb-3 flex-row items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Globe className="h-4 w-4 text-[#006FCF]" />
+                    <CardTitle className="text-sm font-semibold">{regionName} - 3C分析インサイト</CardTitle>
+                  </div>
+                  <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {THREE_C.map((c) => {
+                    const Icon = c.icon
                     return (
-                      <div key={m.id} className="rounded-lg border border-border/60 p-3 text-center">
-                        <p className="text-xs text-muted-foreground mb-1">{m.name}</p>
-                        <p className="text-2xl font-bold" style={{ color: m.color }}>{value}%</p>
-                        <div className="flex items-center justify-center gap-1 mt-1">
-                          {change >= 0 ? (
-                            <TrendingUp className="h-3 w-3 text-emerald-500" />
-                          ) : (
-                            <TrendingDown className="h-3 w-3 text-red-500" />
-                          )}
-                          <span className={`text-xs font-medium ${change >= 0 ? "text-emerald-500" : "text-red-500"}`}>
-                            {change >= 0 ? "+" : ""}{change}% YoY
-                          </span>
+                      <div
+                        key={c.key}
+                        className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
+                            <Icon className={`h-3.5 w-3.5 ${c.color}`} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <p className="text-xs font-bold text-foreground">{c.label}</p>
+                              <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
+                            </div>
+                            <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
+                          </div>
                         </div>
                       </div>
                     )
                   })}
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
 
-            {/* Audience Profile + ペルソナ分析 統合 */}
+            {/* 右カラム: Audience Profile + ペルソナ分析 */}
             <Card className="border border-border shadow-sm">
               <CardHeader className="pb-3 flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -450,41 +488,6 @@ export function AmexHomeContent() {
           </div>
         )
       })()}
-
-      {/* 下段: 3C分析インサイト */}
-      <Card className="border border-border shadow-sm">
-        <CardHeader className="pb-3 flex-row items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Globe className="h-4 w-4 text-[#006FCF]" />
-            <CardTitle className="text-sm font-semibold">全世界 - 3C分析インサイト</CardTitle>
-          </div>
-          <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {THREE_C.map((c) => {
-            const Icon = c.icon
-            return (
-              <div
-                key={c.key}
-                className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
-              >
-                <div className="flex items-start gap-3">
-                  <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
-                    <Icon className={`h-3.5 w-3.5 ${c.color}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <p className="text-xs font-bold text-foreground">{c.label}</p>
-                      <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </CardContent>
-      </Card>
     </div>
   )
 }
