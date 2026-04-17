@@ -76,7 +76,7 @@ const navSections = [
   },
   {
     label: "JAPAN BRAND PLAN",
-    defaultOpen: false,
+    defaultOpen: true,
     items: [
       { title: "Scenario Generator（準備中）", icon: Target,           href: "#", disabled: true },
       { title: "Macro Simulation",            icon: SlidersHorizontal, href: "/dashboard/macro-simulation" },
