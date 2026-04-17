@@ -121,8 +121,8 @@ function markerRadius(sizeNum: number, min: number, max: number): number {
 }
 
 // サブ地域用のバブルサイズ（smaller range）
-const SUB_MIN = 18
-const SUB_MAX = 46
+const SUB_MIN = 12
+const SUB_MAX = 32
 function subRadius(sizeNum: number, min: number, max: number): number {
   return SUB_MIN + ((sizeNum - min) / (max - min)) * (SUB_MAX - SUB_MIN)
 }
@@ -211,7 +211,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
 
       <ComposableMap
         projection="geoMercator"
-        projectionConfig={{ scale: 160, center: [40, 45] }}
+        projectionConfig={{ scale: 190, center: [40, 45] }}
         style={{ width: "100%", height: "100%" }}
       >
         <ZoomableGroup
@@ -298,7 +298,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
               const radius = subRadius(sub.sizeNum, sMin, sMax)
               return (
                 <Marker key={i} coordinates={sub.coordinates} style={{ cursor: "default" }}>
-                  {/* パルスリン��� */}
+                  {/* パルスリン���� */}
                   <circle r={radius + 5} fill="none" stroke={drillConfig.color} strokeWidth={1} opacity={0.35} style={{ pointerEvents: "none" }}>
                     <animate attributeName="r" from={radius + 5} to={radius + 12} dur="2s" repeatCount="indefinite" />
                     <animate attributeName="opacity" from={0.35} to={0} dur="2s" repeatCount="indefinite" />
