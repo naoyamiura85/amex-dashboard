@@ -112,7 +112,7 @@ const COUNTRY_TO_REGION: Record<string, string> = {
   "036": "oc", "554": "oc", "598": "oc",
 }
 
-const GLOBAL_CONFIG = { center: [0, 40] as [number, number], zoom: 1.0 }
+const GLOBAL_CONFIG = { center: [40, 40] as [number, number], zoom: 1.0 }
 
 const MARKER_MIN = 38
 const MARKER_MAX = 85
@@ -210,8 +210,8 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
       )}
 
       <ComposableMap
-        projection="geoNaturalEarth1"
-        projectionConfig={{ scale: 220, center: [0, 40], rotate: [-140, 0, 0] }}
+        projection="geoMercator"
+        projectionConfig={{ scale: 120, center: [40, 40] }}
         style={{ width: "100%", height: "100%" }}
       >
         <ZoomableGroup
