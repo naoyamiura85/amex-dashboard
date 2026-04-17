@@ -182,7 +182,7 @@ export function ExperienceFlow() {
         {[
           { label: "Tribe",        color: COL_COLORS.tribe },
           { label: "ブランド接点", color: COL_COLORS.touchpoint },
-          { label: "購買動機",       color: COL_COLORS.motive },
+          { label: "申込み動機",       color: COL_COLORS.motive },
           { label: "パターン",       color: COL_COLORS.pattern },
         ].map(l => (
           <span key={l.label} className="flex items-center gap-1.5">
@@ -206,7 +206,7 @@ export function ExperienceFlow() {
         {[
           { label: "Tribe",        x: colX.tribe,      anchor: "end"    },
           { label: "ブランド接点", x: colX.touchpoint, anchor: "middle" },
-          { label: "購買動機",       x: colX.motive,     anchor: "middle" },
+          { label: "申込み動機",       x: colX.motive,     anchor: "middle" },
           { label: "パターン",       x: colX.pattern,    anchor: "middle" },
         ].map(col => (
           <text
@@ -293,7 +293,7 @@ export function ExperienceFlow() {
           </g>
         ))}
 
-        {/* 購買動機 ノード */}
+        {/* 申込み動機 ノード */}
         {motiveNodes.map(n => (
           <g
             key={n.id}
