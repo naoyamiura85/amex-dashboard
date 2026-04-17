@@ -74,33 +74,35 @@ const COMPETITOR_DATA = [
   { name: "Others",     share:  8, color: "#A0AEC0" },
 ]
 
-// ─── 3C インサイト ────────────────────────────────────────────────────────────
-const THREE_C = [
-  {
-    key: "Customer",
-    label: "Customer（顧客）",
-    icon: Users,
-    color: "text-[#006FCF]",
-    bg: "bg-[#E6F2FF]",
-    text: "プレミアム富裕層が前年比+25.5%成長。若年富裕層の「体験消費」トレンドが定着しており、旅行・ダイニングへの高額支出が継続拡大しています。",
+// ─── 3C インサイト（地域別）────────────────────────────────────────────────────
+const THREE_C_BASE = {
+  Customer: { key: "Customer", label: "Customer（顧客）", icon: Users, color: "text-[#006FCF]", bg: "bg-[#E6F2FF]" },
+  Company: { key: "Company", label: "Company（自社）", icon: Building2, color: "text-[#B4975A]", bg: "bg-amber-50" },
+  Competitor: { key: "Competitor", label: "Competitor（競合）", icon: TrendingUp, color: "text-rose-600", bg: "bg-rose-50" },
+}
+
+const REGION_THREE_C: Record<string, { Customer: string; Company: string; Competitor: string }> = {
+  global: {
+    Customer: "プレミアム富裕層が前年比+25.5%成長。若年富裕層の「体験消費」トレンドが定着しており、旅行・ダイニングへの高額支出が継続拡大しています。",
+    Company: "AMEXのグローバル会員数が1,158万人に到達。アジア太平洋・中東での新規獲得を加速しており、センチュリオン会員は過去最高水準を更新。",
+    Competitor: "Visaがプレミアム領域に参入強化。一方でAMEXの会員ロイヤルティ指標（NPS: 72）は業界トップを維持しており、プレミアム特典での差別化が奏功。",
   },
-  {
-    key: "Company",
-    label: "Company（自社）",
-    icon: Building2,
-    color: "text-[#B4975A]",
-    bg: "bg-amber-50",
-    text: "AMEXのグローバル会員数が1,158万人に到達。アジア太平洋・中東での新規獲得を加速しており、センチュリオン会員は過去最高水準を更新。",
+  eu: {
+    Customer: "欧州の富裕層は「サステナブルラグジュアリー」志向が顕著。環境配慮型の旅行・ダイニング体験への支出が前年比+32%増加。ミレニアル富裕層のカード保有意向が上昇。",
+    Company: "欧州AMEX会員数は285万人。英国・フランス・ドイツでプラチナ会員が+15%成長。EUの決済規制対応でコンプライアンス体制を強化中。",
+    Competitor: "Mastercardが欧州ラグジュアリー市場でシェア拡大。AMEXは空港ラウンジ・ホテル特典で差別化し、NPS 68を維持。提携レストラン網の拡充が課題。",
   },
-  {
-    key: "Competitor",
-    label: "Competitor（競合）",
-    icon: TrendingUp,
-    color: "text-rose-600",
-    bg: "bg-rose-50",
-    text: "Visaがプレミアム領域に参入強化。一方でAMEXの会員ロイヤルティ指標（NPS: 72）は業界トップを維持しており、プレミアム特典での差別化が奏功。",
+  jp: {
+    Customer: "日本の富裕層は「静かなラグジュアリー」を志向。高級旅館・ミシュラン店への支出が堅調で、40代経営者層のセンチュリオン申込が+28%増加。インバウンド回復で国内消費も活性化。",
+    Company: "日本AMEX会員数は158万人、プラチナ・センチュリオン比率が世界最高水準。ダイナースとの提携強化で加盟店網を拡大。ゴールド層からのアップグレード促進が成長ドライバー。",
+    Competitor: "JCBがプレミアム領域に注力、ザ・クラス会員を+12%増加。Visaは富裕層向けコンシェルジュを開始。AMEXはNPS 75で首位を維持し、体験型特典での差別化を継続。",
   },
-]
+  na: {
+    Customer: "北米の富裕層は「体験への投資」が加速。プライベートジェット・ヨットチャーター利用が前年比+45%増。Z世代富裕層（25-35歳）のプラチナ申込が急増中。",
+    Company: "北米AMEX会員数は715万人で過去最高。センチュリオン会員の平均利用額が$285Kに到達。小規模ビジネス向けカードの新規獲得も好調で、B2B決済市場でのシェア拡大中。",
+    Competitor: "Chase Sapphireが若年富裕層を積極獲得。Citi Prestigeはホテル特典を強化。AMEXはNPS 74を維持し、MRポイントの柔軟性とコンシェルジュ品質で競争優位を確保。",
+  },
+}
 
 // ─── 地域別KPIデータ ───────────────────────────────────────────────────────────
 const REGION_KPI: Record<string, { ar: number; ar_change: number; ltcs: number; ltcs_change: number; bc: number; bc_change: number }> = {
@@ -167,50 +169,6 @@ const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: st
     ],
   },
 }
-
-// ─── ペルソナ ─────────────────────────────────────────────────────────────────
-const PERSONAS = [
-  {
-    name: "田中 雅子",
-    age: 42,
-    role: "外資系コンサル パートナー",
-    location: "東京都港区",
-    quote: "出張が月15日以上。ラウンジと優先搭乗は外せません。出費は惜しまないけど、それ以上の価値が欲しい。",
-    quoteEn: "Business travel 15+ days/month. Lounge and priority boarding are must-haves.",
-    initials: "TM",
-    color: "#006FCF",
-  },
-  {
-    name: "James Carter",
-    age: 38,
-    role: "Senior VP, Private Banking",
-    location: "New York, USA",
-    quote: "My Centurion card is the first thing clients notice. Status matters in my world.",
-    quoteEn: null,
-    initials: "JC",
-    color: "#B4975A",
-  },
-  {
-    name: "Sophie Renard",
-    age: 35,
-    role: "Creative Director",
-    location: "Paris, France",
-    quote: "Je voyage pour l\u2019art et la gastronomie. Les avantages AMEX me donnent acc\u00e8s \u00e0 l\u2019inaccessible.",
-    quoteEn: "I travel for art and gastronomy. AMEX perks give me access to the inaccessible.",
-    initials: "SR",
-    color: "#38A169",
-  },
-  {
-    name: "\u9648 \u660e\u8fdc",
-    age: 44,
-    role: "\u79d1\u6280\u521b\u4e1a\u8005 / Tech Founder",
-    location: "\u4e0a\u6d77, China",
-    quote: "\u56fd\u9645\u5546\u52a1\u4e2d\uff0c\u7f8e\u56fd\u8fd0\u901a\u5361\u662f\u8eab\u4efd\u4e0e\u4fe1\u8d56\u7684\u8c61\u5f81\u3002\u9ad8\u7aef\u670d\u52a1\u662f\u6211\u9009\u62e9\u7684\u6838\u5fc3\u3002",
-    quoteEn: "In international business, AMEX is a symbol of status and trust.",
-    initials: "CM",
-    color: "#E53E3E",
-  },
-]
 
 // ─── コンポーネント ───────────────────────────────────────────────────────────
 export function AmexHomeContent() {
@@ -409,23 +367,26 @@ export function AmexHomeContent() {
                   <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {THREE_C.map((c) => {
-                    const Icon = c.icon
+                  {(["Customer", "Company", "Competitor"] as const).map((cKey) => {
+                    const base = THREE_C_BASE[cKey]
+                    const Icon = base.icon
+                    const regionThreeC = REGION_THREE_C[regionId]
+                    const text = regionThreeC[cKey]
                     return (
                       <div
-                        key={c.key}
+                        key={cKey}
                         className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
                       >
                         <div className="flex items-start gap-3">
-                          <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
-                            <Icon className={`h-3.5 w-3.5 ${c.color}`} />
+                          <div className={`p-1.5 rounded-lg ${base.bg} shrink-0`}>
+                            <Icon className={`h-3.5 w-3.5 ${base.color}`} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1.5">
-                              <p className="text-xs font-bold text-foreground">{c.label}</p>
+                              <p className="text-xs font-bold text-foreground">{base.label}</p>
                               <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
                             </div>
-                            <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
+                            <p className="text-xs text-muted-foreground leading-relaxed">{text}</p>
                           </div>
                         </div>
                       </div>
@@ -456,32 +417,42 @@ export function AmexHomeContent() {
                 </div>
                 {/* ペルソナ分析 */}
                 <div className="space-y-0 divide-y divide-border/60">
-                  {PERSONAS.map((p) => (
-                    <div key={p.name} className="py-3 first:pt-0">
-                      <div className="flex gap-3">
-                        <div
-                          className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
-                          style={{ backgroundColor: p.color }}
-                        >
-                          {p.initials}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-bold text-foreground">{p.name}</span>
-                            <span className="text-xs text-muted-foreground">{p.age}歳 · {p.role}</span>
+                  {audience?.personas.map((p, idx) => {
+                    const colors = ["#006FCF", "#B4975A", "#38A169", "#E53E3E"]
+                    const color = colors[idx % colors.length]
+                    const initials = p.name.split(" ").map(n => n[0]).join("").slice(0, 2)
+                    return (
+                      <div key={p.name} className="py-3 first:pt-0">
+                        <div className="flex gap-3">
+                          <div
+                            className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
+                            style={{ backgroundColor: color }}
+                          >
+                            {initials}
                           </div>
-                          <p className="text-[11px] text-muted-foreground mt-0.5">{p.location}</p>
-                          <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
-                            &ldquo;{p.quote}&rdquo;
-                          </p>
-                          <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5 hover:text-foreground">
-                            <Bookmark className="h-3 w-3" />
-                            保存
-                          </button>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-sm font-bold text-foreground">{p.name}</span>
+                              <span className="text-xs text-muted-foreground">{p.age} · {p.occupation}</span>
+                            </div>
+                            <p className="text-[11px] text-muted-foreground mt-0.5">年収: {p.income}</p>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {p.interests.map((interest) => (
+                                <Badge key={interest} variant="secondary" className="text-[10px] px-1.5 py-0">{interest}</Badge>
+                              ))}
+                            </div>
+                            <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
+                              &ldquo;{p.quote}&rdquo;
+                            </p>
+                            <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5 hover:text-foreground">
+                              <Bookmark className="h-3 w-3" />
+                              保存
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </CardContent>
             </Card>
