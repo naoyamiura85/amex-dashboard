@@ -9,18 +9,6 @@ import { useState } from "react"
 import { Play, RotateCcw, TrendingUp, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-// メディアチャネルタブ定義
-const MEDIA_CHANNELS = [
-  { key: "tv",      label: "TV" },
-  { key: "ctv",     label: "CTV" },
-  { key: "ooh",     label: "OOH" },
-  { key: "olv",     label: "OLV" },
-  { key: "social",  label: "Social" },
-  { key: "audio",   label: "Audio" },
-  { key: "display", label: "Display" },
-] as const
-type MediaChannelKey = typeof MEDIA_CHANNELS[number]["key"]
-
 // マトリクス用定数
 const stages = [
   { key: "prospect", label: "Brand Consideration 低", sub: "890万人" },
@@ -49,7 +37,6 @@ const stageBg: Record<string, { cell: string; cellHover: string }> = {
 }
 
 export default function MacroSimulationPage() {
-  const [selectedChannel, setSelectedChannel] = useState<MediaChannelKey>("tv")
   const [adSpend, setAdSpend] = useState(100)
   const [isSimulated, setIsSimulated] = useState(false)
 
@@ -80,26 +67,8 @@ export default function MacroSimulationPage() {
         breadcrumb={["Plan Simulation", "Macro Simulation"]}
       />
       <div className="p-6 space-y-6">
-        {/* メディアチャネルタブ */}
-        <div className="flex">
-          {MEDIA_CHANNELS.map((channel) => (
-            <button
-              key={channel.key}
-              onClick={() => { setSelectedChannel(channel.key); setIsSimulated(false) }}
-              className={cn(
-                "flex-1 px-4 py-2.5 text-sm font-semibold transition-all border-b-2",
-                selectedChannel === channel.key
-                  ? "bg-[#006FCF] text-white border-[#006FCF]"
-                  : "bg-[#006FCF]/90 text-white/80 border-[#006FCF]/90 hover:bg-[#006FCF] hover:text-white"
-              )}
-            >
-              {channel.label}
-            </button>
-          ))}
-        </div>
-
         <p className="text-sm text-muted-foreground">
-          {MEDIA_CHANNELS.find(c => c.key === selectedChannel)?.label}チャネルの9セグメント変動と「Ad Recall」「Application」のリフトをシミュレート
+          9セグメントの変動と「Ad Recall」「Application」のリフトをシミュレート
         </p>
 
         {/* コントロール */}

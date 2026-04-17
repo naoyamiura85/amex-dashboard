@@ -14,6 +14,20 @@ import {
   Legend,
 } from "recharts"
 
+import { cn } from "@/lib/utils"
+
+// メディアチャネルタブ定義
+const MEDIA_TABS = [
+  { key: "tv",      label: "TV" },
+  { key: "ctv",     label: "CTV" },
+  { key: "ooh",     label: "OOH" },
+  { key: "olv",     label: "OLV" },
+  { key: "social",  label: "Social" },
+  { key: "audio",   label: "Audio" },
+  { key: "display", label: "Display" },
+] as const
+type MediaTabKey = typeof MEDIA_TABS[number]["key"]
+
 interface MediaChannel {
   id: string
   name: string
@@ -22,37 +36,74 @@ interface MediaChannel {
   roi: number
 }
 
-const INITIAL_CHANNELS: MediaChannel[] = [
-  { id: "tv", name: "TV", allocation: 30, color: "#006FCF", roi: 1.8 },
-  { id: "digital", name: "デジタル広告", allocation: 35, color: "#B4975A", roi: 2.4 },
-  { id: "social", name: "SNS", allocation: 15, color: "#00175A", roi: 2.1 },
-  { id: "ooh", name: "OOH", allocation: 10, color: "#38A169", roi: 1.5 },
-  { id: "print", name: "プリント", allocation: 5, color: "#E53E3E", roi: 1.2 },
-  { id: "events", name: "イベント", allocation: 5, color: "#805AD5", roi: 2.8 },
-]
+// チャネルごとのサブ配分データ
+const CHANNEL_ALLOCATIONS: Record<MediaTabKey, MediaChannel[]> = {
+  tv: [
+    { id: "prime", name: "プライムタイム", allocation: 40, color: "#006FCF", roi: 1.8 },
+    { id: "daytime", name: "デイタイム", allocation: 25, color: "#B4975A", roi: 1.5 },
+    { id: "late", name: "深夜帯", allocation: 20, color: "#00175A", roi: 1.3 },
+    { id: "weekend", name: "週末枠", allocation: 15, color: "#38A169", roi: 2.0 },
+  ],
+  ctv: [
+    { id: "streaming", name: "ストリーミング", allocation: 50, color: "#006FCF", roi: 2.4 },
+    { id: "vod", name: "VOD", allocation: 30, color: "#B4975A", roi: 2.2 },
+    { id: "live", name: "ライブ配信", allocation: 20, color: "#00175A", roi: 1.9 },
+  ],
+  ooh: [
+    { id: "billboard", name: "ビルボード", allocation: 35, color: "#006FCF", roi: 1.5 },
+    { id: "transit", name: "交通広告", allocation: 35, color: "#B4975A", roi: 1.8 },
+    { id: "digital_ooh", name: "デジタルOOH", allocation: 30, color: "#00175A", roi: 2.1 },
+  ],
+  olv: [
+    { id: "youtube", name: "YouTube", allocation: 40, color: "#006FCF", roi: 2.6 },
+    { id: "preroll", name: "プレロール", allocation: 30, color: "#B4975A", roi: 2.3 },
+    { id: "instream", name: "インストリーム", allocation: 30, color: "#00175A", roi: 2.1 },
+  ],
+  social: [
+    { id: "instagram", name: "Instagram", allocation: 35, color: "#006FCF", roi: 2.5 },
+    { id: "twitter", name: "X (Twitter)", allocation: 25, color: "#B4975A", roi: 2.0 },
+    { id: "facebook", name: "Facebook", allocation: 20, color: "#00175A", roi: 1.8 },
+    { id: "tiktok", name: "TikTok", allocation: 20, color: "#38A169", roi: 2.8 },
+  ],
+  audio: [
+    { id: "spotify", name: "Spotify", allocation: 45, color: "#006FCF", roi: 2.2 },
+    { id: "podcast", name: "ポッドキャスト", allocation: 35, color: "#B4975A", roi: 2.5 },
+    { id: "radio", name: "ラジオ", allocation: 20, color: "#00175A", roi: 1.6 },
+  ],
+  display: [
+    { id: "programmatic", name: "プログラマティック", allocation: 40, color: "#006FCF", roi: 2.1 },
+    { id: "native", name: "ネイティブ広告", allocation: 35, color: "#B4975A", roi: 2.4 },
+    { id: "banner", name: "バナー", allocation: 25, color: "#00175A", roi: 1.7 },
+  ],
+}
 
 export default function MediaAllocationPage() {
-  const [channels, setChannels] = useState(INITIAL_CHANNELS)
+  const [selectedTab, setSelectedTab] = useState<MediaTabKey>("tv")
+  const [channelAllocations, setChannelAllocations] = useState(CHANNEL_ALLOCATIONS)
   const totalBudget = 120 // 億円
+  
+  const channels = channelAllocations[selectedTab]
 
   const handleAllocationChange = (id: string, value: number[]) => {
     const newValue = value[0]
-    const oldChannel = channels.find((c) => c.id === id)
+    const currentChannels = channelAllocations[selectedTab]
+    const oldChannel = currentChannels.find((c) => c.id === id)
     if (!oldChannel) return
     
     const diff = newValue - oldChannel.allocation
-    const others = channels.filter((c) => c.id !== id)
+    const others = currentChannels.filter((c) => c.id !== id)
     const totalOthers = others.reduce((sum, c) => sum + c.allocation, 0)
     
     if (totalOthers - diff < 0) return
     
-    setChannels(
-      channels.map((c) => {
+    setChannelAllocations({
+      ...channelAllocations,
+      [selectedTab]: currentChannels.map((c) => {
         if (c.id === id) return { ...c, allocation: newValue }
         const ratio = c.allocation / totalOthers
         return { ...c, allocation: Math.max(0, c.allocation - diff * ratio) }
       })
-    )
+    })
   }
 
   const pieData = channels.map((c) => ({ name: c.name, value: c.allocation, color: c.color }))
@@ -64,15 +115,34 @@ export default function MediaAllocationPage() {
         breadcrumb={["Japan Brand Plan", "Media Allocation"]}
       />
       <div className="p-6 space-y-6">
+        {/* メディアチャネルタブ */}
+        <div className="flex rounded-lg overflow-hidden border border-[#006FCF]">
+          {MEDIA_TABS.map((tab, index) => (
+            <button
+              key={tab.key}
+              onClick={() => setSelectedTab(tab.key)}
+              className={cn(
+                "flex-1 px-4 py-2.5 text-sm font-semibold transition-all",
+                index !== MEDIA_TABS.length - 1 && "border-r border-[#006FCF]/30",
+                selectedTab === tab.key
+                  ? "bg-[#006FCF] text-white"
+                  : "bg-white text-[#006FCF] hover:bg-[#006FCF]/10"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
         <p className="text-sm text-muted-foreground">
-          媒体ごとの予算アロケーション最適化
+          {MEDIA_TABS.find(t => t.key === selectedTab)?.label}チャネルの予算アロケーション最適化
         </p>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* 配分チャート */}
           <Card className="border shadow-sm lg:col-span-1">
             <CardHeader>
-              <CardTitle className="text-base">予算配分</CardTitle>
+              <CardTitle className="text-base">{MEDIA_TABS.find(t => t.key === selectedTab)?.label} 予算配分</CardTitle>
               <p className="text-xs text-muted-foreground">総予算: {totalBudget}億円</p>
             </CardHeader>
             <CardContent>
