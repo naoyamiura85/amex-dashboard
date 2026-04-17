@@ -122,117 +122,64 @@ export default function MacroSimulationPage() {
               </Card>
             </div>
 
-            {/* マトリクス変動予測 Before/After */}
+            {/* マトリクス変動予測（統合版） */}
             <Card className="border shadow-sm">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-[#006FCF]" />
-                  9セグメント変動予測（マトリクス）
+                  9セグメント変動予測
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-start gap-6">
-                  {/* Before マトリクス */}
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-center mb-3 text-muted-foreground">現在</p>
-                    <div className="overflow-hidden rounded-lg border border-border">
-                      {/* ヘッダー */}
-                      <div className="grid grid-cols-[60px_repeat(3,1fr)]">
-                        <div className="p-2 border-b border-r border-border bg-slate-50">
-                          <p className="text-[10px] text-muted-foreground text-center">ステージ</p>
-                          <p className="text-[10px] text-muted-foreground text-center">世帯年収</p>
-                        </div>
-                        {stages.map((s) => (
-                          <div key={s.key} className={cn("p-2 border-b border-r last:border-r-0 border-border text-center", stageBg[s.key].cell)}>
-                            <div className="flex items-center justify-center gap-1 mb-0.5">
-                              <div className={cn("w-2 h-2 rounded-full", s.key === "prospect" ? "bg-slate-400" : "bg-[#006FCF]")} />
-                            </div>
-                            <p className={cn("text-xs font-bold", s.key === "prospect" ? "text-slate-600" : "text-[#006FCF]")}>{s.label}</p>
-                            <p className="text-[10px] text-slate-400">{s.sub}</p>
-                          </div>
-                        ))}
-                      </div>
-                      {/* ボディ */}
-                      {engagements.map((eng) => (
-                        <div key={eng.key} className="grid grid-cols-[60px_repeat(3,1fr)]">
-                          <div className="p-2 border-r border-b last:border-b-0 border-border bg-slate-50 flex flex-col items-center justify-center">
-                            <span className="text-lg font-bold text-[#006FCF]">{eng.label}</span>
-                            <span className="text-[10px] text-muted-foreground">{eng.sublabel}</span>
-                          </div>
-                          {stages.map((stage) => {
-                            const count = MATRIX_DATA[eng.key][stage.key]
-                            return (
-                              <div
-                                key={stage.key}
-                                className={cn(
-                                  "p-3 border-r border-b last:border-r-0 last:border-b-0 border-border/50 text-center",
-                                  stageBg[stage.key].cell
-                                )}
-                              >
-                                <p className="text-lg font-bold text-[#1A202C]">{count}万人</p>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      ))}
+                <div className="overflow-hidden rounded-lg border border-border">
+                  {/* ヘッダー */}
+                  <div className="grid grid-cols-[80px_repeat(3,1fr)]">
+                    <div className="p-3 border-b border-r border-border bg-slate-50">
+                      <p className="text-[10px] text-muted-foreground text-center">ステージ</p>
+                      <p className="text-[10px] text-muted-foreground text-center">世帯年収</p>
                     </div>
-                  </div>
-
-                  {/* 矢印 */}
-                  <div className="flex items-center justify-center pt-20">
-                    <ArrowRight className="h-8 w-8 text-[#006FCF]" />
-                  </div>
-
-                  {/* After マトリクス */}
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-center mb-3 text-[#006FCF]">シミュレーション後</p>
-                    <div className="overflow-hidden rounded-lg border-2 border-[#006FCF]">
-                      {/* ヘッダー */}
-                      <div className="grid grid-cols-[60px_repeat(3,1fr)]">
-                        <div className="p-2 border-b border-r border-border bg-slate-50">
-                          <p className="text-[10px] text-muted-foreground text-center">ステージ</p>
-                          <p className="text-[10px] text-muted-foreground text-center">世帯年収</p>
+                    {stages.map((s) => (
+                      <div key={s.key} className={cn("p-3 border-b border-r last:border-r-0 border-border text-center", stageBg[s.key].cell)}>
+                        <div className="flex items-center justify-center gap-1 mb-0.5">
+                          <div className={cn("w-2 h-2 rounded-full", s.key === "prospect" ? "bg-slate-400" : "bg-[#006FCF]")} />
                         </div>
-                        {stages.map((s) => (
-                          <div key={s.key} className={cn("p-2 border-b border-r last:border-r-0 border-border text-center", stageBg[s.key].cell)}>
-                            <div className="flex items-center justify-center gap-1 mb-0.5">
-                              <div className={cn("w-2 h-2 rounded-full", s.key === "prospect" ? "bg-slate-400" : "bg-[#006FCF]")} />
-                            </div>
-                            <p className={cn("text-xs font-bold", s.key === "prospect" ? "text-slate-600" : "text-[#006FCF]")}>{s.label}</p>
-                            <p className="text-[10px] text-slate-400">{s.sub}</p>
-                          </div>
-                        ))}
+                        <p className={cn("text-sm font-bold", s.key === "prospect" ? "text-slate-600" : "text-[#006FCF]")}>{s.label}</p>
+                        <p className="text-[10px] text-slate-400">{s.sub}</p>
                       </div>
-                      {/* ボディ */}
-                      {engagements.map((eng) => (
-                        <div key={eng.key} className="grid grid-cols-[60px_repeat(3,1fr)]">
-                          <div className="p-2 border-r border-b last:border-b-0 border-border bg-slate-50 flex flex-col items-center justify-center">
-                            <span className="text-lg font-bold text-[#006FCF]">{eng.label}</span>
-                            <span className="text-[10px] text-muted-foreground">{eng.sublabel}</span>
-                          </div>
-                          {stages.map((stage) => {
-                            const base = MATRIX_DATA[eng.key][stage.key]
-                            const lift = getSegmentLift(eng.key, stage.key)
-                            const projected = base + lift
-                            return (
-                              <div
-                                key={stage.key}
-                                className={cn(
-                                  "p-3 border-r border-b last:border-r-0 last:border-b-0 border-border/50 text-center",
-                                  stageBg[stage.key].cell
-                                )}
-                              >
-                                <p className="text-lg font-bold text-[#1A202C]">{projected}万人</p>
-                                <Badge className="text-[10px] bg-emerald-100 text-emerald-700 mt-1">
-                                  +{lift}万人
-                                </Badge>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      ))}
-                    </div>
+                    ))}
                   </div>
+                  {/* ボディ */}
+                  {engagements.map((eng) => (
+                    <div key={eng.key} className="grid grid-cols-[80px_repeat(3,1fr)]">
+                      <div className="p-3 border-r border-b last:border-b-0 border-border bg-slate-50 flex flex-col items-center justify-center">
+                        <span className="text-xl font-bold text-[#006FCF]">{eng.label}</span>
+                        <span className="text-[10px] text-muted-foreground">{eng.sublabel}</span>
+                      </div>
+                      {stages.map((stage) => {
+                        const base = MATRIX_DATA[eng.key][stage.key]
+                        const lift = getSegmentLift(eng.key, stage.key)
+                        const projected = base + lift
+                        return (
+                          <div
+                            key={stage.key}
+                            className={cn(
+                              "p-4 border-r border-b last:border-r-0 last:border-b-0 border-border/50 text-center",
+                              stageBg[stage.key].cell
+                            )}
+                          >
+                            <div className="flex items-center justify-center gap-2">
+                              <span className="text-sm text-muted-foreground">{base}万人</span>
+                              <ArrowRight className="h-3 w-3 text-[#006FCF]" />
+                              <span className="text-lg font-bold text-[#1A202C]">{projected}万人</span>
+                            </div>
+                            <Badge className="text-[10px] bg-emerald-100 text-emerald-700 mt-2">
+                              +{lift}万人
+                            </Badge>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ))}
                 </div>
 
                 {/* 合計変動サマリー */}
