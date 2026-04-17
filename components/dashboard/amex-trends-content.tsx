@@ -30,6 +30,13 @@ interface Country {
   activities: Activity[]
 }
 
+// ---- メインタブ定義 ----
+const MAIN_TABS: { key: "travel" | "dining" | "entertainment"; label: string; color: string; categories: ActivityCategory[] }[] = [
+  { key: "travel",        label: "Travel",        color: "text-[#006FCF]", categories: ["トラベル", "スポーツ", "ウェルネス"] },
+  { key: "dining",        label: "Dining",        color: "text-[#B4975A]", categories: ["ダイニング"] },
+  { key: "entertainment", label: "Entertainment", color: "text-[#9B2335]", categories: ["エンターテイメント", "ショッピング"] },
+]
+
 // ---- カテゴリ定義 ----
 const CATEGORIES: { key: ActivityCategory | "all"; label: string; color: string }[] = [
   { key: "all",               label: "すべて",               color: "text-slate-600" },
@@ -106,7 +113,7 @@ const COUNTRIES: Country[] = [
     activities: [
       { id: "fr-01", name: "ワインツーリズム", icon: Wine,       category: "トラベル",          growth: 55, hot: true  },
       { id: "fr-02", name: "プロヴァンス旅行", icon: Sunrise,    category: "トラベル",          growth: 42, hot: true  },
-      { id: "fr-03", name: "ミシュランダイニング", icon: ChefHat, category: "ダイニング",        growth: 61, hot: true  },
+      { id: "fr-03", name: "��シュランダイニング", icon: ChefHat, category: "ダイニング",        growth: 61, hot: true  },
       { id: "fr-04", name: "チーズテイスティング", icon: Utensils, category: "ダイニング",      growth: 38, hot: false },
       { id: "fr-05", name: "美術館巡り",       icon: Palette,    category: "エンターテイメント", growth: 29, hot: false },
       { id: "fr-06", name: "オペラ観劇",       icon: Theater,    category: "エンターテイメント", growth: 24, hot: false },
@@ -186,23 +193,43 @@ const COUNTRIES: Country[] = [
 // ---- コンポーネント ----
 export function AmexTrendsContent() {
   const [selectedCountry, setSelectedCountry] = useState<string>("JP")
-  const [selectedCategory, setSelectedCategory] = useState<ActivityCategory | "all">("all")
+  const [selectedTab, setSelectedTab] = useState<"travel" | "dining" | "entertainment">("travel")
 
   const country = COUNTRIES.find(c => c.code === selectedCountry)!
+  const currentTabConfig = MAIN_TABS.find(t => t.key === selectedTab)!
 
+  // 選択されたタブに属するカテゴリのアクティビティをフィルタ
   const filtered = country.activities.filter(a =>
-    selectedCategory === "all" || a.category === selectedCategory
+    currentTabConfig.categories.includes(a.category)
   )
 
   // カテゴリ別にグループ化
-  const grouped = CATEGORIES.filter(c => c.key !== "all").reduce<Record<string, Activity[]>>((acc, cat) => {
-    const acts = filtered.filter(a => a.category === cat.key)
-    if (acts.length > 0) acc[cat.key] = acts
+  const grouped = currentTabConfig.categories.reduce<Record<string, Activity[]>>((acc, catKey) => {
+    const acts = filtered.filter(a => a.category === catKey)
+    if (acts.length > 0) acc[catKey] = acts
     return acc
   }, {})
 
   return (
     <div className="space-y-6 pb-8">
+
+      {/* メインタブ: Travel / Dining / Entertainment */}
+      <div className="flex gap-1 p-1 bg-slate-100 rounded-lg w-fit">
+        {MAIN_TABS.map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setSelectedTab(tab.key)}
+            className={cn(
+              "px-6 py-2 rounded-md text-sm font-semibold transition-all",
+              selectedTab === tab.key
+                ? "bg-white text-[#006FCF] shadow-sm"
+                : "text-slate-500 hover:text-slate-700"
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       {/* 国タブ */}
       <div className="flex flex-wrap gap-2">
@@ -219,24 +246,6 @@ export function AmexTrendsContent() {
           >
             <span className="text-base">{c.flag}</span>
             {c.name}
-          </button>
-        ))}
-      </div>
-
-      {/* カテゴリフィルター */}
-      <div className="flex flex-wrap gap-2">
-        {CATEGORIES.map(cat => (
-          <button
-            key={cat.key}
-            onClick={() => setSelectedCategory(cat.key)}
-            className={cn(
-              "px-3 py-1 rounded-full text-xs font-semibold border transition-all",
-              selectedCategory === cat.key
-                ? "bg-slate-800 text-white border-slate-800"
-                : `border-slate-200 text-slate-500 hover:border-slate-400 hover:text-slate-700`
-            )}
-          >
-            {cat.label}
           </button>
         ))}
       </div>
@@ -294,12 +303,15 @@ export function AmexTrendsContent() {
           <span className="inline-flex h-3 w-3 rounded-full bg-red-500" />
           急上昇トレンド
         </div>
-        {CATEGORIES.filter(c => c.key !== "all").map(cat => (
-          <div key={cat.key} className="flex items-center gap-1.5 text-xs">
-            <div className={cn("w-2.5 h-2.5 rounded-sm", CATEGORY_BG[cat.key as ActivityCategory].split(" ")[0])} />
-            <span className={cn("font-medium", cat.color)}>{cat.label}</span>
-          </div>
-        ))}
+        {currentTabConfig.categories.map(catKey => {
+          const cat = CATEGORIES.find(c => c.key === catKey)!
+          return (
+            <div key={catKey} className="flex items-center gap-1.5 text-xs">
+              <div className={cn("w-2.5 h-2.5 rounded-sm", CATEGORY_BG[catKey].split(" ")[0])} />
+              <span className={cn("font-medium", cat.color)}>{cat.label}</span>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
