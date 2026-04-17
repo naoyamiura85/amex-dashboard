@@ -104,6 +104,7 @@ const THREE_C = [
 
 // ─── 地域別KPIデータ ───────────────────────────────────────────────────────────
 const REGION_KPI: Record<string, { ar: number; ar_change: number; ltcs: number; ltcs_change: number; bc: number; bc_change: number }> = {
+  global: { ar: 58, ar_change: 6, ltcs: 72, ltcs_change: 5, bc: 44, bc_change: 5 },
   eu: { ar: 56, ar_change: 5, ltcs: 70, ltcs_change: 5, bc: 45, bc_change: 5 },
   jp: { ar: 50, ar_change: 8, ltcs: 73, ltcs_change: 5, bc: 37, bc_change: 5 },
   na: { ar: 65, ar_change: 7, ltcs: 77, ltcs_change: 5, bc: 50, bc_change: 5 },
@@ -117,6 +118,18 @@ const KPI_METRICS = [
 
 // ─── 地域別Audienceデータ ──────────────────────────────────────────────────────
 const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: string }[]; personas: { name: string; age: string; occupation: string; income: string; interests: string[]; quote: string }[] }> = {
+  global: {
+    demographics: [
+      { label: "平均年齢", value: "42歳" },
+      { label: "平均世帯年収", value: "$180K" },
+      { label: "男女比", value: "60:40" },
+      { label: "都市部居住率", value: "78%" },
+    ],
+    personas: [
+      { name: "Global Executive", age: "45歳", occupation: "経営幹部", income: "$200K+", interests: ["ビジネス旅行", "ゴルフ", "ファインダイニング"], quote: "グローバルで信頼されるカードが必要です" },
+      { name: "Affluent Professional", age: "38歳", occupation: "専門職", income: "$150K+", interests: ["旅行", "アート", "ウェルネス"], quote: "プレミアムな体験と特典を重視しています" },
+    ],
+  },
   eu: {
     demographics: [
       { label: "平均年齢", value: "44歳" },
@@ -344,94 +357,99 @@ export function AmexHomeContent() {
         </Card>
       </div>
 
-      {/* 地域選択時: KPIトラッキング + Audience Profile */}
-      {selected && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* KPIトラッキング */}
-          <Card className="border border-border shadow-sm">
-            <CardHeader className="pb-3 flex-row items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-[#006FCF]" />
-              <CardTitle className="text-sm font-semibold">{selected.name} - KPI Tracking</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-3 gap-3">
-                {KPI_METRICS.map((m) => {
-                  const kpi = REGION_KPI[selected.id]
-                  const value = kpi[m.key as keyof typeof kpi] as number
-                  const change = kpi[m.changeKey as keyof typeof kpi] as number
-                  return (
-                    <div key={m.id} className="rounded-lg border border-border/60 p-3 text-center">
-                      <p className="text-xs text-muted-foreground mb-1">{m.name}</p>
-                      <p className="text-2xl font-bold" style={{ color: m.color }}>{value}%</p>
-                      <div className="flex items-center justify-center gap-1 mt-1">
-                        {change >= 0 ? (
-                          <TrendingUp className="h-3 w-3 text-emerald-500" />
-                        ) : (
-                          <TrendingDown className="h-3 w-3 text-red-500" />
-                        )}
-                        <span className={`text-xs font-medium ${change >= 0 ? "text-emerald-500" : "text-red-500"}`}>
-                          {change >= 0 ? "+" : ""}{change}% YoY
-                        </span>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Audience Profile + ペルソナ分析 統合 */}
-          <Card className="border border-border shadow-sm">
-            <CardHeader className="pb-3 flex-row items-center justify-between">
-              <div className="flex items-center gap-2">
-                <UserCircle className="h-4 w-4 text-[#006FCF]" />
-                <CardTitle className="text-sm font-semibold">{selected.name} - Audience Profile</CardTitle>
-              </div>
-              <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Demographics */}
-              <div className="grid grid-cols-4 gap-2">
-                {REGION_AUDIENCE[selected.id]?.demographics.map((d, i) => (
-                  <div key={i} className="text-center p-2 rounded-lg bg-slate-50">
-                    <p className="text-[10px] text-muted-foreground">{d.label}</p>
-                    <p className="text-sm font-bold text-[#006FCF]">{d.value}</p>
-                  </div>
-                ))}
-              </div>
-              {/* ペルソナ分析 */}
-              <div className="space-y-0 divide-y divide-border/60">
-                {PERSONAS.map((p) => (
-                  <div key={p.name} className="py-3 first:pt-0">
-                    <div className="flex gap-3">
-                      <div
-                        className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
-                        style={{ backgroundColor: p.color }}
-                      >
-                        {p.initials}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-bold text-foreground">{p.name}</span>
-                          <span className="text-xs text-muted-foreground">{p.age}歳 · {p.role}</span>
+      {/* KPIトラッキング + Audience Profile（常に表示、選択地域または全世界） */}
+      {(() => {
+        const regionId = selected?.id ?? "global"
+        const regionName = selected?.name ?? "全世界"
+        const kpi = REGION_KPI[regionId]
+        const audience = REGION_AUDIENCE[regionId]
+        return (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* KPIトラッキング */}
+            <Card className="border border-border shadow-sm">
+              <CardHeader className="pb-3 flex-row items-center gap-2">
+                <BarChart3 className="h-4 w-4 text-[#006FCF]" />
+                <CardTitle className="text-sm font-semibold">{regionName} - KPI Tracking</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  {KPI_METRICS.map((m) => {
+                    const value = kpi[m.key as keyof typeof kpi] as number
+                    const change = kpi[m.changeKey as keyof typeof kpi] as number
+                    return (
+                      <div key={m.id} className="rounded-lg border border-border/60 p-3 text-center">
+                        <p className="text-xs text-muted-foreground mb-1">{m.name}</p>
+                        <p className="text-2xl font-bold" style={{ color: m.color }}>{value}%</p>
+                        <div className="flex items-center justify-center gap-1 mt-1">
+                          {change >= 0 ? (
+                            <TrendingUp className="h-3 w-3 text-emerald-500" />
+                          ) : (
+                            <TrendingDown className="h-3 w-3 text-red-500" />
+                          )}
+                          <span className={`text-xs font-medium ${change >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+                            {change >= 0 ? "+" : ""}{change}% YoY
+                          </span>
                         </div>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">{p.location}</p>
-                        <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
-                          &ldquo;{p.quote}&rdquo;
-                        </p>
-                        <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5 hover:text-foreground">
-                          <Bookmark className="h-3 w-3" />
-                          保存
-                        </button>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Audience Profile + ペルソナ分析 統合 */}
+            <Card className="border border-border shadow-sm">
+              <CardHeader className="pb-3 flex-row items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <UserCircle className="h-4 w-4 text-[#006FCF]" />
+                  <CardTitle className="text-sm font-semibold">{regionName} - Audience Profile</CardTitle>
+                </div>
+                <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Demographics */}
+                <div className="grid grid-cols-4 gap-2">
+                  {audience?.demographics.map((d, i) => (
+                    <div key={i} className="text-center p-2 rounded-lg bg-slate-50">
+                      <p className="text-[10px] text-muted-foreground">{d.label}</p>
+                      <p className="text-sm font-bold text-[#006FCF]">{d.value}</p>
+                    </div>
+                  ))}
+                </div>
+                {/* ペルソナ分析 */}
+                <div className="space-y-0 divide-y divide-border/60">
+                  {PERSONAS.map((p) => (
+                    <div key={p.name} className="py-3 first:pt-0">
+                      <div className="flex gap-3">
+                        <div
+                          className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
+                          style={{ backgroundColor: p.color }}
+                        >
+                          {p.initials}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-sm font-bold text-foreground">{p.name}</span>
+                            <span className="text-xs text-muted-foreground">{p.age}歳 · {p.role}</span>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">{p.location}</p>
+                          <p className="text-xs text-foreground mt-1.5 leading-relaxed italic">
+                            &ldquo;{p.quote}&rdquo;
+                          </p>
+                          <button className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5 hover:text-foreground">
+                            <Bookmark className="h-3 w-3" />
+                            保存
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      })()}
 
       {/* 下段: 3C分析インサイト */}
       <Card className="border border-border shadow-sm">
