@@ -11,14 +11,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 
 // ---- データ定義 ----
 
-const CARD_STAGES = [
-  { key: "全体",                           label: "全体" },
-  { key: "未会員（Brand Consideration 低）", label: "未会員（BC低）" },
-  { key: "未会員（Brand Consideration 高）", label: "未会員（BC高）" },
-  { key: "新規会員",                        label: "新規会員" },
-  { key: "プレミアム",                       label: "プレミアム" },
+// 横軸：ステージ
+const STAGES = [
+  { key: "bc_low",   label: "未会員（BC低）", fullLabel: "未会員（Brand Consideration 低）" },
+  { key: "bc_high",  label: "未会員（BC高）", fullLabel: "未会員（Brand Consideration 高）" },
+  { key: "new",      label: "新規会員",       fullLabel: "新規会員" },
+  { key: "premium",  label: "プレミアム",     fullLabel: "プレミアム" },
 ] as const
-type CardStage = typeof CARD_STAGES[number]["key"]
+type StageKey = typeof STAGES[number]["key"]
+
+// 縦軸：平均世帯年収
+const INCOME_LEVELS = [
+  { key: "high",   label: "H", sublabel: "1,500万〜", minIncome: 1500 },
+  { key: "medium", label: "M", sublabel: "1,000万〜", minIncome: 1000 },
+  { key: "low",    label: "L", sublabel: "500万〜",   minIncome: 500 },
+] as const
+type IncomeKey = typeof INCOME_LEVELS[number]["key"]
 
 interface Persona {
   id: string
@@ -53,6 +61,7 @@ interface Tribe {
   members: number        // 万人
   engagementScore: number   // 0–100 (y軸: 上=高)
   spendPotential: number    // 0–100 (x軸: 右=高)
+  incomeLevel: IncomeKey    // 年収レベル
   description: string
   avgSpend: string
   upgradeRate: string
@@ -71,6 +80,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 42,
     engagementScore: 85,
     spendPotential: 88,
+    incomeLevel: "high",
     description: "国内外の名門コースを年10回以上ラウンドする層。メンバーシップ費・ゴルフ遠征での高額カード決済が多く、コンシェルジュ活用率も最高水準。",
     avgSpend: "¥68万/月",
     upgradeRate: "38%",
@@ -115,6 +125,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 38,
     engagementScore: 90,
     spendPotential: 92,
+    incomeLevel: "high",
     description: "年間20カ国以上を渡航するハイパートラベラー。ビジネスクラス・プライベートジェット利用が多く、空港ラウンジ利用頻度が全トライブ中最高。",
     avgSpend: "¥95万/月",
     upgradeRate: "51%",
@@ -150,6 +161,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 18,
     engagementScore: 78,
     spendPotential: 95,
+    incomeLevel: "high",
     description: "国内外のオークションやギャラリーで現代アートを購入。単価が高く、VIPイベントへの招待を重視。アート×旅行の複合支出が特徴的で解約率が最も低い。",
     avgSpend: "¥120万/月",
     upgradeRate: "44%",
@@ -185,6 +197,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 55,
     engagementScore: 72,
     spendPotential: 78,
+    incomeLevel: "medium",
     description: "ミシュラン星付きレストランでの食事が月4回以上。プライベートシェフ体験やワインセラーオーナーシップへの関心が急上昇中。",
     avgSpend: "¥52万/月",
     upgradeRate: "28%",
@@ -229,6 +242,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 24,
     engagementScore: 76,
     spendPotential: 85,
+    incomeLevel: "high",
     description: "F1グランプリへの年間サーキット観戦が常態化。スーパーカーの購入・サブスク利用や、サーキット走行体験への支出が突出して高い。",
     avgSpend: "¥78万/月",
     upgradeRate: "41%",
@@ -264,6 +278,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 9,
     engagementScore: 82,
     spendPotential: 96,
+    incomeLevel: "high",
     description: "ポロ競技への参加・観戦と乗馬クラブへの所属が中心。馬の購入・管理費を含む支出が最高水準で、英国・アルゼンチンへの遠征が年次化。",
     avgSpend: "¥145万/月",
     upgradeRate: "55%",
@@ -299,6 +314,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 12,
     engagementScore: 88,
     spendPotential: 98,
+    incomeLevel: "high",
     description: "プライベートジェットをメインの移動手段とする超富裕層。チャーター便の手配・フラクショナルオーナーシップが中心で、AMEX Platinumとの親和性が最高。",
     avgSpend: "¥210万/月",
     upgradeRate: "62%",
@@ -313,7 +329,7 @@ const ALL_TRIBES: Tribe[] = [
         id: "p9", name: "安田 武雄", age: 72, gender: "男性",
         image: "/images/personas/persona-11.jpg",
         occupation: "資産家・名誉会長", income: "10億円以上",
-        background: "国内工場視察から海外子会社訪問まで、すべてプライベートジェット��移動。ガルフストリームG650のオーナーで、機体管理チームを保有。",
+        background: "国内工場視察から海外子会社訪問まで、すべてプライベートジェット��移動。��ルフストリームG650のオーナーで、機体管理チームを保有。",
         lifestyle: "時間を最も贅沢なものと考え、待ち時間ゼロを徹底。同じ価値観を持つエグゼクティブとのネットワーク構築に注力。",
         interests: ["プライベートジェット", "ゴルフ", "ヴィンテージワイン"], cardGoal: "FBO（プライベートターミナル）サービスとジェット手配コンシェルジュ",
         tribe: "プライベートアビエーション派"
@@ -334,6 +350,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 22,
     engagementScore: 55,
     spendPotential: 62,
+    incomeLevel: "medium",
     description: "ヘリスキー・極地探検・深海ダイビングなど非日常のアドベンチャーに高額支出する層。体験の希少性・独自性を最優先とする価値観。",
     avgSpend: "¥38万/月",
     upgradeRate: "18%",
@@ -369,6 +386,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 16,
     engagementScore: 65,
     spendPotential: 72,
+    incomeLevel: "medium",
     description: "ウィーン国立歌劇場・ザルツブルク音楽祭などへの毎年参加が定着。VIPボックス席・楽屋訪問への需要が高く、アーティストとの交流を重視。",
     avgSpend: "¥48万/月",
     upgradeRate: "26%",
@@ -404,6 +422,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 27,
     engagementScore: 48,
     spendPotential: 70,
+    incomeLevel: "medium",
     description: "AI・宇宙・バイオテクノロジーへの先行投資が多い若手富裕層。デジタル決済への親和性が最も高く、次世代サービスの早期採用者として注目。",
     avgSpend: "¥41万/月",
     upgradeRate: "31%",
@@ -440,6 +459,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 48,
     engagementScore: 78,
     spendPotential: 75,
+    incomeLevel: "high",
     description: "年3〜5回の長期滞在型リゾートを好む層。モルディブ・バリ・アマンリゾートなどを定宿とし、スパ・ヴィラ・プライベートプール付き宿泊が標準。",
     avgSpend: "¥58万/月",
     upgradeRate: "33%",
@@ -475,6 +495,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 31,
     engagementScore: 62,
     spendPotential: 68,
+    incomeLevel: "medium",
     description: "ボルドー・ブルゴーニュの一級畑を定期購入し、ワインセラーへの長期投資が特徴。テイスティングツアーや醸造家との私的交流を重視する層。",
     avgSpend: "¥44万/月",
     upgradeRate: "24%",
@@ -491,7 +512,7 @@ const ALL_TRIBES: Tribe[] = [
         occupation: "不動産オーナー", income: "1,800万円以上",
         background: "ブルゴーニュ愛好家。DRCのアロケーションを持つ数少ない日本人の一人。ヴォーヌ=ロマネ村に別荘を購入し醸造家と交友。",
         lifestyle: "食事ごとにテーマを決めペアリングを設計。仲間とのヴィンテージ垂直試飲会が月次の楽しみ。",
-        interests: ["ワイン", "フランス料理", "旅行"], cardGoal: "ワイナリーVIPツアーと希少ヴィンテージの優先購入",
+        interests: ["ワイン", "フランス料理", "旅行"], cardGoal: "ワイナリーVIPツアーと希少ヴィンテー���の優先購入",
         tribe: "ワイン・ソムリエ派"
       },
     ],
@@ -510,6 +531,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 19,
     engagementScore: 45,
     spendPotential: 55,
+    incomeLevel: "medium",
     description: "自宅でのプライベートシェフ招聘や貸し切りレストランでのホスト体験に傾倒。ゲストをもてなす「主催者」としてのアイデンティティが強い層。",
     avgSpend: "¥36万/月",
     upgradeRate: "20%",
@@ -545,6 +567,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 14,
     engagementScore: 30,
     spendPotential: 42,
+    incomeLevel: "high",
     description: "地中海・カリブ海をヨットでクルーズするライフスタイル層。船舶オーナーシップまたはチャーター利用が中心で、マリーナ拠点の移動生活が特徴。",
     avgSpend: "¥62万/月",
     upgradeRate: "27%",
@@ -580,6 +603,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 35,
     engagementScore: 35,
     spendPotential: 38,
+    incomeLevel: "low",
     description: "コーチェラ・グラストンベリー・フジロックなど国内外の音楽フェスをVIP席で体験。アーティストとのバックステージ交流や限定体験に高い支出意欲を持つ。",
     avgSpend: "¥28万/月",
     upgradeRate: "16%",
@@ -602,7 +626,7 @@ const ALL_TRIBES: Tribe[] = [
     ],
     stageDistribution: [
       { stage: "未会員（Brand Consideration 低）", pct: 28, color: "#B3D9FF" },
-      { stage: "未会員（Brand Consideration 高）", pct: 34, color: "#66B3FF" },
+      { stage: "未��員（Brand Consideration 高）", pct: 34, color: "#66B3FF" },
       { stage: "新規会員", pct: 30, color: "#006FCF" },
       { stage: "プレミアム", pct: 8, color: "#00175A" },
     ],
@@ -615,6 +639,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 28,
     engagementScore: 22,
     spendPotential: 28,
+    incomeLevel: "low",
     description: "ブロードウェイ・ウエストエンドの初演VIP席やカンヌ映画祭への参加を年間行事とする層。映画・演劇プロデュースへの出資経験を持つ者も多い。",
     avgSpend: "¥22万/月",
     upgradeRate: "13%",
@@ -650,6 +675,7 @@ const ALL_TRIBES: Tribe[] = [
     members: 44,
     engagementScore: 15,
     spendPotential: 32,
+    incomeLevel: "low",
     description: "世界各地の隠れた名店・ストリートフードの探求を旅の主目的とする層。口コミゼロの秘境レストランや伝統市場での体験を最優先する新しいグルメ観。",
     avgSpend: "¥18万/月",
     upgradeRate: "11%",
@@ -747,22 +773,24 @@ function PersonaModal({ persona, open, onClose }: { persona: Persona | null; ope
 
 // ---- メインコンポーネント ----
 export function TribeAnalysisContent() {
-  const [selectedStage, setSelectedStage] = useState<CardStage>("全体" as CardStage)
   const [selectedTribe, setSelectedTribe] = useState<Tribe | null>(null)
   const [detailTab, setDetailTab] = useState("overview")
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null)
   const [personaModalOpen, setPersonaModalOpen] = useState(false)
 
-  const filteredTribes = useMemo(() => {
-    if (selectedStage === "全体") return ALL_TRIBES
-    return ALL_TRIBES.filter(t =>
-      t.stageDistribution.some(s => s.stage === selectedStage && s.pct > 0)
-    )
-  }, [selectedStage])
-  const totalMembers = filteredTribes.reduce((s, t) => s + t.members, 0)
-  const totalTribes = filteredTribes.length
+  const totalMembers = ALL_TRIBES.reduce((s, t) => s + t.members, 0)
+  const totalTribes = ALL_TRIBES.length
 
-  const handleBubbleClick = (tribe: Tribe) => {
+  // マトリクスのセルごとにトライブを取得
+  const getTribesForCell = (income: IncomeKey, stage: StageKey) => {
+    const stageFullLabel = STAGES.find(s => s.key === stage)?.fullLabel ?? ""
+    return ALL_TRIBES.filter(t => 
+      t.incomeLevel === income && 
+      t.stageDistribution.some(s => s.stage === stageFullLabel && s.pct > 15)
+    )
+  }
+
+  const handleTribeClick = (tribe: Tribe) => {
     setSelectedTribe(prev => prev?.id === tribe.id ? null : tribe)
     setDetailTab("overview")
   }
@@ -772,25 +800,18 @@ export function TribeAnalysisContent() {
     setPersonaModalOpen(true)
   }
 
-  // バブル半径マッピング
-  const minR = 32, maxR = 72
-  const maxMem = Math.max(...filteredTribes.map(t => t.members))
-  const getBubbleRadius = (members: number) =>
-    minR + ((members / maxMem) * (maxR - minR))
-
-  // 座標変換（データ範囲を正規化して全体に分散）
-  const margin = 10
-  const allX = filteredTribes.map(t => t.spendPotential)
-  const allY = filteredTribes.map(t => t.engagementScore)
-  const minX = Math.min(...allX), maxX = Math.max(...allX)
-  const minY = Math.min(...allY), maxY = Math.max(...allY)
-  const toX = (v: number) => margin + ((v - minX) / (maxX - minX)) * (100 - margin * 2)
-  const toY = (v: number) => (100 - margin) - ((v - minY) / (maxY - minY)) * (100 - margin * 2)
-
   const churnBadge: Record<string, string> = {
     低: "text-emerald-700 bg-emerald-50 border border-emerald-200",
     中: "text-amber-700 bg-amber-50 border border-amber-200",
     高: "text-red-700 bg-red-50 border border-red-200"
+  }
+
+  // ステージ背景色
+  const stageBg: Record<StageKey, string> = {
+    bc_low: "bg-white",
+    bc_high: "bg-[#E8F4FD]",
+    new: "bg-[#C5E4FC]",
+    premium: "bg-[#8ACDF6]",
   }
 
   return (
@@ -805,126 +826,86 @@ export function TribeAnalysisContent() {
           <span className="text-2xl font-bold text-foreground">{totalMembers}万人</span>
           <span className="text-sm text-muted-foreground">推定会員</span>
         </div>
-        <div className="ml-auto">
-          <div className="flex gap-1 bg-muted p-1 rounded-lg">
-            {CARD_STAGES.map(({ key, label }) => (
-              <button
-                key={key}
-                onClick={() => setSelectedStage(key)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                  selectedStage === key
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+        {/* カテゴリ凡例 */}
+        <div className="ml-auto flex items-center gap-4">
+          {(Object.entries(CATEGORY_META) as [TribeCategory, typeof CATEGORY_META[TribeCategory]][]).map(([, meta]) => (
+            <div key={meta.label} className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: meta.bg, borderColor: meta.color }} />
+              <span className="text-xs font-medium" style={{ color: meta.color }}>{meta.label}</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* メインレイアウト: 常に grid 2列固定 */}
+      {/* メインレイアウト: マトリクス + 詳細パネル */}
       <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 320px" }}>
-        {/* クラスターマップ */}
+        {/* マトリクス表：縦軸=平均世帯年収、横軸=ステージ */}
         <div className="min-w-0">
           <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
-            {/* 上部ラベル */}
-            <div className="flex justify-between px-10 pt-3 pb-0 text-[10px] text-muted-foreground font-medium">
-              <span>高エンゲージメント・低利用額</span>
-              <span>高エンゲージメント・高利用額</span>
-            </div>
-
-            {/* マップ全体 */}
-            <div className="relative mx-6 my-2" style={{ height: 460 }}>
-              {/* 象限グリッド */}
-              <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 pointer-events-none">
-                <div className="border-r border-b border-dashed border-border/60 bg-sky-50/30" />
-                <div className="border-b border-dashed border-border/60 bg-primary/[0.04]" />
-                <div className="border-r border-dashed border-border/60 bg-muted/20" />
-                <div className="bg-blue-50/40" />
+            {/* ヘッダー行 */}
+            <div className="grid grid-cols-[80px_repeat(4,1fr)]">
+              <div className="p-3 border-b border-r border-border bg-slate-50">
+                <p className="text-[10px] text-muted-foreground text-center">ステージ</p>
+                <p className="text-[10px] text-muted-foreground text-center">世帯年収</p>
               </div>
-              {/* 中心線 */}
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border/40" />
-                <div className="absolute top-1/2 left-0 right-0 h-px bg-border/40" />
-              </div>
-              {/* 縦軸ラベル */}
-              <div
-                className="absolute text-[10px] text-muted-foreground font-medium whitespace-nowrap pointer-events-none select-none"
-                style={{ left: -36, top: "50%", transform: "rotate(-90deg) translateX(-50%)", transformOrigin: "left center" }}
-              >
-                エンゲージメントスコア →
-              </div>
-
-              {/* バブル */}
-              {filteredTribes.map((tribe) => {
-                const r = getBubbleRadius(tribe.members)
-                const x = toX(tribe.spendPotential)
-                const y = toY(tribe.engagementScore)
-                const isSelected = selectedTribe?.id === tribe.id
-                const catColor = CATEGORY_META[tribe.category].color
-                const catBg    = CATEGORY_META[tribe.category].bg
-                return (
-                  <button
-                    key={tribe.id}
-                    onClick={() => handleBubbleClick(tribe)}
-                    className="absolute group focus:outline-none"
-                    style={{
-                      left: `${x}%`,
-                      top: `${y}%`,
-                      width: r * 2,
-                      height: r * 2,
-                      marginLeft: -r,
-                      marginTop: -r,
-                      zIndex: isSelected ? 10 : 1,
-                    }}
-                  >
-                    <div
-                      className={`w-full h-full rounded-full flex flex-col items-center justify-center transition-all duration-200 ${
-                        isSelected
-                          ? "ring-2 ring-offset-2 scale-110 shadow-lg"
-                          : "hover:scale-105 hover:shadow-md"
-                      }`}
-                      style={{
-                        backgroundColor: isSelected ? catColor : catBg,
-                        borderWidth: 1.5,
-                        borderColor: catColor,
-                        borderStyle: "solid",
-                      }}
-                    >
-                      <span className="text-[10px] font-bold leading-tight text-center px-1.5"
-                        style={{ color: isSelected ? "white" : catColor }}
-                      >
-                        {tribe.name.replace(/派$/, "")}
-                      </span>
-                      <span className="text-[9px] mt-0.5"
-                        style={{ color: isSelected ? "rgba(255,255,255,0.8)" : catColor + "bb" }}
-                      >
-                        {tribe.members}万人
-                      </span>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-
-            {/* カテゴリ凡例 */}
-            <div className="flex items-center justify-center gap-5 px-6 py-2 border-t border-border/30">
-              {(Object.entries(CATEGORY_META) as [TribeCategory, typeof CATEGORY_META[TribeCategory]][]).map(([, meta]) => (
-                <div key={meta.label} className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: meta.bg, borderColor: meta.color }} />
-                  <span className="text-[11px] font-medium" style={{ color: meta.color }}>{meta.label}</span>
+              {STAGES.map((s) => (
+                <div key={s.key} className={`p-3 border-b border-r last:border-r-0 border-border text-center ${stageBg[s.key]}`}>
+                  <div className="flex items-center justify-center gap-1 mb-0.5">
+                    <div className={`w-2 h-2 rounded-full ${s.key === "bc_low" ? "bg-slate-400" : "bg-[#006FCF]"}`} />
+                  </div>
+                  <p className={`text-xs font-bold ${s.key === "bc_low" ? "text-slate-600" : "text-[#006FCF]"}`}>{s.label}</p>
                 </div>
               ))}
             </div>
-
-            {/* 下部ラベル */}
-            <div className="flex justify-between px-10 pt-0 pb-2 text-[10px] text-muted-foreground font-medium border-t border-border/30">
-              <span>低エンゲージメント・低利用額</span>
-              <span className="flex-1 text-center">← 利用額ポテンシャル →</span>
-              <span>低エンゲージメント・高利用額</span>
-            </div>
+            {/* ボディ行 */}
+            {INCOME_LEVELS.map((income) => (
+              <div key={income.key} className="grid grid-cols-[80px_repeat(4,1fr)]">
+                <div className="p-3 border-r border-b last:border-b-0 border-border bg-slate-50 flex flex-col items-center justify-center">
+                  <span className="text-xl font-bold text-[#006FCF]">{income.label}</span>
+                  <span className="text-[10px] text-muted-foreground">{income.sublabel}</span>
+                </div>
+                {STAGES.map((stage) => {
+                  const tribes = getTribesForCell(income.key, stage.key)
+                  return (
+                    <div
+                      key={stage.key}
+                      className={`p-2 border-r border-b last:border-r-0 last:border-b-0 border-border/50 min-h-[120px] ${stageBg[stage.key]}`}
+                    >
+                      <div className="flex flex-wrap gap-1.5">
+                        {tribes.map((tribe) => {
+                          const isSelected = selectedTribe?.id === tribe.id
+                          const catColor = CATEGORY_META[tribe.category].color
+                          const catBg = CATEGORY_META[tribe.category].bg
+                          return (
+                            <button
+                              key={tribe.id}
+                              onClick={() => handleTribeClick(tribe)}
+                              className={`px-2 py-1 rounded-full text-[10px] font-medium transition-all ${
+                                isSelected
+                                  ? "ring-2 ring-offset-1 shadow-md scale-105"
+                                  : "hover:scale-105 hover:shadow-sm"
+                              }`}
+                              style={{
+                                backgroundColor: isSelected ? catColor : catBg,
+                                color: isSelected ? "white" : catColor,
+                                borderWidth: 1,
+                                borderColor: catColor,
+                                borderStyle: "solid",
+                              }}
+                            >
+                              {tribe.name.replace(/派$/, "")}
+                            </button>
+                          )
+                        })}
+                        {tribes.length === 0 && (
+                          <span className="text-[10px] text-muted-foreground/50">-</span>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -935,18 +916,18 @@ export function TribeAnalysisContent() {
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                 <Network className="h-5 w-5 text-muted-foreground/60" />
               </div>
-              <p className="text-sm font-medium">トラ��ブを選択してください</p>
-              <p className="text-xs text-muted-foreground/70">マップ上のバブルをクリックすると詳細が表示されます</p>
+              <p className="text-sm font-medium">トライブを選択してください</p>
+              <p className="text-xs text-muted-foreground/70">マトリクス上のトライブをクリックすると詳細が表示されます</p>
             </div>
           ) : (
           <>
             {/* パネルヘッダー */}
             <div
               className="flex items-start justify-between px-5 py-4 border-b border-border"
-              style={{ backgroundColor: selectedTribe.color + "12" }}
+              style={{ backgroundColor: CATEGORY_META[selectedTribe.category].color + "12" }}
             >
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-lg" style={{ backgroundColor: selectedTribe.color + "20", color: selectedTribe.color }}>
+                <div className="p-2 rounded-lg" style={{ backgroundColor: CATEGORY_META[selectedTribe.category].color + "20", color: CATEGORY_META[selectedTribe.category].color }}>
                   {(() => { const Icon = selectedTribe.icon; return <Icon className="h-4 w-4" /> })()}
                 </div>
                 <div>
