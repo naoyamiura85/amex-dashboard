@@ -37,9 +37,9 @@ const MOTIVES = [
 ]
 
 const PATTERNS = [
-  { id: "p1", label: "プラチナ申込", count: "3.2万人", color: "#006FCF" },
-  { id: "p2", label: "ゴールド申込", count: "8.7万人", color: "#B4975A" },
-  { id: "p3", label: "グリーン申込", count: "20.1万人", color: "#38A169" },
+  { id: "p1", label: "プラチナ申込", count: "3.2万人", color: "#006FCF", image: "/images/cards/amex-platinum.jpg" },
+  { id: "p2", label: "ゴールド申込", count: "8.7万人", color: "#B4975A", image: "/images/cards/amex-gold.jpg" },
+  { id: "p3", label: "グリーン申込", count: "20.1万人", color: "#38A169", image: "/images/cards/amex-green.jpg" },
 ]
 
 // 接続データ（from → to）
@@ -320,47 +320,71 @@ export function ExperienceFlow() {
           </g>
         ))}
 
-        {/* パターン ノード */}
-        {patternNodes.map(n => (
-          <g
-            key={n.id}
-            onClick={() => handleClick(n.id)}
-            style={{ cursor: "pointer" }}
-          >
-            <circle
-              cx={n.x}
-              cy={n.y}
-              r={36}
-              fill={isHighlight(n.id) ? n.color : "#E2E8F0"}
-              fillOpacity={0.12}
-              stroke={isHighlight(n.id) ? n.color : "#CBD5E1"}
-              strokeWidth={isHighlight(n.id) ? 2 : 1}
-              style={{ transition: "all 0.2s" }}
-            />
-            <text
-              x={n.x}
-              y={n.y - 6}
-              textAnchor="middle"
-              fontSize={10}
-              fontWeight={700}
-              fill={isHighlight(n.id) ? n.color : "#94A3B8"}
-              style={{ transition: "all 0.2s" }}
+        {/* パターン ノード（カード画像付き） */}
+        {patternNodes.map(n => {
+          const cardW = 54
+          const cardH = 34
+          return (
+            <g
+              key={n.id}
+              onClick={() => handleClick(n.id)}
+              style={{ cursor: "pointer" }}
             >
-              {n.label}
-            </text>
-            <text
-              x={n.x}
-              y={n.y + 10}
-              textAnchor="middle"
-              fontSize={11}
-              fontWeight={800}
-              fill={isHighlight(n.id) ? n.color : "#94A3B8"}
-              style={{ transition: "all 0.2s" }}
-            >
-              {n.count}
-            </text>
-          </g>
-        ))}
+              {/* 背景円 */}
+              <circle
+                cx={n.x}
+                cy={n.y}
+                r={42}
+                fill={isHighlight(n.id) ? n.color : "#E2E8F0"}
+                fillOpacity={0.12}
+                stroke={isHighlight(n.id) ? n.color : "#CBD5E1"}
+                strokeWidth={isHighlight(n.id) ? 2 : 1}
+                style={{ transition: "all 0.2s" }}
+              />
+              {/* カード画像 */}
+              <defs>
+                <clipPath id={`card-clip-${n.id}`}>
+                  <rect x={n.x - cardW / 2} y={n.y - 20} width={cardW} height={cardH} rx={4} />
+                </clipPath>
+              </defs>
+              <image
+                href={n.image}
+                x={n.x - cardW / 2}
+                y={n.y - 20}
+                width={cardW}
+                height={cardH}
+                clipPath={`url(#card-clip-${n.id})`}
+                style={{
+                  transition: "opacity 0.2s",
+                  opacity: isHighlight(n.id) ? 1 : 0.4,
+                }}
+              />
+              {/* ラベルと人数 */}
+              <text
+                x={n.x}
+                y={n.y + 24}
+                textAnchor="middle"
+                fontSize={9}
+                fontWeight={700}
+                fill={isHighlight(n.id) ? n.color : "#94A3B8"}
+                style={{ transition: "all 0.2s" }}
+              >
+                {n.label}
+              </text>
+              <text
+                x={n.x}
+                y={n.y + 36}
+                textAnchor="middle"
+                fontSize={10}
+                fontWeight={800}
+                fill={isHighlight(n.id) ? n.color : "#94A3B8"}
+                style={{ transition: "all 0.2s" }}
+              >
+                {n.count}
+              </text>
+            </g>
+          )
+        })}
       </svg>
     </div>
   )

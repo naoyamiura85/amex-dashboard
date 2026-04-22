@@ -795,9 +795,16 @@ export function TribeAnalysisContent() {
   const [detailTab, setDetailTab] = useState("overview")
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null)
   const [personaModalOpen, setPersonaModalOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<TribeCategory | "all">("all")
 
-  const totalMembers = ALL_TRIBES.reduce((s, t) => s + t.members, 0)
-  const totalTribes = ALL_TRIBES.length
+  // カテゴリフィルタリング
+  const filteredTribes = useMemo(() => {
+    if (selectedCategory === "all") return ALL_TRIBES
+    return ALL_TRIBES.filter(t => t.category === selectedCategory)
+  }, [selectedCategory])
+
+  const totalMembers = filteredTribes.reduce((s, t) => s + t.members, 0)
+  const totalTribes = filteredTribes.length
 
   const handleTribeClick = (tribe: Tribe) => {
     setSelectedTribe(prev => prev?.id === tribe.id ? null : tribe)
@@ -806,13 +813,13 @@ export function TribeAnalysisContent() {
 
   // クラスターマップ用: バブル半径マッピング
   const minR = 32, maxR = 72
-  const maxMem = Math.max(...ALL_TRIBES.map(t => t.members))
+  const maxMem = Math.max(...filteredTribes.map(t => t.members))
   const getBubbleRadius = (members: number) =>
     minR + ((members / maxMem) * (maxR - minR))
 
   // 座標変換: x軸=Brand Consideration, y軸=年収レベル
   const margin = 10
-  const allX = ALL_TRIBES.map(t => t.brandConsideration)
+  const allX = filteredTribes.map(t => t.brandConsideration)
   const minX = Math.min(...allX), maxX = Math.max(...allX)
   const toX = (v: number) => margin + ((v - minX) / (maxX - minX)) * (100 - margin * 2)
   // y軸: incomeLevel を数値に変換 (high=80, medium=50, low=20)
@@ -855,6 +862,37 @@ export function TribeAnalysisContent() {
         </div>
       </div>
 
+      {/* カテゴリタブフィルター */}
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() => { setSelectedCategory("all"); setSelectedTribe(null) }}
+          className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+            selectedCategory === "all"
+              ? "bg-slate-800 text-white border-slate-800"
+              : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
+          }`}
+        >
+          すべて
+        </button>
+        {(Object.entries(CATEGORY_META) as [TribeCategory, typeof CATEGORY_META[TribeCategory]][]).map(([key, meta]) => (
+          <button
+            key={key}
+            onClick={() => { setSelectedCategory(key); setSelectedTribe(null) }}
+            className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+              selectedCategory === key
+                ? "text-white border-transparent"
+                : "bg-white border-slate-200 hover:border-current"
+            }`}
+            style={{
+              backgroundColor: selectedCategory === key ? meta.color : undefined,
+              color: selectedCategory === key ? "white" : meta.color,
+            }}
+          >
+            {meta.label}
+          </button>
+        ))}
+      </div>
+
       {/* メインレイアウト: クラスターマップ + 詳細パネル */}
       <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 320px" }}>
         {/* クラスターマップ */}
@@ -893,7 +931,7 @@ export function TribeAnalysisContent() {
               <div className="absolute left-0 top-[85%] text-[9px] text-muted-foreground/70 -translate-x-1">L</div>
 
               {/* バブル */}
-              {ALL_TRIBES.map((tribe) => {
+              {filteredTribes.map((tribe) => {
                 const r = getBubbleRadius(tribe.members)
                 const x = toX(tribe.brandConsideration)
                 const y = incomeToY(tribe.incomeLevel)
