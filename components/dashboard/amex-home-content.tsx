@@ -1,7 +1,7 @@
 "use client"
 
-import dynamic from "next/dynamic"
 import { useState } from "react"
+import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -183,6 +183,7 @@ const PERSONAS = [
     quoteEn: "Business travel 15+ days/month. Lounge and priority boarding are must-haves.",
     initials: "TM",
     color: "#006FCF",
+    image: "/images/personas/tanaka-masako.jpg",
   },
   {
     name: "James Carter",
@@ -193,26 +194,29 @@ const PERSONAS = [
     quoteEn: null,
     initials: "JC",
     color: "#B4975A",
+    image: "/images/personas/james-carter.jpg",
   },
   {
     name: "Sophie Renard",
     age: 35,
     role: "Creative Director",
     location: "Paris, France",
-    quote: "Je voyage pour l\u2019art et la gastronomie. Les avantages AMEX me donnent acc\u00e8s \u00e0 l\u2019inaccessible.",
+    quote: "Je voyage pour l'art et la gastronomie. Les avantages AMEX me donnent accès à l'inaccessible.",
     quoteEn: "I travel for art and gastronomy. AMEX perks give me access to the inaccessible.",
     initials: "SR",
     color: "#38A169",
+    image: "/images/personas/sophie-renard.jpg",
   },
   {
-    name: "\u9648 \u660e\u8fdc",
+    name: "陳 明远",
     age: 44,
-    role: "\u79d1\u6280\u521b\u4e1a\u8005 / Tech Founder",
-    location: "\u4e0a\u6d77, China",
-    quote: "\u56fd\u9645\u5546\u52a1\u4e2d\uff0c\u7f8e\u56fd\u8fd0\u901a\u5361\u662f\u8eab\u4efd\u4e0e\u4fe1\u8d56\u7684\u8c61\u5f81\u3002\u9ad8\u7aef\u670d\u52a1\u662f\u6211\u9009\u62e9\u7684\u6838\u5fc3\u3002",
+    role: "科技创业者 / Tech Founder",
+    location: "上海, China",
+    quote: "国际商务中，美国运通卡是身份与信赖的象征。高端服务是我选择的核心。",
     quoteEn: "In international business, AMEX is a symbol of status and trust.",
     initials: "CM",
     color: "#E53E3E",
+    image: "/images/personas/chen-mingyuan.jpg",
   },
 ]
 
@@ -464,10 +468,16 @@ export function AmexHomeContent() {
                     <div key={p.name} className="py-3 first:pt-0">
                       <div className="flex gap-3">
                         <div
-                          className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
-                          style={{ backgroundColor: p.color }}
+                          className="w-10 h-10 rounded-full shrink-0 overflow-hidden border-2"
+                          style={{ borderColor: p.color }}
                         >
-                          {p.initials}
+                          <Image
+                            src={p.image}
+                            alt={p.name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
