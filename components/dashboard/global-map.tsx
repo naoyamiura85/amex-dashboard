@@ -16,6 +16,7 @@ const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"
 export interface MapRegion {
   id: string
   name: string
+  flag: string
   marketSize: string
   sizeNum: number
   growth: string
@@ -275,10 +276,14 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                     strokeWidth={active ? 2 : 1}
                     style={{ transition: "all 0.2s" }}
                   />
+                  {/* 国旗 */}
+                  <text x={0} y={-radius * 0.28} fontSize={radius * 0.38} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
+                    {r.flag}
+                  </text>
                   {/* 緑の矢印 */}
-                  <text x={radius * 0.35} y={-radius * 0.15} fontSize={radius * 0.32} fill="#10B981" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↗</text>
+                  <text x={radius * 0.42} y={radius * 0.08} fontSize={radius * 0.26} fill="#10B981" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↗</text>
                   {/* 市場規模テキスト - 濃紺で大きく */}
-                  <text x={0} y={radius * 0.18} fontSize={radius * 0.42} fontWeight={700} fill="#1E3A5F" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
+                  <text x={0} y={radius * 0.32} fontSize={radius * 0.36} fontWeight={700} fill="#1E3A5F" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
                     {r.marketSize}
                   </text>
                 </Marker>
