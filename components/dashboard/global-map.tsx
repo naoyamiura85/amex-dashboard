@@ -158,14 +158,8 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
   }
 
   function handleRegionClick(id: string) {
-    console.log("[v0] handleRegionClick called with id:", id)
-    console.log("[v0] SUB_REGIONS[id]:", SUB_REGIONS[id])
     // バブルクリック → ドリルダウン（SUB_REGIONSに存在する場合のみ）
-    if (!SUB_REGIONS[id]) {
-      console.warn(`[v0] Region "${id}" not found in SUB_REGIONS`)
-      return
-    }
-    console.log("[v0] Setting drilledRegion to:", id)
+    if (!SUB_REGIONS[id]) return
     setDrilledRegion(id)
     onSelectRegion(id)
   }
@@ -226,7 +220,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
           <Geographies geography={GEO_URL}>
             {({ geographies }) =>
               geographies.map((geo) => {
-                const numeric = geo.properties.numeric
+                const numeric = geo.properties?.numeric ?? geo.properties?.ISO_N3 ?? ""
                 return (
                   <Geography
                     key={geo.rsmKey}
@@ -235,17 +229,15 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                     stroke="#FFFFFF"
                     strokeWidth={0.4}
                     style={{
-                      default: { outline: "none", cursor: "pointer", transition: "fill 0.2s" },
-                      hover:   { outline: "none", cursor: "pointer" },
+                      default: { outline: "none", cursor: COUNTRY_TO_REGION[numeric] ? "pointer" : "default", transition: "fill 0.2s" },
+                      hover:   { outline: "none", cursor: COUNTRY_TO_REGION[numeric] ? "pointer" : "default" },
                       pressed: { outline: "none" },
                     }}
-                    onMouseEnter={() => !drilledRegion && setHoveredCountry(numeric)}
+                    onMouseEnter={() => !drilledRegion && numeric && setHoveredCountry(numeric)}
                     onMouseLeave={() => setHoveredCountry(null)}
                     onClick={() => {
-                      console.log("[v0] Geography clicked, numeric:", numeric, "type:", typeof numeric)
-                      if (drilledRegion) return
+                      if (!numeric || drilledRegion) return
                       const rid = COUNTRY_TO_REGION[numeric]
-                      console.log("[v0] Region ID from mapping:", rid)
                       if (rid) handleRegionClick(rid)
                     }}
                   />
