@@ -39,7 +39,7 @@ const MOTIVES = [
 const PATTERNS = [
   { id: "p1", label: "プラチナ申込", count: "3.2万人", color: "#006FCF", image: "/images/cards/amex-platinum.jpg" },
   { id: "p2", label: "ゴールド申込", count: "8.7万人", color: "#B4975A", image: "/images/cards/amex-gold.jpg" },
-  { id: "p3", label: "グリーン申込", count: "20.1万人", color: "#38A169", image: "/images/cards/amex-green.jpg" },
+  { id: "p3", label: "グリーン申込", count: "20.1万人", color: "#38A169", image: "/images/cards/amex-green.png" },
 ]
 
 // 接続データ（from → to）
