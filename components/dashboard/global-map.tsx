@@ -158,7 +158,11 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
   }
 
   function handleRegionClick(id: string) {
-    // バブルクリック → ドリルダウン
+    // バブルクリック → ドリルダウン（SUB_REGIONSに存在する場合のみ）
+    if (!SUB_REGIONS[id]) {
+      console.warn(`[v0] Region "${id}" not found in SUB_REGIONS`)
+      return
+    }
     setDrilledRegion(id)
     onSelectRegion(id)
   }
