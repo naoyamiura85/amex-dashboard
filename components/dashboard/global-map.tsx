@@ -105,7 +105,7 @@ const COUNTRY_TO_REGION: Record<string, string> = {
   "124": "ca",   // Canada
 }
 
-const GLOBAL_CONFIG = { center: [40, 45] as [number, number], zoom: 1.0 }
+const GLOBAL_CONFIG = { center: [0, 35] as [number, number], zoom: 1.0 }
 
 const MARKER_MIN = 38
 const MARKER_MAX = 85
@@ -208,7 +208,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
 
       <ComposableMap
         projection="geoMercator"
-        projectionConfig={{ scale: 190, center: [40, 45] }}
+        projectionConfig={{ scale: 140, center: [0, 35] }}
         style={{ width: "100%", height: "100%" }}
       >
         <ZoomableGroup
