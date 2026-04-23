@@ -41,13 +41,11 @@ const radarData = [
 ]
 
 const shareData = [
-  { quarter: "2025Q1", amex: 18.2, jcb: 24.1, visambc: 31.4, mcmufg: 26.3 },
   { quarter: "2025Q2", amex: 18.6, jcb: 23.8, visambc: 31.2, mcmufg: 26.4 },
   { quarter: "2025Q3", amex: 19.1, jcb: 23.5, visambc: 31.0, mcmufg: 26.4 },
   { quarter: "2025Q4", amex: 19.4, jcb: 23.2, visambc: 31.1, mcmufg: 26.3 },
   { quarter: "2026Q1", amex: 19.8, jcb: 23.0, visambc: 31.0, mcmufg: 26.2 },
-  { quarter: "2026Q2", amex: 20.2, jcb: 22.8, visambc: 30.8, mcmufg: 26.2 },
-  { quarter: "2026Q3", amex: 20.7, jcb: 22.5, visambc: 30.6, mcmufg: 26.2 },
+  { quarter: "2026Q2", amex: 20.2, jcb: 22.8, visambc: 30.8, mcmufg: 26.2, current: true },
 ]
 
 const annualFeeData = [
@@ -59,27 +57,63 @@ const annualFeeData = [
 const competitorAlerts = [
   {
     competitor: "JCB",
-    type: "新施策",
-    severity: "medium",
-    title: "JCBがプラチナ向け空港ラウンジ拡充",
-    detail: "国内主要空港20拠点追加。AMEX との差別化要因である旅行特典で競合激化。",
-    date: "2026/09/28",
+    type: "新商品",
+    severity: "high",
+    title: "JCB × ユナイテッド航空「MileagePlus JCBプラチナ」発表",
+    detail: "年会費110,000円の最上位カード。最大20万マイルの入会キャンペーン実施中。AMEXプラチナの旅行特典と直接競合。",
+    date: "2026/04/16",
+    image: "/images/news/jcb-platinum-united.jpg",
+    source: "JCB公式発表",
+    impact: "高所得トラベラー層でのシェア争い激化",
+    tags: ["航空マイル", "プレミアムカード", "新規参入"],
   },
   {
     competitor: "Visa(SMBC)",
-    type: "新商品",
+    type: "キャンペーン",
     severity: "high",
-    title: "SMBCがプレミアムカード新ブランド発表",
-    detail: "年会費55,000円の新プレミアムカード。ゴールド〜プラチナ層へ訴求。AMEX ゴールドと直接競合。",
-    date: "2026/10/02",
+    title: "三井住友カード Visa Infinite 最大70,000pt付与キャンペーン",
+    detail: "新規入会&利用で最大50,000pt、税金納付で最大20,000pt。富裕層向け最上位カードで積極的な顧客獲得施策。",
+    date: "2026/02/24",
+    image: "/images/news/smbc-visa-infinite.jpg",
+    source: "PR TIMES",
+    impact: "AMEXプラチナ検討層の取り込みリスク",
+    tags: ["入会特典", "富裕層", "ポイント還元"],
   },
   {
-    competitor: "MC(MUFG)",
-    type: "価格改定",
+    competitor: "JCB",
+    type: "新施策",
+    severity: "medium",
+    title: "JCBがプラチナ向け空港ラウンジ20拠点追加",
+    detail: "国内主要空港のラウンジアクセス拡充。AMEXとの差別化要因である旅行特典で競合激化。",
+    date: "2026/03/28",
+    image: "/images/news/airport-lounge-expansion.jpg",
+    source: "業界レポート",
+    impact: "ラウンジ特典のアドバンテージ縮小",
+    tags: ["空港ラウンジ", "トラベル特典", "インフラ"],
+  },
+  {
+    competitor: "Chase (US)",
+    type: "提携強化",
+    severity: "medium",
+    title: "Chase Sapphire → IHG 70%ボーナス転送を実施",
+    detail: "ポイントをIHG One Rewardsへ70%増量で転送可能（4/30まで）。日本への旅行需要を取り込む施策。",
+    date: "2026/04/11",
+    image: "/images/news/chase-ihg-bonus.jpg",
+    source: "Roaming Cactus",
+    impact: "北米市場でのホテル特典競争",
+    tags: ["ホテルポイント", "提携", "期間限定"],
+  },
+  {
+    competitor: "Visa(SMBC)",
+    type: "販促",
     severity: "low",
-    title: "MUFGカードが年会費を10%引き下げ",
-    detail: "エントリー層への訴求強化。AMEX ブルー・グリーン層への影響は限定的と推定。",
-    date: "2026/09/15",
+    title: "三井住友カード「複数枚持ち」キャンペーン開始",
+    detail: "既存保有者が対象カード新規入会で最大3,000円相当Vポイント付与。クロスセル戦略の強化。",
+    date: "2026/03/16",
+    image: null,
+    source: "PR TIMES",
+    impact: "既存顧客の囲い込み強化",
+    tags: ["クロスセル", "既存顧客", "ポイント"],
   },
 ]
 
@@ -103,7 +137,7 @@ export function AICompetitorsContent() {
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground">競合・市場分析</p>
-            <p className="text-xs text-muted-foreground">データ収集: Web・開示資料・SNS分析 | 更新: 2026/10/01</p>
+            <p className="text-xs text-muted-foreground">データ収集: Web・開示資料・SNS分析 | 更新: 2026/04/23</p>
           </div>
         </div>
         <Button variant="outline" size="sm" className="gap-2 text-xs">
@@ -112,37 +146,102 @@ export function AICompetitorsContent() {
         </Button>
       </div>
 
-      {/* 競合アラート */}
-      <div className="space-y-3">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">AI 検知アラート</p>
-        {competitorAlerts.map((alert, idx) => {
-          const cfg = severityConfig[alert.severity]
-          return (
-            <div key={idx} className="flex gap-3 p-3.5 rounded-xl border border-border bg-card">
-              <div className="mt-1.5 flex-shrink-0">
-                <span className={`inline-block w-2 h-2 rounded-full ${cfg.dot}`} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${cfg.badge}`}>
-                    {alert.type}
-                  </span>
-                  <span className="text-[10px] font-bold text-[#006FCF]">{alert.competitor}</span>
-                  <span className="text-[10px] text-muted-foreground">{alert.date}</span>
+      {/* 競合アラート - リッチ表示 */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">AI 検知アラート（Deep Research）</p>
+          <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
+            リアルタイム更新
+          </Badge>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {competitorAlerts.map((alert, idx) => {
+            const cfg = severityConfig[alert.severity]
+            return (
+              <div 
+                key={idx} 
+                className={`group rounded-xl border bg-card overflow-hidden transition-all hover:shadow-md ${
+                  alert.severity === "high" ? "border-red-200" : "border-border"
+                }`}
+              >
+                {/* 画像エリア */}
+                {alert.image && (
+                  <div className="relative h-32 overflow-hidden bg-slate-100">
+                    <img 
+                      src={alert.image} 
+                      alt={alert.title}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${cfg.badge}`}>
+                        {alert.type}
+                      </span>
+                      <span className="text-[10px] text-white/90 font-medium">{alert.date}</span>
+                    </div>
+                  </div>
+                )}
+                
+                {/* コンテンツエリア */}
+                <div className="p-4 space-y-3">
+                  {/* ヘッダー（画像なしの場合） */}
+                  {!alert.image && (
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${cfg.badge}`}>
+                        {alert.type}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">{alert.date}</span>
+                    </div>
+                  )}
+                  
+                  {/* 競合名とタイトル */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[11px] font-bold text-[#006FCF]">{alert.competitor}</span>
+                      <span className={`w-2 h-2 rounded-full ${cfg.dot}`} />
+                    </div>
+                    <p className="text-sm font-semibold text-foreground leading-snug">{alert.title}</p>
+                  </div>
+                  
+                  {/* 詳細 */}
+                  <p className="text-xs text-muted-foreground leading-relaxed">{alert.detail}</p>
+                  
+                  {/* インパクト分析 */}
+                  <div className="pt-2 border-t border-border/50">
+                    <div className="flex items-start gap-2">
+                      {alert.severity === "high" 
+                        ? <AlertCircle className="h-3.5 w-3.5 text-red-500 mt-0.5 shrink-0" />
+                        : alert.severity === "medium"
+                        ? <TrendingDown className="h-3.5 w-3.5 text-amber-500 mt-0.5 shrink-0" />
+                        : <TrendingUp className="h-3.5 w-3.5 text-blue-500 mt-0.5 shrink-0" />}
+                      <div>
+                        <p className="text-[10px] font-semibold text-muted-foreground uppercase">影響分析</p>
+                        <p className="text-xs text-foreground">{alert.impact}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* タグ */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {alert.tags.map((tag, i) => (
+                      <span 
+                        key={i}
+                        className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* ソース */}
+                  <p className="text-[10px] text-muted-foreground">
+                    出典: {alert.source}
+                  </p>
                 </div>
-                <p className="text-xs font-semibold text-foreground">{alert.title}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">{alert.detail}</p>
               </div>
-              <div className="flex-shrink-0">
-                {alert.severity === "high"
-                  ? <AlertCircle className="h-4 w-4 text-red-500 mt-0.5" />
-                  : alert.severity === "medium"
-                  ? <TrendingDown className="h-4 w-4 text-amber-500 mt-0.5" />
-                  : <TrendingUp className="h-4 w-4 text-blue-500 mt-0.5" />}
-              </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
 
       {/* 分析タブ */}
