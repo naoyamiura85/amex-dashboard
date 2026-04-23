@@ -1,5 +1,4 @@
 "use client"
-// Force reload v2
 
 import { useState } from "react"
 import Image from "next/image"
@@ -47,11 +46,11 @@ const GlobalMap = dynamic(
 
 // ─── 地域データ（5カ国: 日本・US・UK・メキシコ・カナダ）──────────────────────────────────────
 const REGIONS: MapRegion[] = [
-  { id: "jp", name: "日本",     flag: "🇯🇵", marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]  },
-  { id: "us", name: "US",       flag: "🇺🇸", marketSize: "$4.2T", sizeNum: 4.2, growth: "+7.8%", growthNum: 7.8, color: "#006FCF", coordinates: [-98, 39]  },
-  { id: "uk", name: "UK",       flag: "🇬🇧", marketSize: "$1.2T", sizeNum: 1.2, growth: "+4.1%", growthNum: 4.1, color: "#9B2335", coordinates: [-2, 54]   },
-  { id: "mx", name: "メキシコ", flag: "🇲🇽", marketSize: "$0.6T", sizeNum: 0.6, growth: "+9.4%", growthNum: 9.4, color: "#38A169", coordinates: [-102, 24] },
-  { id: "ca", name: "カナダ",   flag: "🇨🇦", marketSize: "$0.8T", sizeNum: 0.8, growth: "+5.5%", growthNum: 5.5, color: "#805AD5", coordinates: [-106, 56] },
+  { id: "jp", name: "日本",     flag: "/images/flags/jp.jpg", marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]  },
+  { id: "us", name: "US",       flag: "/images/flags/us.jpg", marketSize: "$4.2T", sizeNum: 4.2, growth: "+7.8%", growthNum: 7.8, color: "#006FCF", coordinates: [-98, 39]  },
+  { id: "uk", name: "UK",       flag: "/images/flags/uk.jpg", marketSize: "$1.2T", sizeNum: 1.2, growth: "+4.1%", growthNum: 4.1, color: "#9B2335", coordinates: [-2, 54]   },
+  { id: "mx", name: "メキシコ", flag: "/images/flags/mx.jpg", marketSize: "$0.6T", sizeNum: 0.6, growth: "+9.4%", growthNum: 9.4, color: "#38A169", coordinates: [-102, 24] },
+  { id: "ca", name: "カナダ",   flag: "/images/flags/ca.jpg", marketSize: "$0.8T", sizeNum: 0.8, growth: "+5.5%", growthNum: 5.5, color: "#805AD5", coordinates: [-106, 56] },
 ]
 
 // 地域ごとのトレンドサマリー（5カ国）

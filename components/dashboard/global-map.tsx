@@ -214,6 +214,8 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
           center={viewCenter}
           minZoom={1}
           maxZoom={8}
+          translateExtent={[[-1000, -1000], [1000, 1000]]}
+          onMoveEnd={() => {}}
         >
           {/* 海 */}
           <rect x="-800" y="-800" width="2000" height="2000" fill="#DAE8F5" />
@@ -276,10 +278,17 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                     strokeWidth={active ? 2 : 1}
                     style={{ transition: "all 0.2s" }}
                   />
-                  {/* 国旗 */}
-                  <text x={0} y={-radius * 0.28} fontSize={radius * 0.38} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
-                    {r.flag}
-                  </text>
+                  {/* 国旗画像 */}
+                  <image
+                    href={r.flag}
+                    x={-radius * 0.28}
+                    y={-radius * 0.58}
+                    width={radius * 0.56}
+                    height={radius * 0.38}
+                    preserveAspectRatio="xMidYMid slice"
+                    style={{ pointerEvents: "none", borderRadius: 2 }}
+                    clipPath={`inset(0 round 2px)`}
+                  />
                   {/* 緑の矢印 */}
                   <text x={radius * 0.42} y={radius * 0.08} fontSize={radius * 0.26} fill="#10B981" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↗</text>
                   {/* 市場規模テキスト - 濃紺で大きく */}
