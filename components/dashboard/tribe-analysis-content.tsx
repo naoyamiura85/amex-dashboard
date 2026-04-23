@@ -58,6 +58,7 @@ interface Tribe {
   name: string
   icon: LucideIcon
   category: TribeCategory
+  image: string           // トライブのイメージ画像
   members: number        // 万人
   engagementScore: number   // 0–100 (旧y軸)
   spendPotential: number    // 0–100 (旧x軸)
@@ -78,6 +79,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "ゴルフ派",
     icon: Trophy,
     category: "travel",
+    image: "/images/tribes/golf.jpg",
     members: 42,
     engagementScore: 85,
     spendPotential: 88,
@@ -124,6 +126,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "ジェットセッター派",
     icon: Plane,
     category: "travel",
+    image: "/images/tribes/adventure.jpg",
     members: 38,
     engagementScore: 90,
     spendPotential: 92,
@@ -161,6 +164,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "アートコレクター派",
     icon: Palette,
     category: "entertainment",
+    image: "/images/tribes/art.jpg",
     members: 18,
     engagementScore: 78,
     spendPotential: 95,
@@ -198,6 +202,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "美食・グルメ派",
     icon: Wine,
     category: "dining",
+    image: "/images/tribes/gourmet.jpg",
     members: 55,
     engagementScore: 72,
     spendPotential: 78,
@@ -244,6 +249,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "F1・モータースポーツ派",
     icon: Car,
     category: "entertainment",
+    image: "/images/tribes/luxury-car.jpg",
     members: 24,
     engagementScore: 76,
     spendPotential: 85,
@@ -281,6 +287,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "ポロ・乗馬派",
     icon: Trophy,
     category: "entertainment",
+    image: "/images/tribes/golf.jpg",
     members: 9,
     engagementScore: 82,
     spendPotential: 96,
@@ -318,6 +325,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "プライベートアビエーション派",
     icon: Plane,
     category: "travel",
+    image: "/images/tribes/adventure.jpg",
     members: 12,
     engagementScore: 88,
     spendPotential: 98,
@@ -355,6 +363,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "アドベンチャースポーツ派",
     icon: Mountain,
     category: "travel",
+    image: "/images/tribes/adventure.jpg",
     members: 22,
     engagementScore: 55,
     spendPotential: 62,
@@ -392,6 +401,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "クラシック・オペラ派",
     icon: Music,
     category: "entertainment",
+    image: "/images/tribes/live.jpg",
     members: 16,
     engagementScore: 65,
     spendPotential: 72,
@@ -429,6 +439,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "テック投資家派",
     icon: Cpu,
     category: "entertainment",
+    image: "/images/tribes/tech.jpg",
     members: 27,
     engagementScore: 48,
     spendPotential: 70,
@@ -467,6 +478,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "ラグジュアリーリゾート派",
     icon: Plane,
     category: "travel",
+    image: "/images/tribes/adventure.jpg",
     members: 48,
     engagementScore: 78,
     spendPotential: 75,
@@ -504,6 +516,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "ワイン・ソムリエ派",
     icon: Wine,
     category: "dining",
+    image: "/images/tribes/wine.jpg",
     members: 31,
     engagementScore: 62,
     spendPotential: 68,
@@ -541,6 +554,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "プライベートダイニング派",
     icon: Fish,
     category: "dining",
+    image: "/images/tribes/gourmet.jpg",
     members: 19,
     engagementScore: 45,
     spendPotential: 55,
@@ -578,6 +592,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "ヨット・セーリング派",
     icon: Fish,
     category: "travel",
+    image: "/images/tribes/adventure.jpg",
     members: 14,
     engagementScore: 30,
     spendPotential: 42,
@@ -615,6 +630,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "ライブ・フェス派",
     icon: Music,
     category: "entertainment",
+    image: "/images/tribes/live.jpg",
     members: 35,
     engagementScore: 35,
     spendPotential: 38,
@@ -652,6 +668,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "シアター・映画派",
     icon: Star,
     category: "entertainment",
+    image: "/images/tribes/live.jpg",
     members: 28,
     engagementScore: 22,
     spendPotential: 28,
@@ -689,6 +706,7 @@ const ALL_TRIBES: Tribe[] = [
     name: "ローカルグルメ探訪派",
     icon: Fish,
     category: "dining",
+    image: "/images/tribes/seafood.jpg",
     members: 44,
     engagementScore: 15,
     spendPotential: 32,
@@ -1045,6 +1063,23 @@ export function TribeAnalysisContent() {
 
               {/* 概要タブ */}
               <TabsContent value="overview" className="flex-1 px-5 py-4 space-y-4 m-0 overflow-y-auto">
+                {/* トライブイメージ画像 */}
+                <div className="relative h-36 rounded-xl overflow-hidden">
+                  <Image
+                    src={selectedTribe.image}
+                    alt={selectedTribe.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <div className="flex items-center gap-2">
+                      <selectedTribe.icon className="h-5 w-5 text-white" />
+                      <span className="text-white font-bold text-lg">{selectedTribe.name}</span>
+                    </div>
+                    <p className="text-white/80 text-xs mt-1">{CATEGORY_META[selectedTribe.category].label}</p>
+                  </div>
+                </div>
                 <p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg px-3 py-3">
                   {selectedTribe.description}
                 </p>
