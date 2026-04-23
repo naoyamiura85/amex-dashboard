@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import dynamic from "next/dynamic"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
