@@ -43,18 +43,22 @@ const GlobalMap = dynamic(
   }
 )
 
-// ─── 地域データ（3地域: 欧州・日本・北米）──────────────────────────────────────
+// ─── 地域データ（5カ国: 日本・US・UK・メキシコ・カナダ）──────────────────────────────────────
 const REGIONS: MapRegion[] = [
-  { id: "eu", name: "欧州", marketSize: "$3.5T", sizeNum: 3.5, growth: "+5.2%", growthNum: 5.2, color: "#38A169", coordinates: [10, 50]   },
-  { id: "jp", name: "日本", marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]  },
-  { id: "na", name: "北米", marketSize: "$4.7T", sizeNum: 4.7, growth: "+5.8%", growthNum: 5.8, color: "#006FCF", coordinates: [-100, 40] },
+  { id: "jp", name: "日本",     marketSize: "$2.0T", sizeNum: 2.0, growth: "+5.1%", growthNum: 5.1, color: "#B4975A", coordinates: [138, 36]  },
+  { id: "us", name: "US",       marketSize: "$4.2T", sizeNum: 4.2, growth: "+7.8%", growthNum: 7.8, color: "#006FCF", coordinates: [-98, 39]  },
+  { id: "uk", name: "UK",       marketSize: "$1.2T", sizeNum: 1.2, growth: "+4.1%", growthNum: 4.1, color: "#9B2335", coordinates: [-2, 54]   },
+  { id: "mx", name: "メキシコ", marketSize: "$0.6T", sizeNum: 0.6, growth: "+9.4%", growthNum: 9.4, color: "#38A169", coordinates: [-102, 24] },
+  { id: "ca", name: "カナダ",   marketSize: "$0.8T", sizeNum: 0.8, growth: "+5.5%", growthNum: 5.5, color: "#805AD5", coordinates: [-106, 56] },
 ]
 
-// 地域ごとのトレンドサマリー（3地域）
+// 地域ごとのトレンドサマリー（5カ国）
 const REGION_TREND: Record<string, string> = {
-  eu: "欧州市場は$3.5T規模。ラグジュアリー・ファッション・ガストロノミー消費が堅調。EUの規制強化に伴い競合各社のシェア再編が進行中。",
   jp: "日本市場は$2.0T規模。インバウンド回復と円安によるラグジュアリー消費急増。プラチナ・センチュリオン保有者の利用額が前年比+18%。",
-  na: "北米市場は$4.7T規模。プレミアム旅行・エンタメ消費が牽引し、UHNW層のセンチュリオン利用が過去最高。Z世代富裕層の新規獲得が課題。",
+  us: "US市場は$4.2T規模。プレミアム旅行・エンタメ消費が牽引し、UHNW層のセンチュリオン利用が過去最高。Z世代富裕層の新規獲得が課題。",
+  uk: "UK市場は$1.2T規模。ウエストエンド観劇・ゴルフ特典が高評価。Brexit後の旅行需要回復で欧州路線のラウンジ利用が増加傾向。",
+  mx: "メキシコ市場は$0.6T規模。富裕層の海外旅行需要とe-commerceでの利用が急伸。ニアショアリング景気で法人カード需要拡大。",
+  ca: "カナダ市場は$0.8T規模。移民高所得層が新規入会を牽引。スキー・アウトドアとラグジュアリーホテル特典への需要が特に高い。",
 }
 
 // ─── 年間変化率 ──────────────────────────────────────────────────────────────

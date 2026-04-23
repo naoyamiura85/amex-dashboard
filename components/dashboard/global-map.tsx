@@ -39,77 +39,70 @@ const SUB_REGIONS: Record<string, {
   color: string
   subs: SubRegion[]
 }> = {
-  na: {
-    center: [-100, 48],
-    zoom: 3.2,
-    color: "#006FCF",
-    subs: [
-      { name: "US West",   marketSize: "$1,120B", sizeNum: 1120, growth: "+6.2%", coordinates: [-118, 37] },
-      { name: "US East",   marketSize: "$550B",   sizeNum: 550,  growth: "+4.8%", coordinates: [-76, 40]  },
-      { name: "Mexico",    marketSize: "$620B",   sizeNum: 620,  growth: "+7.1%", coordinates: [-102, 24] },
-      { name: "Canada",    marketSize: "$450B",   sizeNum: 450,  growth: "+5.5%", coordinates: [-96, 56]  },
-    ],
-  },
-  eu: {
-    center: [15, 52],
-    zoom: 4,
-    color: "#38A169",
-    subs: [
-      { name: "UK",          marketSize: "$820B", sizeNum: 820, growth: "+4.1%", coordinates: [-2, 54]  },
-      { name: "DACH",        marketSize: "$740B", sizeNum: 740, growth: "+4.9%", coordinates: [13, 48]  },
-      { name: "France",      marketSize: "$610B", sizeNum: 610, growth: "+5.3%", coordinates: [2, 46]   },
-      { name: "South EU",    marketSize: "$490B", sizeNum: 490, growth: "+6.0%", coordinates: [13, 40]  },
-      { name: "Nordic/East", marketSize: "$370B", sizeNum: 370, growth: "+5.8%", coordinates: [22, 58]  },
-    ],
-  },
-  sa: {
-    center: [-58, -15],
-    zoom: 2.8,
-    color: "#9B2335",
-    subs: [
-      { name: "Brazil",    marketSize: "$480B", sizeNum: 480, growth: "+9.4%", coordinates: [-51, -14] },
-      { name: "Argentina", marketSize: "$290B", sizeNum: 290, growth: "+8.1%", coordinates: [-64, -34] },
-      { name: "Chile",     marketSize: "$200B", sizeNum: 200, growth: "+7.6%", coordinates: [-71, -33] },
-      { name: "Colombia",  marketSize: "$230B", sizeNum: 230, growth: "+8.8%", coordinates: [-74, 4]   },
-    ],
-  },
   jp: {
     center: [138, 37],
     zoom: 5.5,
     color: "#B4975A",
     subs: [
-      { name: "首都圏",   marketSize: "$980B",  sizeNum: 980, growth: "+5.4%", coordinates: [139, 35] },
-      { name: "関西圏",   marketSize: "$480B",  sizeNum: 480, growth: "+4.8%", coordinates: [135, 35] },
-      { name: "中部・九州", marketSize: "$340B", sizeNum: 340, growth: "+5.1%", coordinates: [130, 33] },
-      { name: "地方都市", marketSize: "$200B",  sizeNum: 200, growth: "+4.2%", coordinates: [141, 43] },
+      { name: "首都圏",     marketSize: "$980B",  sizeNum: 980, growth: "+5.4%", coordinates: [139.7, 35.7] },
+      { name: "関西圏",     marketSize: "$480B",  sizeNum: 480, growth: "+4.8%", coordinates: [135.5, 34.7] },
+      { name: "中部・東海", marketSize: "$340B",  sizeNum: 340, growth: "+5.1%", coordinates: [137, 35.2]   },
+      { name: "九州・沖縄", marketSize: "$200B",  sizeNum: 200, growth: "+4.2%", coordinates: [131, 33]     },
     ],
   },
-  oc: {
-    center: [134, -27],
-    zoom: 2.5,
+  us: {
+    center: [-98, 39],
+    zoom: 3.5,
+    color: "#006FCF",
+    subs: [
+      { name: "West Coast",   marketSize: "$1,120B", sizeNum: 1120, growth: "+8.2%", coordinates: [-118, 34] },
+      { name: "East Coast",   marketSize: "$1,280B", sizeNum: 1280, growth: "+7.4%", coordinates: [-74, 41]  },
+      { name: "Midwest",      marketSize: "$620B",   sizeNum: 620,  growth: "+5.8%", coordinates: [-87, 42]  },
+      { name: "South",        marketSize: "$1,180B", sizeNum: 1180, growth: "+8.9%", coordinates: [-84, 34]  },
+    ],
+  },
+  uk: {
+    center: [-2, 54],
+    zoom: 6,
+    color: "#9B2335",
+    subs: [
+      { name: "London",         marketSize: "$520B", sizeNum: 520, growth: "+4.6%", coordinates: [-0.1, 51.5] },
+      { name: "South East",     marketSize: "$280B", sizeNum: 280, growth: "+3.8%", coordinates: [0.5, 51.2]  },
+      { name: "Midlands",       marketSize: "$220B", sizeNum: 220, growth: "+3.5%", coordinates: [-1.9, 52.5] },
+      { name: "Scotland/North", marketSize: "$180B", sizeNum: 180, growth: "+4.2%", coordinates: [-4, 56]    },
+    ],
+  },
+  mx: {
+    center: [-102, 24],
+    zoom: 4,
+    color: "#38A169",
+    subs: [
+      { name: "CDMX",      marketSize: "$240B", sizeNum: 240, growth: "+10.2%", coordinates: [-99.1, 19.4] },
+      { name: "Monterrey", marketSize: "$120B", sizeNum: 120, growth: "+11.5%", coordinates: [-100.3, 25.7]},
+      { name: "Guadalajara",marketSize: "$95B", sizeNum: 95,  growth: "+9.8%",  coordinates: [-103.3, 20.7]},
+      { name: "Cancún",    marketSize: "$65B",  sizeNum: 65,  growth: "+12.4%", coordinates: [-87, 21.2]   },
+    ],
+  },
+  ca: {
+    center: [-106, 56],
+    zoom: 3,
     color: "#805AD5",
     subs: [
-      { name: "Sydney",    marketSize: "$420B", sizeNum: 420, growth: "+9.2%", coordinates: [151, -34] },
-      { name: "Melbourne", marketSize: "$360B", sizeNum: 360, growth: "+8.6%", coordinates: [145, -38] },
-      { name: "NZ",        marketSize: "$180B", sizeNum: 180, growth: "+8.9%", coordinates: [174, -41] },
-      { name: "Pacific",   marketSize: "$240B", sizeNum: 240, growth: "+9.6%", coordinates: [160, -22] },
+      { name: "Toronto",   marketSize: "$320B", sizeNum: 320, growth: "+6.2%", coordinates: [-79.4, 43.7] },
+      { name: "Vancouver", marketSize: "$180B", sizeNum: 180, growth: "+5.8%", coordinates: [-123.1, 49.3]},
+      { name: "Montreal",  marketSize: "$140B", sizeNum: 140, growth: "+5.1%", coordinates: [-73.6, 45.5] },
+      { name: "Calgary",   marketSize: "$80B",  sizeNum: 80,  growth: "+6.5%", coordinates: [-114.1, 51]  },
     ],
   },
 }
 
-// 国コード → 地域ID マッピング
+// 国コード → 地域ID マッピング（5カ国: 日本・US・UK・メキシコ・カナダ）
 const COUNTRY_TO_REGION: Record<string, string> = {
-  "840": "na", "124": "na", "484": "na",
-  "276": "eu", "250": "eu", "380": "eu", "724": "eu", "528": "eu",
-  "752": "eu", "756": "eu", "616": "eu", "203": "eu", "040": "eu",
-  "056": "eu", "620": "eu", "372": "eu", "208": "eu", "246": "eu",
-  "578": "eu", "348": "eu", "703": "eu", "705": "eu", "191": "eu",
-  "100": "eu", "642": "eu", "300": "eu", "826": "eu",
-  "392": "jp",
-  "076": "sa", "032": "sa", "152": "sa", "170": "sa", "604": "sa",
-  "218": "sa", "858": "sa", "591": "sa", "600": "sa", "068": "sa",
-  "862": "sa", "328": "sa", "740": "sa", "780": "sa",
-  "036": "oc", "554": "oc", "598": "oc",
+  "392": "jp",   // Japan
+  "840": "us",   // United States
+  "826": "uk",   // United Kingdom
+  "484": "mx",   // Mexico
+  "124": "ca",   // Canada
 }
 
 const GLOBAL_CONFIG = { center: [40, 45] as [number, number], zoom: 1.0 }
