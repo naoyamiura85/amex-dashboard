@@ -158,11 +158,14 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
   }
 
   function handleRegionClick(id: string) {
+    console.log("[v0] handleRegionClick called with id:", id)
+    console.log("[v0] SUB_REGIONS[id]:", SUB_REGIONS[id])
     // バブルクリック → ドリルダウン（SUB_REGIONSに存在する場合のみ）
     if (!SUB_REGIONS[id]) {
       console.warn(`[v0] Region "${id}" not found in SUB_REGIONS`)
       return
     }
+    console.log("[v0] Setting drilledRegion to:", id)
     setDrilledRegion(id)
     onSelectRegion(id)
   }
@@ -239,8 +242,10 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                     onMouseEnter={() => !drilledRegion && setHoveredCountry(numeric)}
                     onMouseLeave={() => setHoveredCountry(null)}
                     onClick={() => {
+                      console.log("[v0] Geography clicked, numeric:", numeric, "type:", typeof numeric)
                       if (drilledRegion) return
                       const rid = COUNTRY_TO_REGION[numeric]
+                      console.log("[v0] Region ID from mapping:", rid)
                       if (rid) handleRegionClick(rid)
                     }}
                   />
