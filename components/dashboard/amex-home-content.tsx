@@ -95,9 +95,11 @@ const THREE_C = [
 // ─── 地域別KPIデータ ───────────────────────────────────────────────────────────
 const REGION_KPI: Record<string, { ar: number; ar_change: number; ltcs: number; ltcs_change: number; bc: number; bc_change: number }> = {
   global: { ar: 58, ar_change: 6, ltcs: 72, ltcs_change: 5, bc: 44, bc_change: 5 },
-  eu: { ar: 56, ar_change: 5, ltcs: 70, ltcs_change: 5, bc: 45, bc_change: 5 },
   jp: { ar: 50, ar_change: 8, ltcs: 73, ltcs_change: 5, bc: 37, bc_change: 5 },
-  na: { ar: 65, ar_change: 7, ltcs: 77, ltcs_change: 5, bc: 50, bc_change: 5 },
+  us: { ar: 65, ar_change: 7, ltcs: 77, ltcs_change: 5, bc: 50, bc_change: 5 },
+  uk: { ar: 56, ar_change: 5, ltcs: 70, ltcs_change: 5, bc: 45, bc_change: 5 },
+  mx: { ar: 48, ar_change: 10, ltcs: 68, ltcs_change: 6, bc: 35, bc_change: 7 },
+  ca: { ar: 60, ar_change: 6, ltcs: 75, ltcs_change: 4, bc: 48, bc_change: 5 },
 }
 
 const KPI_METRICS = [
@@ -106,7 +108,7 @@ const KPI_METRICS = [
   { id: "brand-consideration", key: "bc", changeKey: "bc_change", name: "Brand Consideration", color: "#00175A" },
 ]
 
-// ─── 地域別Audienceデータ ──────────────────────────────────────────────────────
+// ─── 地域別Audienceデータ（5カ国対応）──────────────────────────────────────────
 const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: string }[]; personas: { name: string; age: string; occupation: string; income: string; interests: string[]; quote: string }[] }> = {
   global: {
     demographics: [
@@ -117,19 +119,7 @@ const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: st
     ],
     personas: [
       { name: "Global Executive", age: "45歳", occupation: "経営幹部", income: "$200K+", interests: ["ビジネス旅行", "ゴルフ", "ファインダイニング"], quote: "グローバルで信頼されるカードが必要です" },
-      { name: "Affluent Professional", age: "38歳", occupation: "専門職", income: "$150K+", interests: ["旅行", "��ート", "ウェルネス"], quote: "プレミアムな体験と特典を重視しています" },
-    ],
-  },
-  eu: {
-    demographics: [
-      { label: "平均年齢", value: "44歳" },
-      { label: "平均世帯年収", value: "€165K" },
-      { label: "男女比", value: "62:38" },
-      { label: "都市部居住率", value: "75%" },
-    ],
-    personas: [
-      { name: "James Thompson", age: "48歳", occupation: "弁護士", income: "€180K+", interests: ["劇場", "ワイン", "旅行"], quote: "伝統と名声が私には重要です" },
-      { name: "Sophie Renard", age: "35歳", occupation: "クリエイティブディレクター", income: "€150K+", interests: ["アート", "ガストロノミー", "旅行"], quote: "AMEXの特典で特別な体験にアクセスできます" },
+      { name: "Affluent Professional", age: "38歳", occupation: "専門職", income: "$150K+", interests: ["旅行", "アート", "ウェルネス"], quote: "プレミアムな体験と特典を重視しています" },
     ],
   },
   jp: {
@@ -144,7 +134,7 @@ const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: st
       { name: "佐藤 美咲", age: "35歳", occupation: "医師", income: "1,200万円+", interests: ["ワイン", "アート", "ウェルネス"], quote: "特別な体験と手厚いサービスが決め手です" },
     ],
   },
-  na: {
+  us: {
     demographics: [
       { label: "平均年齢", value: "42歳" },
       { label: "平均世帯年収", value: "$220K" },
@@ -154,6 +144,42 @@ const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: st
     personas: [
       { name: "Michael Chen", age: "45歳", occupation: "Tech Executive", income: "$250K+", interests: ["旅行", "高級ダイニング", "ゴルフ"], quote: "プレミアム特典とグローバルな利用を重視しています" },
       { name: "Sarah Williams", age: "38歳", occupation: "投資銀行家", income: "$300K+", interests: ["ラグジュアリーショッピング", "スパ", "アート"], quote: "コンシェルジュサービスは他に類を見ません" },
+    ],
+  },
+  uk: {
+    demographics: [
+      { label: "平均年齢", value: "44歳" },
+      { label: "平均世帯年収", value: "£165K" },
+      { label: "男女比", value: "62:38" },
+      { label: "都市部居住率", value: "75%" },
+    ],
+    personas: [
+      { name: "James Thompson", age: "48歳", occupation: "弁護士", income: "£180K+", interests: ["劇場", "ワイン", "旅行"], quote: "伝統と名声が私には重要です" },
+      { name: "Sophie Renard", age: "35歳", occupation: "クリエイティブディレクター", income: "£150K+", interests: ["アート", "ガストロノミー", "旅行"], quote: "AMEXの特典で特別な体験にアクセスできます" },
+    ],
+  },
+  mx: {
+    demographics: [
+      { label: "平均年齢", value: "40歳" },
+      { label: "平均世帯年収", value: "$150K" },
+      { label: "男女比", value: "55:45" },
+      { label: "都市部居住率", value: "80%" },
+    ],
+    personas: [
+      { name: "Carlos Hernández", age: "42歳", occupation: "企業オーナー", income: "$180K+", interests: ["ビジネス旅行", "ゴルフ", "高級車"], quote: "海外出張が多いのでグローバルな特典が重要です" },
+      { name: "María González", age: "36歳", occupation: "外資系マネージャー", income: "$140K+", interests: ["ショッピング", "旅行", "美食"], quote: "プレミアムな体験を大切にしています" },
+    ],
+  },
+  ca: {
+    demographics: [
+      { label: "平均年齢", value: "41歳" },
+      { label: "平均世帯年収", value: "CAD 200K" },
+      { label: "男女比", value: "57:43" },
+      { label: "都市部居住率", value: "85%" },
+    ],
+    personas: [
+      { name: "David Lee", age: "44歳", occupation: "ファイナンシャルアドバイザー", income: "CAD 220K+", interests: ["スキー", "ワイン", "旅行"], quote: "旅行特典とラウンジアクセスが決め手です" },
+      { name: "Emily Brown", age: "37歳", occupation: "テック企業VP", income: "CAD 250K+", interests: ["アウトドア", "ウェルネス", "投資"], quote: "実用的で価値のある特典を求めています" },
     ],
   },
 }
