@@ -16,15 +16,15 @@ import {
 import {
   TrendingUp,
   TrendingDown,
-  Globe,
-  Users,
-  Building2,
   Sparkles,
   Bookmark,
   RefreshCw,
   Download,
   BarChart3,
   UserCircle,
+  Plane,
+  UtensilsCrossed,
+  Music,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { GlobalMap, type MapRegion } from "./global-map"
@@ -64,32 +64,99 @@ const COMPETITOR_DATA = [
   { name: "Others",     share:  8, color: "#A0AEC0" },
 ]
 
-// ─── 3C インサイト ────────────────────────────────────────────────────────────
-const THREE_C = [
-  {
-    key: "Customer",
-    label: "Customer（顧客）",
-    icon: Users,
-    color: "text-[#006FCF]",
-    bg: "bg-[#E6F2FF]",
-    text: "プレミアム富裕層が前年比+25.5%成長。若年富裕層の「体験消費」トレンドが定着しており、旅行・ダイニングへの高額支出が継続拡大しています。",
+// ─── 地域別 Travel / Dining / Entertainment トピックス ─────────────────────────
+
+const REGION_TOPICS: Record<string, { travel: string[]; dining: string[]; entertainment: string[] }> = {
+  global: {
+    travel: [
+      "プレミアム旅行需要が過去最高、ファーストクラス予約が前年比+32%",
+      "サステナブルツーリズムへの関心が急上昇、エコラグジュアリーリゾートが人気",
+    ],
+    dining: [
+      "ミシュラン星付きレストランの予約が+28%増加、体験型ダイニングがトレンド",
+      "プライベートシェフサービスの利用が富裕層で拡大中",
+    ],
+    entertainment: [
+      "VIPコンサート・スポーツイベントのプレミアムシート需要が急増",
+      "プライベートジェットでのイベント参加パッケージが人気上昇",
+    ],
   },
-  {
-    key: "Company",
-    label: "Company（自社）",
-    icon: Building2,
-    color: "text-[#B4975A]",
-    bg: "bg-amber-50",
-    text: "AMEXのグローバル会員数が1,158万人に到達。アジア太平洋・中東での新規獲得を加速しており、センチュリオン会員は過去最高水準を更新。",
+  jp: {
+    travel: [
+      "国内高級温泉旅館の予約が+45%増、星のやブランドが特に好調",
+      "ファーストクラス利用のハワイ・ヨーロッパ旅行が富裕層で人気継続",
+    ],
+    dining: [
+      "会員限定のオマカセダイニング体験への参加が+38%増加",
+      "銀座・六本木エリアの高級鮨店予約がAMEXコンシェルジュ経由で急増",
+    ],
+    entertainment: [
+      "歌舞伎・能楽のVIP席アレンジ依頼が増加、伝統芸能への関心が高まる",
+      "プライベートワインテイスティングイベントの開催リクエストが+25%",
+    ],
   },
-  {
-    key: "Competitor",
-    label: "Competitor（競合）",
-    icon: TrendingUp,
-    color: "text-rose-600",
-    bg: "bg-rose-50",
-    text: "Visaがプレミアム領域に参入強化。一方でAMEXの会員ロイヤルティ指標（NPS: 72）は業界トップを維持しており、プレミアム特典での差別化が奏功。",
+  us: {
+    travel: [
+      "マイアミ・アスペンへのプライベートジェット予約が+52%増加",
+      "カリブ海オールインクルーシブリゾートのセンチュリオン特典利用が好調",
+    ],
+    dining: [
+      "NYCのミシュラン3つ星レストラン「Eleven Madison Park」予約が+40%",
+      "ナパバレーのワイナリーディナー体験への需要が急増",
+    ],
+    entertainment: [
+      "NFL・NBAプレミアムスイート利用がビジネスエンターテイメントで人気",
+      "ブロードウェイVIP体験パッケージの予約が前年比+35%",
+    ],
   },
+  uk: {
+    travel: [
+      "コッツウォルズの高級カントリーハウス滞在が+30%増加",
+      "ヨーロッパ周遊のオリエント急行体験への予約が好調",
+    ],
+    dining: [
+      "ロンドンのGordon Ramsayグループレストラン予約が+33%増",
+      "スコットランドのウイスキー蒸留所でのプライベートディナーが人気",
+    ],
+    entertainment: [
+      "ウィンブルドン・ロイヤルボックス席の需要が過去最高",
+      "ウエストエンドのプレミア公演VIPパッケージ利用が増加",
+    ],
+  },
+  mx: {
+    travel: [
+      "ロスカボスのオールインクルーシブリゾート予約が+48%増加",
+      "メキシコシティ〜カンクン間のプライベートジェット利用が拡大",
+    ],
+    dining: [
+      "Pujolなど世界ベストレストラン50選の店舗予約が+42%増",
+      "オアハカの伝統料理とメスカルペアリングディナーが人気",
+    ],
+    entertainment: [
+      "F1メキシコGPのVIPホスピタリティパッケージが即完売",
+      "メキシコシティのアートギャラリープライベートツアーが好評",
+    ],
+  },
+  ca: {
+    travel: [
+      "ウィスラーの高級スキーリゾート予約が+38%増、ヘリスキーが人気",
+      "バンクーバー〜トロント間のビジネスクラス利用が過去最高",
+    ],
+    dining: [
+      "トロントのCanoe、Aloレストラン予約がAMEX会員で+35%増加",
+      "モントリオールのフレンチダイニング体験への需要が拡大",
+    ],
+    entertainment: [
+      "NHL・MLBのプレミアムスイート利用がコーポレートイベントで人気",
+      "トロント国際映画祭のVIPパッケージ予約が+28%増加",
+    ],
+  },
+}
+
+const TOPIC_CATEGORIES = [
+  { key: "travel", label: "Travel", icon: Plane, color: "text-sky-600", bg: "bg-sky-50" },
+  { key: "dining", label: "Dining", icon: UtensilsCrossed, color: "text-amber-600", bg: "bg-amber-50" },
+  { key: "entertainment", label: "Entertainment", icon: Music, color: "text-purple-600", bg: "bg-purple-50" },
 ]
 
 // ─── 地域別KPIデータ ───────────────────────────────────────────────────────────
@@ -187,7 +254,7 @@ const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: st
 // ─── ペルソナ ─────────────────────────────────────────────────────────────────
 const PERSONAS = [
   {
-    name: "田中 雅子",
+    name: "田中 ��子",
     age: 42,
     role: "外資系コンサル パートナー",
     location: "東京都港区",
@@ -419,42 +486,51 @@ export function AmexHomeContent() {
         </div>
       </div>
 
-      {/* 3C分析 + Audience Profile（常に表示、選択地域または全世界） */}
+      {/* Latest Topics + Audience Profile（常に表示、選択地域または全世界） */}
       {(() => {
         const regionId = selected?.id ?? "global"
         const regionName = selected?.name ?? "全世界"
         const audience = REGION_AUDIENCE[regionId]
+        const topics = REGION_TOPICS[regionId] ?? REGION_TOPICS.global
         return (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* 左カラム: 3C分析 */}
+            {/* 左カラム: Latest Topics */}
             <div className="space-y-4">
-              {/* 3C分析インサイト */}
+              {/* Travel / Dining / Entertainment トピックス */}
               <Card className="border border-border shadow-sm">
                 <CardHeader className="pb-3 flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Globe className="h-4 w-4 text-[#006FCF]" />
-                    <CardTitle className="text-sm font-semibold">{regionName} - 3C分析インサイト</CardTitle>
+                    <Sparkles className="h-4 w-4 text-[#006FCF]" />
+                    <CardTitle className="text-sm font-semibold">{regionName} - Latest Topics</CardTitle>
                   </div>
                   <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  {THREE_C.map((c) => {
-                    const Icon = c.icon
+                <CardContent className="space-y-4">
+                  {TOPIC_CATEGORIES.map((cat) => {
+                    const Icon = cat.icon
+                    const items = topics[cat.key as keyof typeof topics] ?? []
                     return (
                       <div
-                        key={c.key}
+                        key={cat.key}
                         className="rounded-xl border border-border/60 p-4 hover:border-border transition-colors"
                       >
                         <div className="flex items-start gap-3">
-                          <div className={`p-1.5 rounded-lg ${c.bg} shrink-0`}>
-                            <Icon className={`h-3.5 w-3.5 ${c.color}`} />
+                          <div className={`p-2 rounded-lg ${cat.bg} shrink-0`}>
+                            <Icon className={`h-4 w-4 ${cat.color}`} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1.5">
-                              <p className="text-xs font-bold text-foreground">{c.label}</p>
-                              <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer" />
+                            <div className="flex items-center justify-between mb-2">
+                              <p className="text-sm font-bold text-foreground">{cat.label}</p>
+                              <Bookmark className="h-3.5 w-3.5 text-muted-foreground cursor-pointer hover:text-foreground" />
                             </div>
-                            <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
+                            <ul className="space-y-2">
+                              {items.map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-2">
+                                  <span className="text-xs text-muted-foreground mt-0.5">•</span>
+                                  <p className="text-xs text-muted-foreground leading-relaxed">{item}</p>
+                                </li>
+                              ))}
+                            </ul>
                           </div>
                         </div>
                       </div>
