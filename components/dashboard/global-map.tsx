@@ -1,13 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   ComposableMap,
   Geographies,
   Geography,
   Marker,
 } from "react-simple-maps"
-import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, X } from "lucide-react"
 
@@ -92,12 +91,29 @@ interface Props {
 export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
 
+  // デバッグログ
+  useEffect(() => {
+    console.log("[v0] GlobalMap mounted")
+    console.log("[v0] regions:", regions)
+    console.log("[v0] regions flags:", regions.map(r => ({ id: r.id, flag: r.flag })))
+  }, [regions])
+
+  useEffect(() => {
+    console.log("[v0] selectedRegion changed:", selectedRegion)
+    if (selectedRegion) {
+      console.log("[v0] SUB_REGIONS for", selectedRegion, ":", SUB_REGIONS[selectedRegion])
+    }
+  }, [selectedRegion])
+
   const globalSizes = regions.map((r) => r.sizeNum)
   const gMin = Math.min(...globalSizes)
   const gMax = Math.max(...globalSizes)
 
   const selectedRegionData = selectedRegion ? regions.find((r) => r.id === selectedRegion) : null
   const subRegions = selectedRegion ? SUB_REGIONS[selectedRegion] : null
+
+  console.log("[v0] selectedRegionData:", selectedRegionData)
+  console.log("[v0] subRegions:", subRegions)
 
   function getCountryFill(numeric: string): string {
     const rid = COUNTRY_TO_REGION[numeric]
@@ -233,12 +249,16 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden border-2" style={{ borderColor: selectedRegionData.color }}>
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={selectedRegionData.flag}
                     alt={selectedRegionData.name}
-                    width={40}
-                    height={40}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.log("[v0] Image load error for:", selectedRegionData.flag)
+                      e.currentTarget.style.display = "none"
+                    }}
+                    onLoad={() => console.log("[v0] Image loaded:", selectedRegionData.flag)}
                   />
                 </div>
                 <div>
