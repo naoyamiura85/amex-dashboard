@@ -118,8 +118,8 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
       {/* 地図エリア */}
       <div className="relative w-full rounded-xl overflow-hidden bg-[#EFF4FB]" style={{ aspectRatio: "2.2/1" }}>
         <ComposableMap
-          projection="geoMercator"
-          projectionConfig={{ scale: 130, center: [20, 30] }}
+          projection="geoEqualEarth"
+          projectionConfig={{ scale: 160, center: [0, 20] }}
           style={{ width: "100%", height: "100%" }}
         >
           {/* 海の背景 */}
