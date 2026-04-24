@@ -1,8 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Globe } from "lucide-react"
+
+// デバッグ: コンポーネントのマウントとエラーをログ
+function useDebugMount(name: string) {
+  useEffect(() => {
+    console.log(`[v0] ${name} mounted`)
+    return () => console.log(`[v0] ${name} unmounted`)
+  }, [name])
+}
 
 // ─── 型定義 ───────────────────────────────────────────────────────────────────
 export interface MapRegion {
@@ -74,10 +82,23 @@ interface Props {
 }
 
 export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
+  useDebugMount("GlobalMap")
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
 
-  const selectedData = selectedRegion ? regions.find((r) => r.id === selectedRegion) : null
+  // デバッグログ
+  useEffect(() => {
+    console.log("[v0] GlobalMap props:", { 
+      regionsCount: regions?.length,
+      regionIds: regions?.map(r => r.id),
+      selectedRegion 
+    })
+  }, [regions, selectedRegion])
+
+  // 安全なデータ取得
+  const selectedData = selectedRegion && regions ? regions.find((r) => r.id === selectedRegion) : null
   const subRegions = selectedRegion ? SUB_REGIONS[selectedRegion] : null
+  
+  console.log("[v0] selectedData:", selectedData?.name, "subRegions:", subRegions?.length)
 
   return (
     <div className="space-y-4">
