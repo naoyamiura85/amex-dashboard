@@ -358,133 +358,126 @@ export function AmexHomeContent() {
           </CardContent>
         </Card>
 
-        {/* 右サイドバー: サマリー + KPI Tracking */}
-        <div className="lg:col-span-2 space-y-4">
-          {/* サマリーパネル */}
-          <Card className="border border-border shadow-sm">
-            <CardHeader className="pb-2 flex-row items-center justify-between">
-              <CardTitle className="text-sm font-semibold">
-                {selected ? `${selected.name} サマリー` : "全世界 サマリー"}
-              </CardTitle>
-              <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
-            </CardHeader>
-            <CardContent className="space-y-5">
-              {/* トレンド */}
-              <div>
-                <p className="text-xs font-bold text-foreground mb-2">トレンド</p>
-                <div className="bg-[#EEF6FF] rounded-lg p-3 flex gap-2">
-                  <Sparkles className="h-3.5 w-3.5 text-[#006FCF] shrink-0 mt-0.5" />
-                  <p className="text-xs text-foreground leading-relaxed">{trendText}</p>
-                </div>
-              </div>
-
-              {/* 年間変化率 */}
-              <div>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-2">
-                  年間変化率（セグメント別）
-                </p>
-                <div className="space-y-1.5">
-                  {ANNUAL_CHANGES.map((c) => (
-                    <div key={c.label} className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">{c.label}</span>
-                      <span className={`text-xs font-bold ${c.up ? "text-emerald-600" : "text-red-500"}`}>
-                        {c.up ? "↑" : "↓"} {c.change}%
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 競合シェア */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">競合</p>
-                  <p className="text-[10px] text-muted-foreground">市場シェア（%）</p>
-                </div>
-                <ResponsiveContainer width="100%" height={110}>
-                  <BarChart
-                    layout="vertical"
-                    data={COMPETITOR_DATA}
-                    margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
-                  >
-                    <XAxis
-                      type="number"
-                      tick={{ fontSize: 10, fill: "#6B7280" }}
-                      axisLine={false}
-                      tickLine={false}
-                      domain={[0, 50]}
-                    />
-                    <YAxis
-                      type="category"
-                      dataKey="name"
-                      tick={{ fontSize: 11, fill: "#111827" }}
-                      axisLine={false}
-                      tickLine={false}
-                      width={68}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#fff",
-                        border: "1px solid #E5E7EB",
-                        borderRadius: "6px",
-                        fontSize: 11,
-                      }}
-                      formatter={(v: number) => [`${v}%`, "シェア"]}
-                    />
-                    <Bar dataKey="share" radius={[0, 3, 3, 0]} barSize={10}>
-                      {COMPETITOR_DATA.map((d) => (
-                        <Cell
-                          key={d.name}
-                          fill={d.color}
-                          opacity={d.name === "AMEX" ? 1 : 0.6}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* KPI Tracking */}
-          {(() => {
-            const regionId = selected?.id ?? "global"
-            const regionName = selected?.name ?? "全世界"
-            const kpi = REGION_KPI[regionId]
-            return (
-              <Card className="border border-border shadow-sm">
-                <CardHeader className="pb-3 flex-row items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-[#006FCF]" />
-                  <CardTitle className="text-sm font-semibold">{regionName} - KPI Tracking</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-3 gap-3">
+        {/* 右サイドバー: サマリー + KPI Tracking (統合) */}
+        {(() => {
+          const regionId = selected?.id ?? "global"
+          const kpi = REGION_KPI[regionId]
+          return (
+            <Card className="lg:col-span-2 border border-border shadow-sm">
+              <CardHeader className="pb-2 flex-row items-center justify-between">
+                <CardTitle className="text-sm font-semibold">
+                  {selected ? `${selected.name} サマリー` : "全世界 サマリー"}
+                </CardTitle>
+                <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* KPI Tracking */}
+                <div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-2">
+                    KPI Tracking
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
                     {KPI_METRICS.map((m) => {
                       const value = kpi[m.key as keyof typeof kpi] as number
                       const change = kpi[m.changeKey as keyof typeof kpi] as number
                       return (
-                        <div key={m.id} className="rounded-lg border border-border/60 p-3 text-center">
-                          <p className="text-xs text-muted-foreground mb-1">{m.name}</p>
-                          <p className="text-2xl font-bold" style={{ color: m.color }}>{value}%</p>
-                          <div className="flex items-center justify-center gap-1 mt-1">
+                        <div key={m.id} className="rounded-lg border border-border/60 p-2.5 text-center">
+                          <p className="text-[10px] text-muted-foreground mb-0.5">{m.name}</p>
+                          <p className="text-xl font-bold" style={{ color: m.color }}>{value}%</p>
+                          <div className="flex items-center justify-center gap-0.5 mt-0.5">
                             {change >= 0 ? (
-                              <TrendingUp className="h-3 w-3 text-emerald-500" />
+                              <TrendingUp className="h-2.5 w-2.5 text-emerald-500" />
                             ) : (
-                              <TrendingDown className="h-3 w-3 text-red-500" />
+                              <TrendingDown className="h-2.5 w-2.5 text-red-500" />
                             )}
-                            <span className={`text-xs font-medium ${change >= 0 ? "text-emerald-500" : "text-red-500"}`}>
-                              {change >= 0 ? "+" : ""}{change}% YoY
+                            <span className={`text-[10px] font-medium ${change >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+                              {change >= 0 ? "+" : ""}{change}%
                             </span>
                           </div>
                         </div>
                       )
                     })}
                   </div>
-                </CardContent>
-              </Card>
-            )
-          })()}
-        </div>
+                </div>
+
+                {/* トレンド */}
+                <div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-2">トレンド</p>
+                  <div className="bg-[#EEF6FF] rounded-lg p-3 flex gap-2">
+                    <Sparkles className="h-3.5 w-3.5 text-[#006FCF] shrink-0 mt-0.5" />
+                    <p className="text-xs text-foreground leading-relaxed">{trendText}</p>
+                  </div>
+                </div>
+
+                {/* 年間変化率 */}
+                <div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-2">
+                    年間変化率（セグメント別）
+                  </p>
+                  <div className="space-y-1.5">
+                    {ANNUAL_CHANGES.map((c) => (
+                      <div key={c.label} className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">{c.label}</span>
+                        <span className={`text-xs font-bold ${c.up ? "text-emerald-600" : "text-red-500"}`}>
+                          {c.up ? "↑" : "↓"} {c.change}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 競合シェア */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">競合</p>
+                    <p className="text-[10px] text-muted-foreground">市場シェア（%）</p>
+                  </div>
+                  <ResponsiveContainer width="100%" height={100}>
+                    <BarChart
+                      layout="vertical"
+                      data={COMPETITOR_DATA}
+                      margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
+                    >
+                      <XAxis
+                        type="number"
+                        tick={{ fontSize: 10, fill: "#6B7280" }}
+                        axisLine={false}
+                        tickLine={false}
+                        domain={[0, 50]}
+                      />
+                      <YAxis
+                        type="category"
+                        dataKey="name"
+                        tick={{ fontSize: 10, fill: "#111827" }}
+                        axisLine={false}
+                        tickLine={false}
+                        width={60}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#fff",
+                          border: "1px solid #E5E7EB",
+                          borderRadius: "6px",
+                          fontSize: 11,
+                        }}
+                        formatter={(v: number) => [`${v}%`, "シェア"]}
+                      />
+                      <Bar dataKey="share" radius={[0, 3, 3, 0]} barSize={10}>
+                        {COMPETITOR_DATA.map((d) => (
+                          <Cell
+                            key={d.name}
+                            fill={d.color}
+                            opacity={d.name === "AMEX" ? 1 : 0.6}
+                          />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })()}
       </div>
 
       {/* Latest Topics + Audience Profile（常に表示、選択地域または全世界） */}
