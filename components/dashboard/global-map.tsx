@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { TrendingUp, Globe } from "lucide-react"
+import { TrendingUp } from "lucide-react"
 
 // ─── 型定義 ───────────────────────────────────────────────────────────────────
 export interface MapRegion {
@@ -81,16 +81,10 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
 
   return (
     <div className="space-y-4">
-      {/* ヘッダー */}
-      <div className="flex items-center gap-2 text-muted-foreground">
-        <Globe className="w-4 h-4" />
-        <span className="text-sm font-medium">グローバルマップ</span>
-      </div>
-
       {/* 地図エリア + 国カード */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
         {/* 地図背景 */}
-        <div className="lg:col-span-2 relative h-[280px] rounded-xl overflow-hidden bg-gradient-to-br from-sky-100 to-blue-200 border">
+        <div className="lg:col-span-3 relative h-[320px] rounded-xl overflow-hidden bg-gradient-to-br from-sky-100 to-blue-200 border">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/world-map.jpg"
