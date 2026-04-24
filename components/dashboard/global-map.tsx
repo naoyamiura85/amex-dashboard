@@ -1,16 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-} from "react-simple-maps"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Globe } from "lucide-react"
 
-const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"
-
+// ─── 型定義 ───────────────────────────────────────────────────────────────────
 export interface MapRegion {
   id: string
   name: string
@@ -23,7 +17,6 @@ export interface MapRegion {
   coordinates: [number, number]
 }
 
-// サブ地域データ
 interface SubRegion {
   name: string
   marketSize: string
@@ -31,6 +24,7 @@ interface SubRegion {
   growth: string
 }
 
+// ─── サブ地域データ ───────────────────────────────────────────────────────────
 const SUB_REGIONS: Record<string, SubRegion[]> = {
   jp: [
     { name: "首都圏", marketSize: "$980B", sizeNum: 980, growth: "+5.4%" },
@@ -64,13 +58,13 @@ const SUB_REGIONS: Record<string, SubRegion[]> = {
   ],
 }
 
-// 国コード -> 地域ID マッピング
-const COUNTRY_TO_REGION: Record<string, string> = {
-  "392": "jp",
-  "840": "us",
-  "826": "uk",
-  "484": "mx",
-  "124": "ca",
+// 地図上のマーカー位置（パーセンテージ）
+const MARKER_POSITIONS: Record<string, { left: string; top: string }> = {
+  jp: { left: "85%", top: "42%" },
+  us: { left: "20%", top: "40%" },
+  uk: { left: "47%", top: "28%" },
+  mx: { left: "15%", top: "52%" },
+  ca: { left: "18%", top: "28%" },
 }
 
 interface Props {
@@ -82,67 +76,70 @@ interface Props {
 export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
 
-  const selectedRegionData = selectedRegion ? regions.find((r) => r.id === selectedRegion) : null
+  const selectedData = selectedRegion ? regions.find((r) => r.id === selectedRegion) : null
   const subRegions = selectedRegion ? SUB_REGIONS[selectedRegion] : null
-
-  function getCountryFill(numeric: string): string {
-    const rid = COUNTRY_TO_REGION[numeric]
-    if (!rid) return "#E5E7EB"
-    const region = regions.find((x) => x.id === rid)
-    if (!region) return "#E5E7EB"
-    
-    if (selectedRegion === rid) return region.color + "66"
-    if (hoveredRegion === rid) return region.color + "33"
-    return "#E5E7EB"
-  }
 
   return (
     <div className="space-y-4">
       {/* ヘッダー */}
       <div className="flex items-center gap-2 text-muted-foreground">
-        <Globe className="h-4 w-4" />
+        <Globe className="w-4 h-4" />
         <span className="text-sm font-medium">グローバルマップ</span>
       </div>
 
-      {/* メインコンテンツ: 地図 + 国カード */}
+      {/* 地図エリア + 国カード */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* 地図エリア (左側 2/3) */}
-        <div className="lg:col-span-2 rounded-xl overflow-hidden bg-[#EFF4FB] border" style={{ aspectRatio: "2/1" }}>
-          <ComposableMap
-            projection="geoEqualEarth"
-            projectionConfig={{ scale: 160, center: [0, 20] }}
-            style={{ width: "100%", height: "100%" }}
-          >
-            <rect x="-1000" y="-1000" width="3000" height="3000" fill="#DAE8F5" />
-            <Geographies geography={GEO_URL}>
-              {({ geographies }) =>
-                geographies.map((geo) => {
-                  const numeric = geo.properties?.numeric ?? geo.properties?.ISO_N3 ?? ""
-                  const rid = COUNTRY_TO_REGION[numeric]
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill={getCountryFill(numeric)}
-                      stroke="#FFFFFF"
-                      strokeWidth={0.4}
-                      style={{
-                        default: { outline: "none", cursor: rid ? "pointer" : "default", transition: "fill 0.2s" },
-                        hover: { outline: "none", cursor: rid ? "pointer" : "default" },
-                        pressed: { outline: "none" },
-                      }}
-                      onMouseEnter={() => rid && setHoveredRegion(rid)}
-                      onMouseLeave={() => setHoveredRegion(null)}
-                      onClick={() => rid && onSelectRegion(rid === selectedRegion ? null : rid)}
-                    />
-                  )
-                })
-              }
-            </Geographies>
-          </ComposableMap>
+        {/* 地図背景 */}
+        <div className="lg:col-span-2 relative h-[280px] rounded-xl overflow-hidden bg-gradient-to-br from-sky-100 to-blue-200 border">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/world-map.jpg"
+            alt="World Map"
+            className="absolute inset-0 w-full h-full object-cover opacity-70"
+          />
+          
+          {/* 国マーカー */}
+          {regions.map((r) => {
+            const isActive = selectedRegion === r.id || hoveredRegion === r.id
+            const pos = MARKER_POSITIONS[r.id]
+            if (!pos) return null
+            
+            return (
+              <button
+                key={r.id}
+                onClick={() => onSelectRegion(selectedRegion === r.id ? null : r.id)}
+                onMouseEnter={() => setHoveredRegion(r.id)}
+                onMouseLeave={() => setHoveredRegion(null)}
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 z-10"
+                style={{ left: pos.left, top: pos.top }}
+              >
+                <div
+                  className={`
+                    flex flex-col items-center justify-center
+                    w-16 h-16 rounded-full bg-white shadow-lg
+                    border-2 transition-all duration-200
+                    ${isActive ? "scale-110 shadow-xl" : "hover:scale-105"}
+                  `}
+                  style={{ borderColor: isActive ? r.color : "rgba(0,0,0,0.1)" }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={r.flag}
+                    alt={r.name}
+                    className="w-6 h-4 object-cover rounded-sm mb-0.5"
+                  />
+                  <span className="text-[10px] font-bold text-slate-700">{r.marketSize}</span>
+                  <span className="text-[9px] text-emerald-600 font-medium flex items-center">
+                    <TrendingUp className="w-2 h-2 mr-0.5" />
+                    {r.growth}
+                  </span>
+                </div>
+              </button>
+            )
+          })}
         </div>
 
-        {/* 国カードリスト (右側 1/3) */}
+        {/* 国カードリスト */}
         <div className="space-y-2">
           {regions.map((r) => {
             const isSelected = selectedRegion === r.id
@@ -166,28 +163,16 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  {/* 国旗 */}
-                  <div
-                    className="w-10 h-7 rounded overflow-hidden border shadow-sm flex-shrink-0"
-                    style={{ borderColor: r.color + "44" }}
-                  >
+                  <div className="w-10 h-7 rounded overflow-hidden border shadow-sm flex-shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={r.flag}
-                      alt={r.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={r.flag} alt={r.name} className="w-full h-full object-cover" />
                   </div>
-                  {/* 国名と数値 */}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{r.name}</p>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold" style={{ color: r.color }}>
-                        {r.marketSize}
-                      </span>
+                      <span className="text-xs font-bold" style={{ color: r.color }}>{r.marketSize}</span>
                       <span className="text-xs text-emerald-600 flex items-center gap-0.5">
-                        <TrendingUp className="h-3 w-3" />
-                        {r.growth}
+                        <TrendingUp className="h-3 w-3" />{r.growth}
                       </span>
                     </div>
                   </div>
@@ -198,27 +183,19 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
         </div>
       </div>
 
-      {/* 選択中の地域詳細パネル */}
-      {selectedRegionData && subRegions && (
-        <Card className="border-l-4" style={{ borderLeftColor: selectedRegionData.color }}>
+      {/* 選択された国のサブ地域詳細 */}
+      {selectedData && subRegions && (
+        <Card className="border-l-4 animate-in fade-in slide-in-from-top-2 duration-300" style={{ borderLeftColor: selectedData.color }}>
           <CardHeader className="pb-2">
             <div className="flex items-center gap-3">
-              <div
-                className="w-8 h-6 rounded overflow-hidden border shadow-sm"
-                style={{ borderColor: selectedRegionData.color + "44" }}
-              >
+              <div className="w-8 h-6 rounded overflow-hidden border shadow-sm">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={selectedRegionData.flag}
-                  alt={selectedRegionData.name}
-                  className="w-full h-full object-cover"
-                />
+                <img src={selectedData.flag} alt={selectedData.name} className="w-full h-full object-cover" />
               </div>
               <div>
-                <CardTitle className="text-base">{selectedRegionData.name} - サブ市場</CardTitle>
+                <CardTitle className="text-base">{selectedData.name} - サブ市場</CardTitle>
                 <p className="text-xs text-muted-foreground">
-                  合計 {selectedRegionData.marketSize} / 成長率{" "}
-                  <span className="text-emerald-600 font-medium">{selectedRegionData.growth}</span>
+                  合計 {selectedData.marketSize} / 成長率 <span className="text-emerald-600 font-medium">{selectedData.growth}</span>
                 </p>
               </div>
             </div>
@@ -226,14 +203,9 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {subRegions.map((sub) => (
-                <div
-                  key={sub.name}
-                  className="p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
-                >
+                <div key={sub.name} className="p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
                   <p className="text-xs text-muted-foreground">{sub.name}</p>
-                  <p className="text-sm font-bold" style={{ color: selectedRegionData.color }}>
-                    {sub.marketSize}
-                  </p>
+                  <p className="text-sm font-bold" style={{ color: selectedData.color }}>{sub.marketSize}</p>
                   <div className="flex items-center gap-1 mt-1">
                     <TrendingUp className="h-3 w-3 text-emerald-500" />
                     <span className="text-xs text-emerald-600 font-medium">{sub.growth}</span>
