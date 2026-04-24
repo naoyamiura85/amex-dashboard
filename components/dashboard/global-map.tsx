@@ -1,21 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Marker,
-  ZoomableGroup,
-} from "react-simple-maps"
-import { ChevronLeft } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { TrendingUp } from "lucide-react"
 
-const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"
-// ローカルフォールバック: /public/world-110m.json が存在すれば "/world-110m.json" に切り替え可能
-
+// ─── 型定義 ───────────────────────────────────────────────────────────────────
 export interface MapRegion {
   id: string
   name: string
+  flag: string
   marketSize: string
   sizeNum: number
   growth: string
@@ -24,107 +17,54 @@ export interface MapRegion {
   coordinates: [number, number]
 }
 
-// サブ地域データ（ドリルダウン時に表示）
 interface SubRegion {
   name: string
   marketSize: string
   sizeNum: number
   growth: string
-  coordinates: [number, number]
 }
 
-const SUB_REGIONS: Record<string, {
-  center: [number, number]
-  zoom: number
-  color: string
-  subs: SubRegion[]
-}> = {
-  na: {
-    center: [-100, 48],
-    zoom: 3.2,
-    color: "#006FCF",
-    subs: [
-      { name: "US West",   marketSize: "$1,120B", sizeNum: 1120, growth: "+6.2%", coordinates: [-118, 37] },
-      { name: "US East",   marketSize: "$550B",   sizeNum: 550,  growth: "+4.8%", coordinates: [-76, 40]  },
-      { name: "Mexico",    marketSize: "$620B",   sizeNum: 620,  growth: "+7.1%", coordinates: [-102, 24] },
-      { name: "Canada",    marketSize: "$450B",   sizeNum: 450,  growth: "+5.5%", coordinates: [-96, 56]  },
-    ],
-  },
-  eu: {
-    center: [15, 52],
-    zoom: 4,
-    color: "#38A169",
-    subs: [
-      { name: "UK",          marketSize: "$820B", sizeNum: 820, growth: "+4.1%", coordinates: [-2, 54]  },
-      { name: "DACH",        marketSize: "$740B", sizeNum: 740, growth: "+4.9%", coordinates: [13, 48]  },
-      { name: "France",      marketSize: "$610B", sizeNum: 610, growth: "+5.3%", coordinates: [2, 46]   },
-      { name: "South EU",    marketSize: "$490B", sizeNum: 490, growth: "+6.0%", coordinates: [13, 40]  },
-      { name: "Nordic/East", marketSize: "$370B", sizeNum: 370, growth: "+5.8%", coordinates: [22, 58]  },
-    ],
-  },
-  sa: {
-    center: [-58, -15],
-    zoom: 2.8,
-    color: "#9B2335",
-    subs: [
-      { name: "Brazil",    marketSize: "$480B", sizeNum: 480, growth: "+9.4%", coordinates: [-51, -14] },
-      { name: "Argentina", marketSize: "$290B", sizeNum: 290, growth: "+8.1%", coordinates: [-64, -34] },
-      { name: "Chile",     marketSize: "$200B", sizeNum: 200, growth: "+7.6%", coordinates: [-71, -33] },
-      { name: "Colombia",  marketSize: "$230B", sizeNum: 230, growth: "+8.8%", coordinates: [-74, 4]   },
-    ],
-  },
-  jp: {
-    center: [138, 37],
-    zoom: 5.5,
-    color: "#B4975A",
-    subs: [
-      { name: "首都圏",   marketSize: "$980B",  sizeNum: 980, growth: "+5.4%", coordinates: [139, 35] },
-      { name: "関西圏",   marketSize: "$480B",  sizeNum: 480, growth: "+4.8%", coordinates: [135, 35] },
-      { name: "中部・九州", marketSize: "$340B", sizeNum: 340, growth: "+5.1%", coordinates: [130, 33] },
-      { name: "地方都市", marketSize: "$200B",  sizeNum: 200, growth: "+4.2%", coordinates: [141, 43] },
-    ],
-  },
-  oc: {
-    center: [134, -27],
-    zoom: 2.5,
-    color: "#805AD5",
-    subs: [
-      { name: "Sydney",    marketSize: "$420B", sizeNum: 420, growth: "+9.2%", coordinates: [151, -34] },
-      { name: "Melbourne", marketSize: "$360B", sizeNum: 360, growth: "+8.6%", coordinates: [145, -38] },
-      { name: "NZ",        marketSize: "$180B", sizeNum: 180, growth: "+8.9%", coordinates: [174, -41] },
-      { name: "Pacific",   marketSize: "$240B", sizeNum: 240, growth: "+9.6%", coordinates: [160, -22] },
-    ],
-  },
+// ─── サブ地域データ ───────────────────────────────────────────────────────────
+const SUB_REGIONS: Record<string, SubRegion[]> = {
+  jp: [
+    { name: "首都圏", marketSize: "$980B", sizeNum: 980, growth: "+5.4%" },
+    { name: "関西圏", marketSize: "$480B", sizeNum: 480, growth: "+4.8%" },
+    { name: "中部・東海", marketSize: "$340B", sizeNum: 340, growth: "+5.1%" },
+    { name: "九州・沖縄", marketSize: "$200B", sizeNum: 200, growth: "+4.2%" },
+  ],
+  us: [
+    { name: "West Coast", marketSize: "$1,120B", sizeNum: 1120, growth: "+8.2%" },
+    { name: "East Coast", marketSize: "$1,280B", sizeNum: 1280, growth: "+7.4%" },
+    { name: "Midwest", marketSize: "$620B", sizeNum: 620, growth: "+5.8%" },
+    { name: "South", marketSize: "$1,180B", sizeNum: 1180, growth: "+8.9%" },
+  ],
+  uk: [
+    { name: "London", marketSize: "$520B", sizeNum: 520, growth: "+4.6%" },
+    { name: "South East", marketSize: "$280B", sizeNum: 280, growth: "+3.8%" },
+    { name: "Midlands", marketSize: "$220B", sizeNum: 220, growth: "+3.5%" },
+    { name: "Scotland/North", marketSize: "$180B", sizeNum: 180, growth: "+4.2%" },
+  ],
+  mx: [
+    { name: "CDMX", marketSize: "$240B", sizeNum: 240, growth: "+10.2%" },
+    { name: "Monterrey", marketSize: "$120B", sizeNum: 120, growth: "+11.5%" },
+    { name: "Guadalajara", marketSize: "$95B", sizeNum: 95, growth: "+9.8%" },
+    { name: "Cancun", marketSize: "$65B", sizeNum: 65, growth: "+12.4%" },
+  ],
+  ca: [
+    { name: "Toronto", marketSize: "$320B", sizeNum: 320, growth: "+6.2%" },
+    { name: "Vancouver", marketSize: "$180B", sizeNum: 180, growth: "+5.8%" },
+    { name: "Montreal", marketSize: "$140B", sizeNum: 140, growth: "+5.1%" },
+    { name: "Calgary", marketSize: "$80B", sizeNum: 80, growth: "+6.5%" },
+  ],
 }
 
-// 国コード → 地域ID マッピング
-const COUNTRY_TO_REGION: Record<string, string> = {
-  "840": "na", "124": "na", "484": "na",
-  "276": "eu", "250": "eu", "380": "eu", "724": "eu", "528": "eu",
-  "752": "eu", "756": "eu", "616": "eu", "203": "eu", "040": "eu",
-  "056": "eu", "620": "eu", "372": "eu", "208": "eu", "246": "eu",
-  "578": "eu", "348": "eu", "703": "eu", "705": "eu", "191": "eu",
-  "100": "eu", "642": "eu", "300": "eu", "826": "eu",
-  "392": "jp",
-  "076": "sa", "032": "sa", "152": "sa", "170": "sa", "604": "sa",
-  "218": "sa", "858": "sa", "591": "sa", "600": "sa", "068": "sa",
-  "862": "sa", "328": "sa", "740": "sa", "780": "sa",
-  "036": "oc", "554": "oc", "598": "oc",
-}
-
-const GLOBAL_CONFIG = { center: [40, 45] as [number, number], zoom: 1.0 }
-
-const MARKER_MIN = 38
-const MARKER_MAX = 85
-function markerRadius(sizeNum: number, min: number, max: number): number {
-  return MARKER_MIN + ((sizeNum - min) / (max - min)) * (MARKER_MAX - MARKER_MIN)
-}
-
-// サブ地域用のバブルサイズ（smaller range）
-const SUB_MIN = 12
-const SUB_MAX = 32
-function subRadius(sizeNum: number, min: number, max: number): number {
-  return SUB_MIN + ((sizeNum - min) / (max - min)) * (SUB_MAX - SUB_MIN)
+// 地図上のマーカー位置（パーセンテージ）
+const MARKER_POSITIONS: Record<string, { left: string; top: string }> = {
+  jp: { left: "85%", top: "42%" },
+  us: { left: "20%", top: "40%" },
+  uk: { left: "47%", top: "28%" },
+  mx: { left: "15%", top: "52%" },
+  ca: { left: "18%", top: "28%" },
 }
 
 interface Props {
@@ -134,195 +74,143 @@ interface Props {
 }
 
 export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
-  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null)
-  // ドリルダウン中の地域ID（nullならグローバルビュー）
-  const [drilledRegion, setDrilledRegion] = useState<string | null>(null)
+  const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
 
-  const hoveredRegionId = hoveredCountry ? COUNTRY_TO_REGION[hoveredCountry] ?? null : null
-  const drillConfig = drilledRegion ? SUB_REGIONS[drilledRegion] : null
-  const drilledColor = drillConfig?.color ?? "#006FCF"
-
-  // ビュー設定
-  const viewCenter = drillConfig ? drillConfig.center : GLOBAL_CONFIG.center
-  const viewZoom   = drillConfig ? drillConfig.zoom   : GLOBAL_CONFIG.zoom
-
-  function getCountryFill(numeric: string): string {
-    const rid = COUNTRY_TO_REGION[numeric]
-    if (!rid) return "#D1D5DB"
-    if (drilledRegion) {
-      // ドリルダウン中: 対象地域は色付き、それ以外は薄く
-      return rid === drilledRegion ? drilledColor + "44" : "#E5E7EB"
-    }
-    if (rid && selectedRegion === rid) {
-      const r = regions.find((x) => x.id === rid)
-      return r ? r.color + "55" : "#CBD5E0"
-    }
-    if (rid && hoveredRegionId === rid) {
-      const r = regions.find((x) => x.id === rid)
-      return r ? r.color + "33" : "#CBD5E0"
-    }
-    return "#D1D5DB"
-  }
-
-  function handleRegionClick(id: string) {
-    // バブルクリック → ドリルダウン
-    setDrilledRegion(id)
-    onSelectRegion(id)
-  }
-
-  function handleBack() {
-    setDrilledRegion(null)
-    onSelectRegion(null)
-  }
-
-  // グローバルビューのバブルサイズ計算
-  const globalSizes = regions.map((r) => r.sizeNum)
-  const gMin = Math.min(...globalSizes)
-  const gMax = Math.max(...globalSizes)
-
-  // サブ地域バブルサイズ計算
-  const subSizes = drillConfig ? drillConfig.subs.map((s) => s.sizeNum) : []
-  const sMin = subSizes.length ? Math.min(...subSizes) : 0
-  const sMax = subSizes.length ? Math.max(...subSizes) : 1
+  const selectedData = selectedRegion && regions ? regions.find((r) => r.id === selectedRegion) : null
+  const subRegions = selectedRegion ? SUB_REGIONS[selectedRegion] : null
 
   return (
-    <div className="relative w-full rounded-xl overflow-hidden bg-[#EFF4FB]" style={{ aspectRatio: "2/1" }}>
-      {/* 戻るボタン */}
-      {drilledRegion && (
-        <button
-          onClick={handleBack}
-          className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-md transition-all hover:opacity-90"
-          style={{ backgroundColor: drilledColor, color: "#fff" }}
-        >
-          <ChevronLeft className="h-3.5 w-3.5" />
-          グローバルビューへ戻る
-        </button>
-      )}
-
-      {/* ドリルダウン中のラベル */}
-      {drilledRegion && (
-        <div
-          className="absolute top-3 right-3 z-10 px-3 py-1.5 rounded-full text-xs font-bold shadow-md"
-          style={{ backgroundColor: drilledColor + "22", color: drilledColor, border: `1.5px solid ${drilledColor}` }}
-        >
-          {regions.find((r) => r.id === drilledRegion)?.name} — サブ市場
-        </div>
-      )}
-
-      <ComposableMap
-        projection="geoMercator"
-        projectionConfig={{ scale: 190, center: [40, 45] }}
-        style={{ width: "100%", height: "100%" }}
-      >
-        <ZoomableGroup
-          zoom={viewZoom}
-          center={viewCenter}
-          minZoom={1}
-          maxZoom={8}
-        >
-          {/* 海 */}
-          <rect x="-800" y="-800" width="2000" height="2000" fill="#DAE8F5" />
-
-          <Geographies geography={GEO_URL}>
-            {({ geographies }) =>
-              geographies.map((geo) => {
-                const numeric = geo.properties.numeric
-                return (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    fill={getCountryFill(numeric)}
-                    stroke="#FFFFFF"
-                    strokeWidth={0.4}
-                    style={{
-                      default: { outline: "none", cursor: "pointer", transition: "fill 0.2s" },
-                      hover:   { outline: "none", cursor: "pointer" },
-                      pressed: { outline: "none" },
-                    }}
-                    onMouseEnter={() => !drilledRegion && setHoveredCountry(numeric)}
-                    onMouseLeave={() => setHoveredCountry(null)}
-                    onClick={() => {
-                      if (drilledRegion) return
-                      const rid = COUNTRY_TO_REGION[numeric]
-                      if (rid) handleRegionClick(rid)
-                    }}
-                  />
-                )
-              })
-            }
-          </Geographies>
-
-          {/* グローバルビュー：地域バブル */}
-          {!drilledRegion &&
-            regions.map((r) => {
-              const radius = markerRadius(r.sizeNum, gMin, gMax)
-              const isSelected = selectedRegion === r.id
-              const isHovered  = hoveredRegionId === r.id
-              const active     = isSelected || isHovered
-
-              return (
-                <Marker
-                  key={r.id}
-                  coordinates={r.coordinates}
-                  onClick={() => handleRegionClick(r.id)}
-                  style={{ cursor: "pointer" }}
+    <div className="space-y-4">
+      {/* 地図エリア + 国カード */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+        {/* 地図背景 */}
+        <div className="lg:col-span-3 relative h-[320px] rounded-xl overflow-hidden bg-gradient-to-br from-sky-100 to-blue-200 border">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/world-map.jpg"
+            alt="World Map"
+            className="absolute inset-0 w-full h-full object-cover opacity-70"
+          />
+          
+          {/* 国マーカー */}
+          {regions.map((r) => {
+            const isActive = selectedRegion === r.id || hoveredRegion === r.id
+            const pos = MARKER_POSITIONS[r.id]
+            if (!pos) return null
+            
+            return (
+              <button
+                key={r.id}
+                onClick={() => onSelectRegion(selectedRegion === r.id ? null : r.id)}
+                onMouseEnter={() => setHoveredRegion(r.id)}
+                onMouseLeave={() => setHoveredRegion(null)}
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 z-10"
+                style={{ left: pos.left, top: pos.top }}
+              >
+                <div
+                  className={`
+                    flex flex-col items-center justify-center
+                    w-16 h-16 rounded-full bg-white shadow-lg
+                    border-2 transition-all duration-200
+                    ${isActive ? "scale-110 shadow-xl" : "hover:scale-105"}
+                  `}
+                  style={{ borderColor: isActive ? r.color : "rgba(0,0,0,0.1)" }}
                 >
-                  {/* ドロップシャドウ用の下層円 */}
-                  <circle
-                    r={radius}
-                    fill="rgba(0,0,0,0.08)"
-                    style={{ pointerEvents: "none", transform: "translate(2px, 3px)" }}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={r.flag}
+                    alt={r.name}
+                    className="w-6 h-4 object-cover rounded-sm mb-0.5"
                   />
-                  {/* メインバブル - 白塗りつぶし */}
-                  <circle
-                    r={radius}
-                    fill="#FFFFFF"
-                    stroke={active ? r.color : "rgba(0,0,0,0.06)"}
-                    strokeWidth={active ? 2 : 1}
-                    style={{ transition: "all 0.2s" }}
-                  />
-                  {/* 緑の矢印 */}
-                  <text x={radius * 0.35} y={-radius * 0.15} fontSize={radius * 0.32} fill="#10B981" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↗</text>
-                  {/* 市場規模テキスト - 濃紺で大きく */}
-                  <text x={0} y={radius * 0.18} fontSize={radius * 0.42} fontWeight={700} fill="#1E3A5F" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
-                    {r.marketSize}
-                  </text>
-                </Marker>
-              )
-            })
-          }
+                  <span className="text-[10px] font-bold text-slate-700">{r.marketSize}</span>
+                  <span className="text-[9px] text-emerald-600 font-medium flex items-center">
+                    <TrendingUp className="w-2 h-2 mr-0.5" />
+                    {r.growth}
+                  </span>
+                </div>
+              </button>
+            )
+          })}
+        </div>
 
-          {/* ドリルダウンビュー：サブ地域バブル */}
-          {drilledRegion && drillConfig &&
-            drillConfig.subs.map((sub, i) => {
-              const radius = subRadius(sub.sizeNum, sMin, sMax)
-              return (
-                <Marker key={i} coordinates={sub.coordinates} style={{ cursor: "default" }}>
-                  {/* パルスリン���� */}
-                  <circle r={radius + 5} fill="none" stroke={drillConfig.color} strokeWidth={1} opacity={0.35} style={{ pointerEvents: "none" }}>
-                    <animate attributeName="r" from={radius + 5} to={radius + 12} dur="2s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" from={0.35} to={0} dur="2s" repeatCount="indefinite" />
-                  </circle>
-                  <circle r={radius} fill={drillConfig.color + "1A"} stroke={drillConfig.color} strokeWidth={1.8} style={{ pointerEvents: "none" }} />
-                  <text x={-3} y={-radius * 0.26} fontSize={radius * 0.28} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 700 }}>↑</text>
-                  {/* 市場���模 */}
-                  <text x={0} y={radius * 0.05} fontSize={radius * 0.32} fontWeight={700} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none" }}>
-                    {sub.marketSize}
-                  </text>
-                  {/* 地域名 */}
-                  <text x={0} y={radius + 12} fontSize={8} fill="#374151" textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 600 }}>
-                    {sub.name}
-                  </text>
-                  {/* 成長率 */}
-                  <text x={0} y={radius + 22} fontSize={7} fill={drillConfig.color} textAnchor="middle" dominantBaseline="middle" style={{ pointerEvents: "none", fontWeight: 600 }}>
-                    {sub.growth}
-                  </text>
-                </Marker>
-              )
-            })
-          }
-        </ZoomableGroup>
-      </ComposableMap>
+        {/* 国カードリスト */}
+        <div className="space-y-2">
+          {regions.map((r) => {
+            const isSelected = selectedRegion === r.id
+            const isHovered = hoveredRegion === r.id
+            return (
+              <button
+                key={r.id}
+                onClick={() => onSelectRegion(r.id === selectedRegion ? null : r.id)}
+                onMouseEnter={() => setHoveredRegion(r.id)}
+                onMouseLeave={() => setHoveredRegion(null)}
+                className={`w-full p-3 rounded-lg border text-left transition-all ${
+                  isSelected
+                    ? "ring-2 ring-offset-1 bg-card shadow-sm"
+                    : isHovered
+                    ? "bg-muted/50"
+                    : "bg-card hover:bg-muted/30"
+                }`}
+                style={{
+                  borderColor: isSelected || isHovered ? r.color : undefined,
+                  // @ts-expect-error Tailwind ring-color CSS variable
+                  "--tw-ring-color": isSelected ? r.color : undefined,
+                } as React.CSSProperties}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-7 rounded overflow-hidden border shadow-sm flex-shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={r.flag} alt={r.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">{r.name}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold" style={{ color: r.color }}>{r.marketSize}</span>
+                      <span className="text-xs text-emerald-600 flex items-center gap-0.5">
+                        <TrendingUp className="h-3 w-3" />{r.growth}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* 選択された国のサブ地域詳細 */}
+      {selectedData && subRegions && (
+        <Card className="border-l-4 animate-in fade-in slide-in-from-top-2 duration-300" style={{ borderLeftColor: selectedData.color }}>
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-6 rounded overflow-hidden border shadow-sm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={selectedData.flag} alt={selectedData.name} className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <CardTitle className="text-base">{selectedData.name} - サブ市場</CardTitle>
+                <p className="text-xs text-muted-foreground">
+                  合計 {selectedData.marketSize} / 成長率 <span className="text-emerald-600 font-medium">{selectedData.growth}</span>
+                </p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {subRegions.map((sub) => (
+                <div key={sub.name} className="p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+                  <p className="text-xs text-muted-foreground">{sub.name}</p>
+                  <p className="text-sm font-bold" style={{ color: selectedData.color }}>{sub.marketSize}</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <TrendingUp className="h-3 w-3 text-emerald-500" />
+                    <span className="text-xs text-emerald-600 font-medium">{sub.growth}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

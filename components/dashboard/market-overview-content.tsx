@@ -217,7 +217,7 @@ const allPersonas: Persona[] = [
     image: "/images/personas/persona-10.jpg",
     occupation: "クリエイティブディレクター", income: "900〜1,200万円",
     background: "広告代理���のクリエイティブ責任者。トレンド発掘のため世界各地を旅する。",
-    lifestyle: "デザインホテルや���ップアップ体験を好む。アートフェア・ファッションウィークに参加。",
+    lifestyle: "デザインホテルや������プアップ体験を好む。アートフェア・ファッションウィークに参加。",
     interests: ["デザインホテル", "現代アート", "ファッション"],
     tribe: ["クリエイティブ派", "カルチャー消費派"],
     cardGoal: "文化体験特典・トレンドアクセス",
@@ -776,15 +776,200 @@ function SegmentDetailPanel({
 }
 
 // ----------------------------------------------------------------
+// 国別データ
+// ----------------------------------------------------------------
+type CountryCode = "JP" | "US" | "UK" | "MX" | "CA"
+
+interface CountryKPI {
+  totalCustomers: string
+  activeRate: string
+  avgSpend: string
+  yoyGrowth: string
+}
+
+interface ThreeCItem {
+  label: string
+  points: string[]
+}
+
+interface CountryData {
+  code: CountryCode
+  name: string
+  flag: string
+  kpi: CountryKPI
+  summary: string
+  threeC: {
+    customer: ThreeCItem
+    competitor: ThreeCItem
+    company: ThreeCItem
+  }
+}
+
+const COUNTRY_DATA: CountryData[] = [
+  {
+    code: "JP", name: "日本", flag: "🇯🇵",
+    kpi: { totalCustomers: "1,700万人", activeRate: "68.4%", avgSpend: "¥42万/月", yoyGrowth: "+5.2%" },
+    summary: "国内最大市場。高所得層の利用単価が高く、ラウンジ・コンシェルジュ特典への需要が旺盛。デジタル接点の拡充でミドル層獲得余地も大きい。",
+    threeC: {
+      customer: {
+        label: "Customer",
+        points: ["50代男性経営者・医師が中心ユーザー", "グルメ・旅行・空港特典の利用率が高い", "年収1,500万円超の高所得層が牽引"],
+      },
+      competitor: {
+        label: "Competitor",
+        points: ["三井住友プラチナがシェア38%でトップ", "JCBザ・クラスが富裕層向けで競合", "楽天プレミアムがポイント訴求で中間層を獲得"],
+      },
+      company: {
+        label: "Company",
+        points: ["空港ラウンジ・コンシェルジュで差別化", "グルメ特典（ゴールドダイニング）が好評", "デジタルオンボーディング強化が課題"],
+      },
+    },
+  },
+  {
+    code: "US", name: "アメリカ", flag: "🇺🇸",
+    kpi: { totalCustomers: "3,200万人", activeRate: "74.1%", avgSpend: "$8,400/月", yoyGrowth: "+7.8%" },
+    summary: "北米最大市場。プレミアムジェット利用とスポーツ観戦VIPが急伸。高所得Z世代・ミレニアル層がデジタル完結型入会で急拡大中。",
+    threeC: {
+      customer: {
+        label: "Customer",
+        points: ["30〜40代専門職・IT起業家が急増", "旅行・エンターテイメント消費が全体の65%", "ポイント還元率よりプレミアム体験を重視"],
+      },
+      competitor: {
+        label: "Competitor",
+        points: ["Chase Sapphire Reservedが旅行特典で競合", "Citi Prestige がホテル利用で追随", "Capital One Ventureがデジタル獲得で攻勢"],
+      },
+      company: {
+        label: "Company",
+        points: ["Centurion Loungeが競合優位の核心", "Platinum Card特典の認知度・満足度が最高水準", "法人カード事業が全収益の42%を占める"],
+      },
+    },
+  },
+  {
+    code: "UK", name: "イギリス", flag: "🇬🇧",
+    kpi: { totalCustomers: "820万人", activeRate: "71.3%", avgSpend: "£3,200/月", yoyGrowth: "+4.1%" },
+    summary: "欧州主要市場。ウエストエンド観劇・ゴルフ特典が高評価。Brexit後の旅行需要回復で欧州路線のラウンジ利用が増加傾向。",
+    threeC: {
+      customer: {
+        label: "Customer",
+        points: ["40〜55代金融・法律プロフェッショナルが中心", "海外旅行・文化体験への支出が高い", "ゴルフ・クリケット等スポーツへの関心が強い"],
+      },
+      competitor: {
+        label: "Competitor",
+        points: ["HSBC Premier がブランド認知でリード", "Barclays Avios で旅行ポイント層を囲い込み", "Virgin Atlantic Mastercardが若年層に人気"],
+      },
+      company: {
+        label: "Company",
+        points: ["Heathrow Centurion Loungeが最大の差別化資産", "Platinum Card保有者のNPSが業界最高水準", "中堅所得層向けGold Cardの成長が鈍化"],
+      },
+    },
+  },
+  {
+    code: "MX", name: "メキシコ", flag: "🇲🇽",
+    kpi: { totalCustomers: "420万人", activeRate: "62.7%", avgSpend: "$2,100/月", yoyGrowth: "+9.4%" },
+    summary: "新興成長市場。富裕層の海外旅行需要とe-commerceでの利用が急伸。ニアショアリング景気でビジネス層の法人カード需要が高まっている。",
+    threeC: {
+      customer: {
+        label: "Customer",
+        points: ["35〜50代実業家・専門職が主要ユーザー", "米国渡航頻度が高く空港特典を重視", "高級レストランとブランドショッピングが利用上位"],
+      },
+      competitor: {
+        label: "Competitor",
+        points: ["Banamex Black がローカル富裕層で強い存在感", "BBVA Éliteが銀行バンドル戦略で拡大", "Citibanamex がポイント還元で中間層を獲得"],
+      },
+      company: {
+        label: "Company",
+        points: ["空港ラウンジ（メキシコシティ/カンクン）が差別化に貢献", "法人カード（B2B）成長率が年間18%で最高水準", "デジタル認証・eKYCの整備が普及の鍵"],
+      },
+    },
+  },
+  {
+    code: "CA", name: "カナダ", flag: "🇨🇦",
+    kpi: { totalCustomers: "560万人", activeRate: "69.8%", avgSpend: "C$4,800/月", yoyGrowth: "+5.5%" },
+    summary: "北米第2市場。移民高所得層が新規入会を牽引。スキー・アウトドアとラグジュアリーホテル特典への需要が特に高い。",
+    threeC: {
+      customer: {
+        label: "Customer",
+        points: ["40代以上の専門職・移民富裕層が成長ドライバー", "旅行とウェルネスへの支出割合が北米最高水準", "デジタルチャネルでの問い合わせ対応品質を重視"],
+      },
+      competitor: {
+        label: "Competitor",
+        points: ["TD Aeroplan Visa Infiniteが旅行カード首位", "RBC Avion Visa Infiniteがマイル訴求で競合", "Scotiabank Passport Visaが外貨手数料ゼロで人気"],
+      },
+      company: {
+        label: "Company",
+        points: ["Air Canada Aeroplanとの連携が最大の差別化要素", "高級ホテル（Four Seasons等）優待でNPS向上", "仏語圏（ケベック）でのマーケティング強化が課題"],
+      },
+    },
+  },
+]
+
+// ----------------------------------------------------------------
+// CountryKPIPanel
+// ----------------------------------------------------------------
+function CountryKPIPanel({ country }: { country: CountryData }) {
+  const kpiItems = [
+    { label: "総顧客数", value: country.kpi.totalCustomers },
+    { label: "アクティブ率", value: country.kpi.activeRate },
+    { label: "平均月間利用額", value: country.kpi.avgSpend },
+    { label: "前年比成長", value: country.kpi.yoyGrowth },
+  ]
+
+  const threeCs = [
+    { key: "customer",   data: country.threeC.customer,   color: "text-[#006FCF]", border: "border-[#006FCF]/20", bg: "bg-[#006FCF]/5" },
+    { key: "competitor", data: country.threeC.competitor, color: "text-[#9B2335]", border: "border-[#9B2335]/20", bg: "bg-[#9B2335]/5" },
+    { key: "company",    data: country.threeC.company,    color: "text-emerald-600", border: "border-emerald-200", bg: "bg-emerald-50" },
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* KPI 行 */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {kpiItems.map(item => (
+          <div key={item.label} className="bg-white rounded-xl border border-slate-200 px-4 py-3 shadow-sm">
+            <p className="text-[11px] text-slate-400 font-medium mb-1">{item.label}</p>
+            <p className="text-lg font-black text-[#006FCF] leading-tight">{item.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* サマリー */}
+      <div className="bg-white rounded-xl border border-slate-200 px-4 py-3 shadow-sm">
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">Summary</p>
+        <p className="text-sm text-slate-700 leading-relaxed">{country.summary}</p>
+      </div>
+
+      {/* 3C分析 */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {threeCs.map(({ key, data, color, border, bg }) => (
+          <div key={key} className={`rounded-xl border ${border} ${bg} px-4 py-3`}>
+            <p className={`text-xs font-black uppercase tracking-wider mb-2.5 ${color}`}>{data.label}</p>
+            <ul className="space-y-1.5">
+              {data.points.map((pt, i) => (
+                <li key={i} className="flex items-start gap-1.5 text-xs text-slate-700 leading-relaxed">
+                  <span className={`mt-0.5 shrink-0 w-1.5 h-1.5 rounded-full ${color.replace("text-", "bg-")}`} />
+                  {pt}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ----------------------------------------------------------------
 // メインコンポーネント
 // ----------------------------------------------------------------
 export function MarketOverviewContent() {
   const [selectedCell, setSelectedCell] = useState<{ eng: EngagementLevel; stage: StageKey } | null>(null)
   const [modalPersona, setModalPersona] = useState<Persona | null>(null)
   const [yAxisType, setYAxisType] = useState<YAxisType>("income")
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>("JP")
 
   const engagements = getEngagements(yAxisType)
   const yAxisLabel = Y_AXIS_OPTIONS.find(o => o.value === yAxisType)?.label ?? "世帯年収"
+  const currentCountry = COUNTRY_DATA.find(c => c.code === selectedCountry)!
 
   const handleCellClick = (eng: EngagementLevel, stage: StageKey) => {
     if (selectedCell?.eng === eng && selectedCell?.stage === stage) {
@@ -829,6 +1014,28 @@ export function MarketOverviewContent() {
           </Button>
         </div>
       </div>
+
+      {/* 国別セレクター */}
+      <div className="flex flex-wrap gap-2">
+        {COUNTRY_DATA.map(c => (
+          <button
+            key={c.code}
+            onClick={() => setSelectedCountry(c.code)}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all",
+              selectedCountry === c.code
+                ? "bg-[#006FCF] text-white border-[#006FCF] shadow-sm"
+                : "bg-white text-slate-600 border-slate-200 hover:border-[#006FCF]/50 hover:text-[#006FCF]"
+            )}
+          >
+            <span className="text-base leading-none">{c.flag}</span>
+            {c.name}
+          </button>
+        ))}
+      </div>
+
+      {/* 国別KPI・サマリー・3Cパネル */}
+      <CountryKPIPanel country={currentCountry} />
 
       {/* グリッドテーブル */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
