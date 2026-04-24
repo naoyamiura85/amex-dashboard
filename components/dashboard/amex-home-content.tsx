@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import dynamic from "next/dynamic"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -28,21 +27,7 @@ import {
   UserCircle,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import type { MapRegion } from "./global-map"
-
-// react-simple-maps はSSR非対応のため dynamic import
-const GlobalMap = dynamic(
-  () => import("./global-map").then((m) => m.GlobalMap),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        className="w-full rounded-xl bg-[#EFF4FB] animate-pulse"
-        style={{ aspectRatio: "2/1" }}
-      />
-    ),
-  }
-)
+import { GlobalMap, type MapRegion } from "./global-map"
 
 // ─── 地域データ（5カ国: 日本・US・UK・メキシコ・カナダ）──────────────────────────────────────
 const REGIONS: MapRegion[] = [
@@ -132,7 +117,7 @@ const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: st
     ],
     personas: [
       { name: "Global Executive", age: "45歳", occupation: "経営幹部", income: "$200K+", interests: ["ビジネス旅行", "ゴルフ", "ファインダイニング"], quote: "グローバルで信頼されるカードが必要です" },
-      { name: "Affluent Professional", age: "38歳", occupation: "専門職", income: "$150K+", interests: ["旅行", "アート", "ウェルネス"], quote: "プレミアムな体験と特典を重視しています" },
+      { name: "Affluent Professional", age: "38歳", occupation: "専門職", income: "$150K+", interests: ["旅行", "��ート", "ウェルネス"], quote: "プレミアムな体験と特典を重視しています" },
     ],
   },
   eu: {
