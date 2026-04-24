@@ -25,6 +25,7 @@ import {
   Plane,
   UtensilsCrossed,
   Music,
+  Globe,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { GlobalMap, type MapRegion } from "./global-map"
