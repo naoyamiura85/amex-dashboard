@@ -1,16 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Globe } from "lucide-react"
-
-// デバッグ: コンポーネントのマウントとエラーをログ
-function useDebugMount(name: string) {
-  useEffect(() => {
-    console.log(`[v0] ${name} mounted`)
-    return () => console.log(`[v0] ${name} unmounted`)
-  }, [name])
-}
 
 // ─── 型定義 ───────────────────────────────────────────────────────────────────
 export interface MapRegion {
@@ -82,23 +74,10 @@ interface Props {
 }
 
 export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
-  useDebugMount("GlobalMap")
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
 
-  // デバッグログ
-  useEffect(() => {
-    console.log("[v0] GlobalMap props:", { 
-      regionsCount: regions?.length,
-      regionIds: regions?.map(r => r.id),
-      selectedRegion 
-    })
-  }, [regions, selectedRegion])
-
-  // 安全なデータ取得
   const selectedData = selectedRegion && regions ? regions.find((r) => r.id === selectedRegion) : null
   const subRegions = selectedRegion ? SUB_REGIONS[selectedRegion] : null
-  
-  console.log("[v0] selectedData:", selectedData?.name, "subRegions:", subRegions?.length)
 
   return (
     <div className="space-y-4">
@@ -180,8 +159,9 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                 }`}
                 style={{
                   borderColor: isSelected || isHovered ? r.color : undefined,
-                  ringColor: isSelected ? r.color : undefined,
-                }}
+                  // @ts-expect-error Tailwind ring-color CSS variable
+                  "--tw-ring-color": isSelected ? r.color : undefined,
+                } as React.CSSProperties}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-7 rounded overflow-hidden border shadow-sm flex-shrink-0">
