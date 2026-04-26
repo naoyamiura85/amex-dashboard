@@ -72,6 +72,85 @@ const EDGES: { from: string; to: string; weight: number }[] = [
   { from: "m6", to: "p2", weight: 3 }, { from: "m6", to: "p3", weight: 2 },
 ]
 
+// ─── パス別分析データ ─────────────────────────────────────────────────────────
+const PATH_ANALYSIS: Record<string, {
+  ratio: string
+  score: number
+  scoreLabel: string
+  touchpoints: string[]
+  motivations: string[]
+  insight: string
+  personas: { name: string; age: string; desc: string; image: string; lifestyle: string; interests: string[] }[]
+}> = {
+  t1: {
+    ratio: "68:32",
+    score: 72,
+    scoreLabel: "旅行熱狂度",
+    touchpoints: ["Instagram広告", "旅行メディア", "航空会社提携"],
+    motivations: ["ラウンジアクセス", "マイル還元", "旅行保険"],
+    insight: "「非日常への没入」を重視。価格より体験の質を優先し、SNSでのシェアも意識する傾向が強い。",
+    personas: [
+      { name: "山田 優子", age: "38 F", desc: "外資コンサル勤務。年間15回以上の海外出張。", image: "/images/personas/tanaka-masako.jpg", lifestyle: "ビジネスとプライベートの境界なく旅を楽しむ。", interests: ["ラウンジ", "マイル"] },
+      { name: "田中 健太", age: "45 M", desc: "IT企業役員。家族との旅行を大切にする。", image: "/images/personas/sato-kenichi.jpg", lifestyle: "週末は家族でリゾートへ。", interests: ["家族旅行", "高級ホテル"] },
+    ]
+  },
+  t2: {
+    ratio: "55:45",
+    score: 85,
+    scoreLabel: "美食探求度",
+    touchpoints: ["グルメメディア", "シェフSNS", "レストラン予約アプリ"],
+    motivations: ["レストラン優先予約", "ダイニング特典", "限定イベント"],
+    insight: "「食を通じた文化体験」を追求。ミシュラン星付きから隠れ家まで、体験の幅広さを求める。",
+    personas: [
+      { name: "佐藤 美咲", age: "42 F", desc: "食品メーカーマーケティング部長。週3回外食。", image: "/images/personas/suzuki-misaki.jpg", lifestyle: "新しいレストランの開拓が趣味。", interests: ["ワイン", "和食"] },
+    ]
+  },
+  t5: {
+    ratio: "78:22",
+    score: 91,
+    scoreLabel: "スポーツ熱狂度",
+    touchpoints: ["F1公式", "スポーツメディア", "スタジアム広告"],
+    motivations: ["VIP観戦席", "選手交流", "限定グッズ"],
+    insight: "「現場での興奮」を最優先。チケット入手困難なイベントへのアクセスに価値を感じる。",
+    personas: [
+      { name: "鈴木 拓也", age: "35 M", desc: "金融機関勤務。年間10回以上のスポーツ観戦。", image: "/images/personas/james-carter.jpg", lifestyle: "週末はスタジアムへ。平日もスポーツニュースをチェック。", interests: ["F1", "サッカー", "ゴルフ"] },
+    ]
+  },
+  t6: {
+    ratio: "82:18",
+    score: 68,
+    scoreLabel: "効率重視度",
+    touchpoints: ["ビジネスメディア", "空港広告", "法人提携"],
+    motivations: ["経費精算の簡素化", "出張サポート", "保険の充実"],
+    insight: "「時間とストレスの節約」が最重要。信頼性とサポート体制を重視する傾向。",
+    personas: [
+      { name: "高橋 誠", age: "52 M", desc: "商社部長。月10日以上の出張。", image: "/images/personas/william-hughes.jpg", lifestyle: "効率を最優先。空港での時間を最小化したい。", interests: ["ラウンジ", "優先搭乗"] },
+    ]
+  },
+  p1: {
+    ratio: "25:75",
+    score: 95,
+    scoreLabel: "プレミアム志向",
+    touchpoints: ["招待制イベント", "コンシェルジュ", "パーソナル案内"],
+    motivations: ["最高級の体験", "専任サポート", "限定特典"],
+    insight: "「他では得られない体験」を求める。価格は二の次で、唯一無二の価値に惹かれる。",
+    personas: [
+      { name: "伊藤 雅彦", age: "58 M", desc: "投資会社CEO。年間利用額3000万円以上。", image: "/images/personas/michael-chen.jpg", lifestyle: "最高の体験のみを追求。", interests: ["プライベートジェット", "美術品"] },
+    ]
+  },
+  p2: {
+    ratio: "45:55",
+    score: 78,
+    scoreLabel: "バランス志向",
+    touchpoints: ["デジタル広告", "口コミ", "比較サイト"],
+    motivations: ["コスパ", "幅広い特典", "安心感"],
+    insight: "「賢い選択」を意識。特典の充実度と年会費のバランスを重視する傾向。",
+    personas: [
+      { name: "渡辺 恵", age: "34 F", desc: "メーカー勤務。旅行とグルメが趣味。", image: "/images/personas/emily-brown.jpg", lifestyle: "賢くお得に楽しみたい。", interests: ["ポイント", "旅行"] },
+    ]
+  },
+}
+
 // ─── カラー ────────────────────────────────────────────────────────────────────
 const COL_COLORS = {
   tribe:      "#006FCF",
@@ -117,11 +196,11 @@ export function ExperienceFlow() {
   }, [])
 
   const { w } = dims
-  const PAD = { t: 60, b: 60, l: 130, r: 20 }
+  const PAD = { t: 50, b: 40, l: 130, r: 20 }
 
-  // 最も多いノード数に合わせて高さを動的計算（最低間隔 72px）
+  // 最も多いノード数に合わせて高さを動的計算（最低間隔 52px - コンパクト化）
   const maxNodes = Math.max(TRIBES.length, TOUCHPOINTS.length, MOTIVES.length, PATTERNS.length)
-  const ROW_GAP = 72
+  const ROW_GAP = 52
   const h = PAD.t + PAD.b + maxNodes * ROW_GAP
   const innerH = h - PAD.t - PAD.b
 
@@ -273,7 +352,7 @@ export function ExperienceFlow() {
             <circle
               cx={n.x}
               cy={n.y}
-              r={22}
+              r={18}
               fill="white"
               stroke={isHighlight(n.id) ? COL_COLORS.touchpoint : "#E2E8F0"}
               strokeWidth={isHighlight(n.id) ? 2 : 1}
@@ -281,9 +360,9 @@ export function ExperienceFlow() {
             />
             <text
               x={n.x}
-              y={n.y + 4}
+              y={n.y + 3}
               textAnchor="middle"
-              fontSize={10}
+              fontSize={9}
               fontWeight={600}
               fill={isHighlight(n.id) ? COL_COLORS.touchpoint : "#94A3B8"}
               style={{ transition: "all 0.2s" }}
@@ -322,8 +401,8 @@ export function ExperienceFlow() {
 
         {/* パターン ノード（カード画像付き） */}
         {patternNodes.map(n => {
-          const cardW = 54
-          const cardH = 34
+          const cardW = 44
+          const cardH = 28
           return (
             <g
               key={n.id}
@@ -334,7 +413,7 @@ export function ExperienceFlow() {
               <circle
                 cx={n.x}
                 cy={n.y}
-                r={42}
+                r={34}
                 fill={isHighlight(n.id) ? n.color : "#E2E8F0"}
                 fillOpacity={0.12}
                 stroke={isHighlight(n.id) ? n.color : "#CBD5E1"}
@@ -344,13 +423,13 @@ export function ExperienceFlow() {
               {/* カード画像 */}
               <defs>
                 <clipPath id={`card-clip-${n.id}`}>
-                  <rect x={n.x - cardW / 2} y={n.y - 20} width={cardW} height={cardH} rx={4} />
+                  <rect x={n.x - cardW / 2} y={n.y - 16} width={cardW} height={cardH} rx={3} />
                 </clipPath>
               </defs>
               <image
                 href={n.image}
                 x={n.x - cardW / 2}
-                y={n.y - 20}
+                y={n.y - 16}
                 width={cardW}
                 height={cardH}
                 clipPath={`url(#card-clip-${n.id})`}
@@ -362,9 +441,9 @@ export function ExperienceFlow() {
               {/* ラベルと人数 */}
               <text
                 x={n.x}
-                y={n.y + 24}
+                y={n.y + 20}
                 textAnchor="middle"
-                fontSize={9}
+                fontSize={8}
                 fontWeight={700}
                 fill={isHighlight(n.id) ? n.color : "#94A3B8"}
                 style={{ transition: "all 0.2s" }}
@@ -373,9 +452,9 @@ export function ExperienceFlow() {
               </text>
               <text
                 x={n.x}
-                y={n.y + 36}
+                y={n.y + 30}
                 textAnchor="middle"
-                fontSize={10}
+                fontSize={9}
                 fontWeight={800}
                 fill={isHighlight(n.id) ? n.color : "#94A3B8"}
                 style={{ transition: "all 0.2s" }}
@@ -386,6 +465,124 @@ export function ExperienceFlow() {
           )
         })}
       </svg>
+
+      {/* パス別分析セクション */}
+      {activeId && PATH_ANALYSIS[activeId] && (
+        <div className="border-t border-slate-100 p-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* 左カラム: 統計とタッチポイント */}
+            <div className="space-y-4">
+              {/* 統計 */}
+              <div className="flex gap-4">
+                <div className="bg-slate-50 rounded-lg px-4 py-3 text-center">
+                  <p className="text-lg font-bold text-slate-800">{PATH_ANALYSIS[activeId].ratio}</p>
+                  <p className="text-[10px] text-slate-500">LM/MH</p>
+                </div>
+                <div className="bg-slate-50 rounded-lg px-4 py-3 text-center">
+                  <p className="text-lg font-bold text-[#006FCF]">{PATH_ANALYSIS[activeId].score}</p>
+                  <p className="text-[10px] text-slate-500">{PATH_ANALYSIS[activeId].scoreLabel}</p>
+                </div>
+              </div>
+
+              {/* タッチポイント */}
+              <div>
+                <p className="text-xs font-semibold text-[#006FCF] mb-2">タッチポイント</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {PATH_ANALYSIS[activeId].touchpoints.map(tp => (
+                    <span key={tp} className="px-2 py-1 bg-slate-100 rounded text-[11px] text-slate-600">{tp}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* 申込み動機 */}
+              <div>
+                <p className="text-xs font-semibold text-[#006FCF] mb-2">申込み動機</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {PATH_ANALYSIS[activeId].motivations.map(m => (
+                    <span key={m} className="px-2 py-1 bg-blue-50 border border-blue-200 rounded text-[11px] text-blue-700">{m}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* AIインサイト */}
+              <div className="bg-slate-50 rounded-lg p-3 border-l-2 border-[#006FCF]">
+                <p className="text-[11px] text-slate-600 leading-relaxed">{PATH_ANALYSIS[activeId].insight}</p>
+              </div>
+            </div>
+
+            {/* 右カラム: ペルソナプロフィール */}
+            <div className="lg:col-span-2">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-[#006FCF]" />
+                <p className="text-xs font-semibold text-slate-700">AIペルソナプロフィール</p>
+                <span className="text-[10px] text-slate-400">— このパターンの代表的な顧客像</span>
+              </div>
+
+              {/* ペルソナ選択タブ */}
+              <div className="flex gap-2 mb-4">
+                {PATH_ANALYSIS[activeId].personas.map((p, i) => (
+                  <button
+                    key={p.name}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs transition-all ${
+                      i === 0
+                        ? "bg-[#006FCF] text-white border-[#006FCF]"
+                        : "bg-white text-slate-600 border-slate-200 hover:border-[#006FCF]"
+                    }`}
+                  >
+                    <div className="w-5 h-5 rounded-full overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                    </div>
+                    {p.name}・{p.age}
+                  </button>
+                ))}
+              </div>
+
+              {/* ペルソナ詳細 */}
+              {PATH_ANALYSIS[activeId].personas[0] && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* プロフィール */}
+                  <div className="flex gap-4">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-200 shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={PATH_ANALYSIS[activeId].personas[0].image}
+                        alt={PATH_ANALYSIS[activeId].personas[0].name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-800">{PATH_ANALYSIS[activeId].personas[0].name}</p>
+                      <p className="text-xs text-slate-500">{PATH_ANALYSIS[activeId].personas[0].age}</p>
+                      <p className="text-xs text-slate-600 mt-1">{PATH_ANALYSIS[activeId].personas[0].desc}</p>
+                    </div>
+                  </div>
+
+                  {/* 詳細情報 */}
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-[10px] text-slate-400 flex items-center gap-1 mb-1">
+                        <span className="text-sm">&#128100;</span> ライフスタイル
+                      </p>
+                      <p className="text-xs text-slate-600">{PATH_ANALYSIS[activeId].personas[0].lifestyle}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 flex items-center gap-1 mb-1">
+                        <span className="text-sm">&#10084;</span> 関心事
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {PATH_ANALYSIS[activeId].personas[0].interests.map(i => (
+                          <span key={i} className="px-2 py-0.5 bg-rose-50 border border-rose-200 rounded text-[10px] text-rose-600">{i}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
