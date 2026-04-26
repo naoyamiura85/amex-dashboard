@@ -324,23 +324,6 @@ export function AmexHomeContent() {
               selectedRegion={selectedRegion}
               onSelectRegion={setSelectedRegion}
             />
-            {/* 凡例 */}
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 px-1">
-              {REGIONS.map((r) => (
-                <button
-                  key={r.id}
-                  onClick={() => setSelectedRegion(r.id === selectedRegion ? null : r.id)}
-                  className={`flex items-center gap-1.5 text-xs transition-opacity ${
-                    selectedRegion && selectedRegion !== r.id ? "opacity-40" : "opacity-100"
-                  }`}
-                >
-                  <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: r.color }} />
-                  <span className="font-medium text-foreground">{r.name}</span>
-                  <span className="font-bold" style={{ color: r.color }}>{r.marketSize}</span>
-                  <span className="text-emerald-600 font-semibold">{r.growth}</span>
-                </button>
-              ))}
-            </div>
           </CardContent>
         </Card>
 
