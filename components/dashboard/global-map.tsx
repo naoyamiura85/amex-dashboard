@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp } from "lucide-react"
 
 // ─── 型定義 ───────────────────────────────────────────────────────────────────
@@ -176,36 +175,32 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
 
       {/* 選択された国のサブ地域詳細 */}
       {selectedData && subRegions && (
-        <Card className="border-l-4 animate-in fade-in slide-in-from-top-2 duration-300" style={{ borderLeftColor: selectedData.color }}>
-          <CardHeader className="pb-2">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-6 rounded overflow-hidden border shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={selectedData.flag} alt={selectedData.name} className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <CardTitle className="text-base">{selectedData.name} - サブ市場</CardTitle>
-                <p className="text-xs text-muted-foreground">
-                  合計 {selectedData.marketSize} / 成長率 <span className="text-emerald-600 font-medium">{selectedData.growth}</span>
-                </p>
-              </div>
+        <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-6 rounded overflow-hidden border shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={selectedData.flag} alt={selectedData.name} className="w-full h-full object-cover" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {subRegions.map((sub) => (
-                <div key={sub.name} className="p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                  <p className="text-xs text-muted-foreground">{sub.name}</p>
-                  <p className="text-sm font-bold" style={{ color: selectedData.color }}>{sub.marketSize}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3 text-emerald-500" />
-                    <span className="text-xs text-emerald-600 font-medium">{sub.growth}</span>
-                  </div>
+            <div>
+              <p className="text-base font-semibold">{selectedData.name} - サブ市場</p>
+              <p className="text-xs text-muted-foreground">
+                合計 {selectedData.marketSize} / 成長率 <span className="text-emerald-600 font-medium">{selectedData.growth}</span>
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {subRegions.map((sub) => (
+              <div key={sub.name} className="p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+                <p className="text-xs text-muted-foreground">{sub.name}</p>
+                <p className="text-sm font-bold" style={{ color: selectedData.color }}>{sub.marketSize}</p>
+                <div className="flex items-center gap-1 mt-1">
+                  <TrendingUp className="h-3 w-3 text-emerald-500" />
+                  <span className="text-xs text-emerald-600 font-medium">{sub.growth}</span>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   )
