@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -252,53 +252,39 @@ const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: st
   },
 }
 
-// ─── ペルソナ ─────────────────────────────────────────────────────────────────
-const PERSONAS = [
-  {
-    name: "田中 雅子",
-    age: 42,
-    role: "外資系コンサル パートナー",
-    location: "東京都港区",
-    quote: "出張が月15日以上。ラウンジと優先搭乗は外せません。出費は惜しまないけど、それ以上の価値が欲しい。",
-    quoteEn: "Business travel 15+ days/month. Lounge and priority boarding are must-haves.",
-    initials: "TM",
-    color: "#006FCF",
-    image: "/images/personas/tanaka-masako.jpg",
-  },
-  {
-    name: "James Carter",
-    age: 38,
-    role: "Senior VP, Private Banking",
-    location: "New York, USA",
-    quote: "My Centurion card is the first thing clients notice. Status matters in my world.",
-    quoteEn: null,
-    initials: "JC",
-    color: "#B4975A",
-    image: "/images/personas/james-carter.jpg",
-  },
-  {
-    name: "Sophie Renard",
-    age: 35,
-    role: "Creative Director",
-    location: "Paris, France",
-    quote: "Je voyage pour l'art et la gastronomie. Les avantages AMEX me donnent accès à l'inaccessible.",
-    quoteEn: "I travel for art and gastronomy. AMEX perks give me access to the inaccessible.",
-    initials: "SR",
-    color: "#38A169",
-    image: "/images/personas/sophie-renard.jpg",
-  },
-  {
-    name: "陳 明远",
-    age: 44,
-    role: "科技创业者 / Tech Founder",
-    location: "上海, China",
-    quote: "国际商务中，美国运通卡是身份与信赖的象征。高端服务是我选择的核心。",
-    quoteEn: "In international business, AMEX is a symbol of status and trust.",
-    initials: "CM",
-    color: "#E53E3E",
-    image: "/images/personas/chen-mingyuan.jpg",
-  },
-]
+// ─── ペルソナ（地域別） ─────────────────────────────────────────────────────────
+const PERSONAS: Record<string, { name: string; age: number; role: string; location: string; quote: string; initials: string; color: string }[]> = {
+  global: [
+    { name: "田中 雅子", age: 42, role: "外資系コンサル パートナー", location: "東京都港区", quote: "出張が月15日以上。ラウンジと優先搭乗は外せません。", initials: "TM", color: "#006FCF" },
+    { name: "James Carter", age: 38, role: "Senior VP, Private Banking", location: "New York, USA", quote: "My Centurion card is the first thing clients notice.", initials: "JC", color: "#B4975A" },
+    { name: "Sophie Renard", age: 35, role: "Creative Director", location: "Paris, France", quote: "Je voyage pour l'art et la gastronomie.", initials: "SR", color: "#38A169" },
+  ],
+  jp: [
+    { name: "田中 雅子", age: 42, role: "外資系コンサル パートナー", location: "東京都港区", quote: "出張が月15日以上。ラウンジと優先搭乗は外せません。出費は惜しまないけど、それ以上の価値が欲しい。", initials: "TM", color: "#006FCF" },
+    { name: "佐藤 健一", age: 48, role: "医療法人 理事長", location: "大阪府豊中市", quote: "患者様への最高のサービス同様、自分へのご褒美も妥協しません。", initials: "SK", color: "#B4975A" },
+    { name: "鈴木 美咲", age: 35, role: "IT企業 執行役員", location: "東京都渋谷区", quote: "海外出張とプライベート旅行、どちらも最高の体験を求めています。", initials: "SM", color: "#38A169" },
+  ],
+  us: [
+    { name: "James Carter", age: 38, role: "Senior VP, Private Banking", location: "New York, USA", quote: "My Centurion card is the first thing clients notice. Status matters in my world.", initials: "JC", color: "#B4975A" },
+    { name: "Sarah Williams", age: 42, role: "Tech Executive", location: "San Francisco, USA", quote: "From SFO lounges to global conferences, AMEX makes my life seamless.", initials: "SW", color: "#006FCF" },
+    { name: "Michael Chen", age: 45, role: "Investment Director", location: "Boston, USA", quote: "Premium travel and exclusive access are non-negotiable for me.", initials: "MC", color: "#38A169" },
+  ],
+  uk: [
+    { name: "William Hughes", age: 44, role: "Barrister", location: "London, UK", quote: "Tradition and prestige matter. AMEX embodies both in every interaction.", initials: "WH", color: "#006FCF" },
+    { name: "Charlotte Davies", age: 36, role: "Investment Banker", location: "London, UK", quote: "From Heathrow to Hong Kong, the Centurion service is impeccable.", initials: "CD", color: "#B4975A" },
+    { name: "Oliver Smith", age: 50, role: "Private Equity Partner", location: "Edinburgh, UK", quote: "Fine dining, exclusive events - AMEX opens doors others cannot.", initials: "OS", color: "#38A169" },
+  ],
+  mx: [
+    { name: "Carlos Hernández", age: 42, role: "Empresario", location: "Ciudad de México", quote: "Para mis viajes de negocios internacionales, AMEX es indispensable.", initials: "CH", color: "#006FCF" },
+    { name: "María González", age: 38, role: "Directora de Marketing", location: "Monterrey, México", quote: "Los beneficios premium hacen que cada viaje sea una experiencia única.", initials: "MG", color: "#B4975A" },
+    { name: "Diego Ramírez", age: 45, role: "CEO, Tecnología", location: "Guadalajara, México", quote: "El servicio de conserjería es excepcional para mis eventos corporativos.", initials: "DR", color: "#38A169" },
+  ],
+  ca: [
+    { name: "David Lee", age: 44, role: "Financial Advisor", location: "Toronto, Canada", quote: "From ski trips to business meetings, AMEX delivers exceptional value.", initials: "DL", color: "#006FCF" },
+    { name: "Emily Brown", age: 37, role: "Tech VP", location: "Vancouver, Canada", quote: "The travel benefits alone make the annual fee worthwhile.", initials: "EB", color: "#B4975A" },
+    { name: "Jean-Pierre Dubois", age: 48, role: "Avocat", location: "Montréal, Canada", quote: "Le service en français et les avantages premium sont incomparables.", initials: "JD", color: "#38A169" },
+  ],
+}
 
 // ─── コンポーネント ───────────────────────────────────────────────────────────
 export function AmexHomeContent() {
@@ -553,22 +539,16 @@ export function AmexHomeContent() {
                     </div>
                   ))}
                 </div>
-                {/* ペルソナ分析 */}
+                {/* ペルソナ分析（地域別） */}
                 <div className="space-y-0 divide-y divide-border/60">
-                  {PERSONAS.map((p) => (
+                  {(PERSONAS[regionId] ?? PERSONAS.global).map((p) => (
                     <div key={p.name} className="py-3 first:pt-0">
                       <div className="flex gap-3">
                         <div
-                          className="w-10 h-10 rounded-full shrink-0 overflow-hidden border-2"
-                          style={{ borderColor: p.color }}
+                          className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
+                          style={{ backgroundColor: p.color }}
                         >
-                          <Image
-                            src={p.image}
-                            alt={p.name}
-                            width={40}
-                            height={40}
-                            className="w-full h-full object-cover"
-                          />
+                          {p.initials}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
