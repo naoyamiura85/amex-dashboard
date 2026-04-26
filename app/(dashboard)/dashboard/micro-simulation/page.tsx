@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Send, User, Bot } from "lucide-react"
 
 const AI_PERSONAS = [
@@ -26,6 +26,12 @@ export default function MicroSimulationPage() {
     { role: "assistant", content: `こんにちは、${AI_PERSONAS[0].name}です。AMEXカードについてのご質問があればお聞きください。私の視点からお答えします。` },
   ])
   const [input, setInput] = useState("")
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // メッセージが更新されたら自動スクロール
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
   const handleSend = () => {
     if (!input.trim()) return
@@ -152,6 +158,7 @@ export default function MicroSimulationPage() {
                   )}
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </CardContent>
             <div className="p-4 border-t">
               <div className="flex gap-2">
