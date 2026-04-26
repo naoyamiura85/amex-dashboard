@@ -72,11 +72,11 @@ const statusColors: Record<string, string> = {
 
 // 国タブ定義
 const COUNTRIES = [
-  { code: "jp", name: "日本", flag: "/images/flags/jp.svg" },
-  { code: "us", name: "US", flag: "/images/flags/us.svg" },
-  { code: "uk", name: "UK", flag: "/images/flags/uk.svg" },
-  { code: "mx", name: "メキシコ", flag: "/images/flags/mx.svg" },
-  { code: "ca", name: "カナダ", flag: "/images/flags/ca.svg" },
+  { code: "jp", name: "日本", flag: "/images/flags/jp.jpg" },
+  { code: "us", name: "US", flag: "/images/flags/us.jpg" },
+  { code: "uk", name: "UK", flag: "/images/flags/uk.jpg" },
+  { code: "mx", name: "メキシコ", flag: "/images/flags/mx.jpg" },
+  { code: "ca", name: "カナダ", flag: "/images/flags/ca.jpg" },
 ]
 
 export function TrendsListContent() {
@@ -99,6 +99,9 @@ export function TrendsListContent() {
         // Apply main tab filter first
         const matchesTab = currentTabConfig.categories.includes(trend.category)
         
+        // Apply country filter
+        const matchesCountry = !trend.country || trend.country === selectedCountry
+        
         // Apply category mode filter
         const modeCategories = categoryModeMapping[mode]
         const matchesMode = modeCategories.length === 0 || modeCategories.includes(trend.category)
@@ -110,7 +113,7 @@ export function TrendsListContent() {
         // Then apply additional category filter (only if mode is "all")
         const matchesCategory = mode !== "all" || selectedCategories.length === 0 || selectedCategories.includes(trend.category)
         
-        return matchesTab && matchesMode && matchesSearch && matchesCategory
+        return matchesTab && matchesCountry && matchesMode && matchesSearch && matchesCategory
       })
       .sort((a, b) => {
         if (sortBy === "growth") {
@@ -126,7 +129,7 @@ export function TrendsListContent() {
         }
         return 0
       })
-  }, [trends, mode, searchQuery, selectedCategories, sortBy, currentTabConfig])
+  }, [trends, mode, searchQuery, selectedCategories, sortBy, currentTabConfig, selectedCountry])
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">

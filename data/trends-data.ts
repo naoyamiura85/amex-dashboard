@@ -15,6 +15,7 @@ export const initialTrends: Trend[] = [
     description: "民間宇宙企業による月周回・月面着陸ツアーへの予約金支払いが超富裕層の間で静かに始まっている。1人あたり$1億超の体験に数十件の本申込が確認されている。",
     popularityScore: 28,
     imageUrl: "/images/trends/lunar-tourism.jpg",
+    country: "jp",
     researchStatus: "completed",
     researchData: {
       summary: "SpaceX・Blue Origin・ispace などが提供する月周回・月面滞在プログラムへの関心が、AMEXプラチナ以上会員で前年比12倍増。「生きているうちに月を踏む」という体験の希少性が刺さっており、単なる宇宙飛行を超えた「人類の歴史に参加する」という文脈で語られ始めている。",
@@ -63,6 +64,7 @@ export const initialTrends: Trend[] = [
     description: "水深3,000m超の海底を2人乗り潜水艇で体験するプライベート深海探検ツアーが始動。海洋研究者と同乗し、人類がほぼ訪れたことのない海底生態系を直接目撃する。",
     popularityScore: 22,
     imageUrl: "/images/trends/deep-dive-expedition.jpg",
+    country: "us",
     researchStatus: "completed",
     researchData: {
       summary: "Triton Submarines・OceanGate後継企業などが提供する超深海探検プログラムへの問い合わせが急増。OceanGate事故後に安全技術が刷新され、富裕層の関心が「深海」という未踏領域に再集中している。海底熱水噴出孔・深海サンゴ礁など、写真すら存在しない場所を訪れる「人類初」の体験価値が高い。",
@@ -111,6 +113,7 @@ export const initialTrends: Trend[] = [
     description: "活火山の火口縁・溶岩湖を火山学者と共に訪れるプライベートフィールドツアー。コンゴのニーラゴンゴ・バヌアツのマルム・ハワイのキラウエアなど、一般観光では立ち入れない区域への特別アクセスが提供される。",
     popularityScore: 19,
     imageUrl: "/images/trends/volcano-fieldwork.jpg",
+    country: "jp",
     researchStatus: "completed",
     researchData: {
       summary: "地球科学の第一線研究者が案内役となるVIPフィールドリサーチ体験が、「知的好奇心を満たすアドベンチャー」として富裕層に刺さり始めている。単なるハイクではなく、リアルタイムの科学観測に参加するという体験設計が差別化要因。火山の「生きた地球」という原始的な感動が、デジタル飽和世代に対して強烈に機能している。",
@@ -138,7 +141,7 @@ export const initialTrends: Trend[] = [
         { name: "東京圏", percentage: 45 },
         { name: "大阪圏", percentage: 18 },
         { name: "海外在住", percentage: 25 },
-        { name: "その他", percentage: 12 },
+        { name: "そ��他", percentage: 12 },
       ],
     },
     relatedProducts: [
@@ -159,6 +162,7 @@ export const initialTrends: Trend[] = [
     description: "高度40kmの成層圏まで加圧キャビンを吊り下げた大型バルーンで上昇し、地球の丸みを肉眼で確認する体験。ロケットより圧倒的に静かで穏やかな「宇宙の縁」体験として注目される。",
     popularityScore: 35,
     imageUrl: "/images/trends/stratosphere-balloon.jpg",
+    country: "uk",
     researchStatus: "completed",
     researchData: {
       summary: "Space Perspective・World View Enterprisesが提供する成層圏バルーン体験は、宇宙ロケットの激しいGに代わる「静謐な宇宙体験」として富裕層に訴求。シャンパンを飲みながら4〜6時間かけてゆっくり上昇・下降するという体験設計が、「映え」より「深み」を求める富裕層の美意識と合致している。AMEXカード会員の問い合わせ数が前年比8倍増。",
@@ -207,6 +211,7 @@ export const initialTrends: Trend[] = [
     description: "南極の研究基地に2〜4週間滞在し、極夜・オーロラ・完全孤立という究極の環境で過ごすプライベート越冬体験。現役の南極研究者チームと共に生活し、気候観測・野生動物調査に参加する。",
     popularityScore: 18,
     imageUrl: "/images/trends/antarctica-overwinter.jpg",
+    country: "ca",
     researchStatus: "completed",
     researchData: {
       summary: "White Desert・Antarctic Logisticsが提供するプレミアム南極越冬プログラムへの需要が急増。スマートフォンの電波が届かない完全デジタルデトックス、人類が最も少ない場所で過ごす「選ばれた孤独」という体験価値が、超富裕層の「本当の休息」ニーズに刺さっている。1人あたり$300K超のプログラムに申込が増加中。",
@@ -252,9 +257,10 @@ export const initialTrends: Trend[] = [
     growthType: "up",
     status: "Emerging",
     mentions: "5.6K",
-    description: "アマゾン・パプアニューギニア・サハラの先住民コミュニティに数週間滞在し、伝統医学・狩猟採集・��神儀礼を第一線の文化人類学者と共に体験するプライベートフィールドプログラム。",
+    description: "アマゾン・パプアニューギニア・サハラの先住民コミュニティに数週間滞在し、伝統医学・狩猟採集・精神儀礼を第一線の文化人類学者と共に体験するプライベートフィールドプログラム。",
     popularityScore: 24,
     imageUrl: "/images/trends/indigenous-fieldwork.jpg",
+    country: "mx",
     researchStatus: "completed",
     researchData: {
       summary: "既存の「エコツーリズム」を超えた深度の文化体験として、超富裕層の間でプライベート先住民フィールドワークへの需要が高まっている。観光客ではなく「研究者の視点で参加する」という体験設計が、知的富裕層の承認欲求・好奇心と合致。文化人類学者・民族植物学者が専属でアテンドし、絶滅危惧の知識体系に触れる。",
@@ -303,6 +309,7 @@ export const initialTrends: Trend[] = [
     description: "急速に融解するグリーンランド氷河・水没しかけたツバル・焼け続けるオーストラリア大陸など、気候変動の「最前線」に科学者チームと赴くプライベートフィールドリサーチ体験。",
     popularityScore: 31,
     imageUrl: "/images/trends/climate-frontline.jpg",
+    country: "us",
     researchStatus: "completed",
     researchData: {
       summary: "「インパクト投資」「フィランソロピー」文脈で動く超富裕層が、資金提供だけでなく現地で直接目撃する体験を求め始めている。National Geographic・Woods Hole海洋研究所などと連携したプライベートリサーチ体験が登場。「見に行くことで変わる自分」という体験の深度が、従来の環境チャリティとは全く異なる充実感をもたらすと評価されている。",
@@ -351,6 +358,7 @@ export const initialTrends: Trend[] = [
     description: "アタカマ砂漠・アイスランド溶岩地帯などの火星類似環境に設けられたプライベートアナログ基地に2週間滞在し、実際の宇宙飛行士訓練と同等のミッションをこなす超没入型体験。",
     popularityScore: 20,
     imageUrl: "/images/trends/mars-analog.jpg",
+    country: "jp",
     researchStatus: "completed",
     researchData: {
       summary: "SpaceXの火星移住計画を「傍観」ではなく「準備」として体験したい超富裕層向けに、NASA・ESAの元宇宙飛行士が設計したアナログ居住プログラムが始動。「人類の次の章を自分の体で予習する」という体験フレームが、普通の富裕層体験を卒業した層に刺さっている。参加者の多くがその後、宇宙関連スタートアップへの投資に動く傾向も確認されている。",
@@ -399,6 +407,7 @@ export const initialTrends: Trend[] = [
     description: "放物線飛行機内で生成した無重力状態の中で食材を育て・収穫し、その場でミシュランシェフが調理する究極のファームトゥテーブル体験。宇宙農業研究と美食体験の融合。",
     popularityScore: 16,
     imageUrl: "/images/trends/space-agri-lab.jpg",
+    country: "uk",
     researchStatus: "completed",
     researchData: {
       summary: "国際宇宙ステーションでの宇宙農業研究をプライベート体験に転換したプログラムが登場。放物線飛行で20〜30秒の無重力を繰り返しながら、マイクロハーブ・エディブルフラワーを収穫し、フライト後に地上で調理・試食する体験が超富裕層に提供されている。「自分が育てた宇宙の食材を食べる」という物語の強度が他の体験と一線を画す。",
@@ -447,6 +456,7 @@ export const initialTrends: Trend[] = [
     description: "植物学者・昆虫学者・鳥類学者チームと共にアマゾン奥地を探索し、未記載種の発見調査に参加するプライベートシチズンサイエンス体験。自分の名前が新種の学名に付く可能性もある。",
     popularityScore: 21,
     imageUrl: "/images/trends/amazon-survey.jpg",
+    country: "mx",
     researchStatus: "completed",
     researchData: {
       summary: "スミソニアン研究所・国立アマゾン研究所などの研究者が案内するプライベートフィールドサーベイが、「人類の知識の地図を広げる旅」として超富裕層に訴求。未記載種発見への参加権という「科学史への名前を残す体験」が刺さっており、$500K超を投じる参加者も現れている。",
@@ -495,6 +505,7 @@ export const initialTrends: Trend[] = [
     description: "透明な加圧ヘルメットを装着し、海底を直接歩いて珊瑚礁生態系を体験するプライベート海洋探索体験。スキューバ免許不要で手が自由なため、海洋生物学者から直接レクチャーを受けながら海底を歩き回れる。",
     popularityScore: 17,
     imageUrl: "/images/trends/seabed-walk.jpg",
+    country: "ca",
     researchStatus: "completed",
     researchData: {
       summary: "モルジブ・パラオ・ガラパゴスなどの未保護珊瑚礁エリアで提供されるプライベート海底歩行体験が、「ダイビングを超えた直感的な没入」として評価されている。海洋生物学者専属同行、立ち入り禁止区域への特別アクセス、採取した海水サンプルの後日分析レポートなどが付帯するプレミアムプログラムが登場している。",
