@@ -73,14 +73,14 @@ export default function MicroSimulationPage() {
         title="Micro Simulation" 
         breadcrumb={["Plan Simulation", "Micro Simulation"]}
       />
-      <div className="p-6 space-y-6">
-        <p className="text-sm text-muted-foreground">
+      <div className="p-6 h-[calc(100vh-120px)] flex flex-col">
+        <p className="text-sm text-muted-foreground mb-4">
           AIペルソナとのインタビューシミュレーション
         </p>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6 flex-1 min-h-0">
           {/* ペルソナ選択 */}
-          <Card className="border shadow-sm lg:col-span-1">
+          <Card className="border shadow-sm lg:col-span-1 overflow-auto">
             <CardHeader>
               <CardTitle className="text-base">AIペルソナ選択</CardTitle>
             </CardHeader>
@@ -112,7 +112,7 @@ export default function MicroSimulationPage() {
           </Card>
 
           {/* チャット */}
-          <Card className="border shadow-sm lg:col-span-2 flex flex-col" style={{ height: "500px" }}>
+          <Card className="border shadow-sm lg:col-span-2 flex flex-col min-h-0">
             <CardHeader className="border-b">
               <div className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
