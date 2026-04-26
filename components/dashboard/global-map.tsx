@@ -131,8 +131,8 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
         })}
       </div>
 
-      {/* 国セレクター（横並び・各ボタン3行表示） */}
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      {/* 国セレクター（横並び・各ボタン3行表示） - Updated */}
+      <div className="flex gap-3 overflow-x-auto pb-2">
         {regions.map((r) => {
           const isSelected = selectedRegion === r.id
           const isHovered = hoveredRegion === r.id
