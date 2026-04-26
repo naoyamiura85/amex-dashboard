@@ -9,6 +9,7 @@ import {
   BookOpen, Leaf, Anchor, Zap, TrendingUp,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { FilterTabs } from "@/components/ui/filter-tabs"
 import { cn } from "@/lib/utils"
 
 // ---- 型定義 ----
@@ -212,23 +213,12 @@ export function AmexTrendsContent() {
       </div>
 
       {/* 国タブ */}
-      <div className="flex flex-wrap gap-2">
-        {COUNTRIES.map(c => (
-          <button
-            key={c.code}
-            onClick={() => setSelectedCountry(c.code)}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all",
-              selectedCountry === c.code
-                ? "bg-[#006FCF] text-white border-[#006FCF] shadow-sm"
-                : "bg-white text-slate-600 border-slate-200 hover:border-[#006FCF]/50 hover:text-[#006FCF]"
-            )}
-          >
-            <img src={c.flag} alt={c.name} className="w-5 h-4 object-cover rounded-sm" />
-            {c.name}
-          </button>
-        ))}
-      </div>
+      <FilterTabs
+        tabs={COUNTRIES.map(c => ({ key: c.code, label: c.name }))}
+        activeTab={selectedCountry}
+        onTabChange={setSelectedCountry}
+        variant="pill"
+      />
 
       {/* カテゴリ別グループ */}
       {Object.entries(grouped).map(([catKey, acts]) => {
