@@ -39,8 +39,9 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FilterTabs } from "@/components/ui/filter-tabs"
 
-// メインタブ定義: Travel / Dining / Entertainment
+// メインタブ定義: All / Travel / Dining / Entertainment
 const MAIN_TABS = [
+  { key: "all",           label: "すべて",        categories: ["space", "expedition", "culture", "sciencetech"] },
   { key: "travel",        label: "Travel",        categories: ["space", "expedition"] },
   { key: "dining",        label: "Dining",        categories: ["culture"] },
   { key: "entertainment", label: "Entertainment", categories: ["sciencetech"] },
@@ -72,6 +73,7 @@ const statusColors: Record<string, string> = {
 
 // 国タブ定義
 const COUNTRIES = [
+  { code: "all", name: "すべて", flag: "" },
   { code: "jp", name: "日本", flag: "/images/flags/jp.jpg" },
   { code: "us", name: "US", flag: "/images/flags/us.jpg" },
   { code: "uk", name: "UK", flag: "/images/flags/uk.jpg" },
@@ -84,8 +86,8 @@ export function TrendsListContent() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("growth")
-  const [selectedTab, setSelectedTab] = useState<MainTabKey>("travel")
-  const [selectedCountry, setSelectedCountry] = useState("jp")
+  const [selectedTab, setSelectedTab] = useState<MainTabKey>("all")
+  const [selectedCountry, setSelectedCountry] = useState("all")
   const { mode, modeLabel } = useCategoryMode()
   const modeConfig = categoryModeConfig[mode]
   const { trends } = useTrends()
@@ -100,7 +102,7 @@ export function TrendsListContent() {
         const matchesTab = currentTabConfig.categories.includes(trend.category)
         
         // Apply country filter
-        const matchesCountry = !trend.country || trend.country === selectedCountry
+        const matchesCountry = selectedCountry === "all" || !trend.country || trend.country === selectedCountry
         
         // Apply category mode filter
         const modeCategories = categoryModeMapping[mode]
