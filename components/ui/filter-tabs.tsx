@@ -6,6 +6,7 @@ export interface FilterTab {
   key: string
   label: string
   color?: string // 選択時のアクセントカラー（任意）
+  icon?: string // アイコン画像URL（任意）
 }
 
 interface FilterTabsProps {
@@ -46,7 +47,7 @@ export function FilterTabs({
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
             className={cn(
-              "font-medium border transition-all",
+              "font-medium border transition-all flex items-center gap-2",
               sizeClasses[size],
               variantClasses[variant],
               isActive
@@ -59,6 +60,10 @@ export function FilterTabs({
                 : undefined
             }
           >
+            {tab.icon && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={tab.icon} alt="" className="w-5 h-4 object-cover rounded-sm" />
+            )}
             {tab.label}
           </button>
         )

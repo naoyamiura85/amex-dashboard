@@ -105,7 +105,7 @@ const COUNTRIES: Country[] = [
       { id: "us-11", name: "ブランドショッピング", icon: ShoppingBag, category: "ショッピング", growth: 28, hot: false },
       { id: "us-12", name: "クラフトビール",   icon: Beer,       category: "ダイニング",         growth: 36, hot: true  },
       { id: "us-13", name: "アウトドアキャンプ", icon: Tent,    category: "スポーツ",           growth: 44, hot: true  },
-      { id: "us-14", name: "マリンスポーツ",   icon: Anchor,     category: "スポーツ",           growth: 32, hot: false },
+      { id: "us-14", name: "マリンスポ��ツ",   icon: Anchor,     category: "スポーツ",           growth: 32, hot: false },
       { id: "us-15", name: "ファッションウィーク", icon: Shirt,  category: "ショッピング",       growth: 23, hot: false },
     ],
   },
@@ -214,7 +214,7 @@ export function AmexTrendsContent() {
 
       {/* 国タブ */}
       <FilterTabs
-        tabs={COUNTRIES.map(c => ({ key: c.code, label: c.name }))}
+        tabs={COUNTRIES.map(c => ({ key: c.code, label: c.name, icon: c.flag }))}
         activeTab={selectedCountry}
         onTabChange={setSelectedCountry}
         variant="pill"
