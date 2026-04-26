@@ -6,19 +6,23 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { useState, useCallback, useRef, useEffect } from "react"
-import { Play, RotateCcw, ChevronRight, Megaphone, Target, Sparkles, Users, TrendingUp, FileText } from "lucide-react"
+import { Play, RotateCcw, ChevronRight, ChevronDown, Megaphone, Target, Sparkles, Users, TrendingUp, FileText } from "lucide-react"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-// ─── INPUT 1: メディア配分 ─────────────────────────────────────────────────────
+// ─── INPUT 1: メディア配分（金額ベース・百万円） ─────────────────────────────────
 const MEDIA_CHANNELS = [
-  { key: "tv",      label: "TV",      defaultAlloc: 25, color: "#006FCF" },
-  { key: "ctv",     label: "CTV",     defaultAlloc: 15, color: "#B4975A" },
-  { key: "ooh",     label: "OOH",     defaultAlloc: 10, color: "#38A169" },
-  { key: "olv",     label: "OLV",     defaultAlloc: 20, color: "#9B2335" },
-  { key: "social",  label: "Social",  defaultAlloc: 20, color: "#8B5CF6" },
-  { key: "audio",   label: "Audio",   defaultAlloc: 5,  color: "#EC4899" },
-  { key: "display", label: "Display", defaultAlloc: 5,  color: "#F59E0B" },
+  { key: "tv",      label: "TV",      defaultBudget: 250, color: "#006FCF" },
+  { key: "ctv",     label: "CTV",     defaultBudget: 150, color: "#B4975A" },
+  { key: "ooh",     label: "OOH",     defaultBudget: 100, color: "#38A169" },
+  { key: "olv",     label: "OLV",     defaultBudget: 200, color: "#9B2335" },
+  { key: "social",  label: "Social",  defaultBudget: 200, color: "#8B5CF6" },
+  { key: "audio",   label: "Audio",   defaultBudget: 50,  color: "#EC4899" },
+  { key: "display", label: "Display", defaultBudget: 50,  color: "#F59E0B" },
 ] as const
+
+const DEFAULT_TOTAL_BUDGET = 1000 // 百万円
 
 // ─── INPUT 2: CR要素 ─────────────────────────────────────────────────────────
 const CR_ELEMENTS = [
@@ -55,12 +59,15 @@ const IMPACT_COEFFICIENTS = {
 
 export default function MacroSimulationPage() {
   // INPUT State
-  const [mediaAlloc, setMediaAlloc] = useState<Record<string, number>>(
-    Object.fromEntries(MEDIA_CHANNELS.map(c => [c.key, c.defaultAlloc]))
+  const [totalBudget, setTotalBudget] = useState(DEFAULT_TOTAL_BUDGET)
+  const [mediaBudget, setMediaBudget] = useState<Record<string, number>>(
+    Object.fromEntries(MEDIA_CHANNELS.map(c => [c.key, c.defaultBudget]))
   )
   const [crValues, setCrValues] = useState<Record<string, number>>(
     Object.fromEntries(CR_ELEMENTS.map(c => [c.key, c.defaultValue]))
   )
+  const [isMediaOpen, setIsMediaOpen] = useState(false)
+  const [isCrOpen, setIsCrOpen] = useState(false)
 
   // Simulation State
   const [isSimulating, setIsSimulating] = useState(false)
@@ -74,15 +81,18 @@ export default function MacroSimulationPage() {
 
   const animationRef = useRef<number | null>(null)
 
-  // Allocation変更
-  const handleMediaChange = (key: string, value: number) => {
-    const total = Object.values(mediaAlloc).reduce((s, v) => s + v, 0) - mediaAlloc[key] + value
-    if (total <= 100) {
-      setMediaAlloc(prev => ({ ...prev, [key]: value }))
-    }
+  // メディア予算変更
+  const handleMediaBudgetChange = (key: string, value: number) => {
+    setMediaBudget(prev => ({ ...prev, [key]: value }))
   }
 
-  const totalMediaAlloc = Object.values(mediaAlloc).reduce((s, v) => s + v, 0)
+  // メディア予算合計
+  const totalMediaBudget = Object.values(mediaBudget).reduce((s, v) => s + v, 0)
+
+  // パーセンテージ計算（シミュレーション用）
+  const mediaAlloc = Object.fromEntries(
+    MEDIA_CHANNELS.map(c => [c.key, totalBudget > 0 ? (mediaBudget[c.key] / totalBudget) * 100 : 0])
+  )
 
   // シミュレーション計算
   const runSimulation = useCallback(() => {
@@ -182,7 +192,8 @@ export default function MacroSimulationPage() {
   // リセット
   const handleReset = () => {
     if (animationRef.current) cancelAnimationFrame(animationRef.current)
-    setMediaAlloc(Object.fromEntries(MEDIA_CHANNELS.map(c => [c.key, c.defaultAlloc])))
+    setTotalBudget(DEFAULT_TOTAL_BUDGET)
+    setMediaBudget(Object.fromEntries(MEDIA_CHANNELS.map(c => [c.key, c.defaultBudget])))
     setCrValues(Object.fromEntries(CR_ELEMENTS.map(c => [c.key, c.defaultValue])))
     setPhase("idle")
     setMetrics({
@@ -192,6 +203,8 @@ export default function MacroSimulationPage() {
       application: { base: 2.4, delta: 0 },
     })
     setIsSimulating(false)
+    setIsMediaOpen(false)
+    setIsCrOpen(false)
   }
 
   useEffect(() => {
@@ -242,51 +255,78 @@ export default function MacroSimulationPage() {
                   <CardTitle className="text-xs">INPUT</CardTitle>
                   <p className="text-[11px] text-muted-foreground">メディア配分 & CR要素</p>
                 </div>
-                <Badge variant={totalMediaAlloc === 100 ? "default" : "destructive"} className="ml-auto text-[10px]">
-                  {totalMediaAlloc}%
-                </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-4 pt-0">
-              {/* メディア配分 */}
+              {/* トータルバジェット */}
               <div>
-                <p className="text-[10px] font-semibold text-slate-500 mb-2 flex items-center gap-1.5">
-                  <Megaphone className="h-3 w-3" />
-                  メディア配分
-                </p>
-                <div className="space-y-2">
-                  {MEDIA_CHANNELS.map(ch => (
-                    <div key={ch.key} className="space-y-0.5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ch.color }} />
-                          <span className="text-[10px] font-medium">{ch.label}</span>
-                        </div>
-                        <span className="text-[10px] font-bold" style={{ color: ch.color }}>{mediaAlloc[ch.key]}%</span>
-                      </div>
-                      <Slider
-                        value={[mediaAlloc[ch.key]]}
-                        onValueChange={([v]) => handleMediaChange(ch.key, v)}
-                        max={50}
-                        step={5}
-                        disabled={isSimulating}
-                        className="w-full"
-                      />
-                    </div>
-                  ))}
+                <label className="text-[10px] font-semibold text-slate-700 mb-1.5 block">トータルバジェット</label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    value={totalBudget}
+                    onChange={(e) => setTotalBudget(Number(e.target.value))}
+                    disabled={isSimulating}
+                    className="text-sm font-bold h-9"
+                  />
+                  <span className="text-xs text-slate-500 whitespace-nowrap">百万円</span>
                 </div>
               </div>
 
-              {/* Divider */}
-              <div className="border-t border-dashed border-slate-200" />
+              {/* メディア配分（プルダウン） */}
+              <Collapsible open={isMediaOpen} onOpenChange={setIsMediaOpen}>
+                <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                  <div className="flex items-center gap-2">
+                    <Megaphone className="h-3.5 w-3.5 text-[#006FCF]" />
+                    <span className="text-[11px] font-semibold text-slate-700">メディア配分</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-slate-500">
+                      合計: <span className={cn("font-bold", totalMediaBudget === totalBudget ? "text-emerald-600" : "text-amber-600")}>
+                        ¥{totalMediaBudget.toLocaleString()}M
+                      </span>
+                    </span>
+                    <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isMediaOpen && "rotate-180")} />
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-3 space-y-2">
+                  {MEDIA_CHANNELS.map(ch => (
+                    <div key={ch.key} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: ch.color }} />
+                      <span className="text-[10px] font-medium w-14">{ch.label}</span>
+                      <Input
+                        type="number"
+                        value={mediaBudget[ch.key]}
+                        onChange={(e) => handleMediaBudgetChange(ch.key, Number(e.target.value))}
+                        disabled={isSimulating}
+                        className="text-xs h-7 w-20 text-right"
+                      />
+                      <span className="text-[9px] text-slate-400">M</span>
+                      <span className="text-[9px] text-slate-400 ml-auto">
+                        ({totalBudget > 0 ? Math.round((mediaBudget[ch.key] / totalBudget) * 100) : 0}%)
+                      </span>
+                    </div>
+                  ))}
+                </CollapsibleContent>
+              </Collapsible>
 
-              {/* CR要素 */}
-              <div>
-                <p className="text-[10px] font-semibold text-slate-500 mb-2 flex items-center gap-1.5">
-                  <Sparkles className="h-3 w-3" />
-                  CR要素
-                </p>
-                <div className="space-y-2">
+              {/* CR要素（プルダウン） */}
+              <Collapsible open={isCrOpen} onOpenChange={setIsCrOpen}>
+                <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-3.5 w-3.5 text-[#B4975A]" />
+                    <span className="text-[11px] font-semibold text-slate-700">CR要素</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-slate-500">
+                      平均: <span className="font-bold text-[#B4975A]">
+                        {Math.round(Object.values(crValues).reduce((a, b) => a + b, 0) / CR_ELEMENTS.length)}
+                      </span>
+                    </span>
+                    <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isCrOpen && "rotate-180")} />
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-3 space-y-2">
                   {CR_ELEMENTS.map(el => (
                     <div key={el.key} className="space-y-0.5">
                       <div className="flex items-center justify-between">
@@ -303,8 +343,8 @@ export default function MacroSimulationPage() {
                       />
                     </div>
                   ))}
-                </div>
-              </div>
+                </CollapsibleContent>
+              </Collapsible>
             </CardContent>
           </Card>
 
