@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { X, User, MapPin, Star, Heart, Users, Briefcase, ChevronRight, TrendingUp, Download, Filter, ChevronDown } from "lucide-react"
+import Link from "next/link"
+import { X, User, MapPin, Star, Heart, Users, Briefcase, ChevronRight, TrendingUp, Download, Filter, ChevronDown, MessageCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -291,7 +292,7 @@ const segments: Segment[] = [
       incomes: [{ label: "1,500〜2,000万円", pct: 38 }, { label: "2,000〜3,000万円", pct: 34 }, { label: "3,000万円以上", pct: 28 }],
       cards: [
         { label: "AMEX グリーン", pct: 44, color: "#006FCF" },
-        { label: "AMEX ゴー���ド", pct: 35, color: "#B4975A" },
+        { label: "AMEX ゴー�����ド", pct: 35, color: "#B4975A" },
         { label: "AMEX プラチナ検討中", pct: 21, color: "#8E44AD" },
       ],
       cardNote: "保有AMEXカード / 検討中",
@@ -522,6 +523,18 @@ function PersonaModal({
               <Briefcase className="w-3 h-3" /> カード活用ゴール
             </p>
             <p className="text-sm text-slate-700 bg-slate-50 rounded-lg px-3 py-2.5">{persona.cardGoal}</p>
+          </div>
+          {/* インタビューボタン */}
+          <div className="pt-2">
+            <Link 
+              href={`/dashboard/micro-simulation?persona=${encodeURIComponent(persona.name)}`}
+              onClick={onClose}
+            >
+              <Button className="w-full bg-[#006FCF] hover:bg-[#005bb5] text-white gap-2">
+                <MessageCircle className="w-4 h-4" />
+                インタビューを開始
+              </Button>
+            </Link>
           </div>
           <p className="text-[10px] text-slate-400 text-center pb-1">
             このAIペルソナはマーケティング分析用に生成された架空の人物です
