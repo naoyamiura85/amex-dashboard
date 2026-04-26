@@ -80,8 +80,8 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
 
   return (
     <div className="space-y-3">
-      {/* 地図エリア（横長） */}
-      <div className="relative h-[200px] rounded-xl overflow-hidden bg-gradient-to-br from-sky-100 to-blue-200 border">
+      {/* 地図エリア（横長・レスポンシブ対応） */}
+      <div className="relative h-[200px] lg:h-[280px] xl:h-[320px] 2xl:h-[360px] rounded-xl overflow-hidden bg-gradient-to-br from-sky-100 to-blue-200 border">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/world-map.jpg"
