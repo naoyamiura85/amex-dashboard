@@ -255,7 +255,7 @@ const REGION_AUDIENCE: Record<string, { demographics: { label: string; value: st
 // ─── ペルソナ ─────────────────────────────────────────────────────────────────
 const PERSONAS = [
   {
-    name: "田中 ��子",
+    name: "田中 雅子",
     age: 42,
     role: "外資系コンサル パートナー",
     location: "東京都港区",
