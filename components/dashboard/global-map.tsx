@@ -131,8 +131,8 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
         })}
       </div>
 
-      {/* 国セレクター（横並び） */}
-      <div className="flex flex-wrap gap-2">
+      {/* 国セレクター（1行） */}
+      <div className="flex gap-2 overflow-x-auto">
         {regions.map((r) => {
           const isSelected = selectedRegion === r.id
           const isHovered = hoveredRegion === r.id
@@ -142,7 +142,7 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
               onClick={() => onSelectRegion(r.id === selectedRegion ? null : r.id)}
               onMouseEnter={() => setHoveredRegion(r.id)}
               onMouseLeave={() => setHoveredRegion(null)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-left transition-all ${
+              className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border text-left transition-all whitespace-nowrap ${
                 isSelected
                   ? "ring-2 ring-offset-1 bg-card shadow-sm"
                   : isHovered
@@ -155,17 +155,15 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
                 "--tw-ring-color": isSelected ? r.color : undefined,
               } as React.CSSProperties}
             >
-              <div className="w-8 h-5 rounded overflow-hidden border shadow-sm flex-shrink-0">
+              <div className="w-6 h-4 rounded overflow-hidden border shadow-sm flex-shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={r.flag} alt={r.name} className="w-full h-full object-cover" />
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold">{r.name}</span>
-                <span className="text-xs font-bold" style={{ color: r.color }}>{r.marketSize}</span>
-                <span className="text-xs text-emerald-600 flex items-center gap-0.5">
-                  <TrendingUp className="h-3 w-3" />{r.growth}
-                </span>
-              </div>
+              <span className="text-xs font-semibold">{r.name}</span>
+              <span className="text-[11px] font-bold" style={{ color: r.color }}>{r.marketSize}</span>
+              <span className="text-[11px] text-emerald-600 flex items-center gap-0.5">
+                <TrendingUp className="h-2.5 w-2.5" />{r.growth}
+              </span>
             </button>
           )
         })}
