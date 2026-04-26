@@ -228,86 +228,85 @@ export default function MacroSimulationPage() {
         {/* 4カラムフローレイアウト */}
         <div className="grid lg:grid-cols-[1fr_auto_0.8fr_auto_1fr] gap-4 items-start">
 
-          {/* ===== INPUT ===== */}
-          <div className="space-y-4">
-            {/* INPUT 1: メディア配分 */}
-            <Card className={cn(
-              "border-2 transition-all duration-500",
-              phase === "input" ? "border-[#006FCF] shadow-lg shadow-[#006FCF]/20" : "border-border"
-            )}>
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-[#006FCF]/10">
-                    <Megaphone className="h-4 w-4 text-[#006FCF]" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xs">INPUT 1</CardTitle>
-                    <p className="text-[11px] text-muted-foreground">メディア配分</p>
-                  </div>
-                  <Badge variant={totalMediaAlloc === 100 ? "default" : "destructive"} className="ml-auto text-[10px]">
-                    {totalMediaAlloc}%
-                  </Badge>
+          {/* ===== INPUT (1カード) ===== */}
+          <Card className={cn(
+            "border-2 transition-all duration-500",
+            phase === "input" ? "border-[#006FCF] shadow-lg shadow-[#006FCF]/20" : "border-border"
+          )}>
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-[#006FCF]/10">
+                  <Megaphone className="h-4 w-4 text-[#006FCF]" />
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-3 pt-0">
-                {MEDIA_CHANNELS.map(ch => (
-                  <div key={ch.key} className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: ch.color }} />
-                        <span className="text-[11px] font-medium">{ch.label}</span>
+                <div>
+                  <CardTitle className="text-xs">INPUT</CardTitle>
+                  <p className="text-[11px] text-muted-foreground">メディア配分 & CR要素</p>
+                </div>
+                <Badge variant={totalMediaAlloc === 100 ? "default" : "destructive"} className="ml-auto text-[10px]">
+                  {totalMediaAlloc}%
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-0">
+              {/* メディア配分 */}
+              <div>
+                <p className="text-[10px] font-semibold text-slate-500 mb-2 flex items-center gap-1.5">
+                  <Megaphone className="h-3 w-3" />
+                  メディア配分
+                </p>
+                <div className="space-y-2">
+                  {MEDIA_CHANNELS.map(ch => (
+                    <div key={ch.key} className="space-y-0.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ch.color }} />
+                          <span className="text-[10px] font-medium">{ch.label}</span>
+                        </div>
+                        <span className="text-[10px] font-bold" style={{ color: ch.color }}>{mediaAlloc[ch.key]}%</span>
                       </div>
-                      <span className="text-[11px] font-bold" style={{ color: ch.color }}>{mediaAlloc[ch.key]}%</span>
+                      <Slider
+                        value={[mediaAlloc[ch.key]]}
+                        onValueChange={([v]) => handleMediaChange(ch.key, v)}
+                        max={50}
+                        step={5}
+                        disabled={isSimulating}
+                        className="w-full"
+                      />
                     </div>
-                    <Slider
-                      value={[mediaAlloc[ch.key]]}
-                      onValueChange={([v]) => handleMediaChange(ch.key, v)}
-                      max={50}
-                      step={5}
-                      disabled={isSimulating}
-                      className="w-full"
-                    />
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* INPUT 2: CR要素 */}
-            <Card className={cn(
-              "border-2 transition-all duration-500",
-              phase === "input" ? "border-[#B4975A] shadow-lg shadow-[#B4975A]/20" : "border-border"
-            )}>
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-[#B4975A]/10">
-                    <Sparkles className="h-4 w-4 text-[#B4975A]" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xs">INPUT 2</CardTitle>
-                    <p className="text-[11px] text-muted-foreground">CR要素</p>
-                  </div>
+                  ))}
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-3 pt-0">
-                {CR_ELEMENTS.map(el => (
-                  <div key={el.key} className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-medium">{el.label}</span>
-                      <span className="text-[11px] font-bold" style={{ color: el.color }}>{crValues[el.key]}</span>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-dashed border-slate-200" />
+
+              {/* CR要素 */}
+              <div>
+                <p className="text-[10px] font-semibold text-slate-500 mb-2 flex items-center gap-1.5">
+                  <Sparkles className="h-3 w-3" />
+                  CR要素
+                </p>
+                <div className="space-y-2">
+                  {CR_ELEMENTS.map(el => (
+                    <div key={el.key} className="space-y-0.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-medium">{el.label}</span>
+                        <span className="text-[10px] font-bold" style={{ color: el.color }}>{crValues[el.key]}</span>
+                      </div>
+                      <Slider
+                        value={[crValues[el.key]]}
+                        onValueChange={([v]) => setCrValues(prev => ({ ...prev, [el.key]: v }))}
+                        max={100}
+                        step={5}
+                        disabled={isSimulating}
+                        className="w-full"
+                      />
                     </div>
-                    <Slider
-                      value={[crValues[el.key]]}
-                      onValueChange={([v]) => setCrValues(prev => ({ ...prev, [el.key]: v }))}
-                      max={100}
-                      step={5}
-                      disabled={isSimulating}
-                      className="w-full"
-                    />
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Arrow 1 */}
           <div className="hidden lg:flex items-center justify-center h-full pt-20">
@@ -356,7 +355,7 @@ export default function MacroSimulationPage() {
                     <span className="text-sm font-bold text-emerald-600">+{metrics.adRecall.delta}%</span>
                   )}
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-1">広告認知率</p>
+                <p className="text-[10px] text-muted-foreground mt-1">���告認知率</p>
               </div>
 
               {/* LTCS */}
