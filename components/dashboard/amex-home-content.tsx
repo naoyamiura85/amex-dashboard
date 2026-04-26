@@ -314,9 +314,11 @@ export function AmexHomeContent() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* 世界地図 */}
         <Card className="lg:col-span-3 border border-border shadow-sm">
-          <CardHeader className="pb-2 flex-row items-center gap-2">
-            <Globe className="h-4 w-4 text-[#006FCF]" />
-            <CardTitle className="text-sm font-semibold">グローバルマップ</CardTitle>
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <Globe className="h-4 w-4 text-[#006FCF]" />
+              <CardTitle className="text-sm font-semibold">グローバルマップ</CardTitle>
+            </div>
           </CardHeader>
           <CardContent className="pb-4">
             <GlobalMap
@@ -333,11 +335,13 @@ export function AmexHomeContent() {
           const kpi = REGION_KPI[regionId]
           return (
             <Card className="lg:col-span-2 border border-border shadow-sm">
-              <CardHeader className="pb-2 flex-row items-center justify-between">
-                <CardTitle className="text-sm font-semibold">
-                  {selected ? `${selected.name} サマリー` : "全世界 サマリー"}
-                </CardTitle>
-                <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm font-semibold">
+                    {selected ? `${selected.name} サマリー` : "全世界 サマリー"}
+                  </CardTitle>
+                  <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* KPI Tracking */}
@@ -461,12 +465,14 @@ export function AmexHomeContent() {
             <div className="space-y-4">
               {/* Travel / Dining / Entertainment トピックス */}
               <Card className="border border-border shadow-sm">
-                <CardHeader className="pb-3 flex-row items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-[#006FCF]" />
-                    <CardTitle className="text-sm font-semibold">{regionName} - Latest Topics</CardTitle>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-[#006FCF]" />
+                      <CardTitle className="text-sm font-semibold">{regionName} - Latest Topics</CardTitle>
+                    </div>
+                    <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
                   </div>
-                  <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {TOPIC_CATEGORIES.map((cat) => {
@@ -505,12 +511,14 @@ export function AmexHomeContent() {
 
             {/* 右カラム: Audience Profile + ペルソナ分析 */}
             <Card className="border border-border shadow-sm">
-              <CardHeader className="pb-3 flex-row items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <UserCircle className="h-4 w-4 text-[#006FCF]" />
-                  <CardTitle className="text-sm font-semibold">{regionName} - Audience Profile</CardTitle>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <UserCircle className="h-4 w-4 text-[#006FCF]" />
+                    <CardTitle className="text-sm font-semibold">{regionName} - Audience Profile</CardTitle>
+                  </div>
+                  <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
                 </div>
-                <Bookmark className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" />
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Demographics */}
