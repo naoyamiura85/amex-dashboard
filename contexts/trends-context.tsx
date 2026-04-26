@@ -19,6 +19,7 @@ export interface Trend {
   description: string
   popularityScore: number
   imageUrl?: string
+  country?: string // 国コード: jp, us, uk, mx, ca
   researchStatus?: ResearchStatus
   researchProgress?: number
   createdAt?: Date

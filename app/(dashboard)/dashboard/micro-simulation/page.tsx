@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Send, User, Bot } from "lucide-react"
 
 const AI_PERSONAS = [
@@ -26,6 +26,12 @@ export default function MicroSimulationPage() {
     { role: "assistant", content: `こんにちは、${AI_PERSONAS[0].name}です。AMEXカードについてのご質問があればお聞きください。私の視点からお答えします。` },
   ])
   const [input, setInput] = useState("")
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // メッセージが更新されたら自動スクロール
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
   const handleSend = () => {
     if (!input.trim()) return
@@ -73,14 +79,14 @@ export default function MicroSimulationPage() {
         title="Micro Simulation" 
         breadcrumb={["Plan Simulation", "Micro Simulation"]}
       />
-      <div className="p-6 space-y-6">
-        <p className="text-sm text-muted-foreground">
+      <div className="p-6 h-[calc(100vh-120px)] flex flex-col">
+        <p className="text-sm text-muted-foreground mb-4">
           AIペルソナとのインタビューシミュレーション
         </p>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6 flex-1 min-h-0">
           {/* ペルソナ選択 */}
-          <Card className="border shadow-sm lg:col-span-1">
+          <Card className="border shadow-sm lg:col-span-1 overflow-auto">
             <CardHeader>
               <CardTitle className="text-base">AIペルソナ選択</CardTitle>
             </CardHeader>
@@ -112,7 +118,7 @@ export default function MicroSimulationPage() {
           </Card>
 
           {/* チャット */}
-          <Card className="border shadow-sm lg:col-span-2 flex flex-col" style={{ height: "500px" }}>
+          <Card className="border shadow-sm lg:col-span-2 flex flex-col min-h-0">
             <CardHeader className="border-b">
               <div className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
@@ -152,6 +158,7 @@ export default function MicroSimulationPage() {
                   )}
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </CardContent>
             <div className="p-4 border-t">
               <div className="flex gap-2">

@@ -37,9 +37,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { FilterTabs } from "@/components/ui/filter-tabs"
 
-// メインタブ定義: Travel / Dining / Entertainment
+// メインタブ定義: All / Travel / Dining / Entertainment
 const MAIN_TABS = [
+  { key: "all",           label: "すべて",        categories: ["space", "expedition", "culture", "sciencetech"] },
   { key: "travel",        label: "Travel",        categories: ["space", "expedition"] },
   { key: "dining",        label: "Dining",        categories: ["culture"] },
   { key: "entertainment", label: "Entertainment", categories: ["sciencetech"] },
@@ -69,12 +71,23 @@ const statusColors: Record<string, string> = {
   Declining: "bg-red-100 text-red-700",
 }
 
+// 国タブ定義
+const COUNTRIES = [
+  { code: "all", name: "すべて", flag: "" },
+  { code: "jp", name: "日本", flag: "/images/flags/jp.jpg" },
+  { code: "us", name: "US", flag: "/images/flags/us.jpg" },
+  { code: "uk", name: "UK", flag: "/images/flags/uk.jpg" },
+  { code: "mx", name: "メキシコ", flag: "/images/flags/mx.jpg" },
+  { code: "ca", name: "カナダ", flag: "/images/flags/ca.jpg" },
+]
+
 export function TrendsListContent() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("growth")
-  const [selectedTab, setSelectedTab] = useState<MainTabKey>("travel")
+  const [selectedTab, setSelectedTab] = useState<MainTabKey>("all")
+  const [selectedCountry, setSelectedCountry] = useState("all")
   const { mode, modeLabel } = useCategoryMode()
   const modeConfig = categoryModeConfig[mode]
   const { trends } = useTrends()
@@ -88,6 +101,9 @@ export function TrendsListContent() {
         // Apply main tab filter first
         const matchesTab = currentTabConfig.categories.includes(trend.category)
         
+        // Apply country filter
+        const matchesCountry = selectedCountry === "all" || !trend.country || trend.country === selectedCountry
+        
         // Apply category mode filter
         const modeCategories = categoryModeMapping[mode]
         const matchesMode = modeCategories.length === 0 || modeCategories.includes(trend.category)
@@ -99,7 +115,7 @@ export function TrendsListContent() {
         // Then apply additional category filter (only if mode is "all")
         const matchesCategory = mode !== "all" || selectedCategories.length === 0 || selectedCategories.includes(trend.category)
         
-        return matchesTab && matchesMode && matchesSearch && matchesCategory
+        return matchesTab && matchesCountry && matchesMode && matchesSearch && matchesCategory
       })
       .sort((a, b) => {
         if (sortBy === "growth") {
@@ -115,7 +131,7 @@ export function TrendsListContent() {
         }
         return 0
       })
-  }, [trends, mode, searchQuery, selectedCategories, sortBy, currentTabConfig])
+  }, [trends, mode, searchQuery, selectedCategories, sortBy, currentTabConfig, selectedCountry])
 
   return (
     <main className="flex-1 p-6 space-y-6 bg-muted/30">
@@ -148,6 +164,14 @@ export function TrendsListContent() {
           </div>
           <AddTrendDialog />
         </div>
+
+        {/* 国タブ */}
+        <FilterTabs
+          tabs={COUNTRIES.map(c => ({ key: c.code, label: c.name, icon: c.flag }))}
+          activeTab={selectedCountry}
+          onTabChange={setSelectedCountry}
+          variant="pill"
+        />
 
         {/* Search and Filters */}
         <div className="flex flex-col sm:flex-row gap-3">

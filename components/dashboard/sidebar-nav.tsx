@@ -61,7 +61,7 @@ const navSections = [
     defaultOpen: true,
     items: [
       { title: "Market Overview",        icon: Globe,          href: "/dashboard" },
-      { title: "Trend Analysis",         icon: TrendingUp,     href: "/dashboard/trends" },
+      { title: "Trend Analysis",           icon: TrendingUp,     href: "/dashboard/trends" },
     ],
   },
   {

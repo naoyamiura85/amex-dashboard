@@ -28,6 +28,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
+import { FilterTabs } from "@/components/ui/filter-tabs"
 import {
   Search,
   Filter,
@@ -236,21 +237,13 @@ export function AIMaterialsContent() {
       </div>
 
       {/* カテゴリフィルター */}
-      <div className="flex flex-wrap gap-2">
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => setSelectedCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-              selectedCategory === cat.id
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-muted/30 text-foreground border-border hover:border-primary/50"
-            }`}
-          >
-            {cat.name}
-          </button>
-        ))}
-      </div>
+      <FilterTabs
+        tabs={categories.map(cat => ({ key: cat.id, label: cat.name }))}
+        activeTab={selectedCategory}
+        onTabChange={setSelectedCategory}
+        variant="rounded"
+        size="sm"
+      />
 
       {/* 検索 */}
       <div className="flex gap-2">

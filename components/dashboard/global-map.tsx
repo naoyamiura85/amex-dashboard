@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp } from "lucide-react"
 
 // ─── 型定義 ───────────────────────────────────────────────────────────────────
@@ -80,136 +79,128 @@ export function GlobalMap({ regions, selectedRegion, onSelectRegion }: Props) {
   const subRegions = selectedRegion ? SUB_REGIONS[selectedRegion] : null
 
   return (
-    <div className="space-y-4">
-      {/* 地図エリア + 国カード */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
-        {/* 地図背景 */}
-        <div className="lg:col-span-3 relative h-[320px] rounded-xl overflow-hidden bg-gradient-to-br from-sky-100 to-blue-200 border">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/world-map.jpg"
-            alt="World Map"
-            className="absolute inset-0 w-full h-full object-cover opacity-70"
-          />
+    <div className="space-y-3">
+      {/* 地図エリア（横長・レスポンシブ対応） */}
+      <div className="relative h-[200px] lg:h-[280px] xl:h-[320px] 2xl:h-[360px] rounded-xl overflow-hidden bg-gradient-to-br from-sky-100 to-blue-200 border">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/world-map.jpg"
+          alt="World Map"
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
+        />
+        
+        {/* 国マーカー */}
+        {regions.map((r) => {
+          const isActive = selectedRegion === r.id || hoveredRegion === r.id
+          const pos = MARKER_POSITIONS[r.id]
+          if (!pos) return null
           
-          {/* 国マーカー */}
-          {regions.map((r) => {
-            const isActive = selectedRegion === r.id || hoveredRegion === r.id
-            const pos = MARKER_POSITIONS[r.id]
-            if (!pos) return null
-            
-            return (
-              <button
-                key={r.id}
-                onClick={() => onSelectRegion(selectedRegion === r.id ? null : r.id)}
-                onMouseEnter={() => setHoveredRegion(r.id)}
-                onMouseLeave={() => setHoveredRegion(null)}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 z-10"
-                style={{ left: pos.left, top: pos.top }}
+          return (
+            <button
+              key={r.id}
+              onClick={() => onSelectRegion(selectedRegion === r.id ? null : r.id)}
+              onMouseEnter={() => setHoveredRegion(r.id)}
+              onMouseLeave={() => setHoveredRegion(null)}
+              className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 z-10"
+              style={{ left: pos.left, top: pos.top }}
+            >
+              <div
+                className={`
+                  flex flex-col items-center justify-center
+                  w-14 h-14 rounded-full bg-white shadow-lg
+                  border-2 transition-all duration-200
+                  ${isActive ? "scale-110 shadow-xl" : "hover:scale-105"}
+                `}
+                style={{ borderColor: isActive ? r.color : "rgba(0,0,0,0.1)" }}
               >
-                <div
-                  className={`
-                    flex flex-col items-center justify-center
-                    w-16 h-16 rounded-full bg-white shadow-lg
-                    border-2 transition-all duration-200
-                    ${isActive ? "scale-110 shadow-xl" : "hover:scale-105"}
-                  `}
-                  style={{ borderColor: isActive ? r.color : "rgba(0,0,0,0.1)" }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={r.flag}
-                    alt={r.name}
-                    className="w-6 h-4 object-cover rounded-sm mb-0.5"
-                  />
-                  <span className="text-[10px] font-bold text-slate-700">{r.marketSize}</span>
-                  <span className="text-[9px] text-emerald-600 font-medium flex items-center">
-                    <TrendingUp className="w-2 h-2 mr-0.5" />
-                    {r.growth}
-                  </span>
-                </div>
-              </button>
-            )
-          })}
-        </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={r.flag}
+                  alt={r.name}
+                  className="w-5 h-3.5 object-cover rounded-sm mb-0.5"
+                />
+                <span className="text-[9px] font-bold text-slate-700">{r.marketSize}</span>
+                <span className="text-[8px] text-emerald-600 font-medium flex items-center">
+                  <TrendingUp className="w-2 h-2 mr-0.5" />
+                  {r.growth}
+                </span>
+              </div>
+            </button>
+          )
+        })}
+      </div>
 
-        {/* 国カードリスト */}
-        <div className="space-y-2">
-          {regions.map((r) => {
-            const isSelected = selectedRegion === r.id
-            const isHovered = hoveredRegion === r.id
-            return (
-              <button
-                key={r.id}
-                onClick={() => onSelectRegion(r.id === selectedRegion ? null : r.id)}
-                onMouseEnter={() => setHoveredRegion(r.id)}
-                onMouseLeave={() => setHoveredRegion(null)}
-                className={`w-full p-3 rounded-lg border text-left transition-all ${
-                  isSelected
-                    ? "ring-2 ring-offset-1 bg-card shadow-sm"
-                    : isHovered
-                    ? "bg-muted/50"
-                    : "bg-card hover:bg-muted/30"
-                }`}
-                style={{
-                  borderColor: isSelected || isHovered ? r.color : undefined,
-                  // @ts-expect-error Tailwind ring-color CSS variable
-                  "--tw-ring-color": isSelected ? r.color : undefined,
-                } as React.CSSProperties}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-7 rounded overflow-hidden border shadow-sm flex-shrink-0">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={r.flag} alt={r.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate">{r.name}</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold" style={{ color: r.color }}>{r.marketSize}</span>
-                      <span className="text-xs text-emerald-600 flex items-center gap-0.5">
-                        <TrendingUp className="h-3 w-3" />{r.growth}
-                      </span>
-                    </div>
-                  </div>
+      {/* 国セレクター（横並び・各ボタン3行表示） - Updated */}
+      <div className="flex gap-3 overflow-x-auto pb-2">
+        {regions.map((r) => {
+          const isSelected = selectedRegion === r.id
+          const isHovered = hoveredRegion === r.id
+          return (
+            <button
+              key={r.id}
+              onClick={() => onSelectRegion(r.id === selectedRegion ? null : r.id)}
+              onMouseEnter={() => setHoveredRegion(r.id)}
+              onMouseLeave={() => setHoveredRegion(null)}
+              className={`flex flex-col items-center px-4 py-2 rounded-lg border text-center transition-all min-w-[80px] ${
+                isSelected
+                  ? "ring-2 ring-offset-1 bg-card shadow-sm"
+                  : isHovered
+                  ? "bg-muted/50"
+                  : "bg-card hover:bg-muted/30"
+              }`}
+              style={{
+                borderColor: isSelected || isHovered ? r.color : undefined,
+                // @ts-expect-error Tailwind ring-color CSS variable
+                "--tw-ring-color": isSelected ? r.color : undefined,
+              } as React.CSSProperties}
+            >
+              {/* 1行目: 国旗 + 国名 */}
+              <div className="flex items-center gap-1.5">
+                <div className="w-5 h-3.5 rounded overflow-hidden border shadow-sm flex-shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={r.flag} alt={r.name} className="w-full h-full object-cover" />
                 </div>
-              </button>
-            )
-          })}
-        </div>
+                <span className="text-xs font-semibold">{r.name}</span>
+              </div>
+              {/* 2行目: 金額規模 */}
+              <div className="text-sm font-bold mt-0.5" style={{ color: r.color }}>{r.marketSize}</div>
+              {/* 3行目: 変動率 */}
+              <div className="text-xs text-emerald-600 flex items-center gap-0.5">
+                <TrendingUp className="h-3 w-3" />{r.growth}
+              </div>
+            </button>
+          )
+        })}
       </div>
 
       {/* 選択された国のサブ地域詳細 */}
       {selectedData && subRegions && (
-        <Card className="border-l-4 animate-in fade-in slide-in-from-top-2 duration-300" style={{ borderLeftColor: selectedData.color }}>
-          <CardHeader className="pb-2">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-6 rounded overflow-hidden border shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={selectedData.flag} alt={selectedData.name} className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <CardTitle className="text-base">{selectedData.name} - サブ市場</CardTitle>
-                <p className="text-xs text-muted-foreground">
-                  合計 {selectedData.marketSize} / 成長率 <span className="text-emerald-600 font-medium">{selectedData.growth}</span>
-                </p>
-              </div>
+        <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-6 rounded overflow-hidden border shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={selectedData.flag} alt={selectedData.name} className="w-full h-full object-cover" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {subRegions.map((sub) => (
-                <div key={sub.name} className="p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                  <p className="text-xs text-muted-foreground">{sub.name}</p>
-                  <p className="text-sm font-bold" style={{ color: selectedData.color }}>{sub.marketSize}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3 text-emerald-500" />
-                    <span className="text-xs text-emerald-600 font-medium">{sub.growth}</span>
-                  </div>
+            <div>
+              <p className="text-base font-semibold">{selectedData.name} - サブ市場</p>
+              <p className="text-xs text-muted-foreground">
+                合計 {selectedData.marketSize} / 成長率 <span className="text-emerald-600 font-medium">{selectedData.growth}</span>
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {subRegions.map((sub) => (
+              <div key={sub.name} className="p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+                <p className="text-xs text-muted-foreground">{sub.name}</p>
+                <p className="text-sm font-bold" style={{ color: selectedData.color }}>{sub.marketSize}</p>
+                <div className="flex items-center gap-1 mt-1">
+                  <TrendingUp className="h-3 w-3 text-emerald-500" />
+                  <span className="text-xs text-emerald-600 font-medium">{sub.growth}</span>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   )

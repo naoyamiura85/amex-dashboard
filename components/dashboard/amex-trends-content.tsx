@@ -9,6 +9,7 @@ import {
   BookOpen, Leaf, Anchor, Zap, TrendingUp,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { FilterTabs } from "@/components/ui/filter-tabs"
 import { cn } from "@/lib/utils"
 
 // ---- 型定義 ----
@@ -69,7 +70,7 @@ const CATEGORY_ICON_COLOR: Record<ActivityCategory, string> = {
 // ---- 国別データ ----
 const COUNTRIES: Country[] = [
   {
-    code: "JP", name: "日本", flag: "🇯🇵",
+    code: "jp", name: "日本", flag: "/images/flags/jp.svg",
     activities: [
       { id: "jp-01", name: "温泉旅行",       icon: Waves,       category: "トラベル",          growth: 34, hot: true  },
       { id: "jp-02", name: "ラグジュアリー旅館", icon: Sunrise,  category: "トラベル",          growth: 28, hot: false },
@@ -89,7 +90,7 @@ const COUNTRIES: Country[] = [
     ],
   },
   {
-    code: "US", name: "アメリカ", flag: "🇺🇸",
+    code: "us", name: "US", flag: "/images/flags/us.svg",
     activities: [
       { id: "us-01", name: "プライベートジェット", icon: Plane,  category: "トラベル",          growth: 62, hot: true  },
       { id: "us-02", name: "ロードトリップ",   icon: Car,        category: "トラベル",          growth: 38, hot: true  },
@@ -104,12 +105,12 @@ const COUNTRIES: Country[] = [
       { id: "us-11", name: "ブランドショッピング", icon: ShoppingBag, category: "ショッピング", growth: 28, hot: false },
       { id: "us-12", name: "クラフトビール",   icon: Beer,       category: "ダイニング",         growth: 36, hot: true  },
       { id: "us-13", name: "アウトドアキャンプ", icon: Tent,    category: "スポーツ",           growth: 44, hot: true  },
-      { id: "us-14", name: "マリンスポーツ",   icon: Anchor,     category: "スポーツ",           growth: 32, hot: false },
+      { id: "us-14", name: "マリンスポ��ツ",   icon: Anchor,     category: "スポーツ",           growth: 32, hot: false },
       { id: "us-15", name: "ファッションウィーク", icon: Shirt,  category: "ショッピング",       growth: 23, hot: false },
     ],
   },
   {
-    code: "MX", name: "メキシコ", flag: "🇲🇽",
+    code: "mx", name: "メキシコ", flag: "/images/flags/mx.svg",
     activities: [
       { id: "mx-01", name: "リゾートビーチ",        icon: Waves,       category: "トラベル",          growth: 58, hot: true  },
       { id: "mx-02", name: "テキーラ蒸留所ツアー",   icon: Wine,        category: "ダイニング",         growth: 51, hot: true  },
@@ -129,7 +130,7 @@ const COUNTRIES: Country[] = [
     ],
   },
   {
-    code: "CA", name: "カナダ", flag: "🇨🇦",
+    code: "ca", name: "カナダ", flag: "/images/flags/ca.svg",
     activities: [
       { id: "ca-01", name: "スキーリゾート（ウィスラー）", icon: Mountain, category: "スポーツ",        growth: 61, hot: true  },
       { id: "ca-02", name: "ロッキー山脈ハイキング",      icon: Mountain, category: "スポーツ",         growth: 54, hot: true  },
@@ -149,7 +150,7 @@ const COUNTRIES: Country[] = [
     ],
   },
   {
-    code: "GB", name: "イギリス", flag: "🇬🇧",
+    code: "uk", name: "UK", flag: "/images/flags/uk.svg",
     activities: [
       { id: "gb-01", name: "カントリーハウス旅行", icon: Sunrise, category: "トラベル",         growth: 38, hot: false },
       { id: "gb-02", name: "スコットランド巡り", icon: Globe,    category: "トラベル",          growth: 44, hot: true  },
@@ -172,7 +173,7 @@ const COUNTRIES: Country[] = [
 
 // ---- コンポーネント ----
 export function AmexTrendsContent() {
-  const [selectedCountry, setSelectedCountry] = useState<string>("JP")
+  const [selectedCountry, setSelectedCountry] = useState<string>("jp")
   const [selectedTab, setSelectedTab] = useState<"travel" | "dining" | "entertainment">("travel")
 
   const country = COUNTRIES.find(c => c.code === selectedCountry)!
@@ -212,23 +213,12 @@ export function AmexTrendsContent() {
       </div>
 
       {/* 国タブ */}
-      <div className="flex flex-wrap gap-2">
-        {COUNTRIES.map(c => (
-          <button
-            key={c.code}
-            onClick={() => setSelectedCountry(c.code)}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all",
-              selectedCountry === c.code
-                ? "bg-[#006FCF] text-white border-[#006FCF] shadow-sm"
-                : "bg-white text-slate-600 border-slate-200 hover:border-[#006FCF]/50 hover:text-[#006FCF]"
-            )}
-          >
-            <span className="text-base">{c.flag}</span>
-            {c.name}
-          </button>
-        ))}
-      </div>
+      <FilterTabs
+        tabs={COUNTRIES.map(c => ({ key: c.code, label: c.name, icon: c.flag }))}
+        activeTab={selectedCountry}
+        onTabChange={setSelectedCountry}
+        variant="pill"
+      />
 
       {/* カテゴリ別グループ */}
       {Object.entries(grouped).map(([catKey, acts]) => {
