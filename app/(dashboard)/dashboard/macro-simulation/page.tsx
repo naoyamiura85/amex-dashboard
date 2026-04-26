@@ -265,7 +265,14 @@ export default function MacroSimulationPage() {
                   <Input
                     type="number"
                     value={totalBudget}
-                    onChange={(e) => setTotalBudget(Number(e.target.value))}
+                    onChange={(e) => {
+                      const val = Number(e.target.value)
+                      if (val >= 0 && val <= 99999) {
+                        setTotalBudget(val)
+                      }
+                    }}
+                    max={99999}
+                    min={0}
                     disabled={isSimulating}
                     className="text-sm font-bold h-9"
                   />
