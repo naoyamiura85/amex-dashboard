@@ -8,7 +8,7 @@ import { useClient } from "@/contexts/client-context"
 export default function TrendsListPage() {
   const clientConfig = useClient()
   const isAmex = clientConfig?.brand?.id === "amex"
-  const trendTitle = clientConfig?.data?.trendTitle || "トップトレンド"
+  const trendTitle = clientConfig?.data?.trendTitle || "Trend Analysis"
   
   return (
     <>
