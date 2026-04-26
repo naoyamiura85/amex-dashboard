@@ -226,7 +226,7 @@ export default function MacroSimulationPage() {
         <div className="flex gap-3">
           <Button
             onClick={runSimulation}
-            disabled={isSimulating || totalMediaAlloc !== 100}
+            disabled={isSimulating}
             className="bg-[#006FCF] hover:bg-[#005bb5] gap-2"
           >
             <Play className="h-4 w-4" />
@@ -395,7 +395,7 @@ export default function MacroSimulationPage() {
                     <span className="text-sm font-bold text-emerald-600">+{metrics.adRecall.delta}%</span>
                   )}
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-1">���告認知率</p>
+                <p className="text-[10px] text-muted-foreground mt-1">広告認知率</p>
               </div>
 
               {/* LTCS */}
