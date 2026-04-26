@@ -69,7 +69,7 @@ const CATEGORY_ICON_COLOR: Record<ActivityCategory, string> = {
 // ---- 国別データ ----
 const COUNTRIES: Country[] = [
   {
-    code: "JP", name: "日本", flag: "🇯🇵",
+    code: "jp", name: "日本", flag: "/images/flags/jp.svg",
     activities: [
       { id: "jp-01", name: "温泉旅行",       icon: Waves,       category: "トラベル",          growth: 34, hot: true  },
       { id: "jp-02", name: "ラグジュアリー旅館", icon: Sunrise,  category: "トラベル",          growth: 28, hot: false },
@@ -89,7 +89,7 @@ const COUNTRIES: Country[] = [
     ],
   },
   {
-    code: "US", name: "アメリカ", flag: "🇺🇸",
+    code: "us", name: "US", flag: "/images/flags/us.svg",
     activities: [
       { id: "us-01", name: "プライベートジェット", icon: Plane,  category: "トラベル",          growth: 62, hot: true  },
       { id: "us-02", name: "ロードトリップ",   icon: Car,        category: "トラベル",          growth: 38, hot: true  },
@@ -109,7 +109,7 @@ const COUNTRIES: Country[] = [
     ],
   },
   {
-    code: "MX", name: "メキシコ", flag: "🇲🇽",
+    code: "mx", name: "メキシコ", flag: "/images/flags/mx.svg",
     activities: [
       { id: "mx-01", name: "リゾートビーチ",        icon: Waves,       category: "トラベル",          growth: 58, hot: true  },
       { id: "mx-02", name: "テキーラ蒸留所ツアー",   icon: Wine,        category: "ダイニング",         growth: 51, hot: true  },
@@ -129,7 +129,7 @@ const COUNTRIES: Country[] = [
     ],
   },
   {
-    code: "CA", name: "カナダ", flag: "🇨🇦",
+    code: "ca", name: "カナダ", flag: "/images/flags/ca.svg",
     activities: [
       { id: "ca-01", name: "スキーリゾート（ウィスラー）", icon: Mountain, category: "スポーツ",        growth: 61, hot: true  },
       { id: "ca-02", name: "ロッキー山脈ハイキング",      icon: Mountain, category: "スポーツ",         growth: 54, hot: true  },
@@ -149,7 +149,7 @@ const COUNTRIES: Country[] = [
     ],
   },
   {
-    code: "GB", name: "イギリス", flag: "🇬🇧",
+    code: "uk", name: "UK", flag: "/images/flags/uk.svg",
     activities: [
       { id: "gb-01", name: "カントリーハウス旅行", icon: Sunrise, category: "トラベル",         growth: 38, hot: false },
       { id: "gb-02", name: "スコットランド巡り", icon: Globe,    category: "トラベル",          growth: 44, hot: true  },
@@ -172,7 +172,7 @@ const COUNTRIES: Country[] = [
 
 // ---- コンポーネント ----
 export function AmexTrendsContent() {
-  const [selectedCountry, setSelectedCountry] = useState<string>("JP")
+  const [selectedCountry, setSelectedCountry] = useState<string>("jp")
   const [selectedTab, setSelectedTab] = useState<"travel" | "dining" | "entertainment">("travel")
 
   const country = COUNTRIES.find(c => c.code === selectedCountry)!
@@ -224,7 +224,7 @@ export function AmexTrendsContent() {
                 : "bg-white text-slate-600 border-slate-200 hover:border-[#006FCF]/50 hover:text-[#006FCF]"
             )}
           >
-            <span className="text-base">{c.flag}</span>
+            <img src={c.flag} alt={c.name} className="w-5 h-4 object-cover rounded-sm" />
             {c.name}
           </button>
         ))}
