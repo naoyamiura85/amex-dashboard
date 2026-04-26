@@ -291,20 +291,27 @@ export default function MacroSimulationPage() {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-3 space-y-2">
                   {MEDIA_CHANNELS.map(ch => (
-                    <div key={ch.key} className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: ch.color }} />
-                      <span className="text-[10px] font-medium w-14">{ch.label}</span>
-                      <Input
-                        type="number"
-                        value={mediaBudget[ch.key]}
-                        onChange={(e) => handleMediaBudgetChange(ch.key, Number(e.target.value))}
+                    <div key={ch.key} className="space-y-0.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ch.color }} />
+                          <span className="text-[10px] font-medium">{ch.label}</span>
+                        </div>
+                        <span className="text-[10px] font-bold" style={{ color: ch.color }}>
+                          ¥{mediaBudget[ch.key]}M
+                          <span className="text-[9px] text-slate-400 font-normal ml-1">
+                            ({totalBudget > 0 ? Math.round((mediaBudget[ch.key] / totalBudget) * 100) : 0}%)
+                          </span>
+                        </span>
+                      </div>
+                      <Slider
+                        value={[mediaBudget[ch.key]]}
+                        onValueChange={([v]) => handleMediaBudgetChange(ch.key, v)}
+                        max={Math.max(500, totalBudget)}
+                        step={10}
                         disabled={isSimulating}
-                        className="text-xs h-7 w-20 text-right"
+                        className="w-full"
                       />
-                      <span className="text-[9px] text-slate-400">M</span>
-                      <span className="text-[9px] text-slate-400 ml-auto">
-                        ({totalBudget > 0 ? Math.round((mediaBudget[ch.key] / totalBudget) * 100) : 0}%)
-                      </span>
                     </div>
                   ))}
                 </CollapsibleContent>
